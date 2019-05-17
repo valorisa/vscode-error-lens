@@ -115,6 +115,10 @@
 				},
 				"errorLens.enabledDiagnosticLevels": {
 					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": ["error", "warning", "info", "hint"]
+					},
 					"description": "Specify which diagnostic levels are enhanced. e.g. [ 'error', 'warning' ]. Valid values are any or all of: 'error', 'warning', 'info' & 'hint'",
 					"default": [
 						"error",

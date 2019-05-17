@@ -1,10 +1,11 @@
-## 2.0.0 `17 May 2019`
+## 2.0.0 `18 May 2019`
 
 - Support excluding some of the problems with the setting `errorlens.exclude`
 - Toggle extension with one command `errorLens.toggle` instead of two
 - Rename colors to have `background` & `foreground` suffix
 - Hot reload of all Settings
 - Remove statusbar entry completely
+- Change default values (colors, fontStyle)
 
 # Fork happened
 

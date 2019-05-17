@@ -43,42 +43,42 @@
 			"properties": {
 				"errorLens.errorBackground": {
 					"type": "string",
-					"default": "rgba(240,0,0,0.4)",
+					"default": "#e4545420",
 					"description": "Background color used to highlight lines containing errors."
 				},
 				"errorLens.errorForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1)",
+					"default": "#e45454",
 					"description": "Text color used to highlight lines containing errors."
 				},
 				"errorLens.warningBackground": {
 					"type": "string",
-					"default": "rgba(180,180,0,0.4)",
+					"default": "#ff942f20",
 					"description": "Background color used to highlight lines containing warnings."
 				},
 				"errorLens.warningForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1)",
+					"default": "#ff942f",
 					"description": "Text color used to highlight lines containing warnings."
 				},
 				"errorLens.infoBackground": {
 					"type": "string",
-					"default": "rgba(0,200,0,0.4)",
+					"default": "#00cbfd20",
 					"description": "Background color used to highlight lines containing info."
 				},
 				"errorLens.infoForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1)",
+					"default": "#f0f0f0",
 					"description": "Text color used to highlight lines containing info."
 				},
 				"errorLens.hintBackground": {
 					"type": "string",
-					"default": "rgba(20,140,140,0.4)",
+					"default": "#148c8c66",
 					"description": "Background color used to highlight lines containing hints."
 				},
 				"errorLens.hintForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1)",
+					"default": "#f0f0f0",
 					"description": "Text color used to highlight lines containing hints."
 				},
 				"errorLens.fontStyle": {

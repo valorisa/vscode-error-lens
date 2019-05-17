@@ -202,8 +202,6 @@ export function activate(context: vscode.ExtensionContext) {
 		const errorLensDecorationOptionsWarning: vscode.DecorationOptions[] = [];
 		const errorLensDecorationOptionsInfo: vscode.DecorationOptions[] = [];
 		const errorLensDecorationOptionsHint: vscode.DecorationOptions[] = [];
-		let numErrors = 0;
-		let numWarnings = 0;
 
 		// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "lineN",
 		// where N is the source line where one or more diagnostics are being reported.
@@ -263,18 +261,6 @@ export function activate(context: vscode.ExtensionContext) {
 						line: diagnostic.range.start.line,
 						arrayDiagnostics: [diagnostic],
 					};
-				}
-
-				switch (diagnostic.severity) {
-					case 0:
-						numErrors += 1;
-						break;
-
-					case 1:
-						numWarnings += 1;
-						break;
-
-					// Ignore other severities.
 				}
 			}
 

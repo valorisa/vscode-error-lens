@@ -42,8 +42,7 @@ This extension contributes the following settings:
 
 This extension contributes the following commands:
 
-* `ErrorLens.enable`: Enable ErrorLens.
-* `ErrorLens.disable`: Disable ErrorLens.
+* `errorLens.toggle` Enable/Disable ErrorLens.
 
 ## Exclude problems
 

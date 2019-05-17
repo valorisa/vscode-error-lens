@@ -4,8 +4,8 @@ import * as vscode from 'vscode';
 export function activate(context: vscode.ExtensionContext) {
 	let errorLensEnabled = true;
 
-	let disposableEnableErrorLens = vscode.commands.registerCommand('errorLens.enable', () => {
-		errorLensEnabled = true;
+	const disposableEnableErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
+		errorLensEnabled = !errorLensEnabled;
 
 		const activeTextEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
 		if (activeTextEditor) {
@@ -14,17 +14,6 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposableEnableErrorLens);
-
-	let disposableDisableErrorLens = vscode.commands.registerCommand('errorLens.disable', () => {
-		errorLensEnabled = false;
-
-		const activeTextEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
-		if (activeTextEditor) {
-			updateDecorationsForUri(activeTextEditor.document.uri);
-		}
-	});
-
-	context.subscriptions.push(disposableDisableErrorLens);
 
 	function GetErrorBackgroundColor() : string {
 		const cfg = vscode.workspace.getConfiguration('errorLens');

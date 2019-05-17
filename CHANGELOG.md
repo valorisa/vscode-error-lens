@@ -1,8 +1,9 @@
-## 0.0.1 `17 May 2019`
+## 2.0.0 `17 May 2019`
 
 - Initial fork release
 - Support excluding some of the problems with the setting `errorlens.exclude`
 - Remove statusbar entry completely
+- Toggle extension with one command `errorLens.toggle` instead of two
 
 # Fork happened
 

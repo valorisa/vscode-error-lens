@@ -34,14 +34,9 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "errorLens.enable",
-				"title": "Enable ErrorLens",
-				"category": "ErrorLens"
-			},
-			{
-				"command": "errorLens.disable",
-				"title": "Disable ErrorLens",
-				"category": "ErrorLens"
+				"command": "errorLens.toggle",
+				"title": "Toggle (Enable/Disable) Error Lens",
+				"category": "Error Lens"
 			}
 		],
 		"configuration": {

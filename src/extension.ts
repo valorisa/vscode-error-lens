@@ -120,12 +120,6 @@ export function activate(context: vscode.ExtensionContext) {
 		return(GetEnabledDiagnosticLevels().indexOf('hint') >= 0);
 	}
 
-	function GetStatusBarControl() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const statusBarControl : string = cfg.get('statusBarControl') || 'hide-when-no-issues';
-		return statusBarControl;
-	}
-
 	function AddAnnotationTextPrefixes() : boolean {
 		const cfg = vscode.workspace.getConfiguration('errorLens');
 		const addAnnotationTextPrefixes : boolean = cfg.get('addAnnotationTextPrefixes') || false;
@@ -172,10 +166,6 @@ export function activate(context: vscode.ExtensionContext) {
      * @param {vscode.DiagnosticChangeEvent} diagnosticChangeEvent - Contains info about the change in diagnostics.
      */
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent) {
-		if (!vscode.window) {
-			return;
-		}
-
 		const activeTextEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
 		if (!activeTextEditor) {
 			return;
@@ -411,56 +401,6 @@ export function activate(context: vscode.ExtensionContext) {
 		activeTextEditor.setDecorations(errorLensDecorationTypeWarning, errorLensDecorationOptionsWarning);
 		activeTextEditor.setDecorations(errorLensDecorationTypeInfo, errorLensDecorationOptionsInfo);
 		activeTextEditor.setDecorations(errorLensDecorationTypeHint, errorLensDecorationOptionsHint);
-
-		updateStatusBar(numErrors, numWarnings);
-	}
-
-	/**
-     * Update the Visual Studio Code status bar, showing the number of warnings and/or errors.
-     * Control over when (or if) to show the ErrorLens info in the status bar is controlled via the
-     * errorLens.statusBarControl configuration property.
-     *
-     * @param {number} numErrors - The number of error diagnostics reported.
-     * @param {number} numWarnings - The number of warning diagnostics reported.
-     */
-	function updateStatusBar(numErrors: number, numWarnings: number) {
-		// Create _statusBarItem if needed
-		if (!_statusBarItem) {
-			_statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-		}
-
-		const statusBarControl = GetStatusBarControl();
-		let showStatusBarText = false;
-		if (errorLensEnabled) {
-			if (statusBarControl === 'always') {
-				showStatusBarText = true;
-			} else if (statusBarControl === 'never') {
-				showStatusBarText = false;
-			} else if (statusBarControl === 'hide-when-no-issues') {
-				if (numErrors + numWarnings > 0) {
-					showStatusBarText = true;
-				}
-			}
-		}
-
-		const activeTextEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
-
-		if (!activeTextEditor || !showStatusBarText) {
-			// No open text editor or don't want to show ErrorLens info.
-			_statusBarItem.hide();
-		} else {
-			let statusBarText: string;
-
-			if (numErrors + numWarnings === 0) {
-				statusBarText = 'ErrorLens: No errors or warnings';
-			} else {
-				statusBarText = '$(bug) ErrorLens: ' + String(numErrors) + ' error(s) and ' + String(numWarnings) + ' warning(s).';
-			}
-
-			_statusBarItem.text = statusBarText;
-
-			_statusBarItem.show();
-		}
 	}
 
 	/**
@@ -487,5 +427,4 @@ interface IExcludeObject {
 type Exclude = (string | IExcludeObject)[];
 
 // this method is called when your extension is deactivated
-export function deactivate() {
-}
+export function deactivate() {}

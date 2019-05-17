@@ -2,6 +2,7 @@
 
 - Initial fork release
 - Support excluding some of the problems with the setting `errorlens.exclude`
+- Remove statusbar entry completely
 
 # Fork happened
 

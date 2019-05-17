@@ -126,16 +126,6 @@
 						"hint"
 					]
 				},
-				"errorLens.statusBarControl": {
-					"type": "string",
-					"enum": [
-						"always",
-						"never",
-						"hide-when-no-issues"
-					],
-					"description": "Specify when the ErrorLens status bar text should be shown.",
-					"default": "hide-when-no-issues"
-				},
 				"errorLens.addAnnotationTextPrefixes": {
 					"type": "boolean",
 					"description": "If 'true', prefixes the diagnostic severity ('Error:', 'Warning:' etc) to ErrorLens annotations.",

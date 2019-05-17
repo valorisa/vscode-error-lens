@@ -36,7 +36,6 @@ This extension contributes the following settings:
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.
 * `errorLens.fontMargin`: Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)
 * `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
-* `errorLens.statusBarControl`: Customize how the VS Code Status Bar shows errors and warnings.
 * `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('Error:', 'Warning:' etc) to ErrorLens annotations.
 
 ## Extension Commands

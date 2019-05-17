@@ -2,7 +2,6 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-	let _statusBarItem: vscode.StatusBarItem;
 	let errorLensEnabled = true;
 
 	let disposableEnableErrorLens = vscode.commands.registerCommand('errorLens.enable', () => {

@@ -1,7 +1,12 @@
 'use strict';
 import * as vscode from 'vscode';
+import { workspace } from 'vscode';
+import { IConfig } from './types';
+
+const EXTNAME = 'errorLens';
 
 export function activate(context: vscode.ExtensionContext) {
+	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let errorLensEnabled = true;
 
 	const disposableEnableErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
@@ -15,103 +20,20 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposableEnableErrorLens);
 
-	function GetErrorBackgroundColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const errorColor : string = cfg.get('errorColor') || 'rgba(240,10,0,0.5)';
-		return errorColor;
-	}
-
-	function GetErrorTextColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const errorTextColor : string = cfg.get('errorTextColor') || 'rgba(240,240,240,1.0)';
-		return errorTextColor;
-	}
-
-	function GetWarningBackgroundColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const warningColor : string = cfg.get('warningColor') || 'rgba(200,100,0,0.5)';
-		return warningColor;
-	}
-
-	function GetWarningTextColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const warningTextColor : string = cfg.get('warningTextColor') || 'rgba(240,240,240,1.0)';
-		return warningTextColor;
-	}
-
-	function GetInfoBackgroundColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const infoColor : string = cfg.get('infoColor') || 'rgba(40,20,120,0.5)';
-		return infoColor;
-	}
-
-	function GetInfoTextColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const infoTextColor : string = cfg.get('infoTextColor') || 'rgba(240,240,240,1.0)';
-		return infoTextColor;
-	}
-
-	function GetHintBackgroundColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const hintColor : string = cfg.get('hintColor') || 'rgba(20,120,40,0.5)';
-		return hintColor;
-	}
-
-	function GetHintTextColor() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const hintTextColor : string = cfg.get('hintTextColor') || 'rgba(240,240,240,1.0)';
-		return hintTextColor;
-	}
-
-	function GetAnnotationFontStyle() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const annotationFontStyle : string = cfg.get('fontStyle') || 'italic';
-		return annotationFontStyle;
-	}
-
-	function GetAnnotationFontWeight() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const annotationFontWeight : string = cfg.get('fontWeight') || 'normal';
-		return annotationFontWeight;
-	}
-
-	function GetAnnotationMargin() : string {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const annotationMargin : string = cfg.get('fontMargin') || '40px';
-		return annotationMargin;
-	}
-
-	function GetEnabledDiagnosticLevels() : string[] {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const enabledDiagnosticLevels : string[] = cfg.get('enabledDiagnosticLevels') || ['error', 'warning'];
-		return enabledDiagnosticLevels;
-	}
-	function GetExclude(): Exclude {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const exclude: Exclude = cfg.get('exclude') || [];
-		return exclude;
-	}
-
 	function IsErrorLevelEnabled() {
-		return(GetEnabledDiagnosticLevels().indexOf('error') >= 0);
+		return(config.enabledDiagnosticLevels.indexOf('error') >= 0);
 	}
 
 	function IsWarningLevelEnabled() {
-		return(GetEnabledDiagnosticLevels().indexOf('warning') >= 0);
+		return(config.enabledDiagnosticLevels.indexOf('warning') >= 0);
 	}
 
 	function IsInfoLevelEnabled() {
-		return(GetEnabledDiagnosticLevels().indexOf('info') >= 0);
+		return(config.enabledDiagnosticLevels.indexOf('info') >= 0);
 	}
 
 	function IsHintLevelEnabled() {
-		return(GetEnabledDiagnosticLevels().indexOf('hint') >= 0);
-	}
-
-	function AddAnnotationTextPrefixes() : boolean {
-		const cfg = vscode.workspace.getConfiguration('errorLens');
-		const addAnnotationTextPrefixes : boolean = cfg.get('addAnnotationTextPrefixes') || false;
-		return addAnnotationTextPrefixes;
+		return(config.enabledDiagnosticLevels.indexOf('hint') >= 0);
 	}
 
 	// Create decorator types that we use to amplify lines containing errors, warnings, info, etc.
@@ -120,19 +42,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let errorLensDecorationTypeError: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
 		isWholeLine: true,
-		backgroundColor: GetErrorBackgroundColor(),
+		backgroundColor: config.errorBackground,
 	});
 	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
 		isWholeLine: true,
-		backgroundColor: GetWarningBackgroundColor(),
+		backgroundColor: config.warningBackground,
 	});
 	let errorLensDecorationTypeInfo: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
 		isWholeLine: true,
-		backgroundColor: GetInfoBackgroundColor(),
+		backgroundColor: config.infoBackground,
 	});
 	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
 		isWholeLine: true,
-		backgroundColor: GetHintBackgroundColor(),
+		backgroundColor: config.hintBackground,
 	});
 
 	vscode.languages.onDidChangeDiagnostics(diagnosticChangeEvent => { onChangedDiagnostics(diagnosticChangeEvent); }, undefined, context.subscriptions);
@@ -231,8 +153,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if (errorLensEnabled) {
 			let aggregatedDiagnostics: IAggregatedDiagnostics = {};
 			let diagnostic: vscode.Diagnostic;
-			const exclude: Exclude = GetExclude();
-
+			const exclude = config.exclude || [];
 			// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
 			// a list of objects, grouping together diagnostics which occur on a single line.
 			nextDiagnostic:
@@ -264,12 +185,11 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			}
 
-			let addMessagePrefix: boolean = AddAnnotationTextPrefixes();
 			for (const key in aggregatedDiagnostics) {
 				let aggregatedDiagnostic = aggregatedDiagnostics[key];
 				let messagePrefix = '';
 
-				if (addMessagePrefix) {
+				if (config.addAnnotationTextPrefixes) {
 					if (aggregatedDiagnostic.arrayDiagnostics.length > 1) {
 						// If > 1 diagnostic for this source line, the prefix is "Diagnostic #1 of N: "
 						messagePrefix += 'Diagnostic 1/' + String(aggregatedDiagnostic.arrayDiagnostics.length) + ': ';
@@ -303,28 +223,28 @@ export function activate(context: vscode.ExtensionContext) {
 					case 0:
 						if (IsErrorLevelEnabled()) {
 							addErrorLens = true;
-							decorationTextColor = GetErrorTextColor();
+							decorationTextColor = config.errorForeground;
 						}
 						break;
 					// Warning
 					case 1:
 						if (IsWarningLevelEnabled()) {
 							addErrorLens = true;
-							decorationTextColor = GetWarningTextColor();
+							decorationTextColor = config.warningForeground;
 						}
 						break;
 					// Info
 					case 2:
 						if (IsInfoLevelEnabled()) {
 							addErrorLens = true;
-							decorationTextColor = GetInfoTextColor();
+							decorationTextColor = config.infoForeground;
 						}
 						break;
 					// Hint
 					case 3:
 						if (IsHintLevelEnabled()) {
 							addErrorLens = true;
-							decorationTextColor = GetHintTextColor();
+							decorationTextColor = config.hintForeground;
 						}
 						break;
 				}
@@ -335,9 +255,9 @@ export function activate(context: vscode.ExtensionContext) {
 					const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
 						after: {
 							contentText: truncate(messagePrefix + aggregatedDiagnostic.arrayDiagnostics[0].message),
-							fontStyle: GetAnnotationFontStyle(),
-							fontWeight: GetAnnotationFontWeight(),
-							margin: GetAnnotationMargin(),
+							fontStyle: config.fontStyle,
+							fontWeight: config.fontWeight,
+							margin: config.margin,
 							color: decorationTextColor,
 						},
 					};
@@ -377,6 +297,43 @@ export function activate(context: vscode.ExtensionContext) {
 		activeTextEditor.setDecorations(errorLensDecorationTypeHint, errorLensDecorationOptionsHint);
 	}
 
+	function updateConfig(e: vscode.ConfigurationChangeEvent) {
+		if (!e.affectsConfiguration(EXTNAME)) return;
+
+		config = workspace.getConfiguration(EXTNAME) as any as IConfig;
+
+		const activeTextEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		if (activeTextEditor) {
+			activeTextEditor.setDecorations(errorLensDecorationTypeError, []);
+			activeTextEditor.setDecorations(errorLensDecorationTypeWarning, []);
+			activeTextEditor.setDecorations(errorLensDecorationTypeInfo, []);
+			activeTextEditor.setDecorations(errorLensDecorationTypeHint, []);
+		}
+
+		errorLensDecorationTypeError = vscode.window.createTextEditorDecorationType({
+			isWholeLine: true,
+			backgroundColor: config.errorBackground,
+		});
+		errorLensDecorationTypeWarning = vscode.window.createTextEditorDecorationType({
+			isWholeLine: true,
+			backgroundColor: config.warningBackground,
+		});
+		errorLensDecorationTypeInfo = vscode.window.createTextEditorDecorationType({
+			isWholeLine: true,
+			backgroundColor: config.infoBackground,
+		});
+		errorLensDecorationTypeHint = vscode.window.createTextEditorDecorationType({
+			isWholeLine: true,
+			backgroundColor: config.hintBackground,
+		});
+
+		if (activeTextEditor) {
+			updateDecorationsForUri(activeTextEditor.document.uri);
+		}
+	}
+
+	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
+
 	/**
       * Truncate the supplied string to a constant number of characters. (This truncation
       * limit is hard-coded, and may be changed only by editing the const inside this function).
@@ -393,12 +350,6 @@ export function activate(context: vscode.ExtensionContext) {
 function isObject(x: any): boolean {
 	return typeof x === 'object' && x !== null;
 }
-
-interface IExcludeObject {
-	code: string;
-	source: string;
-}
-type Exclude = (string | IExcludeObject)[];
 
 // this method is called when your extension is deactivated
 export function deactivate() {}

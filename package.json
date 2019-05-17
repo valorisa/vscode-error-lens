@@ -2,7 +2,7 @@
 	"name": "errorlens",
 	"displayName": "Error Lens",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
-	"version": "0.0.1",
+	"version": "2.0.0",
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
@@ -41,45 +41,45 @@
 		],
 		"configuration": {
 			"properties": {
-				"errorLens.errorColor": {
+				"errorLens.errorBackground": {
 					"type": "string",
 					"default": "rgba(240,0,0,0.4)",
-					"description": "The background color used to highlight lines containing errors. (Alpha is used)"
+					"description": "Background color used to highlight lines containing errors."
 				},
-				"errorLens.errorTextColor": {
+				"errorLens.errorForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1.0)",
-					"description": "The text color used to highlight lines containing errors. (Alpha is used)"
+					"default": "rgba(240,240,240,1)",
+					"description": "Text color used to highlight lines containing errors."
 				},
-				"errorLens.warningColor": {
+				"errorLens.warningBackground": {
 					"type": "string",
 					"default": "rgba(180,180,0,0.4)",
-					"description": "The background color used to highlight lines containing warnings. (Alpha is used)"
+					"description": "Background color used to highlight lines containing warnings."
 				},
-				"errorLens.warningTextColor": {
+				"errorLens.warningForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1.0)",
-					"description": "The text color used to highlight lines containing warnings. (Alpha is used)"
+					"default": "rgba(240,240,240,1)",
+					"description": "Text color used to highlight lines containing warnings."
 				},
-				"errorLens.infoColor": {
+				"errorLens.infoBackground": {
 					"type": "string",
 					"default": "rgba(0,200,0,0.4)",
-					"description": "The background color used to highlight lines containing info. (Alpha is used)"
+					"description": "Background color used to highlight lines containing info."
 				},
-				"errorLens.infoTextColor": {
+				"errorLens.infoForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1.0)",
-					"description": "The text color used to highlight lines containing info. (Alpha is used)"
+					"default": "rgba(240,240,240,1)",
+					"description": "Text color used to highlight lines containing info."
 				},
-				"errorLens.hintColor": {
+				"errorLens.hintBackground": {
 					"type": "string",
 					"default": "rgba(20,140,140,0.4)",
-					"description": "The background color used to highlight lines containing hints. (Alpha is used)"
+					"description": "Background color used to highlight lines containing hints."
 				},
-				"errorLens.hintTextColor": {
+				"errorLens.hintForeground": {
 					"type": "string",
-					"default": "rgba(240,240,240,1.0)",
-					"description": "The text color used to highlight lines containing hints. (Alpha is used)"
+					"default": "rgba(240,240,240,1)",
+					"description": "Text color used to highlight lines containing hints."
 				},
 				"errorLens.fontStyle": {
 					"type": "string",
@@ -87,7 +87,7 @@
 						"normal",
 						"italic"
 					],
-					"default": "italic",
+					"default": "normal",
 					"description": "Show ErrorLens annotations in Italics, or not?"
 				},
 				"errorLens.fontWeight": {
@@ -106,7 +106,7 @@
 					"default": "normal",
 					"description": "Specifies the font weight for ErrorLens annotations."
 				},
-				"errorLens.fontMargin": {
+				"errorLens.margin": {
 					"type": "string",
 					"default": "40px",
 					"description": "Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)."

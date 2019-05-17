@@ -1,14 +1,12 @@
 {
 	"name": "errorlens",
-	"displayName": "ErrorLens",
-	"description": "Improve the highlighting of errors, warnings and other language diagnostics.",
-	"version": "1.1.3",
-	"publisher": "PhilHindle",
-	"author": {
-		"name": "Phil Hindle"
-	},
+	"displayName": "Error Lens",
+	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
+	"version": "0.0.1",
+	"publisher": "usernamehw",
+	"license": "MIT",
 	"engines": {
-		"vscode": "^1.24.0"
+		"vscode": "^1.28.0"
 	},
 	"categories": [
 		"Other"
@@ -24,15 +22,15 @@
 		"color": "#332020",
 		"theme": "dark"
 	},
-	"icon": "images/errorlens-icon.png",
+	"icon": "img/icon.png",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/phindle/error-lens"
+		"url": "https://github.com/usernamehw/vscode-error-lens"
 	},
 	"activationEvents": [
 		"*"
 	],
-	"main": "./out/extension",
+	"main": "./dist/extension",
 	"contributes": {
 		"commands": [
 			{
@@ -147,17 +145,20 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+		"vscode:prepublish": "webpack --mode production --colors",
+		"compile": "webpack --mode development",
+		"watch": "webpack --mode development --watch --display=minimal",
+		"postinstall": "node ./node_modules/vscode/bin/install"
 	},
 	"devDependencies": {
-		"@types/mocha": "^2.2.42",
-		"@types/node": "^7.0.71",
-		"tslint": "^5.11.0",
-		"typescript": "^2.6.1",
-		"vscode": "^1.1.21"
+		"@types/node": "^8.10.48",
+		"friendly-errors-webpack-plugin": "^1.7.0",
+		"ts-loader": "^6.0.0",
+		"tslint": "^5.16.0",
+		"typescript": "^3.4.5",
+		"vscode": "^1.1.30",
+		"webpack": "^4.30.0",
+		"webpack-cli": "^3.3.2",
+		"webpack-strip-block": "^0.2.0"
 	}
 }

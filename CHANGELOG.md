@@ -1,22 +1,21 @@
-# Change Log
+## 0.0.1 `17 May 2019`
 
-All notable changes to the ErrorLens extension will be documented in this file.
+- Initial fork release
 
-## 1.1.3
+# Fork happened
 
-- Released 24th February 2019.
+## 1.1.3 `24 Feb 2019`
+
 - Various minor fixes.
 - Remove superfluous console.log() calls.
 - Truncate very long messages.
 
-## 1.1.2
+## 1.1.2 `14 Feb 2019`
 
-- Released 14th February 2019. (Valentine's Day Edition).
 - Fix for <https://github.com/phindle/error-lens/issues/15>. Diagnostic highlights are now shown on the whole line again.
 
-## 1.1.0
+## 1.1.0 `Feb 2019`
 
-- Released February 2019.
 - This release contains some new features and fixes some bugs.
 - Additional font weight options. (Thank you to Oleg Orlov for the PR).
 - Changes to the ErrorLens settings will be reloaded without restarting VS Code. (Hot reload).
@@ -31,7 +30,7 @@ All notable changes to the ErrorLens extension will be documented in this file.
   This addresses issue #4 (<https://github.com/phindle/error-lens/issues/4>).
   For example, to configure the background and text colour for errors:
 
-```
+```javascript
 "errorLens.errorColor": {
   "type": "string",
   "default": "rgba(240,10,0,0.3)",
@@ -56,6 +55,6 @@ All notable changes to the ErrorLens extension will be documented in this file.
  2 commands are available from the command palette: _Enable ErrorLens_ and _Disable ErrorLens_.
  These commands do not have any default keyboard bindings.
 
-## 1.0.0
+## 1.0.0 `Oct 2019`
 
-- Initial release of ErrorLens (October 2018)
+- Initial release

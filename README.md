@@ -45,3 +45,11 @@ This extension contributes the following commands:
 
 * `ErrorLens.enable`: Enable ErrorLens.
 * `ErrorLens.disable`: Disable ErrorLens.
+
+## Exclude problems
+
+```javascript
+"errorLens.exclude": [
+    "Unknown configuration setting"
+]
+```

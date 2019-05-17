@@ -1,6 +1,7 @@
 ## 0.0.1 `17 May 2019`
 
 - Initial fork release
+- Support excluding some of the problems with the setting `errorlens.exclude`
 
 # Fork happened
 

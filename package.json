@@ -34,12 +34,12 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "ErrorLens.enable",
+				"command": "errorLens.enable",
 				"title": "Enable ErrorLens",
 				"category": "ErrorLens"
 			},
 			{
-				"command": "ErrorLens.disable",
+				"command": "errorLens.disable",
 				"title": "Disable ErrorLens",
 				"category": "ErrorLens"
 			}
@@ -140,6 +140,27 @@
 					"type": "boolean",
 					"description": "If 'true', prefixes the diagnostic severity ('Error:', 'Warning:' etc) to ErrorLens annotations.",
 					"default": true
+				},
+				"errorLens.exclude": {
+					"type": "array",
+					"items": {
+						"oneOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string"
+									},
+									"source": {
+										"type": "string"
+									}
+								}
+							}
+						]
+					}
 				}
 			}
 		}

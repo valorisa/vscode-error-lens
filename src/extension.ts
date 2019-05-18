@@ -219,6 +219,7 @@ export function activate(context: vscode.ExtensionContext) {
 							fontWeight: config.fontWeight,
 							margin: config.margin,
 							color: decorationTextColor,
+							textDecoration: `;font-size:${config.fontSize};line-height:1;`,
 						},
 					};
 

@@ -11,6 +11,7 @@ export interface IConfig {
 	hintForeground: string;
 	fontStyle: string;
 	fontWeight: string;
+	fontSize: string;
 	margin: string;
 	enabledDiagnosticLevels: string[];
 	addAnnotationTextPrefixes: boolean;

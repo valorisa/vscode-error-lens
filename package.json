@@ -109,6 +109,11 @@
 					"default": "normal",
 					"description": "Specifies the font weight for ErrorLens annotations."
 				},
+				"errorLens.fontSize": {
+					"type": "string",
+					"default": "",
+					"description": "Font size for text (problem messages)."
+				},
 				"errorLens.margin": {
 					"type": "string",
 					"default": "40px",

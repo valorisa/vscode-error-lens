@@ -60,9 +60,9 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics, undefined, context.subscriptions);
 
 	// Note: URIs for onDidOpenTextDocument() can contain schemes other than file:// (such as git://)
-	vscode.workspace.onDidOpenTextDocument(textDocument => {
-		updateDecorationsForUri(textDocument.uri);
-	}, undefined, context.subscriptions);
+	// vscode.workspace.onDidOpenTextDocument(textDocument => {
+	// 	updateDecorationsForUri(textDocument.uri);
+	// }, undefined, context.subscriptions);
 
 	// Update on editor switch.
 	vscode.window.onDidChangeActiveTextEditor(textEditor => {

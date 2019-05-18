@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType;
 	setBackgroundDecorations();
 
-	const disposableEnableErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
+	const disposableToggleErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
 		errorLensEnabled = !errorLensEnabled;
 		updateAllDecorations();
 	});
@@ -285,7 +285,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
-	context.subscriptions.push(disposableEnableErrorLens);
+	context.subscriptions.push(disposableToggleErrorLens);
 }
 
 export function deactivate() {}

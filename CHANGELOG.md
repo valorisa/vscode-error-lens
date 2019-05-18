@@ -6,6 +6,7 @@
 - Hot reload of all Settings
 - Remove statusbar entry completely
 - Change default values (colors, fontStyle)
+- Experimental: remove `onDidOpenTextDocument` event listener
 
 # Fork happened
 

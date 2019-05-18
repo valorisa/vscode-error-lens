@@ -24,8 +24,5 @@ interface IExcludeObject {
 type Exclude = (string | IExcludeObject)[];
 
 export interface IAggregatedDiagnostics {
-	[key: string]: {
-		line: number;
-		arrayDiagnostics: vscode.Diagnostic[];
-	};
+	[key: string]: vscode.Diagnostic[];
 }

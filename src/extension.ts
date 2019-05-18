@@ -123,23 +123,21 @@ export function activate(context: vscode.ExtensionContext) {
 		const errorLensDecorationOptionsInfo: vscode.DecorationOptions[] = [];
 		const errorLensDecorationOptionsHint: vscode.DecorationOptions[] = [];
 
-		// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "lineN",
+		// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
 		// where N is the source line where one or more diagnostics are being reported.
-		// Each object which is keyed by "lineN" will contain one or more arrayDiagnostics[] array of objects.
+		// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
 		// This facilitates gathering info about lines which contain more than one diagnostic.
 		// {
-		//     line28: {
-		//         line: 28,
-		//         arrayDiagnostics: [ <vscode.Diagnostic #1> ]
-		//     },
-		//     line67: {
-		//         line: 67,
-		//         arrayDiagnostics: [ <vscode.Diagnostic# 1>, <vscode.Diagnostic# 2> ]
-		//     },
-		//     line93: {
-		//         line: 93,
-		//         arrayDiagnostics: [ <vscode.Diagnostic #1> ]
-		//     }
+		//     28: [
+		//         <vscode.Diagnostic #1>
+		//     ],
+		//     67: [
+		//         <vscode.Diagnostic #1>,
+		//         <vscode.Diagnostic #2>
+		//     ],
+		//     93: [
+		//         <vscode.Diagnostic #1>
+		//     ]
 		// };
 
 		if (errorLensEnabled) {
@@ -167,13 +165,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 				if (aggregatedDiagnostics[key]) {
 					// Already added an object for this key, so augment the arrayDiagnostics[] array.
-					aggregatedDiagnostics[key].arrayDiagnostics.push(diagnostic);
+					aggregatedDiagnostics[key].push(diagnostic);
 				} else {
 					// Create a new object for this key, specifying the line: and a arrayDiagnostics[] array
-					aggregatedDiagnostics[key] = {
-						line: diagnostic.range.start.line,
-						arrayDiagnostics: [diagnostic],
-					};
+					aggregatedDiagnostics[key] = [diagnostic];
 				}
 			}
 
@@ -182,12 +177,12 @@ export function activate(context: vscode.ExtensionContext) {
 				let messagePrefix = '';
 
 				if (config.addAnnotationTextPrefixes) {
-					if (aggregatedDiagnostic.arrayDiagnostics.length > 1) {
+					if (aggregatedDiagnostic.length > 1) {
 						// If > 1 diagnostic for this source line, the prefix is "Diagnostic #1 of N: "
-						messagePrefix += 'Diagnostic 1/' + String(aggregatedDiagnostic.arrayDiagnostics.length) + ': ';
+						messagePrefix += 'Diagnostic 1/' + String(aggregatedDiagnostic.length) + ': ';
 					} else {
 						// If only 1 diagnostic for this source line, show the diagnostic severity
-						switch (aggregatedDiagnostic.arrayDiagnostics[0].severity) {
+						switch (aggregatedDiagnostic[0].severity) {
 							case 0:
 								messagePrefix += 'Error: ';
 								break;
@@ -210,7 +205,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				let decorationTextColor;
 				let addErrorLens = false;
-				switch (aggregatedDiagnostic.arrayDiagnostics[0].severity) {
+				switch (aggregatedDiagnostic[0].severity) {
 					// Error
 					case 0:
 						if (IsErrorLevelEnabled()) {
@@ -246,7 +241,7 @@ export function activate(context: vscode.ExtensionContext) {
 					// after the source-code line in the editor, and text rendering options.
 					const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
 						after: {
-							contentText: truncate(messagePrefix + aggregatedDiagnostic.arrayDiagnostics[0].message),
+							contentText: truncate(messagePrefix + aggregatedDiagnostic[0].message),
 							fontStyle: config.fontStyle,
 							fontWeight: config.fontWeight,
 							margin: config.margin,
@@ -256,11 +251,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 					// See type 'DecorationOptions': https://code.visualstudio.com/docs/extensionAPI/vscode-api#DecorationOptions
 					const diagnosticDecorationOptions: vscode.DecorationOptions = {
-						range: aggregatedDiagnostic.arrayDiagnostics[0].range,
+						range: aggregatedDiagnostic[0].range,
 						renderOptions: decInstanceRenderOptions,
 					};
 
-					switch (aggregatedDiagnostic.arrayDiagnostics[0].severity) {
+					switch (aggregatedDiagnostic[0].severity) {
 						// Error
 						case 0:
 							errorLensDecorationOptionsError.push(diagnosticDecorationOptions);

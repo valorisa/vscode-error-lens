@@ -1,3 +1,8 @@
+## 2.0.1 `18 May 2019`
+
+- ✨ Update decorations for all visible editors
+- 🐛 Additionally dispose decorations when settings change
+
 ## 2.0.0 `18 May 2019`
 
 - ✨ Support excluding some of the problems with the setting `errorLens.exclude`

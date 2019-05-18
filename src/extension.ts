@@ -78,17 +78,17 @@ export function activate(context: vscode.ExtensionContext) {
      * @param {vscode.DiagnosticChangeEvent} diagnosticChangeEvent - Contains info about the change in diagnostics.
      */
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent) {
-		const activeTextEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
-		if (!activeTextEditor) {
-			return;
-		}
+		// const activeTextEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		// if (!activeTextEditor) {
+		// 	return;
+		// }
 
-		// Many URIs can change - we only need to decorate the active text editor
+		// Many URIs can change - we only need to decorate all visible editors
 		for (const uri of diagnosticChangeEvent.uris) {
-			// Only update decorations for the active text editor.
-			if (uri.fsPath === activeTextEditor.document.uri.fsPath) {
-				updateDecorationsForUri(uri);
-				break;
+			for (const editor of vscode.window.visibleTextEditors) {
+				if (uri.fsPath === editor.document.uri.fsPath) {
+					updateDecorationsForUri(uri, editor);
+				}
 			}
 		}
 	}
@@ -99,7 +99,7 @@ export function activate(context: vscode.ExtensionContext) {
      *
      * @param {vscode.Uri} uriToDecorate - Uri to add decorations to.
      */
-	function updateDecorationsForUri(uriToDecorate : vscode.Uri) {
+	function updateDecorationsForUri(uriToDecorate : vscode.Uri, editor?: vscode.TextEditor) {
 		if (!uriToDecorate) {
 			return;
 		}
@@ -110,11 +110,14 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		const activeTextEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
-		if (!activeTextEditor) {
+		if (editor === undefined) {
+			editor = activeTextEditor;// tslint:disable-line
+		}
+		if (!editor) {
 			return;
 		}
 
-		if (!activeTextEditor.document.uri.fsPath) {
+		if (!editor.document.uri.fsPath) {
 			return;
 		}
 
@@ -275,10 +278,10 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		// The errorLensDecorationOptions<X> arrays have been built, now apply them.
-		activeTextEditor.setDecorations(errorLensDecorationTypeError, errorLensDecorationOptionsError);
-		activeTextEditor.setDecorations(errorLensDecorationTypeWarning, errorLensDecorationOptionsWarning);
-		activeTextEditor.setDecorations(errorLensDecorationTypeInfo, errorLensDecorationOptionsInfo);
-		activeTextEditor.setDecorations(errorLensDecorationTypeHint, errorLensDecorationOptionsHint);
+		editor.setDecorations(errorLensDecorationTypeError, errorLensDecorationOptionsError);
+		editor.setDecorations(errorLensDecorationTypeWarning, errorLensDecorationOptionsWarning);
+		editor.setDecorations(errorLensDecorationTypeInfo, errorLensDecorationOptionsInfo);
+		editor.setDecorations(errorLensDecorationTypeHint, errorLensDecorationOptionsHint);
 	}
 
 	function updateConfig(e: vscode.ConfigurationChangeEvent) {
@@ -315,8 +318,8 @@ export function activate(context: vscode.ExtensionContext) {
 			backgroundColor: config.hintBackground,
 		});
 
-		if (activeTextEditor) {
-			updateDecorationsForUri(activeTextEditor.document.uri);
+		for (const editor of vscode.window.visibleTextEditors) {
+			updateDecorationsForUri(editor.document.uri, editor);
 		}
 	}
 

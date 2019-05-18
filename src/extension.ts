@@ -263,17 +263,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 		config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 
-		const activeTextEditor: vscode.TextEditor | undefined = window.activeTextEditor;
-		if (activeTextEditor) {
-			activeTextEditor.setDecorations(errorLensDecorationTypeError, []);
-			activeTextEditor.setDecorations(errorLensDecorationTypeWarning, []);
-			activeTextEditor.setDecorations(errorLensDecorationTypeInfo, []);
-			activeTextEditor.setDecorations(errorLensDecorationTypeHint, []);
-			errorLensDecorationTypeError.dispose();
-			errorLensDecorationTypeWarning.dispose();
-			errorLensDecorationTypeInfo.dispose();
-			errorLensDecorationTypeHint.dispose();
-		}
+		errorLensDecorationTypeError.dispose();
+		errorLensDecorationTypeWarning.dispose();
+		errorLensDecorationTypeInfo.dispose();
+		errorLensDecorationTypeHint.dispose();
 
 		errorLensDecorationTypeError = window.createTextEditorDecorationType({
 			isWholeLine: true,

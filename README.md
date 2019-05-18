@@ -1,4 +1,4 @@
-> This is a fork of https://github.com/phindle/error-lens. Changes between this and the original repo should be reflected in the CHANGELOG file.
+> This is a fork of https://github.com/phindle/error-lens. Changes between this and the original repo should be reflected in the [CHANGELOG](https://github.com/usernamehw/vscode-error-lens/blob/master/CHANGELOG.md) file.
 
 Welcome to ErrorLens.
 

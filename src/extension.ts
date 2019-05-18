@@ -292,6 +292,10 @@ export function activate(context: vscode.ExtensionContext) {
 			activeTextEditor.setDecorations(errorLensDecorationTypeWarning, []);
 			activeTextEditor.setDecorations(errorLensDecorationTypeInfo, []);
 			activeTextEditor.setDecorations(errorLensDecorationTypeHint, []);
+			errorLensDecorationTypeError.dispose();
+			errorLensDecorationTypeWarning.dispose();
+			errorLensDecorationTypeInfo.dispose();
+			errorLensDecorationTypeHint.dispose();
 		}
 
 		errorLensDecorationTypeError = vscode.window.createTextEditorDecorationType({

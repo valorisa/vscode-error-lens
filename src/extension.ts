@@ -9,31 +9,15 @@ const EXTNAME = 'errorLens';
 export function activate(context: vscode.ExtensionContext) {
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let errorLensEnabled = true;
+	let errorLensDecorationTypeError: vscode.TextEditorDecorationType;
+	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType;
+	let errorLensDecorationTypeInfo: vscode.TextEditorDecorationType;
+	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType;
+	setBackgroundDecorations();
 
 	const disposableEnableErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
 		errorLensEnabled = !errorLensEnabled;
 		updateAllDecorations();
-	});
-
-	// Create decorator types that we use to amplify lines containing errors, warnings, info, etc.
-	// createTextEditorDecorationType() ref. @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#window.createTextEditorDecorationType
-	// DecorationRenderOptions ref.  @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#DecorationRenderOptions
-
-	let errorLensDecorationTypeError: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
-		isWholeLine: true,
-		backgroundColor: config.errorBackground,
-	});
-	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
-		isWholeLine: true,
-		backgroundColor: config.warningBackground,
-	});
-	let errorLensDecorationTypeInfo: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
-		isWholeLine: true,
-		backgroundColor: config.infoBackground,
-	});
-	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
-		isWholeLine: true,
-		backgroundColor: config.hintBackground,
 	});
 
 	vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics, undefined, context.subscriptions);
@@ -268,6 +252,14 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeInfo.dispose();
 		errorLensDecorationTypeHint.dispose();
 
+		setBackgroundDecorations();
+		updateAllDecorations();
+	}
+
+	function setBackgroundDecorations() {
+		// Create decorator types that we use to amplify lines containing errors, warnings, info, etc.
+		// createTextEditorDecorationType() ref. @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#window.createTextEditorDecorationType
+		// DecorationRenderOptions ref.  @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#DecorationRenderOptions
 		errorLensDecorationTypeError = window.createTextEditorDecorationType({
 			isWholeLine: true,
 			backgroundColor: config.errorBackground,
@@ -284,8 +276,6 @@ export function activate(context: vscode.ExtensionContext) {
 			isWholeLine: true,
 			backgroundColor: config.hintBackground,
 		});
-
-		updateAllDecorations();
 	}
 
 	function updateAllDecorations() {

@@ -10,7 +10,11 @@
 - 🔨 Minor fixes like more specific types for Setting values
 - 🔨 Use webpack
 
+---
+
 # Fork happened
+
+---
 
 ## 1.1.3 `24 Feb 2019`
 

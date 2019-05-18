@@ -16,7 +16,6 @@ the site of the line of code which is generating the diagnostic.
 
 * Lines containing errors or warnings or info are highlighted more obviously.
 * Diagnostic descriptions are appended to the end of any line containing diagnostic info, meaning that you do not have to context-switch to the problem view.
-* The status bar shows the number of diagnostics for the open file. (This can be configured)
 * Settings can be configured to control the way ErrorLens displays enhanced diagnostics.
 * Works for any language which provides diagnostics.
 

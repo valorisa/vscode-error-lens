@@ -109,10 +109,6 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		if (!vscode.window) {
-			return;
-		}
-
 		const activeTextEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
 		if (!activeTextEditor) {
 			return;

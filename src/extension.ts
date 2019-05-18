@@ -128,9 +128,6 @@ export function activate(context: vscode.ExtensionContext) {
 		// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
 		// This facilitates gathering info about lines which contain more than one diagnostic.
 		// {
-		//     28: [
-		//         <vscode.Diagnostic #1>
-		//     ],
 		//     67: [
 		//         <vscode.Diagnostic #1>,
 		//         <vscode.Diagnostic #2>

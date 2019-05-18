@@ -1,12 +1,12 @@
 ## 2.0.0 `18 May 2019`
 
-- Support excluding some of the problems with the setting `errorlens.exclude`
-- Toggle extension with one command `errorLens.toggle` instead of two
-- Rename colors to have `background` & `foreground` suffix
-- Hot reload of all Settings
-- Remove statusbar entry completely
-- Change default values (colors, fontStyle)
-- Experimental: remove `onDidOpenTextDocument` event listener
+- ✨ Support excluding some of the problems with the setting `errorlens.exclude`
+- ✨ Hot reload of all Settings
+- 💥 Toggle extension with one command `errorLens.toggle` instead of two
+- 💥 Rename colors to have `background` & `foreground` suffix
+- 💥 Remove statusbar entry completely
+- 💥 Change default values (colors, fontStyle)
+- 💥 Experimental: remove `onDidOpenTextDocument` event listener
 
 # Fork happened
 
@@ -37,12 +37,12 @@
   For example, to configure the background and text colour for errors:
 
 ```javascript
-"errorLens.errorColor": {
+"errorLens.errorBackground": {
   "type": "string",
   "default": "rgba(240,10,0,0.3)",
   "description": "The background color used to highlight lines containing errors. (Alpha is used)"
 },
-"errorLens.errorTextColor": {
+"errorLens.errorForeground": {
   "type": "string",
   "default": "rgba(240,240,240,1.0)",
   "description": "The text color used to highlight lines containing errors. (Alpha is used)"

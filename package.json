@@ -151,7 +151,8 @@
 								}
 							}
 						]
-					}
+					},
+					"description": "Specify messages that should not be highlighted."
 				}
 			}
 		}

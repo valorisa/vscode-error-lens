@@ -7,6 +7,8 @@
 - 💥 Remove statusbar entry completely
 - 💥 Change default values (colors, fontStyle)
 - 💥 Experimental: remove `onDidOpenTextDocument` event listener
+- 🔨 Minor fixes like more specific types for Setting values
+- 🔨 Use webpack
 
 # Fork happened
 

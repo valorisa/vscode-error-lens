@@ -15,25 +15,23 @@ export function activate(context: vscode.ExtensionContext) {
 		updateAllDecorations();
 	});
 
-	context.subscriptions.push(disposableEnableErrorLens);
-
 	// Create decorator types that we use to amplify lines containing errors, warnings, info, etc.
 	// createTextEditorDecorationType() ref. @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#window.createTextEditorDecorationType
 	// DecorationRenderOptions ref.  @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#DecorationRenderOptions
 
-	let errorLensDecorationTypeError: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
+	let errorLensDecorationTypeError: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
 		isWholeLine: true,
 		backgroundColor: config.errorBackground,
 	});
-	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
+	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
 		isWholeLine: true,
 		backgroundColor: config.warningBackground,
 	});
-	let errorLensDecorationTypeInfo: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
+	let errorLensDecorationTypeInfo: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
 		isWholeLine: true,
 		backgroundColor: config.infoBackground,
 	});
-	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
+	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType = window.createTextEditorDecorationType({
 		isWholeLine: true,
 		backgroundColor: config.hintBackground,
 	});
@@ -41,16 +39,15 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics, undefined, context.subscriptions);
 
 	// Note: URIs for onDidOpenTextDocument() can contain schemes other than file:// (such as git://)
-	// vscode.workspace.onDidOpenTextDocument(textDocument => {
+	// workspace.onDidOpenTextDocument(textDocument => {
 	// 	updateDecorationsForUri(textDocument.uri);
 	// }, undefined, context.subscriptions);
 
 	// Update on editor switch.
-	vscode.window.onDidChangeActiveTextEditor(textEditor => {
-		if (textEditor === undefined) {
-			return;
+	window.onDidChangeActiveTextEditor(textEditor => {
+		if (textEditor) {
+			updateDecorationsForUri(textEditor.document.uri, textEditor);
 		}
-		updateDecorationsForUri(textEditor.document.uri);
 	}, undefined, context.subscriptions);
 
 	/**
@@ -59,14 +56,9 @@ export function activate(context: vscode.ExtensionContext) {
      * @param {vscode.DiagnosticChangeEvent} diagnosticChangeEvent - Contains info about the change in diagnostics.
      */
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent) {
-		// const activeTextEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
-		// if (!activeTextEditor) {
-		// 	return;
-		// }
-
 		// Many URIs can change - we only need to decorate all visible editors
 		for (const uri of diagnosticChangeEvent.uris) {
-			for (const editor of vscode.window.visibleTextEditors) {
+			for (const editor of window.visibleTextEditors) {
 				if (uri.fsPath === editor.document.uri.fsPath) {
 					updateDecorationsForUri(uri, editor);
 				}
@@ -90,7 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		const activeTextEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		const activeTextEditor : vscode.TextEditor | undefined = window.activeTextEditor;
 		if (editor === undefined) {
 			editor = activeTextEditor;// tslint:disable-line
 		}
@@ -270,7 +262,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 
-		const activeTextEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		const activeTextEditor: vscode.TextEditor | undefined = window.activeTextEditor;
 		if (activeTextEditor) {
 			activeTextEditor.setDecorations(errorLensDecorationTypeError, []);
 			activeTextEditor.setDecorations(errorLensDecorationTypeWarning, []);
@@ -282,19 +274,19 @@ export function activate(context: vscode.ExtensionContext) {
 			errorLensDecorationTypeHint.dispose();
 		}
 
-		errorLensDecorationTypeError = vscode.window.createTextEditorDecorationType({
+		errorLensDecorationTypeError = window.createTextEditorDecorationType({
 			isWholeLine: true,
 			backgroundColor: config.errorBackground,
 		});
-		errorLensDecorationTypeWarning = vscode.window.createTextEditorDecorationType({
+		errorLensDecorationTypeWarning = window.createTextEditorDecorationType({
 			isWholeLine: true,
 			backgroundColor: config.warningBackground,
 		});
-		errorLensDecorationTypeInfo = vscode.window.createTextEditorDecorationType({
+		errorLensDecorationTypeInfo = window.createTextEditorDecorationType({
 			isWholeLine: true,
 			backgroundColor: config.infoBackground,
 		});
-		errorLensDecorationTypeHint = vscode.window.createTextEditorDecorationType({
+		errorLensDecorationTypeHint = window.createTextEditorDecorationType({
 			isWholeLine: true,
 			backgroundColor: config.hintBackground,
 		});
@@ -302,13 +294,14 @@ export function activate(context: vscode.ExtensionContext) {
 		updateAllDecorations();
 	}
 
-	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
-
 	function updateAllDecorations() {
 		for (const editor of window.visibleTextEditors) {
 			updateDecorationsForUri(editor.document.uri, editor);
 		}
 	}
+
+	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
+	context.subscriptions.push(disposableEnableErrorLens);
 }
 
 export function deactivate() {}

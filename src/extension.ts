@@ -17,22 +17,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposableEnableErrorLens);
 
-	function IsErrorLevelEnabled() {
-		return(config.enabledDiagnosticLevels.indexOf('error') >= 0);
-	}
-
-	function IsWarningLevelEnabled() {
-		return(config.enabledDiagnosticLevels.indexOf('warning') >= 0);
-	}
-
-	function IsInfoLevelEnabled() {
-		return(config.enabledDiagnosticLevels.indexOf('info') >= 0);
-	}
-
-	function IsHintLevelEnabled() {
-		return(config.enabledDiagnosticLevels.indexOf('hint') >= 0);
-	}
-
 	// Create decorator types that we use to amplify lines containing errors, warnings, info, etc.
 	// createTextEditorDecorationType() ref. @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#window.createTextEditorDecorationType
 	// DecorationRenderOptions ref.  @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#DecorationRenderOptions
@@ -205,28 +189,28 @@ export function activate(context: vscode.ExtensionContext) {
 				switch (aggregatedDiagnostic[0].severity) {
 					// Error
 					case 0:
-						if (IsErrorLevelEnabled()) {
+						if (config.enabledDiagnosticLevels.indexOf('error') !== -1) {
 							addErrorLens = true;
 							decorationTextColor = config.errorForeground;
 						}
 						break;
 					// Warning
 					case 1:
-						if (IsWarningLevelEnabled()) {
+						if (config.enabledDiagnosticLevels.indexOf('warning') !== -1) {
 							addErrorLens = true;
 							decorationTextColor = config.warningForeground;
 						}
 						break;
 					// Info
 					case 2:
-						if (IsInfoLevelEnabled()) {
+						if (config.enabledDiagnosticLevels.indexOf('info') !== -1) {
 							addErrorLens = true;
 							decorationTextColor = config.infoForeground;
 						}
 						break;
 					// Hint
 					case 3:
-						if (IsHintLevelEnabled()) {
+						if (config.enabledDiagnosticLevels.indexOf('hint') !== -1) {
 							addErrorLens = true;
 							decorationTextColor = config.hintForeground;
 						}

@@ -23,19 +23,20 @@ the site of the line of code which is generating the diagnostic.
 
 This extension contributes the following settings:
 
-* `errorLens.errorColor`: The background color used to highlight lines containing errors. (Alpha component can be used)
-* `errorLens.errorTextColor`: The text color used to highlight lines containing errors. (Alpha component can be used)
-* `errorLens.warningColor`: The background color used to highlight lines containing warnings. (Alpha component can be used)
-* `errorLens.warningTextColor`: The text color used to highlight lines containing warnings. (Alpha component can be used)
-* `errorLens.infoColor`: The background color used to highlight lines containing info. (Alpha component can be used)
-* `errorLens.infoTextColor`: The text color used to highlight lines containing info. (Alpha component can be used)
-* `errorLens.hintColor`: The background color used to highlight lines containing hints. (Alpha component can be used)
-* `errorLens.hintTextColor`: The text color used to highlight lines containing hints. (Alpha component can be used)
+* `errorLens.errorBackground`: The background color used to highlight lines containing errors. (Alpha component can be used)
+* `errorLens.errorForeground`: The text color used to highlight lines containing errors. (Alpha component can be used)
+* `errorLens.warningBackground`: The background color used to highlight lines containing warnings. (Alpha component can be used)
+* `errorLens.warningForeground`: The text color used to highlight lines containing warnings. (Alpha component can be used)
+* `errorLens.infoBackground`: The background color used to highlight lines containing info. (Alpha component can be used)
+* `errorLens.infoForeground`: The text color used to highlight lines containing info. (Alpha component can be used)
+* `errorLens.hintBackground`: The background color used to highlight lines containing hints. (Alpha component can be used)
+* `errorLens.hintForeground`: The text color used to highlight lines containing hints. (Alpha component can be used)
 * `errorLens.fontStyle`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.
-* `errorLens.fontMargin`: Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)
+* `errorLens.margin`: Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)
 * `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
 * `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('Error:', 'Warning:' etc) to ErrorLens annotations.
+* `errorLens.exclude`: Specify messages that should not be highlighted.
 
 ## Extension Commands
 
@@ -43,10 +44,3 @@ This extension contributes the following commands:
 
 * `errorLens.toggle` Enable/Disable ErrorLens.
 
-## Exclude problems
-
-```javascript
-"errorLens.exclude": [
-    "Unknown configuration setting"
-]
-```

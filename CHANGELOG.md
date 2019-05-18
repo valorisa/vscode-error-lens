@@ -1,6 +1,6 @@
 ## 2.0.0 `18 May 2019`
 
-- ✨ Support excluding some of the problems with the setting `errorlens.exclude`
+- ✨ Support excluding some of the problems with the setting `errorLens.exclude`
 - ✨ Hot reload of all Settings
 - 💥 Toggle extension with one command `errorLens.toggle` instead of two
 - 💥 Rename colors to have `background` & `foreground` suffix
@@ -15,7 +15,7 @@
 ## 1.1.3 `24 Feb 2019`
 
 - Various minor fixes.
-- Remove superfluous console.log() calls.
+- Remove superfluous `console.log()` calls.
 - Truncate very long messages.
 
 ## 1.1.2 `14 Feb 2019`

@@ -1,3 +1,5 @@
+import * as vscode from 'vscode';
+
 export interface IConfig {
 	errorBackground: string;
 	errorForeground: string;
@@ -20,3 +22,10 @@ interface IExcludeObject {
 	source: string;
 }
 type Exclude = (string | IExcludeObject)[];
+
+export interface IAggregatedDiagnostics {
+	[key: string]: {
+		line: number;
+		arrayDiagnostics: vscode.Diagnostic[];
+	};
+}

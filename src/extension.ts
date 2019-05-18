@@ -1,7 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import { workspace } from 'vscode';
-import { IConfig } from './types';
+import { IAggregatedDiagnostics, IConfig } from './types';
 
 const EXTNAME = 'errorLens';
 
@@ -142,12 +142,6 @@ export function activate(context: vscode.ExtensionContext) {
 		//     }
 		// };
 
-		interface IAggregatedDiagnostics {
-			[key: string]: {
-				line: number;
-				arrayDiagnostics: vscode.Diagnostic[];
-			};
-		}
 		if (errorLensEnabled) {
 			let aggregatedDiagnostics: IAggregatedDiagnostics = {};
 			let diagnostic: vscode.Diagnostic;

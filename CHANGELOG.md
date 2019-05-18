@@ -1,3 +1,8 @@
+## 2.0.2 `18 May 2019`
+
+- ✨ Customize font size of messages with `errorLens.fontSize`
+- 🐛 Toggle ErrorLens command should update decorations for all visible editors
+
 ## 2.0.1 `18 May 2019`
 
 - ✨ Update decorations for all visible editors

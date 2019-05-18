@@ -13,8 +13,9 @@
 	],
 	"keywords": [
 		"highlight",
-		"highlighter",
-		"code highlighter",
+		"problems",
+		"error",
+		"warning",
 		"diagnostics",
 		"multi-root ready"
 	],

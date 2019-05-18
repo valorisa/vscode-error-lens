@@ -1,6 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
-import { workspace } from 'vscode';
+import { window, workspace } from 'vscode';
 import { IAggregatedDiagnostics, IConfig } from './types';
 
 const EXTNAME = 'errorLens';
@@ -11,11 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const disposableEnableErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
 		errorLensEnabled = !errorLensEnabled;
-
-		const activeTextEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
-		if (activeTextEditor) {
-			updateDecorationsForUri(activeTextEditor.document.uri);
-		}
+		updateAllDecorations();
 	});
 
 	context.subscriptions.push(disposableEnableErrorLens);
@@ -318,12 +314,16 @@ export function activate(context: vscode.ExtensionContext) {
 			backgroundColor: config.hintBackground,
 		});
 
-		for (const editor of vscode.window.visibleTextEditors) {
-			updateDecorationsForUri(editor.document.uri, editor);
-		}
+		updateAllDecorations();
 	}
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
+
+	function updateAllDecorations() {
+		for (const editor of window.visibleTextEditors) {
+			updateDecorationsForUri(editor.document.uri, editor);
+		}
+	}
 
 	/**
       * Truncate the supplied string to a constant number of characters. (This truncation

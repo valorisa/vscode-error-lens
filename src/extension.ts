@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import { window, workspace } from 'vscode';
 import { IAggregatedDiagnostics, IConfig } from './types';
+import { isObject, truncate } from './utils';
 
 const EXTNAME = 'errorLens';
 
@@ -324,23 +325,6 @@ export function activate(context: vscode.ExtensionContext) {
 			updateDecorationsForUri(editor.document.uri, editor);
 		}
 	}
-
-	/**
-      * Truncate the supplied string to a constant number of characters. (This truncation
-      * limit is hard-coded, and may be changed only by editing the const inside this function).
-      *
-      * @param {string} str - The string to truncate.
-      * @returns {string} - The truncated string, if the string argument is over the hard-coded limit.
-      */
-	function truncate(str: string): string {
-		const truncationLimit = 300;
-		return str.length > truncationLimit ? str.slice(0, truncationLimit) + '…' : str;
-	}
 }
 
-function isObject(x: any): boolean {
-	return typeof x === 'object' && x !== null;
-}
-
-// this method is called when your extension is deactivated
 export function deactivate() {}

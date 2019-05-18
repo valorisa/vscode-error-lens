@@ -73,7 +73,7 @@
 				},
 				"errorLens.hintBackground": {
 					"type": "string",
-					"default": "#148c8c66",
+					"default": "#148c8c76",
 					"description": "Background color used to highlight lines containing hints."
 				},
 				"errorLens.hintForeground": {

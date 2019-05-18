@@ -158,7 +158,7 @@ export function activate(context: vscode.ExtensionContext) {
 						}
 					}
 				}
-				const key = `line${diagnostic.range.start.line}`;
+				const key = diagnostic.range.start.line;
 
 				if (aggregatedDiagnostics[key]) {
 					// Already added an object for this key, so augment the arrayDiagnostics[] array.

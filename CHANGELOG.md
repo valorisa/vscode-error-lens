@@ -1,3 +1,7 @@
+## 2.0.3 `19 May 2019`
+
+- 🐛 Fix disposing decorations when settings change from Settings GUI
+
 ## 2.0.2 `18 May 2019`
 
 - ✨ Customize font size of messages with `errorLens.fontSize`

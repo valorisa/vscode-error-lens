@@ -22,23 +22,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics, undefined, context.subscriptions);
 
-	// Note: URIs for onDidOpenTextDocument() can contain schemes other than file:// (such as git://)
-	// workspace.onDidOpenTextDocument(textDocument => {
-	// 	updateDecorationsForUri(textDocument.uri);
-	// }, undefined, context.subscriptions);
-
-	// Update on editor switch.
 	window.onDidChangeActiveTextEditor(textEditor => {
 		if (textEditor) {
 			updateDecorationsForUri(textEditor.document.uri, textEditor);
 		}
 	}, undefined, context.subscriptions);
 
-	/**
-     * Invoked by onDidChangeDiagnostics() when the language diagnostics change.
-     *
-     * @param {vscode.DiagnosticChangeEvent} diagnosticChangeEvent - Contains info about the change in diagnostics.
-     */
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent) {
 		// Many URIs can change - we only need to decorate all visible editors
 		for (const uri of diagnosticChangeEvent.uris) {
@@ -53,8 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
 	/**
      * Update the editor decorations for the provided URI. Only if the URI scheme is "file" is the function
      * processed. (It can be others, such as "git://<something>", in which case the function early-exits).
-     *
-     * @param {vscode.Uri} uriToDecorate - Uri to add decorations to.
      */
 	function updateDecorationsForUri(uriToDecorate : vscode.Uri, editor?: vscode.TextEditor) {
 		if (!uriToDecorate) {
@@ -98,13 +85,12 @@ export function activate(context: vscode.ExtensionContext) {
 		// };
 
 		if (errorLensEnabled) {
-			let aggregatedDiagnostics: IAggregatedDiagnostics = {};
-			let diagnostic: vscode.Diagnostic;
+			const aggregatedDiagnostics: IAggregatedDiagnostics = {};
 			const exclude = config.exclude || [];
 			// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
 			// a list of objects, grouping together diagnostics which occur on a single line.
 			nextDiagnostic:
-			for (diagnostic of vscode.languages.getDiagnostics(uriToDecorate)) {
+			for (const diagnostic of vscode.languages.getDiagnostics(uriToDecorate)) {
 				// Exclude items specified in `errorLens.exclude` setting
 				for (const excludeItem of exclude) {
 					if (typeof excludeItem === 'string') {
@@ -130,7 +116,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			for (const key in aggregatedDiagnostics) {
-				let aggregatedDiagnostic = aggregatedDiagnostics[key];
+				const aggregatedDiagnostic = aggregatedDiagnostics[key];
 				let messagePrefix = '';
 
 				if (config.addAnnotationTextPrefixes) {
@@ -197,7 +183,6 @@ export function activate(context: vscode.ExtensionContext) {
 						},
 					};
 
-					// See type 'DecorationOptions': https://code.visualstudio.com/docs/extensionAPI/vscode-api#DecorationOptions
 					const diagnosticDecorationOptions: vscode.DecorationOptions = {
 						range: aggregatedDiagnostic[0].range,
 						renderOptions: decInstanceRenderOptions,

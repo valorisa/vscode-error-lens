@@ -1,7 +1,5 @@
 > This is a fork of https://github.com/phindle/error-lens. Changes between this and the original repo should be reflected in the [CHANGELOG](https://github.com/usernamehw/vscode-error-lens/blob/master/CHANGELOG.md) file.
 
-Welcome to ErrorLens.
-
 ErrorLens enhances Visual Studio Code's inbuilt diagnostic highlighting. Visual Studio Code's default behavior is to
 underline errors and warnings and other diagnostic messages using a 'squiggly underline'. Whilst this is certainly
 useful, the underline visual effect is subtle, and therefore can be easily overlooked in a busy file.
@@ -31,6 +29,7 @@ This extension contributes the following settings:
 * `errorLens.infoForeground`: The text color used to highlight lines containing info. (Alpha component can be used)
 * `errorLens.hintBackground`: The background color used to highlight lines containing hints. (Alpha component can be used)
 * `errorLens.hintForeground`: The text color used to highlight lines containing hints. (Alpha component can be used)
+* `errorLens.light`: Overwrite any of the above color for light themes
 * `errorLens.fontSize`: Font size of diagnostic messages in editor
 * `errorLens.fontStyle`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.

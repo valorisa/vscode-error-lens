@@ -29,7 +29,7 @@ This extension contributes the following settings:
 * `errorLens.infoForeground`: The text color used to highlight lines containing info. (Alpha component can be used)
 * `errorLens.hintBackground`: The background color used to highlight lines containing hints. (Alpha component can be used)
 * `errorLens.hintForeground`: The text color used to highlight lines containing hints. (Alpha component can be used)
-* `errorLens.light`: Overwrite any of the above color for light themes
+* `errorLens.light`: Overwrite any of the above colors for light themes
 * `errorLens.fontSize`: Font size of diagnostic messages in editor
 * `errorLens.fontStyle`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.

@@ -1,3 +1,7 @@
+## 2.0.4 `19 May 2019`
+
+- ✨ Allow to set colors for light themes separately with the setting `errorLens.light`
+
 ## 2.0.3 `19 May 2019`
 
 - 🐛 Fix disposing decorations when settings change from Settings GUI

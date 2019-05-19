@@ -160,50 +160,40 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 
-				let decorationTextColor;
 				let addErrorLens = false;
 				switch (aggregatedDiagnostic[0].severity) {
 					// Error
 					case 0:
 						if (config.enabledDiagnosticLevels.indexOf('error') !== -1) {
 							addErrorLens = true;
-							decorationTextColor = config.errorForeground;
 						}
 						break;
 					// Warning
 					case 1:
 						if (config.enabledDiagnosticLevels.indexOf('warning') !== -1) {
 							addErrorLens = true;
-							decorationTextColor = config.warningForeground;
 						}
 						break;
 					// Info
 					case 2:
 						if (config.enabledDiagnosticLevels.indexOf('info') !== -1) {
 							addErrorLens = true;
-							decorationTextColor = config.infoForeground;
 						}
 						break;
 					// Hint
 					case 3:
 						if (config.enabledDiagnosticLevels.indexOf('hint') !== -1) {
 							addErrorLens = true;
-							decorationTextColor = config.hintForeground;
 						}
 						break;
 				}
 
 				if (addErrorLens) {
 					// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
-					// after the source-code line in the editor, and text rendering options.
+					// after the source-code line in the editor
 					const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
 						after: {
 							contentText: truncate(messagePrefix + aggregatedDiagnostic[0].message),
-							fontStyle: config.fontStyle,
-							fontWeight: config.fontWeight,
-							margin: config.margin,
-							color: decorationTextColor,
-							textDecoration: `;font-size:${config.fontSize};line-height:1;`,
 						},
 					};
 
@@ -257,24 +247,73 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	function setBackgroundDecorations() {
-		// Create decorator types that we use to amplify lines containing errors, warnings, info, etc.
-		// createTextEditorDecorationType() ref. @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#window.createTextEditorDecorationType
-		// DecorationRenderOptions ref.  @ https://code.visualstudio.com/docs/extensionAPI/vscode-api#DecorationRenderOptions
 		errorLensDecorationTypeError = window.createTextEditorDecorationType({
-			isWholeLine: true,
 			backgroundColor: config.errorBackground,
+			after: {
+				color: config.errorForeground,
+				fontStyle: config.fontStyle,
+				margin: config.margin,
+				fontWeight: config.fontWeight,
+				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
+			},
+			light: {
+				backgroundColor: config.light.errorBackground ? config.light.errorBackground : config.errorBackground,
+				after: {
+					color: config.light.errorForeground ? config.light.errorForeground : config.errorForeground,
+				},
+			},
+			isWholeLine: true,
 		});
 		errorLensDecorationTypeWarning = window.createTextEditorDecorationType({
-			isWholeLine: true,
 			backgroundColor: config.warningBackground,
+			after: {
+				color: config.warningForeground,
+				fontStyle: config.fontStyle,
+				margin: config.margin,
+				fontWeight: config.fontWeight,
+				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
+			},
+			light: {
+				backgroundColor: config.light.warningBackground ? config.light.warningBackground : config.warningBackground,
+				after: {
+					color: config.light.warningForeground ? config.light.warningForeground : config.warningForeground,
+				},
+			},
+			isWholeLine: true,
 		});
 		errorLensDecorationTypeInfo = window.createTextEditorDecorationType({
-			isWholeLine: true,
 			backgroundColor: config.infoBackground,
+			after: {
+				color: config.infoForeground,
+				fontStyle: config.fontStyle,
+				margin: config.margin,
+				fontWeight: config.fontWeight,
+				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
+			},
+			light: {
+				backgroundColor: config.light.infoBackground ? config.light.infoBackground : config.infoBackground,
+				after: {
+					color: config.light.infoForeground ? config.light.infoForeground : config.infoForeground,
+				},
+			},
+			isWholeLine: true,
 		});
 		errorLensDecorationTypeHint = window.createTextEditorDecorationType({
-			isWholeLine: true,
 			backgroundColor: config.hintBackground,
+			after: {
+				color: config.hintForeground,
+				fontStyle: config.fontStyle,
+				margin: config.margin,
+				fontWeight: config.fontWeight,
+				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
+			},
+			light: {
+				backgroundColor: config.light.hintBackground ? config.light.hintBackground : config.hintBackground,
+				after: {
+					color: config.light.hintForeground ? config.light.hintForeground : config.hintForeground,
+				},
+			},
+			isWholeLine: true,
 		});
 	}
 

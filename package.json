@@ -164,6 +164,52 @@
 						]
 					},
 					"description": "Specify messages that should not be highlighted."
+				},
+				"errorLens.light": {
+					"type": "object",
+					"description": "Specify color of decorations for when the light color theme is active.",
+					"properties": {
+						"errorBackground": {
+							"type": "string",
+							"default": "",
+							"description": "Background color used to highlight lines containing errors."
+						},
+						"errorForeground": {
+							"type": "string",
+							"default": "",
+							"description": "Text color used to highlight lines containing errors."
+						},
+						"warningBackground": {
+							"type": "string",
+							"default": "",
+							"description": "Background color used to highlight lines containing warnings."
+						},
+						"warningForeground": {
+							"type": "string",
+							"default": "",
+							"description": "Text color used to highlight lines containing warnings."
+						},
+						"infoBackground": {
+							"type": "string",
+							"default": "",
+							"description": "Background color used to highlight lines containing info."
+						},
+						"infoForeground": {
+							"type": "string",
+							"default": "",
+							"description": "Text color used to highlight lines containing info."
+						},
+						"hintBackground": {
+							"type": "string",
+							"default": "",
+							"description": "Background color used to highlight lines containing hints."
+						},
+						"hintForeground": {
+							"type": "string",
+							"default": "",
+							"description": "Text color used to highlight lines containing hints."
+						}
+					}
 				}
 			}
 		}

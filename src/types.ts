@@ -9,9 +9,22 @@ export interface IConfig {
 	infoForeground: string;
 	hintBackground: string;
 	hintForeground: string;
+
+	light: {
+		errorBackground: string;
+		errorForeground: string;
+		warningBackground: string;
+		warningForeground: string;
+		infoBackground: string;
+		infoForeground: string;
+		hintBackground: string;
+		hintForeground: string;
+	};
+
 	fontStyle: string;
 	fontWeight: string;
 	fontSize: string;
+
 	margin: string;
 	enabledDiagnosticLevels: string[];
 	addAnnotationTextPrefixes: boolean;

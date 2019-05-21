@@ -276,9 +276,9 @@ export function activate(context: vscode.ExtensionContext) {
 				color: config.errorForeground,
 			},
 			light: {
-				backgroundColor: config.light.errorBackground ? config.light.errorBackground : config.errorBackground,
+				backgroundColor: config.light.errorBackground || config.errorBackground,
 				after: {
-					color: config.light.errorForeground ? config.light.errorForeground : config.errorForeground,
+					color: config.light.errorForeground || config.errorForeground,
 				},
 			},
 			isWholeLine: true,
@@ -290,9 +290,9 @@ export function activate(context: vscode.ExtensionContext) {
 				color: config.warningForeground,
 			},
 			light: {
-				backgroundColor: config.light.warningBackground ? config.light.warningBackground : config.warningBackground,
+				backgroundColor: config.light.warningBackground || config.warningBackground,
 				after: {
-					color: config.light.warningForeground ? config.light.warningForeground : config.warningForeground,
+					color: config.light.warningForeground || config.warningForeground,
 				},
 			},
 			isWholeLine: true,
@@ -304,9 +304,9 @@ export function activate(context: vscode.ExtensionContext) {
 				color: config.infoForeground,
 			},
 			light: {
-				backgroundColor: config.light.infoBackground ? config.light.infoBackground : config.infoBackground,
+				backgroundColor: config.light.infoBackground || config.infoBackground,
 				after: {
-					color: config.light.infoForeground ? config.light.infoForeground : config.infoForeground,
+					color: config.light.infoForeground || config.infoForeground,
 				},
 			},
 			isWholeLine: true,
@@ -318,9 +318,9 @@ export function activate(context: vscode.ExtensionContext) {
 				color: config.hintForeground,
 			},
 			light: {
-				backgroundColor: config.light.hintBackground ? config.light.hintBackground : config.hintBackground,
+				backgroundColor: config.light.hintBackground || config.hintBackground,
 				after: {
-					color: config.light.hintForeground ? config.light.hintForeground : config.hintForeground,
+					color: config.light.hintForeground || config.hintForeground,
 				},
 			},
 			isWholeLine: true,

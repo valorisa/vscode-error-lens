@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let onDidChangeDiagnosticsDisposable: vscode.Disposable;
 
-	setBackgroundDecorations();
+	setDecorationStyle();
 
 	const disposableToggleErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
 		errorLensEnabled = !errorLensEnabled;
@@ -258,19 +258,22 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeHint.dispose();
 
 		updateChangeDiagnosticListener();
-		setBackgroundDecorations();
+		setDecorationStyle();
 		updateAllDecorations();
 	}
 
-	function setBackgroundDecorations() {
+	function setDecorationStyle() {
+		const afterProps = {
+			fontStyle: config.fontStyle,
+			margin: config.margin,
+			fontWeight: config.fontWeight,
+			textDecoration: `;font-size:${config.fontSize};line-height:1;`,
+		};
 		errorLensDecorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
 			after: {
+				...afterProps,
 				color: config.errorForeground,
-				fontStyle: config.fontStyle,
-				margin: config.margin,
-				fontWeight: config.fontWeight,
-				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
 			},
 			light: {
 				backgroundColor: config.light.errorBackground ? config.light.errorBackground : config.errorBackground,
@@ -283,11 +286,8 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
 			after: {
+				...afterProps,
 				color: config.warningForeground,
-				fontStyle: config.fontStyle,
-				margin: config.margin,
-				fontWeight: config.fontWeight,
-				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
 			},
 			light: {
 				backgroundColor: config.light.warningBackground ? config.light.warningBackground : config.warningBackground,
@@ -300,11 +300,8 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
 			after: {
+				...afterProps,
 				color: config.infoForeground,
-				fontStyle: config.fontStyle,
-				margin: config.margin,
-				fontWeight: config.fontWeight,
-				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
 			},
 			light: {
 				backgroundColor: config.light.infoBackground ? config.light.infoBackground : config.infoBackground,
@@ -317,11 +314,8 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeHint = window.createTextEditorDecorationType({
 			backgroundColor: config.hintBackground,
 			after: {
+				...afterProps,
 				color: config.hintForeground,
-				fontStyle: config.fontStyle,
-				margin: config.margin,
-				fontWeight: config.fontWeight,
-				textDecoration: `;font-size:${config.fontSize};line-height:1;`,
 			},
 			light: {
 				backgroundColor: config.light.hintBackground ? config.light.hintBackground : config.hintBackground,

@@ -29,6 +29,7 @@ export interface IConfig {
 	enabledDiagnosticLevels: string[];
 	addAnnotationTextPrefixes: boolean;
 	exclude: Exclude;
+	delay?: number;
 }
 
 interface IExcludeObject {

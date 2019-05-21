@@ -13,9 +13,7 @@ the site of the line of code which is generating the diagnostic.
 ## Features
 
 * Lines containing errors or warnings or info are highlighted more obviously.
-* Diagnostic descriptions are appended to the end of any line containing diagnostic info, meaning that you do not have to context-switch to the problem view.
-* Settings can be configured to control the way ErrorLens displays enhanced diagnostics.
-* Works for any language which provides diagnostics.
+* Diagnostic descriptions are appended to the end of any line containing diagnostic info, meaning that you do not have to context-switch to the problems view.
 
 ## Extension Settings
 
@@ -35,8 +33,9 @@ This extension contributes the following settings:
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.
 * `errorLens.margin`: Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)
 * `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
-* `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('Error:', 'Warning:' etc) to ErrorLens annotations.
+* `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.
 * `errorLens.exclude`: Specify messages that should not be highlighted.
+* `errorLens.delay`: Specify delay before showing problems.
 
 ## Extension Commands
 

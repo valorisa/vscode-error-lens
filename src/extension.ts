@@ -1,6 +1,8 @@
 'use strict';
+import debounce from 'lodash/debounce';
 import * as vscode from 'vscode';
 import { window, workspace } from 'vscode';
+
 import { IAggregatedDiagnostics, IConfig } from './types';
 import { isObject, truncate } from './utils';
 
@@ -9,18 +11,20 @@ const EXTNAME = 'errorLens';
 export function activate(context: vscode.ExtensionContext) {
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let errorLensEnabled = true;
+
 	let errorLensDecorationTypeError: vscode.TextEditorDecorationType;
 	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType;
 	let errorLensDecorationTypeInfo: vscode.TextEditorDecorationType;
 	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType;
+
+	let onDidChangeDiagnosticsDisposable: vscode.Disposable;
+
 	setBackgroundDecorations();
 
 	const disposableToggleErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
 		errorLensEnabled = !errorLensEnabled;
 		updateAllDecorations();
 	});
-
-	vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics, undefined, context.subscriptions);
 
 	window.onDidChangeActiveTextEditor(textEditor => {
 		if (textEditor) {
@@ -39,6 +43,23 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
+	updateChangeDiagnosticListener();
+
+	function updateChangeDiagnosticListener() {
+		if (onDidChangeDiagnosticsDisposable) {
+			onDidChangeDiagnosticsDisposable.dispose();
+		}
+		if (typeof config.delay === 'number' && config.delay > 0) {
+			const debouncedOnChangeDiagnostics = debounce(onChangedDiagnostics, config.delay);
+			const onChangedDiagnosticsDebounced = (diagnosticChangeEvent: vscode.DiagnosticChangeEvent) => {
+				clearAllDecorations();
+				debouncedOnChangeDiagnostics(diagnosticChangeEvent);
+			};
+			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnosticsDebounced);
+		} else {
+			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics);
+		}
+	}
 	/**
      * Update the editor decorations for the provided URI. Only if the URI scheme is "file" is the function
      * processed. (It can be others, such as "git://<something>", in which case the function early-exits).
@@ -217,6 +238,15 @@ export function activate(context: vscode.ExtensionContext) {
 		editor.setDecorations(errorLensDecorationTypeHint, errorLensDecorationOptionsHint);
 	}
 
+	function clearAllDecorations() {
+		for (const editor of window.visibleTextEditors) {
+			editor.setDecorations(errorLensDecorationTypeError, []);
+			editor.setDecorations(errorLensDecorationTypeWarning, []);
+			editor.setDecorations(errorLensDecorationTypeInfo, []);
+			editor.setDecorations(errorLensDecorationTypeHint, []);
+		}
+	}
+
 	function updateConfig(e: vscode.ConfigurationChangeEvent) {
 		if (!e.affectsConfiguration(EXTNAME)) return;
 
@@ -227,6 +257,7 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeInfo.dispose();
 		errorLensDecorationTypeHint.dispose();
 
+		updateChangeDiagnosticListener();
 		setBackgroundDecorations();
 		updateAllDecorations();
 	}

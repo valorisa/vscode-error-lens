@@ -1,3 +1,7 @@
+## 2.1.0 `21 May 2019`
+
+- ✨ Customize delay before showing problems with `errorLens.delay`
+
 ## 2.0.4 `19 May 2019`
 
 - ✨ Allow to set colors for light themes separately with the setting `errorLens.light`

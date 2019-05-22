@@ -1,3 +1,7 @@
+## 2.1.1 `22 May 2019`
+
+- ✨ Change font family with `errorLens.fontFamily`
+
 ## 2.1.0 `21 May 2019`
 
 - ✨ Customize delay before showing problems with `errorLens.delay`

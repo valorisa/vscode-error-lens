@@ -267,7 +267,7 @@ export function activate(context: vscode.ExtensionContext) {
 			fontStyle: config.fontStyle,
 			margin: config.margin,
 			fontWeight: config.fontWeight,
-			textDecoration: `;font-size:${config.fontSize};line-height:1;`,
+			textDecoration: `;font-family:${config.fontFamily};font-size:${config.fontSize};line-height:1;`,
 		};
 		errorLensDecorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,

@@ -82,6 +82,11 @@
 					"default": "#f0f0f0",
 					"description": "Text color used to highlight lines containing hints."
 				},
+				"errorLens.fontFamily": {
+					"type": "string",
+					"default": "",
+					"description": "Font family of problem messages."
+				},
 				"errorLens.fontStyle": {
 					"type": "string",
 					"enum": [

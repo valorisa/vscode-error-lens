@@ -21,6 +21,7 @@ export interface IConfig {
 		hintForeground: string;
 	};
 
+	fontFamily: string;
 	fontStyle: string;
 	fontWeight: string;
 	fontSize: string;

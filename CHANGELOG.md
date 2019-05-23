@@ -1,3 +1,7 @@
+## 2.2.1 `24 May 2019`
+
+- 🐛 Fix failed to update decorations (on save) when language diagnostics haven't changed
+
 ## 2.2.0 `23 May 2019`
 
 - ✨ Update decorations only on document save with `errorLens.onSave`

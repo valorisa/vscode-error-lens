@@ -54,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		if (config.onSave) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(e => {
-				if ((Date.now() - lastSavedTimestamp) < 500) {
+				if ((Date.now() - lastSavedTimestamp) < 1000) {
 					onChangedDiagnostics(e);
 				}
 			});
@@ -80,8 +80,11 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		onDidSaveTextDocumentDisposable = workspace.onDidSaveTextDocument(onSaveDocument);
 	}
-	function onSaveDocument() {
+	function onSaveDocument(e: vscode.TextDocument) {
 		lastSavedTimestamp = Date.now();
+		setTimeout(() => {
+			updateDecorationsForUri(e.uri);
+		}, 600);
 	}
 
 	/**

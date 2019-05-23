@@ -37,6 +37,7 @@ This extension contributes the following settings:
 * `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.
 * `errorLens.exclude`: Specify messages that should not be highlighted.
 * `errorLens.delay`: Specify delay before showing problems.
+* `errorLens.onSave`: Update decorations only on document save.
 
 ## Extension Commands
 

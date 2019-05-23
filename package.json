@@ -220,6 +220,11 @@
 					"type": "number",
 					"description": "Delay before showing problem decorations.",
 					"default": 0
+				},
+				"errorLens.onSave": {
+					"type": "boolean",
+					"description": "If `true` - update decorations only on save.",
+					"default": false
 				}
 			}
 		}

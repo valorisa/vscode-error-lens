@@ -1,3 +1,7 @@
+## 2.2.0 `23 May 2019`
+
+- ✨ Update decorations only on document save with `errorLens.onSave`
+
 ## 2.1.1 `22 May 2019`
 
 - ✨ Change font family with `errorLens.fontFamily`

@@ -11,6 +11,7 @@ const EXTNAME = 'errorLens';
 export function activate(context: vscode.ExtensionContext) {
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let errorLensEnabled = true;
+	let lastSavedTimestamp = 0;
 
 	let errorLensDecorationTypeError: vscode.TextEditorDecorationType;
 	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType;
@@ -18,6 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType;
 
 	let onDidChangeDiagnosticsDisposable: vscode.Disposable;
+	let onDidSaveTextDocumentDisposable: vscode.Disposable;
 
 	setDecorationStyle();
 
@@ -44,10 +46,19 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	updateChangeDiagnosticListener();
+	updateOnSaveListener();
 
 	function updateChangeDiagnosticListener() {
 		if (onDidChangeDiagnosticsDisposable) {
 			onDidChangeDiagnosticsDisposable.dispose();
+		}
+		if (config.onSave) {
+			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(e => {
+				if ((Date.now() - lastSavedTimestamp) < 500) {
+					onChangedDiagnostics(e);
+				}
+			});
+			return;
 		}
 		if (typeof config.delay === 'number' && config.delay > 0) {
 			const debouncedOnChangeDiagnostics = debounce(onChangedDiagnostics, config.delay);
@@ -60,6 +71,19 @@ export function activate(context: vscode.ExtensionContext) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics);
 		}
 	}
+	function updateOnSaveListener() {
+		if (onDidSaveTextDocumentDisposable) {
+			onDidSaveTextDocumentDisposable.dispose();
+		}
+		if (!config.onSave) {
+			return;
+		}
+		onDidSaveTextDocumentDisposable = workspace.onDidSaveTextDocument(onSaveDocument);
+	}
+	function onSaveDocument() {
+		lastSavedTimestamp = Date.now();
+	}
+
 	/**
      * Update the editor decorations for the provided URI. Only if the URI scheme is "file" is the function
      * processed. (It can be others, such as "git://<something>", in which case the function early-exits).
@@ -258,6 +282,7 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeHint.dispose();
 
 		updateChangeDiagnosticListener();
+		updateOnSaveListener();
 		setDecorationStyle();
 		updateAllDecorations();
 	}

@@ -31,6 +31,7 @@ export interface IConfig {
 	addAnnotationTextPrefixes: boolean;
 	exclude: Exclude;
 	delay?: number;
+	onSave: boolean;
 }
 
 interface IExcludeObject {

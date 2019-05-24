@@ -11,7 +11,7 @@ const EXTNAME = 'errorLens';
 export function activate(context: vscode.ExtensionContext) {
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let errorLensEnabled = true;
-	let lastSavedTimestamp = 0;
+	let lastSavedTimestamp = Date.now() + 4000;
 
 	let errorLensDecorationTypeError: vscode.TextEditorDecorationType;
 	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType;

@@ -1,3 +1,7 @@
+## 2.2.2 `24 May 2019`
+
+- 🐛 Different fix for decorations not rendered the first time with `errorLens.onSave`
+
 ## 2.2.1 `24 May 2019`
 
 - 🐛 Fix failed to update decorations (on save) when language diagnostics haven't changed

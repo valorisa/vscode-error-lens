@@ -28,10 +28,10 @@ This extension contributes the following settings:
 * `errorLens.hintBackground`: The background color used to highlight lines containing hints. (Alpha component can be used)
 * `errorLens.hintForeground`: The text color used to highlight lines containing hints. (Alpha component can be used)
 * `errorLens.light`: Overwrite any of the above colors for light themes
-* `errorLens.fontSize`: Font size of diagnostic messages in editor
+* `errorLens.fontSize`: Font size of diagnostic messages in editor **Not officially supported property**
+* `errorLens.fontFamily`: Font family of annotations. **Not officially supported property**
 * `errorLens.fontStyle`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.
-* `errorLens.fontFamily`: Font family of annotations.
 * `errorLens.margin`: Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)
 * `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
 * `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.

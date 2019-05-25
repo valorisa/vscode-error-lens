@@ -101,7 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		const activeTextEditor : vscode.TextEditor | undefined = window.activeTextEditor;
+		const activeTextEditor = window.activeTextEditor;
 		if (editor === undefined) {
 			editor = activeTextEditor;// tslint:disable-line
 		}

@@ -45,3 +45,16 @@ This extension contributes the following commands:
 
 * `errorLens.toggle` Enable/Disable ErrorLens.
 
+## Extra
+
+You can remove built-in problem decorations from `settings.json`
+
+```javascript
+"workbench.colorCustomizations": {
+    "editorError.border": "#fff0",
+    "editorError.foreground": "#fff0",
+    "editorWarning.border": "#fff0",
+    "editorWarning.foreground": "#fff0",
+    // ...
+}
+```

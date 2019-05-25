@@ -34,7 +34,7 @@ export interface IConfig {
 	onSave: boolean;
 }
 
-interface IExcludeObject {
+export interface IExcludeObject {
 	code: string;
 	source: string;
 }

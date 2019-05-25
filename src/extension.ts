@@ -3,13 +3,15 @@ import debounce from 'lodash/debounce';
 import * as vscode from 'vscode';
 import { window, workspace } from 'vscode';
 
-import { IAggregatedDiagnostics, IConfig } from './types';
+import { IAggregatedDiagnostics, IConfig, IExcludeObject } from './types';
 import { isObject, truncate } from './utils';
 
 const EXTNAME = 'errorLens';
 
 export function activate(context: vscode.ExtensionContext) {
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
+	let excludeRegexp: RegExp[] = [];
+	let excludeSourceAndCode: IExcludeObject[] = [];
 	let errorLensEnabled = true;
 	let lastSavedTimestamp = Date.now() + 4000;
 
@@ -45,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
+	updateExclude();
 	updateChangeDiagnosticListener();
 	updateOnSaveListener();
 
@@ -134,24 +137,23 @@ export function activate(context: vscode.ExtensionContext) {
 
 		if (errorLensEnabled) {
 			const aggregatedDiagnostics: IAggregatedDiagnostics = {};
-			const exclude = config.exclude || [];
 			// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
 			// a list of objects, grouping together diagnostics which occur on a single line.
 			nextDiagnostic:
 			for (const diagnostic of vscode.languages.getDiagnostics(uriToDecorate)) {
 				// Exclude items specified in `errorLens.exclude` setting
-				for (const excludeItem of exclude) {
-					if (typeof excludeItem === 'string') {
-						if (new RegExp(excludeItem, 'i').test(diagnostic.message)) {
-							continue nextDiagnostic;
-						}
-					} else if (isObject(excludeItem)) {
-						if (diagnostic.source === excludeItem.source &&
-							String(diagnostic.code) === excludeItem.code) {
-							continue nextDiagnostic;
-						}
+				for (const regex of excludeRegexp) {
+					if (regex.test(diagnostic.message)) {
+						continue nextDiagnostic;
 					}
 				}
+				for (const excludeItem of excludeSourceAndCode) {
+					if (diagnostic.source === excludeItem.source &&
+						String(diagnostic.code) === excludeItem.code) {
+						continue nextDiagnostic;
+					}
+				}
+
 				const key = diagnostic.range.start.line;
 
 				if (aggregatedDiagnostics[key]) {
@@ -284,10 +286,24 @@ export function activate(context: vscode.ExtensionContext) {
 		errorLensDecorationTypeInfo.dispose();
 		errorLensDecorationTypeHint.dispose();
 
+		updateExclude();
 		updateChangeDiagnosticListener();
 		updateOnSaveListener();
 		setDecorationStyle();
 		updateAllDecorations();
+	}
+
+	function updateExclude() {
+		excludeRegexp = [];
+		excludeSourceAndCode = [];
+
+		for (const item of config.exclude) {
+			if (typeof item === 'string') {
+				excludeRegexp.push(new RegExp(item, 'i'));
+			} else if (isObject(item)) {
+				excludeSourceAndCode.push(item);
+			}
+		}
 	}
 
 	function setDecorationStyle() {

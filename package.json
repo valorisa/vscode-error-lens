@@ -150,6 +150,7 @@
 				},
 				"errorLens.exclude": {
 					"type": "array",
+					"default": [],
 					"items": {
 						"oneOf": [
 							{

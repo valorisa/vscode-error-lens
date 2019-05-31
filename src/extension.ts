@@ -99,8 +99,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		// Only process "file://" URIs.
-		if (uriToDecorate.scheme !== 'file') {
+		if ((uriToDecorate.scheme !== 'file') && (uriToDecorate.scheme !== 'untitled')) {
 			return;
 		}
 

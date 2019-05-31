@@ -1,3 +1,8 @@
+## 2.3.0
+
+- ✨ Add an option to render gutter icons `errorLens.gutterIconsEnabled`
+- 🔨 Increase limit for long messages truncation from 300 to 500 symbols
+
 ## 2.2.3 `25 May 2019`
 
 - ✨ Draw decorations in `Untitled` files

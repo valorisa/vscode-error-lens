@@ -47,7 +47,23 @@ This extension contributes the following commands:
 
 ## Extra
 
-You can remove built-in problem decorations from `settings.json`
+Example of using `source` & `code` or diagnostic message to exclude a problem:
+
+```javascript
+"errorLens.exclude": [
+    // Use source and code
+    {
+        "code": "6133",// is declared but its value is never read.
+        "source": "ts",
+    },
+    // Use diagnostic message
+    "Unknown configuration setting"
+],
+```
+
+---
+
+Remove built-in problem decorations from `settings.json`:
 
 ```javascript
 "workbench.colorCustomizations": {

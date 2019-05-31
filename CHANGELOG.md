@@ -1,3 +1,9 @@
+## 2.2.3 `25 May 2019`
+
+- ✨ Draw decorations in `Untitled` files
+- 📚 Add an example of `exclude` setting to README
+- 🔨 Move `exclude` RegExp creation out of the loop
+
 ## 2.2.2 `24 May 2019`
 
 - 🐛 Different fix for decorations not rendered the first time with `errorLens.onSave`

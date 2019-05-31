@@ -314,12 +314,14 @@ export function activate(context: vscode.ExtensionContext) {
 		};
 		errorLensDecorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
+			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/error-inverse.svg') : undefined,
 			after: {
 				...afterProps,
 				color: config.errorForeground,
 			},
 			light: {
 				backgroundColor: config.light.errorBackground || config.errorBackground,
+				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/error.svg') : undefined,
 				after: {
 					color: config.light.errorForeground || config.errorForeground,
 				},
@@ -328,12 +330,14 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		errorLensDecorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
+			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/warning-inverse.svg') : undefined,
 			after: {
 				...afterProps,
 				color: config.warningForeground,
 			},
 			light: {
 				backgroundColor: config.light.warningBackground || config.warningBackground,
+				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/warning.svg') : undefined,
 				after: {
 					color: config.light.warningForeground || config.warningForeground,
 				},
@@ -342,12 +346,14 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		errorLensDecorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
+			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/info-inverse.svg') : undefined,
 			after: {
 				...afterProps,
 				color: config.infoForeground,
 			},
 			light: {
 				backgroundColor: config.light.infoBackground || config.infoBackground,
+				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/info.svg') : undefined,
 				after: {
 					color: config.light.infoForeground || config.infoForeground,
 				},

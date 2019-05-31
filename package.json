@@ -226,6 +226,11 @@
 					"type": "boolean",
 					"description": "If `true` - update decorations only on save.",
 					"default": false
+				},
+				"errorLens.gutterIconsEnabled": {
+					"type": "boolean",
+					"description": "If `true` - show error/warning/info icons in the gutter (In place of debug icon).",
+					"default": false
 				}
 			}
 		}

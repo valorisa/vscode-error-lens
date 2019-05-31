@@ -32,6 +32,7 @@ export interface IConfig {
 	exclude: Exclude;
 	delay?: number;
 	onSave: boolean;
+	gutterIconsEnabled: boolean;
 }
 
 export interface IExcludeObject {

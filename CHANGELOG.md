@@ -1,4 +1,5 @@
-## 2.3.0
+
+## 2.3.0 `01 Jun 2019`
 
 - ✨ Add an option to render gutter icons `errorLens.gutterIconsEnabled`
 - 🔨 Increase limit for long messages truncation from 300 to 500 symbols

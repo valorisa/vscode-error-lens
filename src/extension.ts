@@ -15,10 +15,10 @@ export function activate(context: vscode.ExtensionContext) {
 	let errorLensEnabled = true;
 	let lastSavedTimestamp = Date.now() + 4000;
 
-	let errorLensDecorationTypeError: vscode.TextEditorDecorationType;
-	let errorLensDecorationTypeWarning: vscode.TextEditorDecorationType;
-	let errorLensDecorationTypeInfo: vscode.TextEditorDecorationType;
-	let errorLensDecorationTypeHint: vscode.TextEditorDecorationType;
+	let decorationTypeError: vscode.TextEditorDecorationType;
+	let decorationTypeWarning: vscode.TextEditorDecorationType;
+	let decorationTypeInfo: vscode.TextEditorDecorationType;
+	let decorationTypeHint: vscode.TextEditorDecorationType;
 
 	let onDidChangeDiagnosticsDisposable: vscode.Disposable;
 	let onDidSaveTextDocumentDisposable: vscode.Disposable;
@@ -115,10 +115,10 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		const errorLensDecorationOptionsError: vscode.DecorationOptions[] = [];
-		const errorLensDecorationOptionsWarning: vscode.DecorationOptions[] = [];
-		const errorLensDecorationOptionsInfo: vscode.DecorationOptions[] = [];
-		const errorLensDecorationOptionsHint: vscode.DecorationOptions[] = [];
+		const decorationOptionsError: vscode.DecorationOptions[] = [];
+		const decorationOptionsWarning: vscode.DecorationOptions[] = [];
+		const decorationOptionsInfo: vscode.DecorationOptions[] = [];
+		const decorationOptionsHint: vscode.DecorationOptions[] = [];
 
 		// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
 		// where N is the source line where one or more diagnostics are being reported.
@@ -240,19 +240,19 @@ export function activate(context: vscode.ExtensionContext) {
 					switch (aggregatedDiagnostic[0].severity) {
 						// Error
 						case 0:
-							errorLensDecorationOptionsError.push(diagnosticDecorationOptions);
+							decorationOptionsError.push(diagnosticDecorationOptions);
 							break;
 						// Warning
 						case 1:
-							errorLensDecorationOptionsWarning.push(diagnosticDecorationOptions);
+							decorationOptionsWarning.push(diagnosticDecorationOptions);
 							break;
 						// Info
 						case 2:
-							errorLensDecorationOptionsInfo.push(diagnosticDecorationOptions);
+							decorationOptionsInfo.push(diagnosticDecorationOptions);
 							break;
 						// Hint
 						case 3:
-							errorLensDecorationOptionsHint.push(diagnosticDecorationOptions);
+							decorationOptionsHint.push(diagnosticDecorationOptions);
 							break;
 					}
 				}
@@ -260,18 +260,18 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		// The errorLensDecorationOptions<X> arrays have been built, now apply them.
-		editor.setDecorations(errorLensDecorationTypeError, errorLensDecorationOptionsError);
-		editor.setDecorations(errorLensDecorationTypeWarning, errorLensDecorationOptionsWarning);
-		editor.setDecorations(errorLensDecorationTypeInfo, errorLensDecorationOptionsInfo);
-		editor.setDecorations(errorLensDecorationTypeHint, errorLensDecorationOptionsHint);
+		editor.setDecorations(decorationTypeError, decorationOptionsError);
+		editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
+		editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
+		editor.setDecorations(decorationTypeHint, decorationOptionsHint);
 	}
 
 	function clearAllDecorations() {
 		for (const editor of window.visibleTextEditors) {
-			editor.setDecorations(errorLensDecorationTypeError, []);
-			editor.setDecorations(errorLensDecorationTypeWarning, []);
-			editor.setDecorations(errorLensDecorationTypeInfo, []);
-			editor.setDecorations(errorLensDecorationTypeHint, []);
+			editor.setDecorations(decorationTypeError, []);
+			editor.setDecorations(decorationTypeWarning, []);
+			editor.setDecorations(decorationTypeInfo, []);
+			editor.setDecorations(decorationTypeHint, []);
 		}
 	}
 
@@ -280,10 +280,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 		config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 
-		errorLensDecorationTypeError.dispose();
-		errorLensDecorationTypeWarning.dispose();
-		errorLensDecorationTypeInfo.dispose();
-		errorLensDecorationTypeHint.dispose();
+		decorationTypeError.dispose();
+		decorationTypeWarning.dispose();
+		decorationTypeInfo.dispose();
+		decorationTypeHint.dispose();
 
 		updateExclude();
 		updateChangeDiagnosticListener();
@@ -313,7 +313,7 @@ export function activate(context: vscode.ExtensionContext) {
 			fontWeight: config.fontWeight,
 			textDecoration: `;font-family:${config.fontFamily};font-size:${config.fontSize};line-height:1;`,
 		};
-		errorLensDecorationTypeError = window.createTextEditorDecorationType({
+		decorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
 			gutterIconSize,
 			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/error-inverse.svg') : undefined,
@@ -331,7 +331,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			isWholeLine: true,
 		});
-		errorLensDecorationTypeWarning = window.createTextEditorDecorationType({
+		decorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
 			gutterIconSize,
 			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/warning-inverse.svg') : undefined,
@@ -349,7 +349,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			isWholeLine: true,
 		});
-		errorLensDecorationTypeInfo = window.createTextEditorDecorationType({
+		decorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
 			gutterIconSize,
 			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/info-inverse.svg') : undefined,
@@ -367,7 +367,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			isWholeLine: true,
 		});
-		errorLensDecorationTypeHint = window.createTextEditorDecorationType({
+		decorationTypeHint = window.createTextEditorDecorationType({
 			backgroundColor: config.hintBackground,
 			after: {
 				...afterProps,

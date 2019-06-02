@@ -17,6 +17,7 @@
 		"error",
 		"warning",
 		"diagnostics",
+		"gutter",
 		"multi-root ready"
 	],
 	"galleryBanner": {
@@ -234,7 +235,7 @@
 				},
 				"errorLens.gutterIconSize": {
 					"type": "string",
-					"description": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `60%`",
+					"description": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%`",
 					"default": "100%"
 				}
 			}

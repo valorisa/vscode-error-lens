@@ -38,7 +38,8 @@ This extension contributes the following settings:
 * `errorLens.exclude`: Specify messages that should not be highlighted.
 * `errorLens.delay`: Specify delay before showing problems.
 * `errorLens.onSave`: Update decorations only on document save.
-* `errorLens.gutterIconsEnabled`: Show gutter icons
+* `errorLens.gutterIconsEnabled`: Show gutter icons (In place of debug breakpoint icon).
+* `errorLens.gutterIconSize`: Customize gutter icon size
 
 ## Extension Commands
 

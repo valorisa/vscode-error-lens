@@ -306,6 +306,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	function setDecorationStyle() {
+		const gutterIconSize = config.gutterIconSize;
 		const afterProps = {
 			fontStyle: config.fontStyle,
 			margin: config.margin,
@@ -314,6 +315,7 @@ export function activate(context: vscode.ExtensionContext) {
 		};
 		errorLensDecorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
+			gutterIconSize,
 			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/error-inverse.svg') : undefined,
 			after: {
 				...afterProps,
@@ -321,6 +323,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.errorBackground || config.errorBackground,
+				gutterIconSize,
 				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/error.svg') : undefined,
 				after: {
 					color: config.light.errorForeground || config.errorForeground,
@@ -330,6 +333,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		errorLensDecorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
+			gutterIconSize,
 			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/warning-inverse.svg') : undefined,
 			after: {
 				...afterProps,
@@ -337,6 +341,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.warningBackground || config.warningBackground,
+				gutterIconSize,
 				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/warning.svg') : undefined,
 				after: {
 					color: config.light.warningForeground || config.warningForeground,
@@ -346,6 +351,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		errorLensDecorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
+			gutterIconSize,
 			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/info-inverse.svg') : undefined,
 			after: {
 				...afterProps,
@@ -353,6 +359,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.infoBackground || config.infoBackground,
+				gutterIconSize,
 				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/info.svg') : undefined,
 				after: {
 					color: config.light.infoForeground || config.infoForeground,

@@ -1,3 +1,7 @@
+## 2.3.1 `02 Jun 2019`
+
+- ✨ Configure gutter icon size with: `errorLens.gutterIconSize`
+- ✨ Configure gutter icons to be borderless with `errorLens.gutterIconSet`: [PR #6](https://github.com/usernamehw/vscode-error-lens/pull/6) by [karlsander](https://github.com/karlsander)
 
 ## 2.3.0 `01 Jun 2019`
 

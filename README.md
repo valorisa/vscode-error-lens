@@ -39,7 +39,8 @@ This extension contributes the following settings:
 * `errorLens.delay`: Specify delay before showing problems.
 * `errorLens.onSave`: Update decorations only on document save.
 * `errorLens.gutterIconsEnabled`: Show gutter icons (In place of debug breakpoint icon).
-* `errorLens.gutterIconSize`: Customize gutter icon size.
+* `errorLens.gutterIconSize`: Customize gutter icon size. Example: `"120%"`
+* `errorLens.gutterIconSet`: Customize gutter icon style. Possible values: `"default"`, `"borderless"`
 
 ## Extension Commands
 

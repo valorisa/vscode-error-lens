@@ -235,8 +235,14 @@
 				},
 				"errorLens.gutterIconSize": {
 					"type": "string",
-					"description": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%`",
+					"markdownDescription": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%`",
 					"default": "100%"
+				},
+				"errorLens.gutterIconSet": {
+					"type": "string",
+					"description": "Change gutter icon style.",
+					"enum": ["default", "borderless"],
+					"default": "default"
 				}
 			}
 		}

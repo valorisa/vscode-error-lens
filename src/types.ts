@@ -34,7 +34,10 @@ export interface IConfig {
 	onSave: boolean;
 	gutterIconsEnabled: boolean;
 	gutterIconSize: string;
+	gutterIconSet: GutterIconSet;
 }
+
+export type GutterIconSet = 'default' | 'borderless';
 
 export interface IExcludeObject {
 	code: string;

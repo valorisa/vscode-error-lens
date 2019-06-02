@@ -307,6 +307,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 	function setDecorationStyle() {
 		const gutterIconSize = config.gutterIconSize;
+		let gutterIconSet = config.gutterIconSet;
+		if (config.gutterIconSet !== 'borderless' &&
+			config.gutterIconSet !== 'default') {
+				gutterIconSet = 'default';
+		}
 		const afterProps = {
 			fontStyle: config.fontStyle,
 			margin: config.margin,
@@ -316,7 +321,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
 			gutterIconSize,
-			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/error-inverse.svg') : undefined,
+			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/error-inverse.svg`) : undefined,
 			after: {
 				...afterProps,
 				color: config.errorForeground,
@@ -324,7 +329,7 @@ export function activate(context: vscode.ExtensionContext) {
 			light: {
 				backgroundColor: config.light.errorBackground || config.errorBackground,
 				gutterIconSize,
-				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/error.svg') : undefined,
+				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/error.svg`) : undefined,
 				after: {
 					color: config.light.errorForeground || config.errorForeground,
 				},
@@ -334,7 +339,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
 			gutterIconSize,
-			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/warning-inverse.svg') : undefined,
+			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/warning-inverse.svg`) : undefined,
 			after: {
 				...afterProps,
 				color: config.warningForeground,
@@ -342,7 +347,7 @@ export function activate(context: vscode.ExtensionContext) {
 			light: {
 				backgroundColor: config.light.warningBackground || config.warningBackground,
 				gutterIconSize,
-				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/warning.svg') : undefined,
+				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/warning.svg`) : undefined,
 				after: {
 					color: config.light.warningForeground || config.warningForeground,
 				},
@@ -352,7 +357,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
 			gutterIconSize,
-			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/info-inverse.svg') : undefined,
+			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/info-inverse.svg`) : undefined,
 			after: {
 				...afterProps,
 				color: config.infoForeground,
@@ -360,7 +365,7 @@ export function activate(context: vscode.ExtensionContext) {
 			light: {
 				backgroundColor: config.light.infoBackground || config.infoBackground,
 				gutterIconSize,
-				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath('./img/default/info.svg') : undefined,
+				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/info.svg`) : undefined,
 				after: {
 					color: config.light.infoForeground || config.infoForeground,
 				},

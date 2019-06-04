@@ -14,6 +14,7 @@ the site of the line of code which is generating the diagnostic.
 
 * Lines containing errors or warnings or info are highlighted more obviously.
 * Diagnostic descriptions are appended to the end of any line containing diagnostic info, meaning that you do not have to context-switch to the problems view.
+* Show icons in gutter
 
 ## Extension Settings
 

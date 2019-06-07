@@ -251,7 +251,7 @@
 					"type": "string",
 					"description": "Absolute path for error gutter icon for dark themes."
 				},
-				"errorLens.errorGutterIconLightPath": {
+				"errorLens.errorGutterIconPathLight": {
 					"type": "string",
 					"description": "Absolute path for error gutter icon for light themes."
 				},
@@ -259,7 +259,7 @@
 					"type": "string",
 					"description": "Absolute path for warning gutter icon for dark themes."
 				},
-				"errorLens.warningGutterIconLightPath": {
+				"errorLens.warningGutterIconPathLight": {
 					"type": "string",
 					"description": "Absolute path for warning gutter icon for light themes."
 				},
@@ -267,7 +267,7 @@
 					"type": "string",
 					"description": "Absolute path for info gutter icon for dark themes."
 				},
-				"errorLens.infoGutterIconLightPath": {
+				"errorLens.infoGutterIconPathLight": {
 					"type": "string",
 					"description": "Absolute path for info gutter icon for light themes."
 				}

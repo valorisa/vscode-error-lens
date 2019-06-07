@@ -43,11 +43,11 @@ This extension contributes the following settings:
 * `errorLens.gutterIconSize`: Customize gutter icon size. Example: `"120%"`
 * `errorLens.gutterIconSet`: Customize gutter icon style. Possible values: `"default"`, `"borderless"`
 * `errorLens.errorGutterIconPath`: Absolute path for error gutter icon for dark themes.
-* `errorLens.errorGutterIconLightPath`: Absolute path for error gutter icon for light themes.
+* `errorLens.errorGutterIconPathLight`: Absolute path for error gutter icon for light themes.
 * `errorLens.warningGutterIconPath`: Absolute path for warning gutter icon for dark themes.
-* `errorLens.warningGutterIconLightPath`: Absolute path for warning gutter icon for light themes.
+* `errorLens.warningGutterIconPathLight`: Absolute path for warning gutter icon for light themes.
 * `errorLens.infoGutterIconPath`: Absolute path for info gutter icon for dark themes.
-* `errorLens.infoGutterIconLightPath`: Absolute path for info gutter icon for light themes.
+* `errorLens.infoGutterIconPathLight`: Absolute path for info gutter icon for light themes.
 
 ## Extension Commands
 

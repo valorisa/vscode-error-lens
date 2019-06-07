@@ -38,11 +38,11 @@ export interface IConfig {
 	gutterIconSet: GutterIconSet;
 
 	errorGutterIconPath?: string;
-	errorGutterIconLightPath?: string;
+	errorGutterIconPathLight?: string;
 	warningGutterIconPath?: string;
-	warningGutterIconLightPath?: string;
+	warningGutterIconPathLight?: string;
 	infoGutterIconPath?: string;
-	infoGutterIconLightPath?: string;
+	infoGutterIconPathLight?: string;
 }
 
 export type GutterIconSet = 'default' | 'borderless';

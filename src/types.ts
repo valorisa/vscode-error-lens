@@ -32,9 +32,17 @@ export interface IConfig {
 	exclude: Exclude;
 	delay?: number;
 	onSave: boolean;
+
 	gutterIconsEnabled: boolean;
 	gutterIconSize: string;
 	gutterIconSet: GutterIconSet;
+
+	errorGutterIconPath?: string;
+	errorGutterIconLightPath?: string;
+	warningGutterIconPath?: string;
+	warningGutterIconLightPath?: string;
+	infoGutterIconPath?: string;
+	infoGutterIconLightPath?: string;
 }
 
 export type GutterIconSet = 'default' | 'borderless';

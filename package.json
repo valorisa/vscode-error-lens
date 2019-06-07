@@ -246,6 +246,30 @@
 						"borderless"
 					],
 					"default": "default"
+				},
+				"errorLens.errorGutterIconPath": {
+					"type": "string",
+					"description": "Absolute path for error gutter icon for dark themes."
+				},
+				"errorLens.errorGutterIconLightPath": {
+					"type": "string",
+					"description": "Absolute path for error gutter icon for light themes."
+				},
+				"errorLens.warningGutterIconPath": {
+					"type": "string",
+					"description": "Absolute path for warning gutter icon for dark themes."
+				},
+				"errorLens.warningGutterIconLightPath": {
+					"type": "string",
+					"description": "Absolute path for warning gutter icon for light themes."
+				},
+				"errorLens.infoGutterIconPath": {
+					"type": "string",
+					"description": "Absolute path for info gutter icon for dark themes."
+				},
+				"errorLens.infoGutterIconLightPath": {
+					"type": "string",
+					"description": "Absolute path for info gutter icon for light themes."
 				}
 			}
 		}

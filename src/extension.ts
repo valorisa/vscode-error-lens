@@ -307,10 +307,54 @@ export function activate(context: vscode.ExtensionContext) {
 
 	function setDecorationStyle() {
 		const gutterIconSize = config.gutterIconSize;
+
 		let gutterIconSet = config.gutterIconSet;
 		if (config.gutterIconSet !== 'borderless' &&
 			config.gutterIconSet !== 'default') {
 				gutterIconSet = 'default';
+		}
+
+		let errorGutterIcon;
+		let errorGutterIconLight;
+		let warningGutterIcon;
+		let warningGutterIconLight;
+		let infoGutterIcon;
+		let infoGutterIconLight;
+
+		if (config.gutterIconsEnabled) {
+			// ERROR
+			if (config.errorGutterIconPath) {
+				errorGutterIcon = config.errorGutterIconPath;
+			} else {
+				errorGutterIcon = context.asAbsolutePath(`./img/${gutterIconSet}/error-inverse.svg`);
+			}
+			if (config.errorGutterIconLightPath) {
+				errorGutterIconLight = config.errorGutterIconLightPath;
+			} else {
+				errorGutterIconLight = context.asAbsolutePath(`./img/${gutterIconSet}/error.svg`);
+			}
+			// WARNING
+			if (config.warningGutterIconPath) {
+				warningGutterIcon = config.warningGutterIconPath;
+			} else {
+				warningGutterIcon = context.asAbsolutePath(`./img/${gutterIconSet}/warning-inverse.svg`);
+			}
+			if (config.warningGutterIconLightPath) {
+				warningGutterIconLight = config.warningGutterIconLightPath;
+			} else {
+				warningGutterIconLight = context.asAbsolutePath(`./img/${gutterIconSet}/warning.svg`);
+			}
+			// INFO
+			if (config.infoGutterIconPath) {
+				infoGutterIcon = config.infoGutterIconPath;
+			} else {
+				infoGutterIcon = context.asAbsolutePath(`./img/${gutterIconSet}/info-inverse.svg`);
+			}
+			if (config.infoGutterIconLightPath) {
+				infoGutterIconLight = config.infoGutterIconLightPath;
+			} else {
+				infoGutterIconLight = context.asAbsolutePath(`./img/${gutterIconSet}/info.svg`);
+			}
 		}
 		const afterProps = {
 			fontStyle: config.fontStyle,
@@ -321,7 +365,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
 			gutterIconSize,
-			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/error-inverse.svg`) : undefined,
+			gutterIconPath: errorGutterIcon,
 			after: {
 				...afterProps,
 				color: config.errorForeground,
@@ -329,7 +373,7 @@ export function activate(context: vscode.ExtensionContext) {
 			light: {
 				backgroundColor: config.light.errorBackground || config.errorBackground,
 				gutterIconSize,
-				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/error.svg`) : undefined,
+				gutterIconPath: errorGutterIconLight,
 				after: {
 					color: config.light.errorForeground || config.errorForeground,
 				},
@@ -339,7 +383,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
 			gutterIconSize,
-			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/warning-inverse.svg`) : undefined,
+			gutterIconPath: warningGutterIcon,
 			after: {
 				...afterProps,
 				color: config.warningForeground,
@@ -347,7 +391,7 @@ export function activate(context: vscode.ExtensionContext) {
 			light: {
 				backgroundColor: config.light.warningBackground || config.warningBackground,
 				gutterIconSize,
-				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/warning.svg`) : undefined,
+				gutterIconPath: warningGutterIconLight,
 				after: {
 					color: config.light.warningForeground || config.warningForeground,
 				},
@@ -357,7 +401,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
 			gutterIconSize,
-			gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/info-inverse.svg`) : undefined,
+			gutterIconPath: infoGutterIcon,
 			after: {
 				...afterProps,
 				color: config.infoForeground,
@@ -365,7 +409,7 @@ export function activate(context: vscode.ExtensionContext) {
 			light: {
 				backgroundColor: config.light.infoBackground || config.infoBackground,
 				gutterIconSize,
-				gutterIconPath: config.gutterIconsEnabled ? context.asAbsolutePath(`./img/${gutterIconSet}/info.svg`) : undefined,
+				gutterIconPath: infoGutterIconLight,
 				after: {
 					color: config.light.infoForeground || config.infoForeground,
 				},

@@ -1,3 +1,7 @@
+## 2.3.2 `07 Jun 2019`
+
+- ✨ Set custom gutter icons (Using absolute file path).
+
 ## 2.3.1 `02 Jun 2019`
 
 - ✨ Configure gutter icon size with: `errorLens.gutterIconSize`

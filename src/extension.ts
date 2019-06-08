@@ -1,4 +1,3 @@
-'use strict';
 import debounce from 'lodash/debounce';
 import * as vscode from 'vscode';
 import { window, workspace } from 'vscode';

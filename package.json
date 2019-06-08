@@ -281,15 +281,15 @@
 		"postinstall": "node ./node_modules/vscode/bin/install"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.129",
-		"@types/node": "^8.10.48",
+		"@types/lodash": "^4.14.134",
+		"@types/node": "^10.14.8",
 		"friendly-errors-webpack-plugin": "^1.7.0",
-		"ts-loader": "^6.0.0",
-		"tslint": "^5.16.0",
-		"typescript": "^3.4.5",
+		"ts-loader": "^6.0.2",
+		"tslint": "^5.17.0",
+		"typescript": "^3.5.1",
 		"vscode": "^1.1.30",
-		"webpack": "^4.30.0",
-		"webpack-cli": "^3.3.2",
+		"webpack": "^4.33.0",
+		"webpack-cli": "^3.3.3",
 		"webpack-strip-block": "^0.2.0"
 	},
 	"dependencies": {

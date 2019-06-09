@@ -1,3 +1,7 @@
+## 2.3.3 `09 Jun 2019`
+
+- 🔨 Update dependencies
+
 ## 2.3.2 `07 Jun 2019`
 
 - ✨ Set custom gutter icons (Using absolute file path).

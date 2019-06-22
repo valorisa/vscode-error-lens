@@ -32,6 +32,7 @@ export interface IConfig {
 	exclude: Exclude;
 	delay?: number;
 	onSave: boolean;
+	clearDecorations: boolean;
 
 	gutterIconsEnabled: boolean;
 	gutterIconSize: string;

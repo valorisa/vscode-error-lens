@@ -223,6 +223,11 @@
 					"description": "Delay before showing problem decorations.",
 					"default": 0
 				},
+				"errorLens.clearDecorations": {
+					"type": "boolean",
+					"markdownDescription": "Works only when `delay` is set. When set to `true` extension clears all decorations at the time when diagnostic changes (but it could cause flickering if the delay is low). When set to `false` - decorations are not cleared and delay applied to clearing decorations also (but that causes messages being on screen even if the problem was solved).",
+					"default": false
+				},
 				"errorLens.onSave": {
 					"type": "boolean",
 					"description": "If `true` - update decorations only on save.",

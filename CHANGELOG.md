@@ -1,3 +1,7 @@
+## 2.3.4 `22 Jun 2019`
+
+- ✨ Add an option to choose if the decorations should be cleared when you start typing (only when `delay` is set) – `errorLens.clearDecorations`.
+
 ## 2.3.3 `09 Jun 2019`
 
 - 🔨 Update dependencies

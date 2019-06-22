@@ -38,6 +38,7 @@ This extension contributes the following settings:
 * `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.
 * `errorLens.exclude`: Specify messages that should not be highlighted.
 * `errorLens.delay`: Specify delay before showing problems.
+* `errorLens.clearDecorations`: Works only when `delay` is set. When set to `true` extension clears all decorations at the time when diagnostic changes (but it could cause flickering if the delay is low). When set to `false` - decorations are not cleared and delay applied to clearing decorations also (but that causes messages being on screen even if the problem was solved).
 * `errorLens.onSave`: Update decorations only on document save.
 * `errorLens.gutterIconsEnabled`: Show gutter icons (In place of debug breakpoint icon).
 * `errorLens.gutterIconSize`: Customize gutter icon size. Example: `"120%"`

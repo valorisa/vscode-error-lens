@@ -52,8 +52,6 @@ This extension contributes the following settings:
 
 ## Extension Commands
 
-This extension contributes the following commands:
-
 * `errorLens.toggle` Enable/Disable ErrorLens.
 
 ## Extra

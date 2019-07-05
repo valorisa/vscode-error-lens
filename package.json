@@ -70,7 +70,7 @@
 				},
 				"errorLens.infoForeground": {
 					"type": "string",
-					"default": "#f0f0f0",
+					"default": "#00cbfd",
 					"description": "Text color used to highlight lines containing info."
 				},
 				"errorLens.hintBackground": {

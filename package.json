@@ -248,7 +248,8 @@
 					"description": "Change gutter icon style.",
 					"enum": [
 						"default",
-						"borderless"
+						"borderless",
+						"circle"
 					],
 					"default": "default"
 				},
@@ -275,6 +276,30 @@
 				"errorLens.infoGutterIconPathLight": {
 					"type": "string",
 					"description": "Absolute path for info gutter icon for light themes."
+				},
+				"errorLens.errorGutterIconColor": {
+					"type": "string",
+					"default": "#e45454"
+				},
+				"errorLens.errorGutterIconColorLight": {
+					"type": "string",
+					"default": "#e45454"
+				},
+				"errorLens.warningGutterIconColor": {
+					"type": "string",
+					"default": "#ff942f"
+				},
+				"errorLens.warningGutterIconColorLight": {
+					"type": "string",
+					"default": "#ff942f"
+				},
+				"errorLens.infoGutterIconColor": {
+					"type": "string",
+					"default": "#00cbfd"
+				},
+				"errorLens.infoGutterIconColorLight": {
+					"type": "string",
+					"default": "#00cbfd"
 				}
 			}
 		}

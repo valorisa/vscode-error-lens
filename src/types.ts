@@ -44,9 +44,16 @@ export interface IConfig {
 	warningGutterIconPathLight?: string;
 	infoGutterIconPath?: string;
 	infoGutterIconPathLight?: string;
+
+	errorGutterIconColor: string;
+	errorGutterIconColorLight: string;
+	warningGutterIconColor: string;
+	warningGutterIconColorLight: string;
+	infoGutterIconColor: string;
+	infoGutterIconColorLight: string;
 }
 
-export type GutterIconSet = 'default' | 'borderless';
+export type GutterIconSet = 'default' | 'borderless' | 'circle';
 
 export interface IExcludeObject {
 	code: string;

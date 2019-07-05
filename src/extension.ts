@@ -311,7 +311,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let gutterIconSet = config.gutterIconSet;
 		if (config.gutterIconSet !== 'borderless' &&
-			config.gutterIconSet !== 'default') {
+			config.gutterIconSet !== 'default' &&
+			config.gutterIconSet !== 'circle') {
 				gutterIconSet = 'default';
 		}
 
@@ -322,7 +323,22 @@ export function activate(context: vscode.ExtensionContext) {
 		let infoGutterIconPath;
 		let infoGutterIconPathLight;
 
+		let errorGutterIconSize = gutterIconSize;
+		let errorGutterIconSizeLight = gutterIconSize;
+		let warningGutterIconSize = gutterIconSize;
+		let warningGutterIconSizeLight = gutterIconSize;
+		let infoGutterIconSize = gutterIconSize;
+		let infoGutterIconSizeLight = gutterIconSize;
+
 		if (config.gutterIconsEnabled) {
+			if (gutterIconSet === 'circle') {
+				errorGutterIconSize = getGutterCircleSizeAndColor(config.errorGutterIconColor);
+				errorGutterIconSizeLight = getGutterCircleSizeAndColor(config.errorGutterIconColorLight);
+				warningGutterIconSize = getGutterCircleSizeAndColor(config.warningGutterIconColor);
+				warningGutterIconSizeLight = getGutterCircleSizeAndColor(config.warningGutterIconColorLight);
+				infoGutterIconSize = getGutterCircleSizeAndColor(config.infoGutterIconColor);
+				infoGutterIconSizeLight = getGutterCircleSizeAndColor(config.infoGutterIconColorLight);
+			}
 			// ERROR
 			if (config.errorGutterIconPath) {
 				errorGutterIconPath = config.errorGutterIconPath;
@@ -365,7 +381,7 @@ export function activate(context: vscode.ExtensionContext) {
 		};
 		decorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
-			gutterIconSize,
+			gutterIconSize: errorGutterIconSize,
 			gutterIconPath: errorGutterIconPath,
 			after: {
 				...afterProps,
@@ -373,7 +389,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.errorBackground || config.errorBackground,
-				gutterIconSize,
+				gutterIconSize: errorGutterIconSizeLight,
 				gutterIconPath: errorGutterIconPathLight,
 				after: {
 					color: config.light.errorForeground || config.errorForeground,
@@ -383,7 +399,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		decorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
-			gutterIconSize,
+			gutterIconSize: warningGutterIconSize,
 			gutterIconPath: warningGutterIconPath,
 			after: {
 				...afterProps,
@@ -391,7 +407,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.warningBackground || config.warningBackground,
-				gutterIconSize,
+				gutterIconSize: warningGutterIconSizeLight,
 				gutterIconPath: warningGutterIconPathLight,
 				after: {
 					color: config.light.warningForeground || config.warningForeground,
@@ -401,7 +417,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		decorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
-			gutterIconSize,
+			gutterIconSize: infoGutterIconSize,
 			gutterIconPath: infoGutterIconPath,
 			after: {
 				...afterProps,
@@ -409,7 +425,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.infoBackground || config.infoBackground,
-				gutterIconSize,
+				gutterIconSize: infoGutterIconSizeLight,
 				gutterIconPath: infoGutterIconPathLight,
 				after: {
 					color: config.light.infoForeground || config.infoForeground,
@@ -441,6 +457,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
 	context.subscriptions.push(disposableToggleErrorLens);
+
+	function getGutterCircleSizeAndColor(color: string): string {
+		return `${config.gutterIconSize};background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${color}"/></svg>');`;
+	}
 }
 
 export function deactivate() {}

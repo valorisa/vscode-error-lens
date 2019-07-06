@@ -37,7 +37,27 @@
 		"commands": [
 			{
 				"command": "errorLens.toggle",
-				"title": "Toggle (Enable/Disable) Error Lens",
+				"title": "Toggle (Enable/Disable) All Decorations",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.toggleError",
+				"title": "Toggle Errors",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.toggleWarning",
+				"title": "Toggle Warnings",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.toggleInfo",
+				"title": "Toggle Info",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.toggleHint",
+				"title": "Toggle Hint",
 				"category": "Error Lens"
 			}
 		],

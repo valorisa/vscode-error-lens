@@ -52,7 +52,11 @@ This extension contributes the following settings:
 
 ## Extension Commands
 
-* `errorLens.toggle` Enable/Disable ErrorLens.
+* `errorLens.toggle` Temporarily Enable/Disable ErrorLens.
+* `errorLens.toggleError`
+* `errorLens.toggleWarning`
+* `errorLens.toggleInfo`
+* `errorLens.toggleHint`
 
 ## Extra
 

@@ -12,6 +12,10 @@ export function activate(context: vscode.ExtensionContext) {
 	let excludeRegexp: RegExp[] = [];
 	let excludeSourceAndCode: IExcludeObject[] = [];
 	let errorLensEnabled = true;
+	let errorEnabled = true;
+	let warningEabled = true;
+	let infoEnabled = true;
+	let hintEnabled = true;
 	let lastSavedTimestamp = Date.now() + 4000;
 
 	let decorationTypeError: vscode.TextEditorDecorationType;
@@ -26,6 +30,22 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const disposableToggleErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
 		errorLensEnabled = !errorLensEnabled;
+		updateAllDecorations();
+	});
+	const disposableToggleError = vscode.commands.registerCommand('errorLens.toggleError', () => {
+		errorEnabled = !errorEnabled;
+		updateAllDecorations();
+	});
+	const disposableToggleWarning = vscode.commands.registerCommand('errorLens.toggleWarning', () => {
+		warningEabled = !warningEabled;
+		updateAllDecorations();
+	});
+	const disposableToggleInfo = vscode.commands.registerCommand('errorLens.toggleInfo', () => {
+		infoEnabled = !infoEnabled;
+		updateAllDecorations();
+	});
+	const disposableToggleHint = vscode.commands.registerCommand('errorLens.toggleHint', () => {
+		hintEnabled = !hintEnabled;
 		updateAllDecorations();
 	});
 
@@ -200,25 +220,25 @@ export function activate(context: vscode.ExtensionContext) {
 				switch (aggregatedDiagnostic[0].severity) {
 					// Error
 					case 0:
-						if (config.enabledDiagnosticLevels.indexOf('error') !== -1) {
+						if (config.enabledDiagnosticLevels.indexOf('error') !== -1 && errorEnabled) {
 							addErrorLens = true;
 						}
 						break;
 					// Warning
 					case 1:
-						if (config.enabledDiagnosticLevels.indexOf('warning') !== -1) {
+						if (config.enabledDiagnosticLevels.indexOf('warning') !== -1 && warningEabled) {
 							addErrorLens = true;
 						}
 						break;
 					// Info
 					case 2:
-						if (config.enabledDiagnosticLevels.indexOf('info') !== -1) {
+						if (config.enabledDiagnosticLevels.indexOf('info') !== -1 && infoEnabled) {
 							addErrorLens = true;
 						}
 						break;
 					// Hint
 					case 3:
-						if (config.enabledDiagnosticLevels.indexOf('hint') !== -1) {
+						if (config.enabledDiagnosticLevels.indexOf('hint') !== -1 && hintEnabled) {
 							addErrorLens = true;
 						}
 						break;
@@ -444,7 +464,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
-	context.subscriptions.push(disposableToggleErrorLens);
+	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint);
 
 	function getGutterCircleSizeAndColor(color: string): string {
 		return `${config.gutterIconSize};background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${color}"/></svg>');`;

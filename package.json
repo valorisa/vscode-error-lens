@@ -85,22 +85,22 @@
 				},
 				"errorLens.infoBackground": {
 					"type": "string",
-					"default": "#00cbfd20",
+					"default": "#00b7e420",
 					"description": "Background color used to highlight lines containing info."
 				},
 				"errorLens.infoForeground": {
 					"type": "string",
-					"default": "#00cbfd",
+					"default": "#00b7e4",
 					"description": "Text color used to highlight lines containing info."
 				},
 				"errorLens.hintBackground": {
 					"type": "string",
-					"default": "#148c8c76",
+					"default": "#17a2a220",
 					"description": "Background color used to highlight lines containing hints."
 				},
 				"errorLens.hintForeground": {
 					"type": "string",
-					"default": "#f0f0f0",
+					"default": "#17a2a2",
 					"description": "Text color used to highlight lines containing hints."
 				},
 				"errorLens.fontFamily": {
@@ -260,7 +260,7 @@
 						},
 						"infoGutterIconColor": {
 							"type": "string",
-							"default": "#00cbfd",
+							"default": "#00b7e4",
 							"markdownDescription": "Info color of `circle` gutter icon set for light themes."
 						}
 					}
@@ -329,7 +329,7 @@
 				},
 				"errorLens.infoGutterIconColor": {
 					"type": "string",
-					"default": "#00cbfd",
+					"default": "#00b7e4",
 					"markdownDescription": "Info color of `circle` gutter icon set."
 				}
 			}

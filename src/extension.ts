@@ -323,65 +323,53 @@ export function activate(context: vscode.ExtensionContext) {
 		let infoGutterIconPath;
 		let infoGutterIconPathLight;
 
-		let errorGutterIconSize = gutterIconSize;
-		let errorGutterIconSizeLight = gutterIconSize;
-		let warningGutterIconSize = gutterIconSize;
-		let warningGutterIconSizeLight = gutterIconSize;
-		let infoGutterIconSize = gutterIconSize;
-		let infoGutterIconSizeLight = gutterIconSize;
+		let errorGutterIconSizeAndColor = gutterIconSize;
+		let errorGutterIconSizeAndColorLight = gutterIconSize;
+		let warningGutterIconSizeAndColor = gutterIconSize;
+		let warningGutterIconSizeAndColorLight = gutterIconSize;
+		let infoGutterIconSizeAndColor = gutterIconSize;
+		let infoGutterIconSizeAndColorLight = gutterIconSize;
 
 		if (config.gutterIconsEnabled) {
 			if (gutterIconSet === 'circle') {
-				errorGutterIconSize = getGutterCircleSizeAndColor(config.errorGutterIconColor);
-				errorGutterIconSizeLight = getGutterCircleSizeAndColor(config.errorGutterIconColorLight);
-				warningGutterIconSize = getGutterCircleSizeAndColor(config.warningGutterIconColor);
-				warningGutterIconSizeLight = getGutterCircleSizeAndColor(config.warningGutterIconColorLight);
-				infoGutterIconSize = getGutterCircleSizeAndColor(config.infoGutterIconColor);
-				infoGutterIconSizeLight = getGutterCircleSizeAndColor(config.infoGutterIconColorLight);
+				if (!config.errorGutterIconPath) {
+					errorGutterIconSizeAndColor = getGutterCircleSizeAndColor(config.errorGutterIconColor);
+				}
+				if (!config.light.errorGutterIconPath) {
+					errorGutterIconSizeAndColorLight = config.light.errorGutterIconColor ? getGutterCircleSizeAndColor(config.light.errorGutterIconColor) : errorGutterIconSizeAndColor;
+				}
+				if (!config.warningGutterIconPath) {
+					warningGutterIconSizeAndColor = getGutterCircleSizeAndColor(config.warningGutterIconColor);
+				}
+				if (!config.light.warningGutterIconPath) {
+					warningGutterIconSizeAndColorLight = config.light.warningGutterIconColor ? getGutterCircleSizeAndColor(config.light.warningGutterIconColor) : warningGutterIconSizeAndColor;
+				}
+				if (!config.infoGutterIconPath) {
+					infoGutterIconSizeAndColor = getGutterCircleSizeAndColor(config.infoGutterIconColor);
+				}
+				if (!config.light.infoGutterIconPath) {
+					infoGutterIconSizeAndColorLight = config.light.infoGutterIconColor ? getGutterCircleSizeAndColor(config.light.infoGutterIconColor) : infoGutterIconSizeAndColor;
+				}
 			}
-			// ERROR
-			if (config.errorGutterIconPath) {
-				errorGutterIconPath = config.errorGutterIconPath;
-			} else {
-				errorGutterIconPath = context.asAbsolutePath(`./img/${gutterIconSet}/error-inverse.svg`);
-			}
-			if (config.errorGutterIconPathLight) {
-				errorGutterIconPathLight = config.errorGutterIconPathLight;
-			} else {
-				errorGutterIconPathLight = context.asAbsolutePath(`./img/${gutterIconSet}/error.svg`);
-			}
-			// WARNING
-			if (config.warningGutterIconPath) {
-				warningGutterIconPath = config.warningGutterIconPath;
-			} else {
-				warningGutterIconPath = context.asAbsolutePath(`./img/${gutterIconSet}/warning-inverse.svg`);
-			}
-			if (config.warningGutterIconPathLight) {
-				warningGutterIconPathLight = config.warningGutterIconPathLight;
-			} else {
-				warningGutterIconPathLight = context.asAbsolutePath(`./img/${gutterIconSet}/warning.svg`);
-			}
-			// INFO
-			if (config.infoGutterIconPath) {
-				infoGutterIconPath = config.infoGutterIconPath;
-			} else {
-				infoGutterIconPath = context.asAbsolutePath(`./img/${gutterIconSet}/info-inverse.svg`);
-			}
-			if (config.infoGutterIconPathLight) {
-				infoGutterIconPathLight = config.infoGutterIconPathLight;
-			} else {
-				infoGutterIconPathLight = context.asAbsolutePath(`./img/${gutterIconSet}/info.svg`);
-			}
+
+			errorGutterIconPath = config.errorGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/error-inverse.svg`);
+			errorGutterIconPathLight = config.light.errorGutterIconPath || (config.errorGutterIconPath ? config.errorGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/error.svg`);
+			warningGutterIconPath = config.warningGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/warning-inverse.svg`);
+			warningGutterIconPathLight = config.light.warningGutterIconPath || (config.warningGutterIconPath ? config.warningGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/warning.svg`);
+			infoGutterIconPath = config.infoGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/info-inverse.svg`);
+			infoGutterIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/info.svg`);
 		}
+
 		const afterProps = {
 			fontStyle: config.fontStyle,
 			margin: config.margin,
 			fontWeight: config.fontWeight,
 			textDecoration: `;font-family:${config.fontFamily};font-size:${config.fontSize};line-height:1;`,
 		};
+
 		decorationTypeError = window.createTextEditorDecorationType({
 			backgroundColor: config.errorBackground,
-			gutterIconSize: errorGutterIconSize,
+			gutterIconSize: errorGutterIconSizeAndColor,
 			gutterIconPath: errorGutterIconPath,
 			after: {
 				...afterProps,
@@ -389,7 +377,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.errorBackground || config.errorBackground,
-				gutterIconSize: errorGutterIconSizeLight,
+				gutterIconSize: errorGutterIconSizeAndColorLight,
 				gutterIconPath: errorGutterIconPathLight,
 				after: {
 					color: config.light.errorForeground || config.errorForeground,
@@ -399,7 +387,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		decorationTypeWarning = window.createTextEditorDecorationType({
 			backgroundColor: config.warningBackground,
-			gutterIconSize: warningGutterIconSize,
+			gutterIconSize: warningGutterIconSizeAndColor,
 			gutterIconPath: warningGutterIconPath,
 			after: {
 				...afterProps,
@@ -407,7 +395,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.warningBackground || config.warningBackground,
-				gutterIconSize: warningGutterIconSizeLight,
+				gutterIconSize: warningGutterIconSizeAndColorLight,
 				gutterIconPath: warningGutterIconPathLight,
 				after: {
 					color: config.light.warningForeground || config.warningForeground,
@@ -417,7 +405,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 		decorationTypeInfo = window.createTextEditorDecorationType({
 			backgroundColor: config.infoBackground,
-			gutterIconSize: infoGutterIconSize,
+			gutterIconSize: infoGutterIconSizeAndColor,
 			gutterIconPath: infoGutterIconPath,
 			after: {
 				...afterProps,
@@ -425,7 +413,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			light: {
 				backgroundColor: config.light.infoBackground || config.infoBackground,
-				gutterIconSize: infoGutterIconSizeLight,
+				gutterIconSize: infoGutterIconSizeAndColorLight,
 				gutterIconPath: infoGutterIconPathLight,
 				after: {
 					color: config.light.infoForeground || config.infoForeground,

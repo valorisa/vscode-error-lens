@@ -29,8 +29,8 @@ This extension contributes the following settings:
 * `errorLens.hintBackground`: The background color used to highlight lines containing hints. (Alpha component can be used)
 * `errorLens.hintForeground`: The text color used to highlight lines containing hints. (Alpha component can be used)
 * `errorLens.light`: Overwrite any of the above colors for light themes
-* `errorLens.fontSize`: Font size of diagnostic messages in editor **Not officially supported property**
-* `errorLens.fontFamily`: Font family of annotations. **Not officially supported property**
+* `errorLens.fontSize`: Font size of diagnostic messages in editor **Not an officially supported property**
+* `errorLens.fontFamily`: Font family of annotations. **Not an officially supported property**
 * `errorLens.fontStyle`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.
 * `errorLens.margin`: Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)
@@ -42,13 +42,13 @@ This extension contributes the following settings:
 * `errorLens.onSave`: Update decorations only on document save.
 * `errorLens.gutterIconsEnabled`: Show gutter icons (In place of debug breakpoint icon).
 * `errorLens.gutterIconSize`: Customize gutter icon size. Example: `"120%"`
-* `errorLens.gutterIconSet`: Customize gutter icon style. Possible values: `"default"`, `"borderless"`
-* `errorLens.errorGutterIconPath`: Absolute path for error gutter icon for dark themes.
-* `errorLens.errorGutterIconPathLight`: Absolute path for error gutter icon for light themes.
-* `errorLens.warningGutterIconPath`: Absolute path for warning gutter icon for dark themes.
-* `errorLens.warningGutterIconPathLight`: Absolute path for warning gutter icon for light themes.
-* `errorLens.infoGutterIconPath`: Absolute path for info gutter icon for dark themes.
-* `errorLens.infoGutterIconPathLight`: Absolute path for info gutter icon for light themes.
+* `errorLens.gutterIconSet`: Customize gutter icon style. Possible values: `"default"`, `"borderless"`, `"circle"`
+* `errorLens.errorGutterIconPath`: Absolute path for error gutter icon.
+* `errorLens.warningGutterIconPath`: Absolute path for warning gutter icon.
+* `errorLens.infoGutterIconPath`: Absolute path for info gutter icon.
+* `errorLens.errorGutterIconColor`: Error color of `circle` gutter icon set.
+* `errorLens.warningGutterIconColor`: Warning color of `circle` gutter icon set.
+* `errorLens.infoGutterIconColor`: Info color of `circle` gutter icon set.
 
 ## Extension Commands
 

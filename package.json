@@ -215,6 +215,33 @@
 							"type": "string",
 							"default": "",
 							"description": "Text color used to highlight lines containing hints."
+						},
+						"errorGutterIconPath": {
+							"type": "string",
+							"description": "Absolute path to error gutter icon for light themes."
+						},
+						"warningGutterIconPath": {
+							"type": "string",
+							"description": "Absolute path to warning gutter icon for light themes."
+						},
+						"infoGutterIconPath": {
+							"type": "string",
+							"description": "Absolute path to info gutter icon for light themes."
+						},
+						"errorGutterIconColor": {
+							"type": "string",
+							"default": "#e45454",
+							"markdownDescription": "Error color of `circle` gutter icon set for light themes."
+						},
+						"warningGutterIconColor": {
+							"type": "string",
+							"default": "#ff942f",
+							"markdownDescription": "Warning color of `circle` gutter icon set for light themes."
+						},
+						"infoGutterIconColor": {
+							"type": "string",
+							"default": "#00cbfd",
+							"markdownDescription": "Info color of `circle` gutter icon set for light themes."
 						}
 					}
 				},
@@ -251,55 +278,39 @@
 						"borderless",
 						"circle"
 					],
+					"enumDescriptions": [
+						"Should be similar to vscode icons in Problems Panel.",
+						"Should be similar to vscode icons in Problems Panel only without a border.",
+						"A simple filled circle."
+					],
 					"default": "default"
 				},
 				"errorLens.errorGutterIconPath": {
 					"type": "string",
-					"description": "Absolute path for error gutter icon for dark themes."
-				},
-				"errorLens.errorGutterIconPathLight": {
-					"type": "string",
-					"description": "Absolute path for error gutter icon for light themes."
+					"description": "Absolute path to error gutter icon."
 				},
 				"errorLens.warningGutterIconPath": {
 					"type": "string",
-					"description": "Absolute path for warning gutter icon for dark themes."
-				},
-				"errorLens.warningGutterIconPathLight": {
-					"type": "string",
-					"description": "Absolute path for warning gutter icon for light themes."
+					"description": "Absolute path to warning gutter icon."
 				},
 				"errorLens.infoGutterIconPath": {
 					"type": "string",
-					"description": "Absolute path for info gutter icon for dark themes."
-				},
-				"errorLens.infoGutterIconPathLight": {
-					"type": "string",
-					"description": "Absolute path for info gutter icon for light themes."
+					"description": "Absolute path to info gutter icon."
 				},
 				"errorLens.errorGutterIconColor": {
 					"type": "string",
-					"default": "#e45454"
-				},
-				"errorLens.errorGutterIconColorLight": {
-					"type": "string",
-					"default": "#e45454"
+					"default": "#e45454",
+					"markdownDescription": "Error color of `circle` gutter icon set."
 				},
 				"errorLens.warningGutterIconColor": {
 					"type": "string",
-					"default": "#ff942f"
-				},
-				"errorLens.warningGutterIconColorLight": {
-					"type": "string",
-					"default": "#ff942f"
+					"default": "#ff942f",
+					"markdownDescription": "Warning color of `circle` gutter icon set."
 				},
 				"errorLens.infoGutterIconColor": {
 					"type": "string",
-					"default": "#00cbfd"
-				},
-				"errorLens.infoGutterIconColorLight": {
-					"type": "string",
-					"default": "#00cbfd"
+					"default": "#00cbfd",
+					"markdownDescription": "Info color of `circle` gutter icon set."
 				}
 			}
 		}

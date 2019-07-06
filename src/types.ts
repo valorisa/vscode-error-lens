@@ -19,6 +19,14 @@ export interface IConfig {
 		infoForeground: string;
 		hintBackground: string;
 		hintForeground: string;
+
+		errorGutterIconPath?: string;
+		warningGutterIconPath?: string;
+		infoGutterIconPath?: string;
+
+		errorGutterIconColor: string;
+		warningGutterIconColor: string;
+		infoGutterIconColor: string;
 	};
 
 	fontFamily: string;
@@ -39,18 +47,12 @@ export interface IConfig {
 	gutterIconSet: GutterIconSet;
 
 	errorGutterIconPath?: string;
-	errorGutterIconPathLight?: string;
 	warningGutterIconPath?: string;
-	warningGutterIconPathLight?: string;
 	infoGutterIconPath?: string;
-	infoGutterIconPathLight?: string;
 
 	errorGutterIconColor: string;
-	errorGutterIconColorLight: string;
 	warningGutterIconColor: string;
-	warningGutterIconColorLight: string;
 	infoGutterIconColor: string;
-	infoGutterIconColorLight: string;
 }
 
 export type GutterIconSet = 'default' | 'borderless' | 'circle';

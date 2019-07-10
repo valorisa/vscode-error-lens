@@ -5,9 +5,8 @@ import { window, workspace } from 'vscode';
 import { IAggregatedDiagnostics, IConfig, IExcludeObject } from './types';
 import { isObject, truncate } from './utils';
 
-const EXTNAME = 'errorLens';
-
 export function activate(context: vscode.ExtensionContext) {
+	const EXTNAME = 'errorLens';
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let excludeRegexp: RegExp[] = [];
 	let excludeSourceAndCode: IExcludeObject[] = [];
@@ -16,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let warningEabled = true;
 	let infoEnabled = true;
 	let hintEnabled = true;
-	let lastSavedTimestamp = Date.now() + 4000;
+	let lastSavedTimestamp = Date.now() + 5000;
 
 	let decorationTypeError: vscode.TextEditorDecorationType;
 	let decorationTypeWarning: vscode.TextEditorDecorationType;
@@ -28,23 +27,23 @@ export function activate(context: vscode.ExtensionContext) {
 
 	setDecorationStyle();
 
-	const disposableToggleErrorLens = vscode.commands.registerCommand('errorLens.toggle', () => {
+	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTNAME}.toggle`, () => {
 		errorLensEnabled = !errorLensEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleError = vscode.commands.registerCommand('errorLens.toggleError', () => {
+	const disposableToggleError = vscode.commands.registerCommand(`${EXTNAME}.toggleError`, () => {
 		errorEnabled = !errorEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleWarning = vscode.commands.registerCommand('errorLens.toggleWarning', () => {
+	const disposableToggleWarning = vscode.commands.registerCommand(`${EXTNAME}.toggleWarning`, () => {
 		warningEabled = !warningEabled;
 		updateAllDecorations();
 	});
-	const disposableToggleInfo = vscode.commands.registerCommand('errorLens.toggleInfo', () => {
+	const disposableToggleInfo = vscode.commands.registerCommand(`${EXTNAME}.toggleInfo`, () => {
 		infoEnabled = !infoEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleHint = vscode.commands.registerCommand('errorLens.toggleHint', () => {
+	const disposableToggleHint = vscode.commands.registerCommand(`${EXTNAME}.toggleHint`, () => {
 		hintEnabled = !hintEnabled;
 		updateAllDecorations();
 	});

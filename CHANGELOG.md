@@ -1,3 +1,7 @@
+## 2.4.1 `11 Jul 2019`
+
+- 🐛 Decorations stopped working in `settings.json` in **1.37**
+
 ## 2.4.0 `06 Jul 2019`
 
 - ✨ New gutter icon set **`circle`**

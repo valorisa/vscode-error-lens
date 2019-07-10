@@ -120,7 +120,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		if ((uriToDecorate.scheme !== 'file') && (uriToDecorate.scheme !== 'untitled')) {
+		if ((uriToDecorate.scheme !== 'file') && (uriToDecorate.scheme !== 'untitled') && (uriToDecorate.scheme !== 'vscode-userdata')) {
 			return;
 		}
 

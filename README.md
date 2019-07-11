@@ -16,14 +16,14 @@ the site of the line of code which is generating the diagnostic.
 
 This extension contributes the following settings:
 
-* `errorLens.errorBackground`: The background color used to highlight lines containing errors. (Alpha component can be used)
-* `errorLens.errorForeground`: The text color used to highlight lines containing errors. (Alpha component can be used)
-* `errorLens.warningBackground`: The background color used to highlight lines containing warnings. (Alpha component can be used)
-* `errorLens.warningForeground`: The text color used to highlight lines containing warnings. (Alpha component can be used)
-* `errorLens.infoBackground`: The background color used to highlight lines containing info. (Alpha component can be used)
-* `errorLens.infoForeground`: The text color used to highlight lines containing info. (Alpha component can be used)
-* `errorLens.hintBackground`: The background color used to highlight lines containing hints. (Alpha component can be used)
-* `errorLens.hintForeground`: The text color used to highlight lines containing hints. (Alpha component can be used)
+* `errorLens.errorBackground`: Background color used to highlight lines containing errors.
+* `errorLens.errorForeground`: Text color used to highlight lines containing errors.
+* `errorLens.warningBackground`: Background color used to highlight lines containing warnings.
+* `errorLens.warningForeground`: Text color used to highlight lines containing warnings.
+* `errorLens.infoBackground`: Background color used to highlight lines containing info.
+* `errorLens.infoForeground`: Text color used to highlight lines containing info.
+* `errorLens.hintBackground`: Background color used to highlight lines containing hints.
+* `errorLens.hintForeground`: Text color used to highlight lines containing hints.
 * `errorLens.light`: Overwrite any of the above colors for light themes
 * `errorLens.fontSize`: Font size of diagnostic messages in editor **Not an officially supported property**
 * `errorLens.fontFamily`: Font family of annotations. **Not an officially supported property**

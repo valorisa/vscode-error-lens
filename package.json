@@ -142,7 +142,7 @@
 				},
 				"errorLens.margin": {
 					"type": "string",
-					"default": "40px",
+					"default": "30px",
 					"description": "Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)."
 				},
 				"errorLens.enabledDiagnosticLevels": {
@@ -166,8 +166,8 @@
 				},
 				"errorLens.addAnnotationTextPrefixes": {
 					"type": "boolean",
-					"description": "If 'true', prefixes the diagnostic severity ('Error:', 'Warning:' etc) to ErrorLens annotations.",
-					"default": true
+					"description": "If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.",
+					"default": false
 				},
 				"errorLens.exclude": {
 					"type": "array",

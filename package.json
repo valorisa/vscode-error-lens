@@ -59,6 +59,11 @@
 				"command": "errorLens.toggleHint",
 				"title": "Toggle Hint",
 				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.copyProblemMessage",
+				"title": "Copy Problem Message",
+				"category": "Error Lens"
 			}
 		],
 		"configuration": {

@@ -476,8 +476,30 @@ export function activate(context: vscode.ExtensionContext) {
 		updateAllDecorations();
 	});
 
+	const disposableCopyProblemMessage = vscode.commands.registerTextEditorCommand(`${EXTNAME}.copyProblemMessage`, editor => {
+		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
+		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
+			const key = diagnostic.range.start.line;
+
+			if (aggregatedDiagnostics[key]) {
+				aggregatedDiagnostics[key].push(diagnostic);
+			} else {
+				aggregatedDiagnostics[key] = [diagnostic];
+			}
+		}
+		const activeLineNumber = editor.selection.active.line;
+		const diagnosticAtActiveLineNumber = aggregatedDiagnostics[activeLineNumber];
+		if (!diagnosticAtActiveLineNumber) {
+			window.showInformationMessage('There\'s no problem at the active line.');
+			return;
+		}
+		const renderedDiagnostic = diagnosticAtActiveLineNumber.sort((a, b) => a.severity - b.severity)[0];
+		const source = renderedDiagnostic.source ? '[' + renderedDiagnostic.source + '] ' : '';
+		vscode.env.clipboard.writeText(source + renderedDiagnostic.message);
+	});
+
 	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
-	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint);
+	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
 }
 
 export function deactivate() {}

@@ -15,6 +15,10 @@ export function activate(context: vscode.ExtensionContext) {
 	let warningEabled = true;
 	let infoEnabled = true;
 	let hintEnabled = true;
+	let configErrorEnabled = true;
+	let configWarningEnabled = true;
+	let configInfoEnabled = true;
+	let configHintEnabled = true;
 	let lastSavedTimestamp = Date.now() + 5000;
 
 	let decorationTypeError: vscode.TextEditorDecorationType;
@@ -66,6 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	updateExclude();
+	updateConfigEnabledLevels();
 	updateChangeDiagnosticListener();
 	updateOnSaveListener();
 
@@ -191,25 +196,25 @@ export function activate(context: vscode.ExtensionContext) {
 				switch (aggregatedDiagnostic[0].severity) {
 					// Error
 					case 0:
-						if (config.enabledDiagnosticLevels.indexOf('error') !== -1 && errorEnabled) {
+						if (configErrorEnabled && errorEnabled) {
 							addErrorLens = true;
 						}
 						break;
 					// Warning
 					case 1:
-						if (config.enabledDiagnosticLevels.indexOf('warning') !== -1 && warningEabled) {
+						if (configWarningEnabled && warningEabled) {
 							addErrorLens = true;
 						}
 						break;
 					// Info
 					case 2:
-						if (config.enabledDiagnosticLevels.indexOf('info') !== -1 && infoEnabled) {
+						if (configInfoEnabled && infoEnabled) {
 							addErrorLens = true;
 						}
 						break;
 					// Hint
 					case 3:
-						if (config.enabledDiagnosticLevels.indexOf('hint') !== -1 && hintEnabled) {
+						if (configHintEnabled && hintEnabled) {
 							addErrorLens = true;
 						}
 						break;
@@ -305,6 +310,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeHint.dispose();
 
 		updateExclude();
+		updateConfigEnabledLevels();
 		updateChangeDiagnosticListener();
 		updateOnSaveListener();
 		setDecorationStyle();
@@ -322,6 +328,13 @@ export function activate(context: vscode.ExtensionContext) {
 				excludeSourceAndCode.push(item);
 			}
 		}
+	}
+
+	function updateConfigEnabledLevels() {
+		configErrorEnabled = config.enabledDiagnosticLevels.indexOf('error') !== -1;
+		configWarningEnabled = config.enabledDiagnosticLevels.indexOf('warning') !== -1;
+		configInfoEnabled = config.enabledDiagnosticLevels.indexOf('info') !== -1;
+		configHintEnabled = config.enabledDiagnosticLevels.indexOf('hint') !== -1;
 	}
 
 	function setDecorationStyle() {

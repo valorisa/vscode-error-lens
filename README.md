@@ -29,7 +29,7 @@ This extension contributes the following settings:
 * `errorLens.fontFamily`: Font family of annotations. **Not an officially supported property**
 * `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.
 * `errorLens.fontStyleItalic`: Show ErrorLens annotations in Italics, or not?
-* `errorLens.margin`: Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)
+* `errorLens.margin`: Distance between the end of the line and the start of annotation. (CSS units)
 * `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
 * `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.
 * `errorLens.exclude`: Specify messages that should not be highlighted.

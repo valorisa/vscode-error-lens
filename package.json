@@ -139,7 +139,7 @@
 				"errorLens.margin": {
 					"type": "string",
 					"default": "30px",
-					"description": "Distance between end of the code line, and the start of the ErrorLens annotation. (CSS units)."
+					"description": "Distance between the end of the line and the start of annotation. (CSS units)"
 				},
 				"errorLens.enabledDiagnosticLevels": {
 					"type": "array",

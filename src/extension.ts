@@ -370,7 +370,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		const afterProps = {
-			fontStyle: config.fontStyle,
+			fontStyle: config.italic ? 'italic' : 'normal',
 			margin: config.margin,
 			fontWeight: config.fontWeight,
 			textDecoration: `;font-family:${config.fontFamily};font-size:${config.fontSize};line-height:1;`,

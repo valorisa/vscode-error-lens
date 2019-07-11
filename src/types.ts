@@ -30,9 +30,9 @@ export interface IConfig {
 	};
 
 	fontFamily: string;
-	fontStyle: string;
 	fontWeight: string;
 	fontSize: string;
+	italic: boolean;
 
 	margin: string;
 	enabledDiagnosticLevels: string[];

@@ -1,3 +1,10 @@
+## 2.5.0 `11 Jul 2019`
+
+- 💥 Deprecate enum setting `errorLens.fontStyle` in favor of boolean `errorLens.fontStyleItalic`
+- 💥 Change default settings `errorLens.addAnnotationTextPrefixes` and `errorLens.margin`
+- 🐛 Error decoration must always trump Warning etc: `ERROR` => `WARNING` => `INFO` => `HINT`
+- ✨ New command to copy problem at active line number `errorLens.copyProblemMessage`
+
 ## 2.4.1 `11 Jul 2019`
 
 - 🐛 Decorations stopped working in `settings.json` in **1.37**

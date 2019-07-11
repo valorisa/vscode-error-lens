@@ -30,27 +30,10 @@ export function activate(context: vscode.ExtensionContext) {
 	let onDidSaveTextDocumentDisposable: vscode.Disposable;
 
 	setDecorationStyle();
-
-	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTNAME}.toggle`, () => {
-		errorLensEnabled = !errorLensEnabled;
-		updateAllDecorations();
-	});
-	const disposableToggleError = vscode.commands.registerCommand(`${EXTNAME}.toggleError`, () => {
-		errorEnabled = !errorEnabled;
-		updateAllDecorations();
-	});
-	const disposableToggleWarning = vscode.commands.registerCommand(`${EXTNAME}.toggleWarning`, () => {
-		warningEabled = !warningEabled;
-		updateAllDecorations();
-	});
-	const disposableToggleInfo = vscode.commands.registerCommand(`${EXTNAME}.toggleInfo`, () => {
-		infoEnabled = !infoEnabled;
-		updateAllDecorations();
-	});
-	const disposableToggleHint = vscode.commands.registerCommand(`${EXTNAME}.toggleHint`, () => {
-		hintEnabled = !hintEnabled;
-		updateAllDecorations();
-	});
+	updateExclude();
+	updateConfigEnabledLevels();
+	updateChangeDiagnosticListener();
+	updateOnSaveListener();
 
 	window.onDidChangeActiveTextEditor(textEditor => {
 		if (textEditor) {
@@ -68,11 +51,6 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 	}
-
-	updateExclude();
-	updateConfigEnabledLevels();
-	updateChangeDiagnosticListener();
-	updateOnSaveListener();
 
 	function updateChangeDiagnosticListener() {
 		if (onDidChangeDiagnosticsDisposable) {
@@ -473,13 +451,33 @@ export function activate(context: vscode.ExtensionContext) {
 			updateDecorationsForUri(editor.document.uri, editor);
 		}
 	}
-
-	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
-	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint);
-
 	function getGutterCircleSizeAndColor(color: string): string {
 		return `${config.gutterIconSize};background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${color}"/></svg>');`;
 	}
+
+	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTNAME}.toggle`, () => {
+		errorLensEnabled = !errorLensEnabled;
+		updateAllDecorations();
+	});
+	const disposableToggleError = vscode.commands.registerCommand(`${EXTNAME}.toggleError`, () => {
+		errorEnabled = !errorEnabled;
+		updateAllDecorations();
+	});
+	const disposableToggleWarning = vscode.commands.registerCommand(`${EXTNAME}.toggleWarning`, () => {
+		warningEabled = !warningEabled;
+		updateAllDecorations();
+	});
+	const disposableToggleInfo = vscode.commands.registerCommand(`${EXTNAME}.toggleInfo`, () => {
+		infoEnabled = !infoEnabled;
+		updateAllDecorations();
+	});
+	const disposableToggleHint = vscode.commands.registerCommand(`${EXTNAME}.toggleHint`, () => {
+		hintEnabled = !hintEnabled;
+		updateAllDecorations();
+	});
+
+	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
+	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint);
 }
 
 export function deactivate() {}

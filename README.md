@@ -49,10 +49,11 @@ This extension contributes the following settings:
 ## Extension Commands
 
 * `errorLens.toggle` Temporarily Enable/Disable ErrorLens.
-* `errorLens.toggleError`
-* `errorLens.toggleWarning`
-* `errorLens.toggleInfo`
-* `errorLens.toggleHint`
+* `errorLens.toggleError` Temporarily Enable/Disable Error level.
+* `errorLens.toggleWarning` Temporarily Enable/Disable Warning level.
+* `errorLens.toggleInfo` Temporarily Enable/Disable Info level.
+* `errorLens.toggleHint` Temporarily Enable/Disable Hint level.
+* `errorLens.copyProblemMessage` Copy problem message to clipboard (at the active line).
 
 ## Extra
 

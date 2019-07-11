@@ -126,7 +126,7 @@
 					"default": "normal",
 					"description": "Specifies the font weight for ErrorLens annotations."
 				},
-				"errorLens.italic": {
+				"errorLens.fontStyleItalic": {
 					"type": "boolean",
 					"default": false,
 					"description": "Show ErrorLens annotations in Italics, or not?"

@@ -32,7 +32,7 @@ export interface IConfig {
 	fontFamily: string;
 	fontWeight: string;
 	fontSize: string;
-	italic: boolean;
+	fontStyleItalic: boolean;
 
 	margin: string;
 	enabledDiagnosticLevels: string[];

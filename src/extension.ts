@@ -168,7 +168,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			for (const key in aggregatedDiagnostics) {
-				const aggregatedDiagnostic = aggregatedDiagnostics[key];
+				const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
 
 				let addErrorLens = false;
 				switch (aggregatedDiagnostic[0].severity) {

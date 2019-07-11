@@ -6,7 +6,7 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.28.0"
+		"vscode": "^1.30.0"
 	},
 	"categories": [
 		"Other"
@@ -339,7 +339,7 @@
 	"devDependencies": {
 		"@types/lodash": "^4.14.136",
 		"@types/node": "^10.14.12",
-		"@types/vscode": "^1.28.0",
+		"@types/vscode": "^1.30.0",
 		"friendly-errors-webpack-plugin": "^1.7.0",
 		"ts-loader": "^6.0.4",
 		"tslint": "^5.18.0",

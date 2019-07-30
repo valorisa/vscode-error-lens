@@ -128,7 +128,6 @@
 		"no-string-literal": true,
 		"no-sparse-arrays": true,
 		"no-string-throw": true,
-		"no-use-before-declare": true,
 		"use-isnan": true,
 		"cyclomatic-complexity": [
 			false,

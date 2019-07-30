@@ -8,13 +8,11 @@ the site of the line of code which is generating the diagnostic.
 
 ## Features
 
-* Lines containing errors or warnings or info are highlighted more obviously.
-* Diagnostic descriptions are appended to the end of any line containing diagnostic info, meaning that you do not have to context-switch to the problems view.
-* Show icons in gutter
+* Highlight lines containing diagnostics.
+* Append diagnostic descriptions to the end of the line.
+* Show icons in gutter.
 
-## Extension Settings
-
-This extension contributes the following settings:
+## Settings
 
 * `errorLens.errorBackground`: Background color used to highlight lines containing errors.
 * `errorLens.errorForeground`: Text color used to highlight lines containing errors.
@@ -25,9 +23,9 @@ This extension contributes the following settings:
 * `errorLens.hintBackground`: Background color used to highlight lines containing hints.
 * `errorLens.hintForeground`: Text color used to highlight lines containing hints.
 * `errorLens.light`: Overwrite any of the above colors for light themes
-* `errorLens.fontSize`: Font size of diagnostic messages in editor **Not an officially supported property**
-* `errorLens.fontFamily`: Font family of annotations. **Not an officially supported property**
-* `errorLens.fontWeight`: Specifies the font weight for ErrorLens annotations.
+* `errorLens.fontSize`: Font size of annotations **Not officially supported**
+* `errorLens.fontFamily`: Font family of annotations. **Not officially supported**
+* `errorLens.fontWeight`: Font Weight of annotations.
 * `errorLens.fontStyleItalic`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.margin`: Distance between the end of the line and the start of annotation. (CSS units)
 * `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
@@ -46,7 +44,7 @@ This extension contributes the following settings:
 * `errorLens.warningGutterIconColor`: Warning color of `circle` gutter icon set.
 * `errorLens.infoGutterIconColor`: Info color of `circle` gutter icon set.
 
-## Extension Commands
+## Commands
 
 * `errorLens.toggle` Temporarily Enable/Disable ErrorLens.
 * `errorLens.toggleError` Temporarily Enable/Disable Error level.
@@ -73,7 +71,7 @@ Example of using `source` & `code` or diagnostic message to exclude a problem:
 
 ---
 
-Remove built-in problem decorations from `settings.json`:
+Remove built-in editor problem decorations (squiggly / double underline) from `settings.json`:
 
 ```javascript
 "workbench.colorCustomizations": {

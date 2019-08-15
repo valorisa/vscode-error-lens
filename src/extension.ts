@@ -36,6 +36,12 @@ export function activate(context: vscode.ExtensionContext) {
 	window.onDidChangeActiveTextEditor(textEditor => {
 		if (textEditor) {
 			updateDecorationsForUri(textEditor.document.uri, textEditor);
+		} else {
+			if (config.editorActiveTabDecorationEnabled) {
+				// Settings GUI or image file is not a textEditor
+				// That means - Error/Warning tab color should be cleared
+				removeActiveTabDecorations();
+			}
 		}
 	}, undefined, context.subscriptions);
 
@@ -136,6 +142,10 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
+		if (!errorLensEnabled) {
+			return;
+		}
+
 		const decorationOptionsError: vscode.DecorationOptions[] = [];
 		const decorationOptionsWarning: vscode.DecorationOptions[] = [];
 		const decorationOptionsInfo: vscode.DecorationOptions[] = [];
@@ -155,171 +165,170 @@ export function activate(context: vscode.ExtensionContext) {
 		//     ]
 		// };
 
-		if (errorLensEnabled) {
-			const aggregatedDiagnostics: IAggregatedDiagnostics = {};
-			// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
-			// a list of objects, grouping together diagnostics which occur on a single line.
-			nextDiagnostic:
-			for (const diagnostic of vscode.languages.getDiagnostics(uriToDecorate)) {
-				// Exclude items specified in `errorLens.exclude` setting
-				for (const regex of excludeRegexp) {
-					if (regex.test(diagnostic.message)) {
-						continue nextDiagnostic;
+		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
+		const diagnostics = vscode.languages.getDiagnostics(uriToDecorate);
+		// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
+		// a list of objects, grouping together diagnostics which occur on a single line.
+		nextDiagnostic:
+		for (const diagnostic of diagnostics) {
+			// Exclude items specified in `errorLens.exclude` setting
+			for (const regex of excludeRegexp) {
+				if (regex.test(diagnostic.message)) {
+					continue nextDiagnostic;
+				}
+			}
+			for (const excludeItem of excludeSourceAndCode) {
+				if (diagnostic.source === excludeItem.source &&
+					String(diagnostic.code) === excludeItem.code) {
+					continue nextDiagnostic;
+				}
+			}
+
+			const key = diagnostic.range.start.line;
+
+			if (aggregatedDiagnostics[key]) {
+				// Already added an object for this key, so augment the arrayDiagnostics[] array.
+				aggregatedDiagnostics[key].push(diagnostic);
+			} else {
+				// Create a new object for this key, specifying the line: and a arrayDiagnostics[] array
+				aggregatedDiagnostics[key] = [diagnostic];
+			}
+		}
+
+		let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
+		if (config.followCursor === 'closestProblem') {
+			if (range === undefined) {
+				range = editor.selection;// tslint:disable-line
+			}
+			const line = range.start.line;
+
+			const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => {
+				return Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0]));
+			});
+			aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
+			allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
+		}
+
+		for (const key in aggregatedDiagnostics) {
+			const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
+
+			let addErrorLens = false;
+			switch (aggregatedDiagnostic[0].severity) {
+				// Error
+				case 0:
+					if (configErrorEnabled && errorEnabled) {
+						addErrorLens = true;
+					}
+					break;
+				// Warning
+				case 1:
+					if (configWarningEnabled && warningEabled) {
+						addErrorLens = true;
+					}
+					break;
+				// Info
+				case 2:
+					if (configInfoEnabled && infoEnabled) {
+						addErrorLens = true;
+					}
+					break;
+				// Hint
+				case 3:
+					if (configHintEnabled && hintEnabled) {
+						addErrorLens = true;
+					}
+					break;
+			}
+
+			if (addErrorLens) {
+				let messagePrefix = '';
+				if (config.addAnnotationTextPrefixes) {
+					if (aggregatedDiagnostic.length > 1) {
+						// If > 1 diagnostic for this source line, the prefix is "Diagnostic #1 of N: "
+						messagePrefix += 'Diagnostic 1/' + String(aggregatedDiagnostic.length) + ': ';
+					} else {
+						// If only 1 diagnostic for this source line, show the diagnostic severity
+						switch (aggregatedDiagnostic[0].severity) {
+							case 0:
+								messagePrefix += 'ERROR: ';
+								break;
+
+							case 1:
+								messagePrefix += 'WARNING: ';
+								break;
+
+							case 2:
+								messagePrefix += 'INFO: ';
+								break;
+
+							case 3:
+							default:
+								messagePrefix += 'HINT: ';
+								break;
+						}
 					}
 				}
-				for (const excludeItem of excludeSourceAndCode) {
-					if (diagnostic.source === excludeItem.source &&
-						String(diagnostic.code) === excludeItem.code) {
-						continue nextDiagnostic;
-					}
-				}
+				// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
+				// after the source-code line in the editor
+				const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
+					after: {
+						contentText: truncate(messagePrefix + aggregatedDiagnostic[0].message),
+					},
+				};
 
-				const key = diagnostic.range.start.line;
-
-				if (aggregatedDiagnostics[key]) {
-					// Already added an object for this key, so augment the arrayDiagnostics[] array.
-					aggregatedDiagnostics[key].push(diagnostic);
+				let messageRange: vscode.Range | undefined;
+				if (config.followCursor === 'allLines') {
+					// Default value (most used)
+					messageRange = aggregatedDiagnostic[0].range;
 				} else {
-					// Create a new object for this key, specifying the line: and a arrayDiagnostics[] array
-					aggregatedDiagnostics[key] = [diagnostic];
+					// Others require cursor tracking
+					if (range === undefined) {
+						range = editor.selection;// tslint:disable-line
+					}
+					const diagnosticRange = aggregatedDiagnostic[0].range;
+
+					if (config.followCursor === 'activeLine') {
+						const lineStart = range.start.line - config.followCursorMore;
+						const lineEnd = range.end.line + config.followCursorMore;
+
+						if (((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
+							((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))) {
+							messageRange = diagnosticRange;
+						}
+					} else if (config.followCursor === 'closestProblem') {
+						if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) ||
+							allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
+								messageRange = diagnosticRange;
+						}
+					}
 				}
-			}
 
-			let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
-			if (config.followCursor === 'closestProblem') {
-				if (range === undefined) {
-					range = editor.selection;// tslint:disable-line
+				if (!messageRange) {
+					continue;
 				}
-				const line = range.start.line;
 
-				const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => {
-					return Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0]));
-				});
-				aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
-				allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
-			}
+				const diagnosticDecorationOptions: vscode.DecorationOptions = {
+					range: messageRange,
+					renderOptions: decInstanceRenderOptions,
+				};
 
-			for (const key in aggregatedDiagnostics) {
-				const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-
-				let addErrorLens = false;
 				switch (aggregatedDiagnostic[0].severity) {
 					// Error
 					case 0:
-						if (configErrorEnabled && errorEnabled) {
-							addErrorLens = true;
-						}
+						decorationOptionsError.push(diagnosticDecorationOptions);
 						break;
 					// Warning
 					case 1:
-						if (configWarningEnabled && warningEabled) {
-							addErrorLens = true;
-						}
+						decorationOptionsWarning.push(diagnosticDecorationOptions);
 						break;
 					// Info
 					case 2:
-						if (configInfoEnabled && infoEnabled) {
-							addErrorLens = true;
-						}
+						decorationOptionsInfo.push(diagnosticDecorationOptions);
 						break;
 					// Hint
 					case 3:
-						if (configHintEnabled && hintEnabled) {
-							addErrorLens = true;
-						}
+						decorationOptionsHint.push(diagnosticDecorationOptions);
 						break;
-				}
-
-				if (addErrorLens) {
-					let messagePrefix = '';
-					if (config.addAnnotationTextPrefixes) {
-						if (aggregatedDiagnostic.length > 1) {
-							// If > 1 diagnostic for this source line, the prefix is "Diagnostic #1 of N: "
-							messagePrefix += 'Diagnostic 1/' + String(aggregatedDiagnostic.length) + ': ';
-						} else {
-							// If only 1 diagnostic for this source line, show the diagnostic severity
-							switch (aggregatedDiagnostic[0].severity) {
-								case 0:
-									messagePrefix += 'ERROR: ';
-									break;
-
-								case 1:
-									messagePrefix += 'WARNING: ';
-									break;
-
-								case 2:
-									messagePrefix += 'INFO: ';
-									break;
-
-								case 3:
-								default:
-									messagePrefix += 'HINT: ';
-									break;
-							}
-						}
-					}
-					// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
-					// after the source-code line in the editor
-					const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
-						after: {
-							contentText: truncate(messagePrefix + aggregatedDiagnostic[0].message),
-						},
-					};
-
-					let messageRange: vscode.Range | undefined;
-					if (config.followCursor === 'allLines') {
-						// Default value (most used)
-						messageRange = aggregatedDiagnostic[0].range;
-					} else {
-						// Others require cursor tracking
-						if (range === undefined) {
-							range = editor.selection;// tslint:disable-line
-						}
-						const diagnosticRange = aggregatedDiagnostic[0].range;
-
-						if (config.followCursor === 'activeLine') {
-							const lineStart = range.start.line - config.followCursorMore;
-							const lineEnd = range.end.line + config.followCursorMore;
-
-							if (((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
-								((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))) {
-								messageRange = diagnosticRange;
-							}
-						} else if (config.followCursor === 'closestProblem') {
-							if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) ||
-								allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
-									messageRange = diagnosticRange;
-							}
-						}
-					}
-
-					if (!messageRange) {
-						continue;
-					}
-
-					const diagnosticDecorationOptions: vscode.DecorationOptions = {
-						range: messageRange,
-						renderOptions: decInstanceRenderOptions,
-					};
-
-					switch (aggregatedDiagnostic[0].severity) {
-						// Error
-						case 0:
-							decorationOptionsError.push(diagnosticDecorationOptions);
-							break;
-						// Warning
-						case 1:
-							decorationOptionsWarning.push(diagnosticDecorationOptions);
-							break;
-						// Info
-						case 2:
-							decorationOptionsInfo.push(diagnosticDecorationOptions);
-							break;
-						// Hint
-						case 3:
-							decorationOptionsHint.push(diagnosticDecorationOptions);
-							break;
-					}
 				}
 			}
 		}
@@ -329,6 +338,36 @@ export function activate(context: vscode.ExtensionContext) {
 		editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
 		editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
 		editor.setDecorations(decorationTypeHint, decorationOptionsHint);
+
+		if (config.editorActiveTabDecorationEnabled &&
+			editor === window.activeTextEditor) {
+			const workspaceColorCustomizations = getWorkspaceColorCustomizations();
+
+			let newTabBackground: string | undefined = '';
+
+			// File has at least one warning
+			if (diagnostics.some(diagnostic => {
+				return diagnostic.severity === vscode.DiagnosticSeverity.Warning;
+			})) {
+				newTabBackground = config.editorActiveTabWarningBackground;
+			}
+			// File has at least one error
+			if (diagnostics.some(diagnostic => {
+				return diagnostic.severity === vscode.DiagnosticSeverity.Error;
+			})) {
+				newTabBackground = config.editorActiveTabErrorBackground;
+			}
+			if (newTabBackground) {
+				// Don't write the same value
+				if (newTabBackground === workspaceColorCustomizations['tab.activeBackground']) {
+					return;
+				}
+				workspaceColorCustomizations['tab.activeBackground'] = newTabBackground;
+				updateWorkspaceColorCustomizations(workspaceColorCustomizations);
+			} else {
+				removeActiveTabDecorations();
+			}
+		}
 	}
 
 	function clearAllDecorations() {
@@ -525,6 +564,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTNAME}.toggle`, () => {
 		errorLensEnabled = !errorLensEnabled;
+		clearAllDecorations();
 		updateAllDecorations();
 	});
 	const disposableToggleError = vscode.commands.registerCommand(`${EXTNAME}.toggleError`, () => {
@@ -568,6 +608,35 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
 	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
+}
+interface IColorCustomizations {
+	[key: string]: string;
+}
+function getWorkspaceColorCustomizations() {
+	const inspect = workspace.getConfiguration().inspect('workbench.colorCustomizations');
+
+	if (!inspect) {
+		return {};
+	}
+	if (typeof inspect.workspaceValue !== 'object') {
+		return {};
+	}
+	const colorCustomizations: IColorCustomizations = inspect.workspaceValue as IColorCustomizations;
+
+	return colorCustomizations;
+}
+function updateWorkspaceColorCustomizations(newValue = {}) {
+	const settings = workspace.getConfiguration(undefined, null);
+	settings.update('workbench.colorCustomizations', newValue, vscode.ConfigurationTarget.Workspace);
+}
+function removeActiveTabDecorations() {
+	const workspaceColorCustomizations = getWorkspaceColorCustomizations();
+	if (!('tab.activeBackground' in workspaceColorCustomizations)) {
+		return;
+	}
+	delete workspaceColorCustomizations['tab.activeBackground'];
+
+	updateWorkspaceColorCustomizations(workspaceColorCustomizations);
 }
 
 export function deactivate() {}

@@ -44,7 +44,14 @@ export interface IConfig {
 
 	followCursor: FollowCursor;
 	followCursorMore: number;
+
 	onSave: boolean;
+
+	editorActiveTabDecorationEnabled: boolean;
+	editorActiveTabErrorBackground?: string;
+	// editorActiveTabErrorForeground?: string;
+	editorActiveTabWarningBackground?: string;
+	// editorActiveTabWarningForeground?: string;
 
 	gutterIconsEnabled: boolean;
 	gutterIconSize: string;

@@ -352,6 +352,21 @@
 					"type": "string",
 					"default": "#00b7e4",
 					"markdownDescription": "Info color of `circle` gutter icon set."
+				},
+				"errorLens.editorActiveTabDecorationEnabled": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "When `true` - updates `tab.activeBackground` if the file has errors"
+				},
+				"errorLens.editorActiveTabErrorBackground": {
+					"type": "string",
+					"default": null,
+					"markdownDescription": ""
+				},
+				"errorLens.editorActiveTabWarningBackground": {
+					"type": "string",
+					"default": null,
+					"markdownDescription": ""
 				}
 			}
 		}

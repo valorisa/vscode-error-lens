@@ -38,9 +38,13 @@ export interface IConfig {
 	enabledDiagnosticLevels: string[];
 	addAnnotationTextPrefixes: boolean;
 	exclude: Exclude;
+
 	delay?: number;
-	onSave: boolean;
 	clearDecorations: boolean;
+
+	followCursor: FollowCursor;
+	followCursorMore: number;
+	onSave: boolean;
 
 	gutterIconsEnabled: boolean;
 	gutterIconSize: string;
@@ -56,6 +60,7 @@ export interface IConfig {
 }
 
 export type GutterIconSet = 'default' | 'borderless' | 'circle';
+export type FollowCursor = 'allLines' | 'activeLine' | 'closestProblem';
 
 export interface IExcludeObject {
 	code: string;

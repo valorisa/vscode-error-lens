@@ -28,12 +28,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let onDidChangeDiagnosticsDisposable: vscode.Disposable;
 	let onDidSaveTextDocumentDisposable: vscode.Disposable;
+	let onDidCursorChangeDisposable: vscode.Disposable;
+	let lastPosition: vscode.Position;
 
 	setDecorationStyle();
 	updateExclude();
 	updateConfigEnabledLevels();
 	updateChangeDiagnosticListener();
 	updateOnSaveListener();
+	updateCursorChangeListener();
 
 	window.onDidChangeActiveTextEditor(textEditor => {
 		if (textEditor) {
@@ -77,6 +80,26 @@ export function activate(context: vscode.ExtensionContext) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics);
 		}
 	}
+	function updateCursorChangeListener() {
+		if (onDidCursorChangeDisposable) {
+			onDidCursorChangeDisposable.dispose();
+		}
+		if (config.followCursor === 'allLines') {
+			return;
+		}
+		if (config.followCursor === 'activeLine' || config.followCursor === 'closestProblem') {
+			lastPosition = new vscode.Position(999999, 0);// Unlikely line number
+			onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
+				const selection = e.selections[0];
+				if (e.selections.length === 1 &&
+					selection.isEmpty &&
+					lastPosition.line !== selection.active.line) {
+					updateDecorationsForUri(e.textEditor.document.uri, e.textEditor, selection);
+					lastPosition = e.selections[0].active;
+				}
+			});
+		}
+	}
 	function updateOnSaveListener() {
 		if (onDidSaveTextDocumentDisposable) {
 			onDidSaveTextDocumentDisposable.dispose();
@@ -97,7 +120,7 @@ export function activate(context: vscode.ExtensionContext) {
      * Update the editor decorations for the provided URI. Only if the URI scheme is "file" is the function
      * processed. (It can be others, such as "git://<something>", in which case the function early-exits).
      */
-	function updateDecorationsForUri(uriToDecorate : vscode.Uri, editor?: vscode.TextEditor) {
+	function updateDecorationsForUri(uriToDecorate : vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range) {
 		if (!uriToDecorate) {
 			return;
 		}
@@ -167,6 +190,20 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			}
 
+			let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
+			if (config.followCursor === 'closestProblem') {
+				if (range === undefined) {
+					range = editor.selection;// tslint:disable-line
+				}
+				const line = range.start.line;
+
+				const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => {
+					return Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0]));
+				});
+				aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
+				allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
+			}
+
 			for (const key in aggregatedDiagnostics) {
 				const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
 
@@ -234,8 +271,39 @@ export function activate(context: vscode.ExtensionContext) {
 						},
 					};
 
+					let messageRange: vscode.Range | undefined;
+					if (config.followCursor === 'allLines') {
+						// Default value (most used)
+						messageRange = aggregatedDiagnostic[0].range;
+					} else {
+						// Others require cursor tracking
+						if (range === undefined) {
+							range = editor.selection;// tslint:disable-line
+						}
+						const diagnosticRange = aggregatedDiagnostic[0].range;
+
+						if (config.followCursor === 'activeLine') {
+							const lineStart = range.start.line - config.followCursorMore;
+							const lineEnd = range.end.line + config.followCursorMore;
+
+							if (((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
+								((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))) {
+								messageRange = diagnosticRange;
+							}
+						} else if (config.followCursor === 'closestProblem') {
+							if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) ||
+								allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
+									messageRange = diagnosticRange;
+							}
+						}
+					}
+
+					if (!messageRange) {
+						continue;
+					}
+
 					const diagnosticDecorationOptions: vscode.DecorationOptions = {
-						range: aggregatedDiagnostic[0].range,
+						range: messageRange,
 						renderOptions: decInstanceRenderOptions,
 					};
 
@@ -291,6 +359,7 @@ export function activate(context: vscode.ExtensionContext) {
 		updateConfigEnabledLevels();
 		updateChangeDiagnosticListener();
 		updateOnSaveListener();
+		updateCursorChangeListener();
 		setDecorationStyle();
 		updateAllDecorations();
 	}

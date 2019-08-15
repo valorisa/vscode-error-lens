@@ -297,10 +297,10 @@ export function activate(context: vscode.ExtensionContext) {
 								messageRange = diagnosticRange;
 						}
 					}
-				}
 
-				if (!messageRange) {
-					continue;
+					if (!messageRange) {
+						continue;
+					}
 				}
 
 				const diagnosticDecorationOptions: vscode.DecorationOptions = {

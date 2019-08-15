@@ -382,7 +382,6 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeHint.dispose();
 
 		updateEverything();
-		updateAllDecorations();
 	}
 
 	function updateExclude() {
@@ -543,6 +542,7 @@ export function activate(context: vscode.ExtensionContext) {
 		updateChangeDiagnosticListener();
 		updateOnSaveListener();
 		updateCursorChangeListener();
+		updateAllDecorations();
 	}
 
 	function updateAllDecorations() {

@@ -1,3 +1,8 @@
+## 2.6.0 `15 Aug 2019`
+
+- ✨ Ability to show only closest to the cursor problems (`errorLens.followCursor`).
+- ✨ Ability to change active editor tab title background when file has Errors/Warnings (`errorLens.editorActiveTabDecorationEnabled`)
+
 ## 2.5.0 `11 Jul 2019`
 
 - 💥 Deprecate enum setting `errorLens.fontStyle` in favor of boolean `errorLens.fontStyleItalic`

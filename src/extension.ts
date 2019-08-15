@@ -214,25 +214,21 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let addErrorLens = false;
 			switch (aggregatedDiagnostic[0].severity) {
-				// Error
 				case 0:
 					if (configErrorEnabled && errorEnabled) {
 						addErrorLens = true;
 					}
 					break;
-				// Warning
 				case 1:
 					if (configWarningEnabled && warningEabled) {
 						addErrorLens = true;
 					}
 					break;
-				// Info
 				case 2:
 					if (configInfoEnabled && infoEnabled) {
 						addErrorLens = true;
 					}
 					break;
-				// Hint
 				case 3:
 					if (configHintEnabled && hintEnabled) {
 						addErrorLens = true;
@@ -313,19 +309,15 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				switch (aggregatedDiagnostic[0].severity) {
-					// Error
 					case 0:
 						decorationOptionsError.push(diagnosticDecorationOptions);
 						break;
-					// Warning
 					case 1:
 						decorationOptionsWarning.push(diagnosticDecorationOptions);
 						break;
-					// Info
 					case 2:
 						decorationOptionsInfo.push(diagnosticDecorationOptions);
 						break;
-					// Hint
 					case 3:
 						decorationOptionsHint.push(diagnosticDecorationOptions);
 						break;
@@ -345,15 +337,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let newTabBackground: string | undefined = '';
 
-			// File has at least one warning
 			if (diagnostics.some(diagnostic => {
-				return diagnostic.severity === vscode.DiagnosticSeverity.Warning;
+				// File has at least one warning
+				return diagnostic.severity === 1;
 			})) {
 				newTabBackground = config.editorActiveTabWarningBackground;
 			}
-			// File has at least one error
 			if (diagnostics.some(diagnostic => {
-				return diagnostic.severity === vscode.DiagnosticSeverity.Error;
+				// File has at least one error
+				return diagnostic.severity === 0;
 			})) {
 				newTabBackground = config.editorActiveTabErrorBackground;
 			}

@@ -31,12 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let onDidCursorChangeDisposable: vscode.Disposable;
 	let lastPosition: vscode.Position;
 
-	setDecorationStyle();
-	updateExclude();
-	updateConfigEnabledLevels();
-	updateChangeDiagnosticListener();
-	updateOnSaveListener();
-	updateCursorChangeListener();
+	updateEverything();
 
 	window.onDidChangeActiveTextEditor(textEditor => {
 		if (textEditor) {
@@ -355,12 +350,7 @@ export function activate(context: vscode.ExtensionContext) {
 		decorationTypeInfo.dispose();
 		decorationTypeHint.dispose();
 
-		updateExclude();
-		updateConfigEnabledLevels();
-		updateChangeDiagnosticListener();
-		updateOnSaveListener();
-		updateCursorChangeListener();
-		setDecorationStyle();
+		updateEverything();
 		updateAllDecorations();
 	}
 
@@ -513,6 +503,15 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 			isWholeLine: true,
 		});
+	}
+
+	function updateEverything() {
+		updateExclude();
+		setDecorationStyle();
+		updateConfigEnabledLevels();
+		updateChangeDiagnosticListener();
+		updateOnSaveListener();
+		updateCursorChangeListener();
 	}
 
 	function updateAllDecorations() {

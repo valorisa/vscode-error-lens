@@ -29,7 +29,6 @@ export function activate(context: vscode.ExtensionContext) {
 	let onDidChangeDiagnosticsDisposable: vscode.Disposable;
 	let onDidSaveTextDocumentDisposable: vscode.Disposable;
 	let onDidCursorChangeDisposable: vscode.Disposable;
-	let lastPosition: vscode.Position;
 
 	updateEverything();
 
@@ -89,14 +88,14 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 		if (config.followCursor === 'activeLine' || config.followCursor === 'closestProblem') {
-			lastPosition = new vscode.Position(999999, 0);// Unlikely line number
+			let lastPositionLine = 999999;// Unlikely line number
 			onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 				const selection = e.selections[0];
 				if (e.selections.length === 1 &&
 					selection.isEmpty &&
-					lastPosition.line !== selection.active.line) {
+					lastPositionLine !== selection.active.line) {
 					updateDecorationsForUri(e.textEditor.document.uri, e.textEditor, selection);
-					lastPosition = e.selections[0].active;
+					lastPositionLine = e.selections[0].active.line;
 				}
 			});
 		}

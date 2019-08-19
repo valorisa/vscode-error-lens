@@ -49,9 +49,7 @@ export interface IConfig {
 
 	editorActiveTabDecorationEnabled: boolean;
 	editorActiveTabErrorBackground?: string;
-	// editorActiveTabErrorForeground?: string;
 	editorActiveTabWarningBackground?: string;
-	// editorActiveTabWarningForeground?: string;
 
 	gutterIconsEnabled: boolean;
 	gutterIconSize: string;

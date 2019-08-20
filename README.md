@@ -14,14 +14,18 @@ the site of the line of code which is generating the diagnostic.
 
 ## Settings
 
-* `errorLens.errorBackground`: Background color used to highlight lines containing errors.
+* `errorLens.errorBackground`: Background color of the entire line containing error.
 * `errorLens.errorForeground`: Text color used to highlight lines containing errors.
-* `errorLens.warningBackground`: Background color used to highlight lines containing warnings.
+* `errorLens.errorMessageBackground`: Background color of the error message.
+* `errorLens.warningBackground`: Background color of the entire line containing warning.
 * `errorLens.warningForeground`: Text color used to highlight lines containing warnings.
-* `errorLens.infoBackground`: Background color used to highlight lines containing info.
+* `errorLens.warningMessageBackground`: Background color of the warning message.
+* `errorLens.infoBackground`: Background color of the entire line containing info.
 * `errorLens.infoForeground`: Text color used to highlight lines containing info.
-* `errorLens.hintBackground`: Background color used to highlight lines containing hints.
+* `errorLens.infoMessageBackground`: Background color of the info message.
+* `errorLens.hintBackground`: Background color of the entire line containing hint.
 * `errorLens.hintForeground`: Text color used to highlight lines containing hints.
+* `errorLens.hintMessageBackground`: Background color of the hint message.
 * `errorLens.light`: Overwrite any of the above colors for light themes
 * `errorLens.fontSize`: Font size of annotations **Not officially supported**
 * `errorLens.fontFamily`: Font family of annotations. **Not officially supported**

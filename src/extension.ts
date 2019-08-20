@@ -462,6 +462,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			after: {
 				...afterProps,
 				color: config.errorForeground,
+				backgroundColor: config.errorMessageBackground,
 			},
 			light: {
 				backgroundColor: config.light.errorBackground || config.errorBackground,
@@ -480,6 +481,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			after: {
 				...afterProps,
 				color: config.warningForeground,
+				backgroundColor: config.warningMessageBackground,
 			},
 			light: {
 				backgroundColor: config.light.warningBackground || config.warningBackground,
@@ -498,6 +500,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			after: {
 				...afterProps,
 				color: config.infoForeground,
+				backgroundColor: config.infoMessageBackground,
 			},
 			light: {
 				backgroundColor: config.light.infoBackground || config.infoBackground,
@@ -514,6 +517,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			after: {
 				...afterProps,
 				color: config.hintForeground,
+				backgroundColor: config.hintMessageBackground,
 			},
 			light: {
 				backgroundColor: config.light.hintBackground || config.hintBackground,

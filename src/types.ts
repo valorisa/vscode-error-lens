@@ -3,12 +3,19 @@ import * as vscode from 'vscode';
 export interface IConfig {
 	errorBackground: string;
 	errorForeground: string;
+	errorMessageBackground: string;
+
 	warningBackground: string;
 	warningForeground: string;
+	warningMessageBackground: string;
+
 	infoBackground: string;
 	infoForeground: string;
+	infoMessageBackground: string;
+
 	hintBackground: string;
 	hintForeground: string;
+	hintMessageBackground: string;
 
 	light: {
 		errorBackground: string;

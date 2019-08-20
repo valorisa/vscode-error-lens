@@ -71,42 +71,62 @@
 				"errorLens.errorBackground": {
 					"type": "string",
 					"default": "#e4545420",
-					"description": "Background color used to highlight lines containing errors."
+					"description": "Background color of the entire line containing error."
 				},
 				"errorLens.errorForeground": {
 					"type": "string",
 					"default": "#e45454",
-					"description": "Text color used to highlight lines containing errors."
+					"description": "Text color of the error problem message."
+				},
+				"errorLens.errorMessageBackground": {
+					"type": ["string", "null"],
+					"default": null,
+					"description": "Background color of the error message."
 				},
 				"errorLens.warningBackground": {
 					"type": "string",
 					"default": "#ff942f20",
-					"description": "Background color used to highlight lines containing warnings."
+					"description": "Background color of the entire line containing warning."
 				},
 				"errorLens.warningForeground": {
 					"type": "string",
 					"default": "#ff942f",
 					"description": "Text color used to highlight lines containing warnings."
 				},
+				"errorLens.warningMessageBackground": {
+					"type": ["string", "null"],
+					"default": null,
+					"description": "Background color of the warning message."
+				},
 				"errorLens.infoBackground": {
 					"type": "string",
 					"default": "#00b7e420",
-					"description": "Background color used to highlight lines containing info."
+					"description": "Background color of the entire line containing info."
 				},
 				"errorLens.infoForeground": {
 					"type": "string",
 					"default": "#00b7e4",
 					"description": "Text color used to highlight lines containing info."
 				},
+				"errorLens.infoMessageBackground": {
+					"type": ["string", "null"],
+					"default": null,
+					"description": "Background color of the info message."
+				},
 				"errorLens.hintBackground": {
 					"type": "string",
 					"default": "#17a2a220",
-					"description": "Background color used to highlight lines containing hints."
+					"description": "Background color of the entire line containing hint."
 				},
 				"errorLens.hintForeground": {
 					"type": "string",
 					"default": "#17a2a2",
 					"description": "Text color used to highlight lines containing hints."
+				},
+				"errorLens.hintMessageBackground": {
+					"type": ["string", "null"],
+					"default": null,
+					"description": "Background color of the hint message."
 				},
 				"errorLens.fontFamily": {
 					"type": "string",

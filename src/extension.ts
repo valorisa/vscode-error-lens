@@ -44,6 +44,8 @@ export function activate(context: vscode.ExtensionContext): void {
 		}
 	}, undefined, context.subscriptions);
 
+	window.onDidChangeVisibleTextEditors(updateAllDecorations, undefined, context.subscriptions);
+
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
 		// Many URIs can change - we only need to decorate all visible editors
 		for (const uri of diagnosticChangeEvent.uris) {

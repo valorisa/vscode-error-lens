@@ -127,12 +127,6 @@ export function activate(context: vscode.ExtensionContext): void {
 			return;
 		}
 
-		if (uriToDecorate.scheme !== 'file' &&
-			uriToDecorate.scheme !== 'untitled' &&
-			uriToDecorate.scheme !== 'vscode-userdata') {
-			return;
-		}
-
 		const activeTextEditor = window.activeTextEditor;
 		if (editor === undefined) {
 			editor = activeTextEditor;// tslint:disable-line

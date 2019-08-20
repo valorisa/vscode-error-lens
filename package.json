@@ -2,7 +2,7 @@
 	"name": "errorlens",
 	"displayName": "Error Lens",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
-	"version": "2.6.0",
+	"version": "2.7.0",
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
@@ -79,7 +79,10 @@
 					"description": "Text color of the error problem message."
 				},
 				"errorLens.errorMessageBackground": {
-					"type": ["string", "null"],
+					"type": [
+						"string",
+						"null"
+					],
 					"default": null,
 					"description": "Background color of the error message."
 				},
@@ -94,7 +97,10 @@
 					"description": "Text color used to highlight lines containing warnings."
 				},
 				"errorLens.warningMessageBackground": {
-					"type": ["string", "null"],
+					"type": [
+						"string",
+						"null"
+					],
 					"default": null,
 					"description": "Background color of the warning message."
 				},
@@ -109,7 +115,10 @@
 					"description": "Text color used to highlight lines containing info."
 				},
 				"errorLens.infoMessageBackground": {
-					"type": ["string", "null"],
+					"type": [
+						"string",
+						"null"
+					],
 					"default": null,
 					"description": "Background color of the info message."
 				},
@@ -124,7 +133,10 @@
 					"description": "Text color used to highlight lines containing hints."
 				},
 				"errorLens.hintMessageBackground": {
-					"type": ["string", "null"],
+					"type": [
+						"string",
+						"null"
+					],
 					"default": null,
 					"description": "Background color of the hint message."
 				},

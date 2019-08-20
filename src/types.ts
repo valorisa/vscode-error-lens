@@ -64,7 +64,7 @@ export interface IConfig {
 	infoGutterIconColor: string;
 }
 
-export type GutterIconSet = 'default' | 'borderless' | 'circle';
+export type GutterIconSet = 'default' | 'defaultOutline' | 'borderless' | 'circle';
 export type FollowCursor = 'allLines' | 'activeLine' | 'closestProblem';
 
 export interface IExcludeObject {

@@ -399,7 +399,8 @@ export function activate(context: vscode.ExtensionContext): void {
 		let gutterIconSet = config.gutterIconSet;
 		if (config.gutterIconSet !== 'borderless' &&
 			config.gutterIconSet !== 'default' &&
-			config.gutterIconSet !== 'circle') {
+			config.gutterIconSet !== 'circle' &&
+			config.gutterIconSet !== 'defaultOutline') {
 			gutterIconSet = 'default';
 		}
 
@@ -439,12 +440,12 @@ export function activate(context: vscode.ExtensionContext): void {
 				}
 			}
 
-			errorGutterIconPath = config.errorGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/error-inverse.svg`);
-			errorGutterIconPathLight = config.light.errorGutterIconPath || (config.errorGutterIconPath ? config.errorGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/error.svg`);
-			warningGutterIconPath = config.warningGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/warning-inverse.svg`);
-			warningGutterIconPathLight = config.light.warningGutterIconPath || (config.warningGutterIconPath ? config.warningGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/warning.svg`);
-			infoGutterIconPath = config.infoGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/info-inverse.svg`);
-			infoGutterIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/info.svg`);
+			errorGutterIconPath = config.errorGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/error-dark.svg`);
+			errorGutterIconPathLight = config.light.errorGutterIconPath || (config.errorGutterIconPath ? config.errorGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/error-light.svg`);
+			warningGutterIconPath = config.warningGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/warning-dark.svg`);
+			warningGutterIconPathLight = config.light.warningGutterIconPath || (config.warningGutterIconPath ? config.warningGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/warning-light.svg`);
+			infoGutterIconPath = config.infoGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/info-dark.svg`);
+			infoGutterIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/info-light.svg`);
 		}
 
 		const afterProps = {

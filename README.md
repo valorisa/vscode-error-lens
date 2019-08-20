@@ -36,7 +36,7 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.onSave`: Update decorations only on document save.
 * `errorLens.gutterIconsEnabled`: Show gutter icons (In place of debug breakpoint icon).
 * `errorLens.gutterIconSize`: Customize gutter icon size. Example: `"120%"`
-* `errorLens.gutterIconSet`: Customize gutter icon style. Possible values: `"default"`, `"borderless"`, `"circle"`.
+* `errorLens.gutterIconSet`: Customize gutter icon style. Possible values: `"default"`, `"defaultOutline"`, `"borderless"`, `"circle"`.
 * `errorLens.errorGutterIconPath`: Absolute path for error gutter icon.
 * `errorLens.warningGutterIconPath`: Absolute path for warning gutter icon.
 * `errorLens.infoGutterIconPath`: Absolute path for info gutter icon.

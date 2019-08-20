@@ -316,13 +316,15 @@
 					"description": "Change gutter icon style.",
 					"enum": [
 						"default",
+						"defaultOutline",
 						"borderless",
 						"circle"
 					],
 					"enumDescriptions": [
-						"Should be similar to vscode icons in Problems Panel.",
-						"Should be similar to vscode icons in Problems Panel only without a border.",
-						"A simple filled circle."
+						"Similar to vscode icons in Problems Panel (old).",
+						"Similar to vscode icons in Problems Panel (new).",
+						"Similar to vscode icons in Problems Panel, only without a border.",
+						"Simple filled circle."
 					],
 					"default": "default"
 				},

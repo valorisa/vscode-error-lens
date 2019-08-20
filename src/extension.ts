@@ -3,6 +3,7 @@ import vscode, { window, workspace } from 'vscode';
 
 import { IAggregatedDiagnostics, IConfig, IExcludeObject } from './types';
 import { isObject, truncate } from './utils';
+import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
 
 export function activate(context: vscode.ExtensionContext): void {
 	const EXTNAME = 'errorLens';
@@ -586,35 +587,6 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
 	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
-}
-interface IColorCustomizations {
-	[key: string]: string;
-}
-function getWorkspaceColorCustomizations(): IColorCustomizations {
-	const inspect = workspace.getConfiguration().inspect('workbench.colorCustomizations');
-
-	if (!inspect) {
-		return {};
-	}
-	if (typeof inspect.workspaceValue !== 'object') {
-		return {};
-	}
-	const colorCustomizations: IColorCustomizations = inspect.workspaceValue as IColorCustomizations;
-
-	return colorCustomizations;
-}
-function updateWorkspaceColorCustomizations(newValue = {}): void {
-	const settings = workspace.getConfiguration(undefined, null);
-	settings.update('workbench.colorCustomizations', newValue, vscode.ConfigurationTarget.Workspace);
-}
-function removeActiveTabDecorations(): void {
-	const workspaceColorCustomizations = getWorkspaceColorCustomizations();
-	if (!('tab.activeBackground' in workspaceColorCustomizations)) {
-		return;
-	}
-	delete workspaceColorCustomizations['tab.activeBackground'];
-
-	updateWorkspaceColorCustomizations(workspaceColorCustomizations);
 }
 
 export function deactivate(): void {}

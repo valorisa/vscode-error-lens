@@ -1,3 +1,10 @@
+## 2.7.0 `20 Aug 2019`
+
+- 🐛 Fix not updated decorations while dragging tabs
+- 🐛 Fix not working on remote
+- ✨ New gutter icon set `defaultOutline`
+- ✨ Ability to change message background on top of the entire line background: `errorLens.errorMessageBackground` / ...
+
 ## 2.6.0 `15 Aug 2019`
 
 - ✨ Ability to show only closest to the cursor problems (`errorLens.followCursor`).

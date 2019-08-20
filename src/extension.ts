@@ -239,22 +239,11 @@ export function activate(context: vscode.ExtensionContext): void {
 					} else {
 						// If only 1 diagnostic for this source line, show the diagnostic severity
 						switch (aggregatedDiagnostic[0].severity) {
-							case 0:
-								messagePrefix += 'ERROR: ';
-								break;
-
-							case 1:
-								messagePrefix += 'WARNING: ';
-								break;
-
-							case 2:
-								messagePrefix += 'INFO: ';
-								break;
-
+							case 0: messagePrefix += 'ERROR: ';break;
+							case 1: messagePrefix += 'WARNING: ';break;
+							case 2: messagePrefix += 'INFO: ';break;
 							case 3:
-							default:
-								messagePrefix += 'HINT: ';
-								break;
+							default: messagePrefix += 'HINT: ';break;
 						}
 					}
 				}

@@ -1,11 +1,10 @@
 import debounce from 'lodash/debounce';
-import * as vscode from 'vscode';
-import { window, workspace } from 'vscode';
+import vscode, { window, workspace } from 'vscode';
 
 import { IAggregatedDiagnostics, IConfig, IExcludeObject } from './types';
 import { isObject, truncate } from './utils';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
 	const EXTNAME = 'errorLens';
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let excludeRegexp: RegExp[] = [];
@@ -44,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}, undefined, context.subscriptions);
 
-	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent) {
+	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
 		// Many URIs can change - we only need to decorate all visible editors
 		for (const uri of diagnosticChangeEvent.uris) {
 			for (const editor of window.visibleTextEditors) {
@@ -55,13 +54,13 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	function updateChangeDiagnosticListener() {
+	function updateChangeDiagnosticListener(): void {
 		if (onDidChangeDiagnosticsDisposable) {
 			onDidChangeDiagnosticsDisposable.dispose();
 		}
 		if (config.onSave) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(e => {
-				if ((Date.now() - lastSavedTimestamp) < 1000) {
+				if (Date.now() - lastSavedTimestamp < 1000) {
 					onChangedDiagnostics(e);
 				}
 			});
@@ -69,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		if (typeof config.delay === 'number' && config.delay > 0) {
 			const debouncedOnChangeDiagnostics = debounce(onChangedDiagnostics, config.delay);
-			const onChangedDiagnosticsDebounced = (diagnosticChangeEvent: vscode.DiagnosticChangeEvent) => {
+			const onChangedDiagnosticsDebounced = (diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void => {
 				if (config.clearDecorations) {
 					clearAllDecorations();
 				}
@@ -80,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics);
 		}
 	}
-	function updateCursorChangeListener() {
+	function updateCursorChangeListener(): void {
 		if (onDidCursorChangeDisposable) {
 			onDidCursorChangeDisposable.dispose();
 		}
@@ -100,7 +99,7 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 		}
 	}
-	function updateOnSaveListener() {
+	function updateOnSaveListener(): void {
 		if (onDidSaveTextDocumentDisposable) {
 			onDidSaveTextDocumentDisposable.dispose();
 		}
@@ -109,7 +108,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		onDidSaveTextDocumentDisposable = workspace.onDidSaveTextDocument(onSaveDocument);
 	}
-	function onSaveDocument(e: vscode.TextDocument) {
+	function onSaveDocument(e: vscode.TextDocument): void {
 		lastSavedTimestamp = Date.now();
 		setTimeout(() => {
 			updateDecorationsForUri(e.uri);
@@ -117,15 +116,17 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	/**
-     * Update the editor decorations for the provided URI. Only if the URI scheme is "file" is the function
-     * processed. (It can be others, such as "git://<something>", in which case the function early-exits).
-     */
-	function updateDecorationsForUri(uriToDecorate : vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range) {
+	 * Update the editor decorations for the provided URI. Only if the URI scheme is "file" is the function
+	 * processed. (It can be others, such as "git://<something>", in which case the function early-exits).
+	 */
+	function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range): void {
 		if (!uriToDecorate) {
 			return;
 		}
 
-		if ((uriToDecorate.scheme !== 'file') && (uriToDecorate.scheme !== 'untitled') && (uriToDecorate.scheme !== 'vscode-userdata')) {
+		if (uriToDecorate.scheme !== 'file' &&
+			uriToDecorate.scheme !== 'untitled' &&
+			uriToDecorate.scheme !== 'vscode-userdata') {
 			return;
 		}
 
@@ -164,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
 		//     ]
 		// };
 
-		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
+		const aggregatedDiagnostics: IAggregatedDiagnostics = Object.create(null);
 		const diagnostics = vscode.languages.getDiagnostics(uriToDecorate);
 		// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
 		// a list of objects, grouping together diagnostics which occur on a single line.
@@ -201,9 +202,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 			const line = range.start.line;
 
-			const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => {
-				return Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0]));
-			});
+			const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
 			aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
 			allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
 		}
@@ -240,7 +239,7 @@ export function activate(context: vscode.ExtensionContext) {
 				if (config.addAnnotationTextPrefixes) {
 					if (aggregatedDiagnostic.length > 1) {
 						// If > 1 diagnostic for this source line, the prefix is "Diagnostic #1 of N: "
-						messagePrefix += 'Diagnostic 1/' + String(aggregatedDiagnostic.length) + ': ';
+						messagePrefix += `Diagnostic 1/${String(aggregatedDiagnostic.length)}: `;
 					} else {
 						// If only 1 diagnostic for this source line, show the diagnostic severity
 						switch (aggregatedDiagnostic[0].severity) {
@@ -286,14 +285,14 @@ export function activate(context: vscode.ExtensionContext) {
 						const lineStart = range.start.line - config.followCursorMore;
 						const lineEnd = range.end.line + config.followCursorMore;
 
-						if (((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
-							((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))) {
+						if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
+							diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
 							messageRange = diagnosticRange;
 						}
 					} else if (config.followCursor === 'closestProblem') {
-						if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) ||
-							allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
-								messageRange = diagnosticRange;
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
+							messageRange = diagnosticRange;
 						}
 					}
 
@@ -308,18 +307,10 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				switch (aggregatedDiagnostic[0].severity) {
-					case 0:
-						decorationOptionsError.push(diagnosticDecorationOptions);
-						break;
-					case 1:
-						decorationOptionsWarning.push(diagnosticDecorationOptions);
-						break;
-					case 2:
-						decorationOptionsInfo.push(diagnosticDecorationOptions);
-						break;
-					case 3:
-						decorationOptionsHint.push(diagnosticDecorationOptions);
-						break;
+					case 0: decorationOptionsError.push(diagnosticDecorationOptions);break;
+					case 1: decorationOptionsWarning.push(diagnosticDecorationOptions);break;
+					case 2: decorationOptionsInfo.push(diagnosticDecorationOptions);break;
+					case 3: decorationOptionsHint.push(diagnosticDecorationOptions);break;
 				}
 			}
 		}
@@ -336,16 +327,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let newTabBackground: string | undefined = '';
 
-			if (diagnostics.some(diagnostic => {
-				// File has at least one warning
-				return diagnostic.severity === 1;
-			})) {
+			// File has at least one warning
+			if (diagnostics.some(diagnostic => diagnostic.severity === 1)) {
 				newTabBackground = config.editorActiveTabWarningBackground;
 			}
-			if (diagnostics.some(diagnostic => {
-				// File has at least one error
-				return diagnostic.severity === 0;
-			})) {
+			// File has at least one error
+			if (diagnostics.some(diagnostic => diagnostic.severity === 0)) {
 				newTabBackground = config.editorActiveTabErrorBackground;
 			}
 			if (newTabBackground) {
@@ -361,7 +348,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	function clearAllDecorations() {
+	function clearAllDecorations(): void {
 		for (const editor of window.visibleTextEditors) {
 			editor.setDecorations(decorationTypeError, []);
 			editor.setDecorations(decorationTypeWarning, []);
@@ -370,7 +357,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	function updateConfig(e: vscode.ConfigurationChangeEvent) {
+	function updateConfig(e: vscode.ConfigurationChangeEvent): void {
 		if (!e.affectsConfiguration(EXTNAME)) return;
 
 		config = workspace.getConfiguration(EXTNAME) as any as IConfig;
@@ -383,7 +370,7 @@ export function activate(context: vscode.ExtensionContext) {
 		updateEverything();
 	}
 
-	function updateExclude() {
+	function updateExclude(): void {
 		excludeRegexp = [];
 		excludeSourceAndCode = [];
 
@@ -396,21 +383,21 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 
-	function updateConfigEnabledLevels() {
-		configErrorEnabled = config.enabledDiagnosticLevels.indexOf('error') !== -1;
-		configWarningEnabled = config.enabledDiagnosticLevels.indexOf('warning') !== -1;
-		configInfoEnabled = config.enabledDiagnosticLevels.indexOf('info') !== -1;
-		configHintEnabled = config.enabledDiagnosticLevels.indexOf('hint') !== -1;
+	function updateConfigEnabledLevels(): void {
+		configErrorEnabled = config.enabledDiagnosticLevels.includes('error');
+		configWarningEnabled = config.enabledDiagnosticLevels.includes('warning');
+		configInfoEnabled = config.enabledDiagnosticLevels.includes('info');
+		configHintEnabled = config.enabledDiagnosticLevels.includes('hint');
 	}
 
-	function setDecorationStyle() {
+	function setDecorationStyle(): void {
 		const gutterIconSize = config.gutterIconSize;
 
 		let gutterIconSet = config.gutterIconSet;
 		if (config.gutterIconSet !== 'borderless' &&
 			config.gutterIconSet !== 'default' &&
 			config.gutterIconSet !== 'circle') {
-				gutterIconSet = 'default';
+			gutterIconSet = 'default';
 		}
 
 		let errorGutterIconPath;
@@ -534,7 +521,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
-	function updateEverything() {
+	function updateEverything(): void {
 		updateExclude();
 		setDecorationStyle();
 		updateConfigEnabledLevels();
@@ -544,7 +531,7 @@ export function activate(context: vscode.ExtensionContext) {
 		updateAllDecorations();
 	}
 
-	function updateAllDecorations() {
+	function updateAllDecorations(): void {
 		for (const editor of window.visibleTextEditors) {
 			updateDecorationsForUri(editor.document.uri, editor);
 		}
@@ -593,7 +580,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 		const renderedDiagnostic = diagnosticAtActiveLineNumber.sort((a, b) => a.severity - b.severity)[0];
-		const source = renderedDiagnostic.source ? '[' + renderedDiagnostic.source + '] ' : '';
+		const source = renderedDiagnostic.source ? `[${renderedDiagnostic.source}] ` : '';
 		vscode.env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
@@ -603,7 +590,7 @@ export function activate(context: vscode.ExtensionContext) {
 interface IColorCustomizations {
 	[key: string]: string;
 }
-function getWorkspaceColorCustomizations() {
+function getWorkspaceColorCustomizations(): IColorCustomizations {
 	const inspect = workspace.getConfiguration().inspect('workbench.colorCustomizations');
 
 	if (!inspect) {
@@ -616,11 +603,11 @@ function getWorkspaceColorCustomizations() {
 
 	return colorCustomizations;
 }
-function updateWorkspaceColorCustomizations(newValue = {}) {
+function updateWorkspaceColorCustomizations(newValue = {}): void {
 	const settings = workspace.getConfiguration(undefined, null);
 	settings.update('workbench.colorCustomizations', newValue, vscode.ConfigurationTarget.Workspace);
 }
-function removeActiveTabDecorations() {
+function removeActiveTabDecorations(): void {
 	const workspaceColorCustomizations = getWorkspaceColorCustomizations();
 	if (!('tab.activeBackground' in workspaceColorCustomizations)) {
 		return;
@@ -630,4 +617,4 @@ function removeActiveTabDecorations() {
 	updateWorkspaceColorCustomizations(workspaceColorCustomizations);
 }
 
-export function deactivate() {}
+export function deactivate(): void {}

@@ -194,7 +194,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
 		if (config.followCursor === 'closestProblem') {
 			if (range === undefined) {
-				range = editor.selection;// tslint:disable-line
+				range = editor.selection;
 			}
 			const line = range.start.line;
 
@@ -208,26 +208,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
 			let addErrorLens = false;
 			switch (aggregatedDiagnostic[0].severity) {
-				case 0:
-					if (configErrorEnabled && errorEnabled) {
-						addErrorLens = true;
-					}
-					break;
-				case 1:
-					if (configWarningEnabled && warningEabled) {
-						addErrorLens = true;
-					}
-					break;
-				case 2:
-					if (configInfoEnabled && infoEnabled) {
-						addErrorLens = true;
-					}
-					break;
-				case 3:
-					if (configHintEnabled && hintEnabled) {
-						addErrorLens = true;
-					}
-					break;
+				case 0: addErrorLens = configErrorEnabled && errorEnabled; break;
+				case 1: addErrorLens = configWarningEnabled && warningEabled; break;
+				case 2: addErrorLens = configInfoEnabled && infoEnabled; break;
+				case 3: addErrorLens = configHintEnabled && hintEnabled; break;
 			}
 
 			if (addErrorLens) {
@@ -239,11 +223,11 @@ export function activate(context: vscode.ExtensionContext): void {
 					} else {
 						// If only 1 diagnostic for this source line, show the diagnostic severity
 						switch (aggregatedDiagnostic[0].severity) {
-							case 0: messagePrefix += 'ERROR: ';break;
-							case 1: messagePrefix += 'WARNING: ';break;
-							case 2: messagePrefix += 'INFO: ';break;
+							case 0: messagePrefix += 'ERROR: '; break;
+							case 1: messagePrefix += 'WARNING: '; break;
+							case 2: messagePrefix += 'INFO: '; break;
 							case 3:
-							default: messagePrefix += 'HINT: ';break;
+							default: messagePrefix += 'HINT: '; break;
 						}
 					}
 				}
@@ -292,10 +276,10 @@ export function activate(context: vscode.ExtensionContext): void {
 				};
 
 				switch (aggregatedDiagnostic[0].severity) {
-					case 0: decorationOptionsError.push(diagnosticDecorationOptions);break;
-					case 1: decorationOptionsWarning.push(diagnosticDecorationOptions);break;
-					case 2: decorationOptionsInfo.push(diagnosticDecorationOptions);break;
-					case 3: decorationOptionsHint.push(diagnosticDecorationOptions);break;
+					case 0: decorationOptionsError.push(diagnosticDecorationOptions); break;
+					case 1: decorationOptionsWarning.push(diagnosticDecorationOptions); break;
+					case 2: decorationOptionsInfo.push(diagnosticDecorationOptions); break;
+					case 3: decorationOptionsHint.push(diagnosticDecorationOptions); break;
 				}
 			}
 		}
@@ -430,7 +414,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			infoGutterIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/info-light.svg`);
 		}
 
-		const afterProps = {
+		const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
 			fontStyle: config.fontStyleItalic ? 'italic' : 'normal',
 			margin: config.margin,
 			fontWeight: config.fontWeight,

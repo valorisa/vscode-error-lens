@@ -20,10 +20,13 @@ export interface IConfig {
 	light: {
 		errorBackground: string;
 		errorForeground: string;
+
 		warningBackground: string;
 		warningForeground: string;
+
 		infoBackground: string;
 		infoForeground: string;
+
 		hintBackground: string;
 		hintForeground: string;
 

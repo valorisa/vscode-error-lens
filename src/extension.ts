@@ -418,7 +418,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			fontStyle: config.fontStyleItalic ? 'italic' : 'normal',
 			margin: config.margin,
 			fontWeight: config.fontWeight,
-			textDecoration: `;font-family:${config.fontFamily};font-size:${config.fontSize};line-height:1;`,
+			textDecoration: `;font-family:${config.fontFamily};font-size:${config.fontSize};line-height:1;border-radius:0.15em;padding:0.05em 0.3em;`,
 		};
 
 		decorationTypeError = window.createTextEditorDecorationType({

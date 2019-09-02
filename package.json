@@ -171,7 +171,7 @@
 				"errorLens.fontSize": {
 					"type": "string",
 					"default": "",
-					"description": "Font size for text (problem messages)."
+					"description": "Font size for text (problem messages). (CSS units)"
 				},
 				"errorLens.margin": {
 					"type": "string",
@@ -411,16 +411,16 @@
 		"watch": "webpack --mode development --watch --display=minimal"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.137",
+		"@types/lodash": "^4.14.138",
 		"@types/node": "^10.14.15",
 		"@types/vscode": "^1.30.0",
 		"@typescript-eslint/eslint-plugin": "^2.0.0",
 		"@typescript-eslint/parser": "^2.0.0",
-		"eslint": "^6.2.0",
+		"eslint": "^6.3.0",
 		"friendly-errors-webpack-plugin": "^1.7.0",
 		"ts-loader": "^6.0.4",
-		"typescript": "^3.5.3",
-		"webpack": "^4.39.2",
+		"typescript": "^3.6.2",
+		"webpack": "^4.39.3",
 		"webpack-cli": "^3.3.7",
 		"webpack-strip-block": "^0.2.0"
 	},

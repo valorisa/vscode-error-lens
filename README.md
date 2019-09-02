@@ -27,8 +27,8 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.hintForeground`: Text color used to highlight lines containing hints.
 * `errorLens.hintMessageBackground`: Background color of the hint message.
 * `errorLens.light`: Overwrite any of the above colors for light themes
-* `errorLens.fontSize`: Font size of annotations **Not officially supported**
-* `errorLens.fontFamily`: Font family of annotations. **Not officially supported**
+* `errorLens.fontSize`: Font size of annotations **HACK**
+* `errorLens.fontFamily`: Font family of annotations. **HACK**
 * `errorLens.fontWeight`: Font Weight of annotations.
 * `errorLens.fontStyleItalic`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.margin`: Distance between the end of the line and the start of annotation. (CSS units)
@@ -47,8 +47,8 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.errorGutterIconColor`: Error color of the `circle` gutter icon set.
 * `errorLens.warningGutterIconColor`: Warning color of the `circle` gutter icon set.
 * `errorLens.infoGutterIconColor`: Info color of the `circle` gutter icon set.
-* `errorLens.followCursor`: **EXPERIMENTAL** Highlight only portion of the problems. Possible values: `"allLines"`, `"activeLine"`, `"closestProblem"`.
-* `followCursorMore`: **EXPERIMENTAL** Augments `followCursor`. Adds number of lines to top and bottom when `followCursor` is `activeLine`. Adds number of closest problems when `followCursor` is `closestProblem`
+* `errorLens.followCursor`: Highlight only portion of the problems. Possible values: `"allLines"`, `"activeLine"`, `"closestProblem"`.
+* `followCursorMore`: Augments `followCursor`. Adds number of lines to top and bottom when `followCursor` is `activeLine`. Adds number of closest problems when `followCursor` is `closestProblem`
 
 ## Commands
 

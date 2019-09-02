@@ -26,8 +26,8 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.hintBackground`: Background color of the entire line containing hint.
 * `errorLens.hintForeground`: Text color used to highlight lines containing hints.
 * `errorLens.hintMessageBackground`: Background color of the hint message.
-* `errorLens.light`: Overwrite any of the above colors for light themes
-* `errorLens.fontSize`: Font size of annotations **HACK**
+* `errorLens.light`: Overwrite any of the above colors (except `message`) for light themes
+* `errorLens.fontSize`: Font size of annotations. **HACK**
 * `errorLens.fontFamily`: Font family of annotations. **HACK**
 * `errorLens.fontWeight`: Font Weight of annotations.
 * `errorLens.fontStyleItalic`: Show ErrorLens annotations in Italics, or not?

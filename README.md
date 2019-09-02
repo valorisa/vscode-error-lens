@@ -63,7 +63,7 @@ the site of the line of code which is generating the diagnostic.
 
 Example of using `source` & `code` or diagnostic message to exclude a problem:
 
-```javascript
+```js
 "errorLens.exclude": [
     // Use source and code
     {
@@ -71,7 +71,7 @@ Example of using `source` & `code` or diagnostic message to exclude a problem:
         "source": "ts",
     },
     // Use diagnostic message
-    "Unknown configuration setting"
+    "Missing semicolon"
 ],
 ```
 

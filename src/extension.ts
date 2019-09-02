@@ -413,12 +413,18 @@ export function activate(context: vscode.ExtensionContext): void {
 			infoGutterIconPath = config.infoGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/info-dark.svg`);
 			infoGutterIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/info-light.svg`);
 		}
+		const fontFamily = config.fontFamily ? `font-family:${config.fontFamily}` : '';
+		const fontSize = config.fontSize ? `font-size:${config.fontSize};line-height:1` : '';
+		const paddingAndBorderRadius =
+			config.errorMessageBackground ||
+			config.warningMessageBackground ||
+			config.infoMessageBackground ||
+			config.hintMessageBackground ? 'border-radius:0.15em;padding:0.05em 0.3em;' : '';
 
 		const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
 			fontStyle: config.fontStyleItalic ? 'italic' : 'normal',
-			margin: config.margin,
 			fontWeight: config.fontWeight,
-			textDecoration: `;font-family:${config.fontFamily};font-size:${config.fontSize};line-height:1;border-radius:0.15em;padding:0.05em 0.3em;`,
+			textDecoration: `;${fontFamily};${fontSize};${paddingAndBorderRadius};margin-left:${config.margin};`,
 		};
 
 		decorationTypeError = window.createTextEditorDecorationType({

@@ -1,3 +1,9 @@
+## 2.7.1 `14 Sep 2019`
+
+- 💥 Deprecate `exclude` setting using **source** and **code** and leave only `exclude` using problem message.
+- ✨ Set some padding, only when one of message colors is set (`errorLens.errorMessageBackground` / ...)
+- 🔨 Allow omitting CSS units for `margin` & `fontSize` (`px` will be used)
+
 ## 2.7.0 `20 Aug 2019`
 
 - 🐛 Fix not updated decorations while dragging tabs

@@ -47,7 +47,7 @@ export interface IConfig {
 	margin: string;
 	enabledDiagnosticLevels: string[];
 	addAnnotationTextPrefixes: boolean;
-	exclude: Exclude;
+	exclude: string[];
 
 	delay?: number;
 	clearDecorations: boolean;
@@ -76,12 +76,6 @@ export interface IConfig {
 
 export type GutterIconSet = 'default' | 'defaultOutline' | 'borderless' | 'circle';
 export type FollowCursor = 'allLines' | 'activeLine' | 'closestProblem';
-
-export interface IExcludeObject {
-	code: string;
-	source: string;
-}
-type Exclude = (string | IExcludeObject)[];
 
 export interface IAggregatedDiagnostics {
 	[key: string]: vscode.Diagnostic[];

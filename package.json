@@ -206,22 +206,7 @@
 					"type": "array",
 					"default": [],
 					"items": {
-						"oneOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "object",
-								"properties": {
-									"code": {
-										"type": "string"
-									},
-									"source": {
-										"type": "string"
-									}
-								}
-							}
-						]
+						"type": "string"
 					},
 					"description": "Specify messages that should not be highlighted."
 				},

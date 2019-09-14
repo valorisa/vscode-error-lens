@@ -1,15 +1,14 @@
 import debounce from 'lodash/debounce';
 import vscode, { window, workspace } from 'vscode';
 
-import { IAggregatedDiagnostics, IConfig, IExcludeObject } from './types';
-import { isObject, truncate } from './utils';
+import { IAggregatedDiagnostics, IConfig } from './types';
+import { truncate } from './utils';
 import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
 
 export function activate(context: vscode.ExtensionContext): void {
 	const EXTNAME = 'errorLens';
 	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
 	let excludeRegexp: RegExp[] = [];
-	let excludeSourceAndCode: IExcludeObject[] = [];
 	let errorLensEnabled = true;
 	let errorEnabled = true;
 	let warningEabled = true;
@@ -170,12 +169,6 @@ export function activate(context: vscode.ExtensionContext): void {
 			// Exclude items specified in `errorLens.exclude` setting
 			for (const regex of excludeRegexp) {
 				if (regex.test(diagnostic.message)) {
-					continue nextDiagnostic;
-				}
-			}
-			for (const excludeItem of excludeSourceAndCode) {
-				if (diagnostic.source === excludeItem.source &&
-					String(diagnostic.code) === excludeItem.code) {
 					continue nextDiagnostic;
 				}
 			}
@@ -341,13 +334,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	function updateExclude(): void {
 		excludeRegexp = [];
-		excludeSourceAndCode = [];
 
 		for (const item of config.exclude) {
 			if (typeof item === 'string') {
 				excludeRegexp.push(new RegExp(item, 'i'));
-			} else if (isObject(item)) {
-				excludeSourceAndCode.push(item);
 			}
 		}
 	}

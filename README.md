@@ -61,22 +61,6 @@ the site of the line of code which is generating the diagnostic.
 
 ## Extra
 
-Example of using `source` & `code` or diagnostic message to exclude a problem:
-
-```js
-"errorLens.exclude": [
-    // Use source and code
-    {
-        "code": "6133",// is declared but its value is never read.
-        "source": "ts",
-    },
-    // Use diagnostic message
-    "Missing semicolon"
-],
-```
-
----
-
 Remove built-in editor problem decorations (squiggly / double underline) from `settings.json`:
 
 ```javascript

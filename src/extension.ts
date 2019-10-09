@@ -20,6 +20,11 @@ export function activate(context: vscode.ExtensionContext): void {
 	let configHintEnabled = true;
 	let lastSavedTimestamp = Date.now() + 5000;
 
+	let decorationRenderOptionsError: vscode.DecorationRenderOptions;
+	let decorationRenderOptionsWarning: vscode.DecorationRenderOptions;
+	let decorationRenderOptionsInfo: vscode.DecorationRenderOptions;
+	let decorationRenderOptionsHint: vscode.DecorationRenderOptions;
+
 	let decorationTypeError: vscode.TextEditorDecorationType;
 	let decorationTypeWarning: vscode.TextEditorDecorationType;
 	let decorationTypeInfo: vscode.TextEditorDecorationType;
@@ -224,10 +229,21 @@ export function activate(context: vscode.ExtensionContext): void {
 						}
 					}
 				}
+
+				let decorationRenderOptions: vscode.DecorationRenderOptions = {};
+				switch (aggregatedDiagnostic[0].severity) {
+					case 0: decorationRenderOptions = decorationRenderOptionsError; break;
+					case 1: decorationRenderOptions = decorationRenderOptionsWarning; break;
+					case 2: decorationRenderOptions = decorationRenderOptionsInfo; break;
+					case 3: decorationRenderOptions = decorationRenderOptionsHint; break;
+				}
+
 				// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
 				// after the source-code line in the editor
 				const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
+					...decorationRenderOptions,
 					after: {
+						...decorationRenderOptions.after || {},
 						contentText: truncate(messagePrefix + aggregatedDiagnostic[0].message),
 					},
 				};
@@ -418,7 +434,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			textDecoration: `;${fontFamily};${fontSize};${paddingAndBorderRadius};margin-left:${onlyDigitsRegExp.test(config.margin) ? `${config.margin}px` : config.margin};`,
 		};
 
-		decorationTypeError = window.createTextEditorDecorationType({
+		decorationRenderOptionsError = {
 			backgroundColor: config.errorBackground,
 			gutterIconSize: errorGutterIconSizeAndColor,
 			gutterIconPath: errorGutterIconPath,
@@ -436,8 +452,8 @@ export function activate(context: vscode.ExtensionContext): void {
 				},
 			},
 			isWholeLine: true,
-		});
-		decorationTypeWarning = window.createTextEditorDecorationType({
+		};
+		decorationRenderOptionsWarning = {
 			backgroundColor: config.warningBackground,
 			gutterIconSize: warningGutterIconSizeAndColor,
 			gutterIconPath: warningGutterIconPath,
@@ -455,8 +471,8 @@ export function activate(context: vscode.ExtensionContext): void {
 				},
 			},
 			isWholeLine: true,
-		});
-		decorationTypeInfo = window.createTextEditorDecorationType({
+		};
+		decorationRenderOptionsInfo = {
 			backgroundColor: config.infoBackground,
 			gutterIconSize: infoGutterIconSizeAndColor,
 			gutterIconPath: infoGutterIconPath,
@@ -474,8 +490,8 @@ export function activate(context: vscode.ExtensionContext): void {
 				},
 			},
 			isWholeLine: true,
-		});
-		decorationTypeHint = window.createTextEditorDecorationType({
+		};
+		decorationRenderOptionsHint = {
 			backgroundColor: config.hintBackground,
 			after: {
 				...afterProps,
@@ -489,7 +505,12 @@ export function activate(context: vscode.ExtensionContext): void {
 				},
 			},
 			isWholeLine: true,
-		});
+		};
+
+		decorationTypeError = window.createTextEditorDecorationType(decorationRenderOptionsError);
+		decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptionsWarning);
+		decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
+		decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 	}
 
 	function updateEverything(): void {

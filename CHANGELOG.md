@@ -1,3 +1,7 @@
+## 2.7.2 `12 Oct 2019`
+
+- 🐛 Prevent `:after` decoration clashing with other extensions [PR #28](https://github.com/usernamehw/vscode-error-lens/pull/28) by [@bmalehorn](https://github.com/bmalehorn)
+
 ## 2.7.1 `14 Sep 2019`
 
 - 💥 Deprecate `exclude` setting using **source** and **code** and leave only `exclude` using problem message.
@@ -50,7 +54,7 @@
 ## 2.3.1 `02 Jun 2019`
 
 - ✨ Configure gutter icon size with: `errorLens.gutterIconSize`
-- ✨ Configure gutter icons to be borderless with `errorLens.gutterIconSet`: [PR #6](https://github.com/usernamehw/vscode-error-lens/pull/6) by [karlsander](https://github.com/karlsander)
+- ✨ Configure gutter icons to be borderless with `errorLens.gutterIconSet`: [PR #6](https://github.com/usernamehw/vscode-error-lens/pull/6) by [@karlsander](https://github.com/karlsander)
 
 ## 2.3.0 `01 Jun 2019`
 

@@ -576,7 +576,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
-	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig, EXTNAME));
+	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig));
 	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
 }
 

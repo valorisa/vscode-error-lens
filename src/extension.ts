@@ -424,9 +424,9 @@ export function activate(context: vscode.ExtensionContext): void {
 		const fontSize = config.fontSize ? `font-size:${onlyDigitsRegExp.test(config.fontSize) ? `${config.fontSize}px` : config.fontSize};line-height:1` : '';
 		const paddingAndBorderRadius =
 			config.errorMessageBackground ||
-			config.warningMessageBackground ||
-			config.infoMessageBackground ||
-			config.hintMessageBackground ? 'border-radius:0.15em;padding:0.05em 0.3em;' : '';
+				config.warningMessageBackground ||
+				config.infoMessageBackground ||
+				config.hintMessageBackground ? 'border-radius:0.15em;padding:0.05em 0.3em;' : '';
 
 		const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
 			fontStyle: config.fontStyleItalic ? 'italic' : 'normal',
@@ -580,4 +580,4 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
 }
 
-export function deactivate(): void {}
+export function deactivate(): void { }

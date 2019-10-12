@@ -6,8 +6,8 @@ import { truncate } from './utils';
 import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
 
 export function activate(context: vscode.ExtensionContext): void {
-	const EXTNAME = 'errorLens';
-	let config = workspace.getConfiguration(EXTNAME) as any as IConfig;
+	const EXTENSION_NAME = 'errorLens';
+	let config = workspace.getConfiguration(EXTENSION_NAME) as any as IConfig;
 	let excludeRegexp: RegExp[] = [];
 	let errorLensEnabled = true;
 	let errorEnabled = true;
@@ -336,9 +336,9 @@ export function activate(context: vscode.ExtensionContext): void {
 	}
 
 	function updateConfig(e: vscode.ConfigurationChangeEvent): void {
-		if (!e.affectsConfiguration(EXTNAME)) return;
+		if (!e.affectsConfiguration(EXTENSION_NAME)) return;
 
-		config = workspace.getConfiguration(EXTNAME) as any as IConfig;
+		config = workspace.getConfiguration(EXTENSION_NAME) as any as IConfig;
 
 		decorationTypeError.dispose();
 		decorationTypeWarning.dispose();
@@ -532,29 +532,29 @@ export function activate(context: vscode.ExtensionContext): void {
 		return `${config.gutterIconSize};background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${color}"/></svg>');`;
 	}
 
-	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTNAME}.toggle`, () => {
+	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggle`, () => {
 		errorLensEnabled = !errorLensEnabled;
 		clearAllDecorations();
 		updateAllDecorations();
 	});
-	const disposableToggleError = vscode.commands.registerCommand(`${EXTNAME}.toggleError`, () => {
+	const disposableToggleError = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleError`, () => {
 		errorEnabled = !errorEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleWarning = vscode.commands.registerCommand(`${EXTNAME}.toggleWarning`, () => {
+	const disposableToggleWarning = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleWarning`, () => {
 		warningEabled = !warningEabled;
 		updateAllDecorations();
 	});
-	const disposableToggleInfo = vscode.commands.registerCommand(`${EXTNAME}.toggleInfo`, () => {
+	const disposableToggleInfo = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleInfo`, () => {
 		infoEnabled = !infoEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleHint = vscode.commands.registerCommand(`${EXTNAME}.toggleHint`, () => {
+	const disposableToggleHint = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleHint`, () => {
 		hintEnabled = !hintEnabled;
 		updateAllDecorations();
 	});
 
-	const disposableCopyProblemMessage = vscode.commands.registerTextEditorCommand(`${EXTNAME}.copyProblemMessage`, editor => {
+	const disposableCopyProblemMessage = vscode.commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
 		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
 		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;

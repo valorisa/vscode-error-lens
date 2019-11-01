@@ -59,16 +59,3 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.toggleHint` Temporarily Enable/Disable Hint level.
 * `errorLens.copyProblemMessage` Copy problem message to clipboard (at the active line).
 
-## Extra
-
-Remove built-in editor problem decorations (squiggly / double underline) from `settings.json`:
-
-```javascript
-"workbench.colorCustomizations": {
-    "editorError.border": "#fff0",
-    "editorError.foreground": "#fff0",
-    "editorWarning.border": "#fff0",
-    "editorWarning.foreground": "#fff0",
-    // ...
-}
-```

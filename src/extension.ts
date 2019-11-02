@@ -255,7 +255,7 @@ export function activate(context: vscode.ExtensionContext): void {
 				} else {
 					// Others require cursor tracking
 					if (range === undefined) {
-						range = editor.selection;// tslint:disable-line
+						range = editor.selection;
 					}
 					const diagnosticRange = aggregatedDiagnostic[0].range;
 

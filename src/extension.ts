@@ -122,10 +122,6 @@ export function activate(context: vscode.ExtensionContext): void {
 		}, 600);
 	}
 
-	/**
-	 * Update the editor decorations for the provided URI. Only if the URI scheme is "file" is the function
-	 * processed. (It can be others, such as "git://<something>", in which case the function early-exits).
-	 */
 	function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range): void {
 		if (!uriToDecorate) {
 			return;

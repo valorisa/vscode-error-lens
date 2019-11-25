@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 
 export interface IConfig {
+	/**
+	 * `useColorContributions` is a temporary option
+	 */
+	useColorContributions: boolean;
+
 	errorBackground: string;
 	errorForeground: string;
 	errorMessageBackground: string;

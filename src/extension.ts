@@ -415,6 +415,72 @@ export function activate(context: vscode.ExtensionContext): void {
 			infoGutterIconPath = config.infoGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/info-dark.svg`);
 			infoGutterIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/info-light.svg`);
 		}
+
+		let errorBackground;
+		let errorMessageBackground;
+		let errorBackgroundLight;
+		let errorForeground;
+		let errorForegroundLight;
+		let warningBackground;
+		let warningMessageBackground;
+		let warningBackgroundLight;
+		let warningForeground;
+		let warningForegroundLight;
+		let infoBackground;
+		let infoMessageBackground;
+		let infoBackgroundLight;
+		let infoForeground;
+		let infoForegroundLight;
+		let hintBackground;
+		let hintMessageBackground;
+		let hintBackgroundLight;
+		let hintForeground;
+		let hintForegroundLight;
+
+		if (config.useColorContributions) {
+			errorBackground = new vscode.ThemeColor('errorLens.errorBackground');
+			errorMessageBackground = new vscode.ThemeColor('errorLens.errorMessageBackground');
+			errorBackgroundLight = new vscode.ThemeColor('errorLens.errorBackgroundLight');
+			errorForeground = new vscode.ThemeColor('errorLens.errorForeground');
+			errorForegroundLight = new vscode.ThemeColor('errorLens.errorForegroundLight');
+			warningBackground = new vscode.ThemeColor('errorLens.warningBackground');
+			warningMessageBackground = new vscode.ThemeColor('errorLens.warningMessageBackground');
+			warningBackgroundLight = new vscode.ThemeColor('errorLens.warningBackgroundLight');
+			warningForeground = new vscode.ThemeColor('errorLens.warningForeground');
+			warningForegroundLight = new vscode.ThemeColor('errorLens.warningForegroundLight');
+			infoBackground = new vscode.ThemeColor('errorLens.infoBackground');
+			infoMessageBackground = new vscode.ThemeColor('errorLens.infoMessageBackground');
+			infoBackgroundLight = new vscode.ThemeColor('errorLens.infoBackgroundLight');
+			infoForeground = new vscode.ThemeColor('errorLens.infoForeground');
+			infoForegroundLight = new vscode.ThemeColor('errorLens.infoForegroundLight');
+			hintBackground = new vscode.ThemeColor('errorLens.hintBackground');
+			hintMessageBackground = new vscode.ThemeColor('errorLens.hintMessageBackground');
+			hintBackgroundLight = new vscode.ThemeColor('errorLens.hintBackgroundLight');
+			hintForeground = new vscode.ThemeColor('errorLens.hintForeground');
+			hintForegroundLight = new vscode.ThemeColor('errorLens.hintForegroundLight');
+		} else {
+			errorBackground = config.errorBackground;
+			errorMessageBackground = config.errorMessageBackground;
+			errorForeground = config.errorForeground;
+			errorBackgroundLight = config.light.errorBackground;
+			errorForegroundLight = config.light.errorForeground;
+			warningBackground = config.warningBackground;
+			warningMessageBackground = config.warningMessageBackground;
+			warningForeground = config.warningForeground;
+			warningBackgroundLight = config.light.warningBackground;
+			warningForegroundLight = config.light.warningForeground;
+			infoBackground = config.infoBackground;
+			infoMessageBackground = config.infoMessageBackground;
+			infoForeground = config.infoForeground;
+			infoBackgroundLight = config.light.infoBackground;
+			infoForegroundLight = config.light.infoForeground;
+			hintBackground = config.hintBackground;
+			hintMessageBackground = config.hintMessageBackground;
+			hintForeground = config.hintForeground;
+			hintBackgroundLight = config.light.hintBackground;
+			hintForegroundLight = config.light.hintForeground;
+		}
+
 		const onlyDigitsRegExp = /^\d+$/;
 		const fontFamily = config.fontFamily ? `font-family:${config.fontFamily}` : '';
 		const fontSize = config.fontSize ? `font-size:${onlyDigitsRegExp.test(config.fontSize) ? `${config.fontSize}px` : config.fontSize};line-height:1` : '';
@@ -431,73 +497,73 @@ export function activate(context: vscode.ExtensionContext): void {
 		};
 
 		decorationRenderOptionsError = {
-			backgroundColor: config.errorBackground,
+			backgroundColor: errorBackground,
 			gutterIconSize: errorGutterIconSizeAndColor,
 			gutterIconPath: errorGutterIconPath,
 			after: {
 				...afterProps,
-				color: config.errorForeground,
-				backgroundColor: config.errorMessageBackground,
+				color: errorForeground,
+				backgroundColor: errorMessageBackground,
 			},
 			light: {
-				backgroundColor: config.light.errorBackground || config.errorBackground,
+				backgroundColor: errorBackgroundLight,
 				gutterIconSize: errorGutterIconSizeAndColorLight,
 				gutterIconPath: errorGutterIconPathLight,
 				after: {
-					color: config.light.errorForeground || config.errorForeground,
+					color: errorForegroundLight,
 				},
 			},
 			isWholeLine: true,
 		};
 		decorationRenderOptionsWarning = {
-			backgroundColor: config.warningBackground,
+			backgroundColor: warningBackground,
 			gutterIconSize: warningGutterIconSizeAndColor,
 			gutterIconPath: warningGutterIconPath,
 			after: {
 				...afterProps,
-				color: config.warningForeground,
-				backgroundColor: config.warningMessageBackground,
+				color: warningForeground,
+				backgroundColor: warningMessageBackground,
 			},
 			light: {
-				backgroundColor: config.light.warningBackground || config.warningBackground,
+				backgroundColor: warningBackgroundLight,
 				gutterIconSize: warningGutterIconSizeAndColorLight,
 				gutterIconPath: warningGutterIconPathLight,
 				after: {
-					color: config.light.warningForeground || config.warningForeground,
+					color: warningForegroundLight,
 				},
 			},
 			isWholeLine: true,
 		};
 		decorationRenderOptionsInfo = {
-			backgroundColor: config.infoBackground,
+			backgroundColor: infoBackground,
 			gutterIconSize: infoGutterIconSizeAndColor,
 			gutterIconPath: infoGutterIconPath,
 			after: {
 				...afterProps,
-				color: config.infoForeground,
-				backgroundColor: config.infoMessageBackground,
+				color: infoForeground,
+				backgroundColor: infoMessageBackground,
 			},
 			light: {
-				backgroundColor: config.light.infoBackground || config.infoBackground,
+				backgroundColor: infoBackgroundLight,
 				gutterIconSize: infoGutterIconSizeAndColorLight,
 				gutterIconPath: infoGutterIconPathLight,
 				after: {
-					color: config.light.infoForeground || config.infoForeground,
+					color: infoForegroundLight,
 				},
 			},
 			isWholeLine: true,
 		};
 		decorationRenderOptionsHint = {
-			backgroundColor: config.hintBackground,
+			backgroundColor: hintBackground,
 			after: {
 				...afterProps,
-				color: config.hintForeground,
-				backgroundColor: config.hintMessageBackground,
+				color: hintForeground,
+				backgroundColor: hintMessageBackground,
 			},
 			light: {
-				backgroundColor: config.light.hintBackground || config.hintBackground,
+				backgroundColor: hintBackgroundLight,
 				after: {
-					color: config.light.hintForeground || config.hintForeground,
+					color: hintForegroundLight,
 				},
 			},
 			isWholeLine: true,

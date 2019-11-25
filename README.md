@@ -14,6 +14,7 @@ the site of the line of code which is generating the diagnostic.
 
 ## Settings
 
+* `errorLens.useColorContributions`: Use color contributions instead of settings. These Colors can be contributed by themes.
 * `errorLens.errorBackground`: Background color of the entire line containing error.
 * `errorLens.errorForeground`: Text color used to highlight lines containing errors.
 * `errorLens.errorMessageBackground`: Background color of the error message.
@@ -59,3 +60,27 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.toggleHint` Temporarily Enable/Disable Hint level.
 * `errorLens.copyProblemMessage` Copy problem message to clipboard (at the active line).
 
+## Colors (works only when `useColorContributions` setting is true)
+
+can be configured in `settings.json` (**`workbench.colorCustomizations`** section)
+
+* `errorLens.errorBackground`
+* `errorLens.errorMessageBackground`
+* `errorLens.errorBackgroundLight`
+* `errorLens.errorForeground`
+* `errorLens.errorForegroundLight`
+* `errorLens.warningBackground`
+* `errorLens.warningMessageBackground`
+* `errorLens.warningBackgroundLight`
+* `errorLens.warningForeground`
+* `errorLens.warningForegroundLight`
+* `errorLens.infoBackground`
+* `errorLens.infoMessageBackground`
+* `errorLens.infoBackgroundLight`
+* `errorLens.infoForeground`
+* `errorLens.infoForegroundLight`
+* `errorLens.hintBackground`
+* `errorLens.hintMessageBackground`
+* `errorLens.hintBackgroundLight`
+* `errorLens.hintForeground`
+* `errorLens.hintForegroundLight`

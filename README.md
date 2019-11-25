@@ -65,21 +65,13 @@ can be configured in `settings.json` (**`workbench.colorCustomizations`** sectio
 
 * `errorLens.errorBackground`
 * `errorLens.errorMessageBackground`
-* `errorLens.errorBackgroundLight`
 * `errorLens.errorForeground`
-* `errorLens.errorForegroundLight`
 * `errorLens.warningBackground`
 * `errorLens.warningMessageBackground`
-* `errorLens.warningBackgroundLight`
 * `errorLens.warningForeground`
-* `errorLens.warningForegroundLight`
 * `errorLens.infoBackground`
 * `errorLens.infoMessageBackground`
-* `errorLens.infoBackgroundLight`
 * `errorLens.infoForeground`
-* `errorLens.infoForegroundLight`
 * `errorLens.hintBackground`
 * `errorLens.hintMessageBackground`
-* `errorLens.hintBackgroundLight`
 * `errorLens.hintForeground`
-* `errorLens.hintForegroundLight`

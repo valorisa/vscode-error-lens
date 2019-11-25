@@ -85,3 +85,16 @@ export type FollowCursor = 'allLines' | 'activeLine' | 'closestProblem';
 export interface IAggregatedDiagnostics {
 	[key: string]: vscode.Diagnostic[];
 }
+
+export interface IGutter {
+	iconSet: GutterIconSet;
+
+	errorIconPath: string;
+	errorIconPathLight: string;
+
+	warningIconPath: string;
+	warningIconPathLight: string;
+
+	infoIconPath: string;
+	infoIconPathLight: string;
+}

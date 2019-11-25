@@ -273,17 +273,17 @@
 						},
 						"errorGutterIconColor": {
 							"type": "string",
-							"default": "#e45454",
+							"default": "",
 							"markdownDescription": "Error color of `circle` gutter icon set for light themes."
 						},
 						"warningGutterIconColor": {
 							"type": "string",
-							"default": "#ff942f",
+							"default": "",
 							"markdownDescription": "Warning color of `circle` gutter icon set for light themes."
 						},
 						"infoGutterIconColor": {
 							"type": "string",
-							"default": "#00b7e4",
+							"default": "",
 							"markdownDescription": "Info color of `circle` gutter icon set for light themes."
 						}
 					}

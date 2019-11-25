@@ -1,13 +1,15 @@
 import debounce from 'lodash/debounce';
 import vscode, { window, workspace } from 'vscode';
 
-import { IAggregatedDiagnostics, IConfig } from './types';
+import { IAggregatedDiagnostics, IConfig, IGutter } from './types';
 import { truncate } from './utils';
 import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
+import { promises as fs } from 'fs';
 
-export function activate(context: vscode.ExtensionContext): void {
-	const EXTENSION_NAME = 'errorLens';
-	let config = workspace.getConfiguration(EXTENSION_NAME) as any as IConfig;
+export const EXTENSION_NAME = 'errorLens';
+let config = workspace.getConfiguration(EXTENSION_NAME) as any as IConfig;
+
+export function activate(extensionContext: vscode.ExtensionContext): void {
 	let excludeRegexp: RegExp[] = [];
 	let errorLensEnabled = true;
 	let errorEnabled = true;
@@ -46,9 +48,9 @@ export function activate(context: vscode.ExtensionContext): void {
 				removeActiveTabDecorations();
 			}
 		}
-	}, undefined, context.subscriptions);
+	}, undefined, extensionContext.subscriptions);
 
-	window.onDidChangeVisibleTextEditors(updateAllDecorations, undefined, context.subscriptions);
+	window.onDidChangeVisibleTextEditors(updateAllDecorations, undefined, extensionContext.subscriptions);
 
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
 		// Many URIs can change - we only need to decorate all visible editors
@@ -362,58 +364,9 @@ export function activate(context: vscode.ExtensionContext): void {
 	}
 
 	function setDecorationStyle(): void {
-		const gutterIconSize = config.gutterIconSize;
-
-		let gutterIconSet = config.gutterIconSet;
-		if (config.gutterIconSet !== 'borderless' &&
-			config.gutterIconSet !== 'default' &&
-			config.gutterIconSet !== 'circle' &&
-			config.gutterIconSet !== 'defaultOutline') {
-			gutterIconSet = 'default';
-		}
-
-		let errorGutterIconPath;
-		let errorGutterIconPathLight;
-		let warningGutterIconPath;
-		let warningGutterIconPathLight;
-		let infoGutterIconPath;
-		let infoGutterIconPathLight;
-
-		let errorGutterIconSizeAndColor = gutterIconSize;
-		let errorGutterIconSizeAndColorLight = gutterIconSize;
-		let warningGutterIconSizeAndColor = gutterIconSize;
-		let warningGutterIconSizeAndColorLight = gutterIconSize;
-		let infoGutterIconSizeAndColor = gutterIconSize;
-		let infoGutterIconSizeAndColorLight = gutterIconSize;
-
+		let gutter;
 		if (config.gutterIconsEnabled) {
-			if (gutterIconSet === 'circle') {
-				if (!config.errorGutterIconPath) {
-					errorGutterIconSizeAndColor = getGutterCircleSizeAndColor(config.errorGutterIconColor);
-				}
-				if (!config.light.errorGutterIconPath) {
-					errorGutterIconSizeAndColorLight = config.light.errorGutterIconColor ? getGutterCircleSizeAndColor(config.light.errorGutterIconColor) : errorGutterIconSizeAndColor;
-				}
-				if (!config.warningGutterIconPath) {
-					warningGutterIconSizeAndColor = getGutterCircleSizeAndColor(config.warningGutterIconColor);
-				}
-				if (!config.light.warningGutterIconPath) {
-					warningGutterIconSizeAndColorLight = config.light.warningGutterIconColor ? getGutterCircleSizeAndColor(config.light.warningGutterIconColor) : warningGutterIconSizeAndColor;
-				}
-				if (!config.infoGutterIconPath) {
-					infoGutterIconSizeAndColor = getGutterCircleSizeAndColor(config.infoGutterIconColor);
-				}
-				if (!config.light.infoGutterIconPath) {
-					infoGutterIconSizeAndColorLight = config.light.infoGutterIconColor ? getGutterCircleSizeAndColor(config.light.infoGutterIconColor) : infoGutterIconSizeAndColor;
-				}
-			}
-
-			errorGutterIconPath = config.errorGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/error-dark.svg`);
-			errorGutterIconPathLight = config.light.errorGutterIconPath || (config.errorGutterIconPath ? config.errorGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/error-light.svg`);
-			warningGutterIconPath = config.warningGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/warning-dark.svg`);
-			warningGutterIconPathLight = config.light.warningGutterIconPath || (config.warningGutterIconPath ? config.warningGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/warning-light.svg`);
-			infoGutterIconPath = config.infoGutterIconPath || context.asAbsolutePath(`./img/${gutterIconSet}/info-dark.svg`);
-			infoGutterIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || context.asAbsolutePath(`./img/${gutterIconSet}/info-light.svg`);
+			gutter = getGutterStyles(extensionContext);
 		}
 
 		let errorBackground;
@@ -498,8 +451,8 @@ export function activate(context: vscode.ExtensionContext): void {
 
 		decorationRenderOptionsError = {
 			backgroundColor: errorBackground,
-			gutterIconSize: errorGutterIconSizeAndColor,
-			gutterIconPath: errorGutterIconPath,
+			gutterIconSize: config.gutterIconSize,
+			gutterIconPath: gutter?.errorIconPath,
 			after: {
 				...afterProps,
 				color: errorForeground,
@@ -507,8 +460,8 @@ export function activate(context: vscode.ExtensionContext): void {
 			},
 			light: {
 				backgroundColor: errorBackgroundLight,
-				gutterIconSize: errorGutterIconSizeAndColorLight,
-				gutterIconPath: errorGutterIconPathLight,
+				gutterIconSize: config.gutterIconSize,
+				gutterIconPath: gutter?.errorIconPathLight,
 				after: {
 					color: errorForegroundLight,
 				},
@@ -517,8 +470,8 @@ export function activate(context: vscode.ExtensionContext): void {
 		};
 		decorationRenderOptionsWarning = {
 			backgroundColor: warningBackground,
-			gutterIconSize: warningGutterIconSizeAndColor,
-			gutterIconPath: warningGutterIconPath,
+			gutterIconSize: config.gutterIconSize,
+			gutterIconPath: gutter?.warningIconPath,
 			after: {
 				...afterProps,
 				color: warningForeground,
@@ -526,8 +479,8 @@ export function activate(context: vscode.ExtensionContext): void {
 			},
 			light: {
 				backgroundColor: warningBackgroundLight,
-				gutterIconSize: warningGutterIconSizeAndColorLight,
-				gutterIconPath: warningGutterIconPathLight,
+				gutterIconSize: config.gutterIconSize,
+				gutterIconPath: gutter?.warningIconPathLight,
 				after: {
 					color: warningForegroundLight,
 				},
@@ -536,8 +489,8 @@ export function activate(context: vscode.ExtensionContext): void {
 		};
 		decorationRenderOptionsInfo = {
 			backgroundColor: infoBackground,
-			gutterIconSize: infoGutterIconSizeAndColor,
-			gutterIconPath: infoGutterIconPath,
+			gutterIconSize: config.gutterIconSize,
+			gutterIconPath: gutter?.infoIconPath,
 			after: {
 				...afterProps,
 				color: infoForeground,
@@ -545,8 +498,8 @@ export function activate(context: vscode.ExtensionContext): void {
 			},
 			light: {
 				backgroundColor: infoBackgroundLight,
-				gutterIconSize: infoGutterIconSizeAndColorLight,
-				gutterIconPath: infoGutterIconPathLight,
+				gutterIconSize: config.gutterIconSize,
+				gutterIconPath: gutter?.infoIconPathLight,
 				after: {
 					color: infoForegroundLight,
 				},
@@ -589,9 +542,6 @@ export function activate(context: vscode.ExtensionContext): void {
 		for (const editor of window.visibleTextEditors) {
 			updateDecorationsForUri(editor.document.uri, editor);
 		}
-	}
-	function getGutterCircleSizeAndColor(color: string): string {
-		return `${config.gutterIconSize};background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${color}"/></svg>');`;
 	}
 
 	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggle`, () => {
@@ -638,8 +588,44 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
-	context.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig));
-	context.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
+	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig));
+	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
+}
+
+function writeCircleGutterIconsToDisk(extensionContext: vscode.ExtensionContext): void {
+	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.errorGutterIconColor}"/></svg>`);
+	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.light.errorGutterIconColor || config.errorGutterIconColor}"/></svg>`);
+
+	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/warning-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.warningGutterIconColor}"/></svg>`);
+	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/warning-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.light.warningGutterIconColor || config.warningGutterIconColor}"/></svg>`);
+
+	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/info-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.infoGutterIconColor}"/></svg>`);
+	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/info-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.light.infoGutterIconColor || config.infoGutterIconColor}"/></svg>`);
+}
+
+function getGutterStyles(extensionContext: vscode.ExtensionContext): IGutter {
+	const gutter: IGutter = Object.create(null);
+
+	gutter.iconSet = config.gutterIconSet;
+	if (config.gutterIconSet !== 'borderless' &&
+		config.gutterIconSet !== 'default' &&
+		config.gutterIconSet !== 'circle' &&
+		config.gutterIconSet !== 'defaultOutline') {
+		gutter.iconSet = 'default';
+	}
+
+	if (gutter.iconSet === 'circle') {
+		writeCircleGutterIconsToDisk(extensionContext);
+	}
+
+	gutter.errorIconPath = config.errorGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
+	gutter.errorIconPathLight = config.light.errorGutterIconPath || (config.errorGutterIconPath ? config.errorGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
+	gutter.warningIconPath = config.warningGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-dark.svg`);
+	gutter.warningIconPathLight = config.light.warningGutterIconPath || (config.warningGutterIconPath ? config.warningGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
+	gutter.infoIconPath = config.infoGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
+	gutter.infoIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
+
+	return gutter;
 }
 
 export function deactivate(): void { }

@@ -55,7 +55,6 @@ export interface IConfig {
 	exclude: string[];
 
 	delay?: number;
-	clearDecorations: boolean;
 
 	followCursor: FollowCursor;
 	followCursorMore: number;

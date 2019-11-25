@@ -78,9 +78,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		if (typeof config.delay === 'number' && config.delay > 0) {
 			const debouncedOnChangeDiagnostics = debounce(onChangedDiagnostics, config.delay);
 			const onChangedDiagnosticsDebounced = (diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void => {
-				if (config.clearDecorations) {
-					clearAllDecorations();
-				}
+				// if (config.clearDecorations) {
+				// 	clearAllDecorations();
+				// }
 				debouncedOnChangeDiagnostics(diagnosticChangeEvent);
 			};
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnosticsDebounced);

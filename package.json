@@ -202,6 +202,20 @@
 						"hint"
 					]
 				},
+				"errorLens.annotationPrefix": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is true). For example emoji ❌ ⚠ ℹ.",
+					"default": [
+						"ERROR: ",
+						"WARNING: ",
+						"INFO: ",
+						"HINT: "
+					],
+					"maxLength": 4
+				},
 				"errorLens.addAnnotationTextPrefixes": {
 					"type": "boolean",
 					"description": "If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.",

@@ -51,6 +51,7 @@ export interface IConfig {
 
 	margin: string;
 	enabledDiagnosticLevels: string[];
+	annotationPrefix: string[];
 	addAnnotationTextPrefixes: boolean;
 	exclude: string[];
 

@@ -34,6 +34,7 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.fontStyleItalic`: Show ErrorLens annotations in Italics, or not?
 * `errorLens.margin`: Distance between the end of the line and the start of annotation. (CSS units)
 * `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
+* `errorLens.annotationPrefix`: Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is true). For example emoji ❌ ⚠ ℹ.
 * `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.
 * `errorLens.exclude`: Specify messages that should not be highlighted.
 * `errorLens.delay`: Specify delay before showing problems.
@@ -61,7 +62,7 @@ the site of the line of code which is generating the diagnostic.
 
 ## Colors (works only when `useColorContributions` setting is true)
 
-can be configured in `settings.json` (**`workbench.colorCustomizations`** section)
+Can be configured in `settings.json` (**`workbench.colorCustomizations`** section)
 
 * `errorLens.errorBackground`
 * `errorLens.errorMessageBackground`

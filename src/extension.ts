@@ -393,24 +393,24 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		if (config.useColorContributions) {
 			errorBackground = new vscode.ThemeColor('errorLens.errorBackground');
 			errorMessageBackground = new vscode.ThemeColor('errorLens.errorMessageBackground');
-			errorBackgroundLight = new vscode.ThemeColor('errorLens.errorBackgroundLight');
+			errorBackgroundLight = errorBackground;
 			errorForeground = new vscode.ThemeColor('errorLens.errorForeground');
-			errorForegroundLight = new vscode.ThemeColor('errorLens.errorForegroundLight');
+			errorForegroundLight = errorForeground;
 			warningBackground = new vscode.ThemeColor('errorLens.warningBackground');
 			warningMessageBackground = new vscode.ThemeColor('errorLens.warningMessageBackground');
-			warningBackgroundLight = new vscode.ThemeColor('errorLens.warningBackgroundLight');
+			warningBackgroundLight = warningBackground;
 			warningForeground = new vscode.ThemeColor('errorLens.warningForeground');
-			warningForegroundLight = new vscode.ThemeColor('errorLens.warningForegroundLight');
+			warningForegroundLight = warningForeground;
 			infoBackground = new vscode.ThemeColor('errorLens.infoBackground');
 			infoMessageBackground = new vscode.ThemeColor('errorLens.infoMessageBackground');
-			infoBackgroundLight = new vscode.ThemeColor('errorLens.infoBackgroundLight');
+			infoBackgroundLight = infoBackground;
 			infoForeground = new vscode.ThemeColor('errorLens.infoForeground');
-			infoForegroundLight = new vscode.ThemeColor('errorLens.infoForegroundLight');
+			infoForegroundLight = infoForeground;
 			hintBackground = new vscode.ThemeColor('errorLens.hintBackground');
 			hintMessageBackground = new vscode.ThemeColor('errorLens.hintMessageBackground');
-			hintBackgroundLight = new vscode.ThemeColor('errorLens.hintBackgroundLight');
+			hintBackgroundLight = hintBackground;
 			hintForeground = new vscode.ThemeColor('errorLens.hintForeground');
-			hintForegroundLight = new vscode.ThemeColor('errorLens.hintForegroundLight');
+			hintForegroundLight = hintForeground;
 		} else {
 			errorBackground = config.errorBackground;
 			errorMessageBackground = config.errorMessageBackground;

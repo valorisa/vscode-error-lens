@@ -393,9 +393,9 @@
 			{
 				"id": "errorLens.errorBackground",
 				"defaults": {
-					"dark": "#e4545420",
+					"dark": "#e454541b",
 					"light": "#e4545420",
-					"highContrast": "#e4545420"
+					"highContrast": "#e454541b"
 				},
 				"description": "Background color of the entire line containing error."
 			},
@@ -411,18 +411,18 @@
 			{
 				"id": "errorLens.errorForeground",
 				"defaults": {
-					"dark": "#e45454",
+					"dark": "#ff6464",
 					"light": "#e45454",
-					"highContrast": "#e45454"
+					"highContrast": "#ff6464"
 				},
 				"description": "Text color used to highlight lines containing errors."
 			},
 			{
 				"id": "errorLens.warningBackground",
 				"defaults": {
-					"dark": "#ff942f20",
+					"dark": "#ff942f1b",
 					"light": "#ff942f20",
-					"highContrast": "#ff942f20"
+					"highContrast": "#ff942f1b"
 				},
 				"description": "Background color used to highlight lines containing warnings."
 			},
@@ -438,9 +438,9 @@
 			{
 				"id": "errorLens.warningForeground",
 				"defaults": {
-					"dark": "#ff942f",
+					"dark": "#fa973a",
 					"light": "#ff942f",
-					"highContrast": "#ff942f"
+					"highContrast": "#fa973a"
 				},
 				"description": "Text color used to highlight lines containing warnings."
 			},
@@ -492,9 +492,9 @@
 			{
 				"id": "errorLens.hintForeground",
 				"defaults": {
-					"dark": "#17a2a2",
-					"light": "#17a2a2",
-					"highContrast": "#17a2a2"
+					"dark": "#2faf64",
+					"light": "#2faf64",
+					"highContrast": "#2faf64"
 				},
 				"description": "Text color used to highlight lines containing hints."
 			}

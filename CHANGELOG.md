@@ -1,3 +1,11 @@
+## 2.8.0 `26 Nov 2019`
+
+- 💥 Delete `clearDecorations` option
+- ✨ Possible future breaking change: Using color contributions instead of settings values for colors. Now hidden behind a config `errorLens.useColorContributions`
+- ✨ Specify custom message prefix
+- 🐛 Fix broken `circle` gutter icon set
+- 🔨 Update version to **1.40.0**
+
 ## 2.7.2 `12 Oct 2019`
 
 - 🐛 Prevent `:after` decoration clashing with other extensions [PR #28](https://github.com/usernamehw/vscode-error-lens/pull/28) by [@bmalehorn](https://github.com/bmalehorn)

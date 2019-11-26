@@ -32,25 +32,13 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	let decorationTypeInfo: vscode.TextEditorDecorationType;
 	let decorationTypeHint: vscode.TextEditorDecorationType;
 
-	let onDidChangeDiagnosticsDisposable: vscode.Disposable;
-	let onDidSaveTextDocumentDisposable: vscode.Disposable;
-	let onDidCursorChangeDisposable: vscode.Disposable;
+	let onDidChangeDiagnosticsDisposable: vscode.Disposable | undefined;
+	let onDidChangeActiveTextEditor: vscode.Disposable | undefined;
+	let onDidChangeVisibleTextEditors: vscode.Disposable | undefined;
+	let onDidSaveTextDocumentDisposable: vscode.Disposable | undefined;
+	let onDidCursorChangeDisposable: vscode.Disposable | undefined;
 
 	updateEverything();
-
-	window.onDidChangeActiveTextEditor(textEditor => {
-		if (textEditor) {
-			updateDecorationsForUri(textEditor.document.uri, textEditor);
-		} else {
-			if (config.editorActiveTabDecorationEnabled) {
-				// Settings GUI or image file is not a textEditor
-				// That means - Error/Warning tab color should be cleared
-				removeActiveTabDecorations();
-			}
-		}
-	}, undefined, extensionContext.subscriptions);
-
-	window.onDidChangeVisibleTextEditors(updateAllDecorations, undefined, extensionContext.subscriptions);
 
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
 		// Many URIs can change - we only need to decorate all visible editors
@@ -61,6 +49,30 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 				}
 			}
 		}
+	}
+
+	function updateChangedActiveTextEditorListener(): void {
+		if (onDidChangeActiveTextEditor) {
+			onDidChangeActiveTextEditor.dispose();
+		}
+		onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(textEditor => {
+			if (textEditor) {
+				updateDecorationsForUri(textEditor.document.uri, textEditor);
+			} else {
+				if (config.editorActiveTabDecorationEnabled) {
+					// Settings GUI or image file is not a textEditor
+					// That means - Error/Warning tab color should be cleared
+					removeActiveTabDecorations();
+				}
+			}
+		});
+	}
+
+	function updateChangeVisibleTextEditorsListener(): void {
+		if (onDidChangeVisibleTextEditors) {
+			onDidChangeVisibleTextEditors.dispose();
+		}
+		onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateAllDecorations);
 	}
 
 	function updateChangeDiagnosticListener(): void {
@@ -137,10 +149,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		}
 
 		if (!editor.document.uri.fsPath) {
-			return;
-		}
-
-		if (!errorLensEnabled) {
 			return;
 		}
 
@@ -312,15 +320,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			} else {
 				removeActiveTabDecorations();
 			}
-		}
-	}
-
-	function clearAllDecorations(): void {
-		for (const editor of window.visibleTextEditors) {
-			editor.setDecorations(decorationTypeError, []);
-			editor.setDecorations(decorationTypeWarning, []);
-			editor.setDecorations(decorationTypeInfo, []);
-			editor.setDecorations(decorationTypeHint, []);
 		}
 	}
 
@@ -523,10 +522,44 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		updateExclude();
 		setDecorationStyle();
 		updateConfigEnabledLevels();
+
 		updateChangeDiagnosticListener();
+		updateChangeVisibleTextEditorsListener();
 		updateOnSaveListener();
 		updateCursorChangeListener();
+		updateChangedActiveTextEditorListener();
+
 		updateAllDecorations();
+	}
+
+	function disposeEverything(): void {
+		if (decorationTypeError) {
+			decorationTypeError.dispose();
+		}
+		if (decorationTypeWarning) {
+			decorationTypeWarning.dispose();
+		}
+		if (decorationTypeInfo) {
+			decorationTypeInfo.dispose();
+		}
+		if (decorationTypeHint) {
+			decorationTypeHint.dispose();
+		}
+		if (onDidChangeVisibleTextEditors) {
+			onDidChangeVisibleTextEditors.dispose();
+		}
+		if (onDidChangeDiagnosticsDisposable) {
+			onDidChangeDiagnosticsDisposable.dispose();
+		}
+		if (onDidChangeActiveTextEditor) {
+			onDidChangeActiveTextEditor.dispose();
+		}
+		if (onDidSaveTextDocumentDisposable) {
+			onDidSaveTextDocumentDisposable.dispose();
+		}
+		if (onDidCursorChangeDisposable) {
+			onDidCursorChangeDisposable.dispose();
+		}
 	}
 
 	function updateAllDecorations(): void {
@@ -537,8 +570,12 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 
 	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggle`, () => {
 		errorLensEnabled = !errorLensEnabled;
-		clearAllDecorations();
-		updateAllDecorations();
+
+		if (errorLensEnabled) {
+			updateEverything();
+		} else {
+			disposeEverything();
+		}
 	});
 	const disposableToggleError = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleError`, () => {
 		errorEnabled = !errorEnabled;

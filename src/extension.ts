@@ -214,18 +214,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 				let messagePrefix = '';
 				if (config.addAnnotationTextPrefixes) {
 					if (aggregatedDiagnostic.length > 1) {
-						// If > 1 diagnostic for this source line, the prefix is "Diagnostic #1 of N: "
-						messagePrefix += `Diagnostic 1/${String(aggregatedDiagnostic.length)}: `;
-					} else {
-						// If only 1 diagnostic for this source line, show the diagnostic severity
-						switch (aggregatedDiagnostic[0].severity) {
-							case 0: messagePrefix += config.annotationPrefix[0] || ''; break;
-							case 1: messagePrefix += config.annotationPrefix[1] || ''; break;
-							case 2: messagePrefix += config.annotationPrefix[2] || ''; break;
-							case 3:
-							default: messagePrefix += config.annotationPrefix[3] || ''; break;
-						}
+						messagePrefix += `1/${String(aggregatedDiagnostic.length)}: `;
 					}
+					messagePrefix += config.annotationPrefix[aggregatedDiagnostic[0].severity] || '';
 				}
 
 				let decorationRenderOptions: vscode.DecorationRenderOptions = {};

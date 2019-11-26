@@ -137,10 +137,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	}
 
 	function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range): void {
-		// if (!uriToDecorate) {
-		// 	return;
-		// }
-
 		if (editor === undefined) {
 			editor = window.activeTextEditor;
 		}

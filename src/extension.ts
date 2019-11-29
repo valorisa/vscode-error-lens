@@ -217,9 +217,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			if (addErrorLens) {
 				let messagePrefix = '';
 				if (config.addAnnotationTextPrefixes) {
-					if (aggregatedDiagnostic.length > 1) {
-						messagePrefix += `1/${String(aggregatedDiagnostic.length)}: `;
-					}
 					messagePrefix += config.annotationPrefix[aggregatedDiagnostic[0].severity] || '';
 				}
 

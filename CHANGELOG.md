@@ -1,3 +1,7 @@
+## 2.8.1 `29 Nov 2019`
+
+- 🐛 Fix missing message prefix when there are multiple diagnostics on the line [Issue #33](https://github.com/usernamehw/vscode-error-lens/issues/33)
+
 ## 2.8.0 `26 Nov 2019`
 
 - 💥 Delete `clearDecorations` option

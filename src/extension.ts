@@ -321,11 +321,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 
 		config = workspace.getConfiguration(EXTENSION_NAME) as any as IConfig;
 
-		decorationTypeError.dispose();
-		decorationTypeWarning.dispose();
-		decorationTypeInfo.dispose();
-		decorationTypeHint.dispose();
-
+		disposeEverything();
 		updateEverything();
 	}
 
@@ -516,13 +512,13 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		setDecorationStyle();
 		updateConfigEnabledLevels();
 
+		updateAllDecorations();
+
 		updateChangeDiagnosticListener();
 		updateChangeVisibleTextEditorsListener();
 		updateOnSaveListener();
 		updateCursorChangeListener();
 		updateChangedActiveTextEditorListener();
-
-		updateAllDecorations();
 	}
 
 	function disposeEverything(): void {

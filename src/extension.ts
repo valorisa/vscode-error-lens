@@ -615,7 +615,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig));
 	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
 }
-
+/**
+ * The idea of circle gutter icons is that it should be possible to change their color. AFAIK that's only possible with writing <svg> to disk and then referencing them from extension.
+ */
 function writeCircleGutterIconsToDisk(extensionContext: vscode.ExtensionContext): void {
 	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.errorGutterIconColor}"/></svg>`);
 	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.light.errorGutterIconColor || config.errorGutterIconColor}"/></svg>`);

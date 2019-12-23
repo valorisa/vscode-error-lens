@@ -227,7 +227,7 @@
 					"items": {
 						"type": "string"
 					},
-					"description": "Specify messages that should not be highlighted."
+					"description": "Specify messages that should not be highlighted (RegEx)."
 				},
 				"errorLens.light": {
 					"type": "object",

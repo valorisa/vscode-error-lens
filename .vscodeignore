@@ -13,6 +13,7 @@ package-lock.json
 .npmrc
 .gitattributes
 *.todo
+misc.md
 
 node_modules
 webpack.config.js

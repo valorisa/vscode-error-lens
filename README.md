@@ -77,4 +77,4 @@ Can be configured in `settings.json` (**`workbench.colorCustomizations`** sectio
 * `errorLens.hintMessageBackground`
 * `errorLens.hintForeground`
 
-## [Miscellaneous: `misc.md`](https://raw.githubusercontent.com/usernamehw/vscode-remove-empty-lines/master/misc.md)
+## [Miscellaneous: `misc.md`](https://github.com/usernamehw/vscode-error-lens/blob/master/misc.md)

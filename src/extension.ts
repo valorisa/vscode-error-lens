@@ -207,7 +207,10 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
 
 			let addErrorLens = false;
-			switch (aggregatedDiagnostic[0].severity) {
+			const diagnostic = aggregatedDiagnostic[0];
+			const severity = diagnostic.severity;
+
+			switch (severity) {
 				case 0: addErrorLens = configErrorEnabled && errorEnabled; break;
 				case 1: addErrorLens = configWarningEnabled && warningEabled; break;
 				case 2: addErrorLens = configInfoEnabled && infoEnabled; break;
@@ -217,11 +220,11 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			if (addErrorLens) {
 				let messagePrefix = '';
 				if (config.addAnnotationTextPrefixes) {
-					messagePrefix += config.annotationPrefix[aggregatedDiagnostic[0].severity] || '';
+					messagePrefix += config.annotationPrefix[severity] || '';
 				}
 
 				let decorationRenderOptions: vscode.DecorationRenderOptions = {};
-				switch (aggregatedDiagnostic[0].severity) {
+				switch (severity) {
 					case 0: decorationRenderOptions = decorationRenderOptionsError; break;
 					case 1: decorationRenderOptions = decorationRenderOptionsWarning; break;
 					case 2: decorationRenderOptions = decorationRenderOptionsInfo; break;
@@ -234,20 +237,20 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 					...decorationRenderOptions,
 					after: {
 						...decorationRenderOptions.after || {},
-						contentText: truncate(messagePrefix + aggregatedDiagnostic[0].message),
+						contentText: truncate(messagePrefix + diagnostic.message),
 					},
 				};
 
 				let messageRange: vscode.Range | undefined;
 				if (config.followCursor === 'allLines') {
 					// Default value (most used)
-					messageRange = aggregatedDiagnostic[0].range;
+					messageRange = diagnostic.range;
 				} else {
 					// Others require cursor tracking
 					if (range === undefined) {
 						range = editor.selection;
 					}
-					const diagnosticRange = aggregatedDiagnostic[0].range;
+					const diagnosticRange = diagnostic.range;
 
 					if (config.followCursor === 'activeLine') {
 						const lineStart = range.start.line - config.followCursorMore;
@@ -274,7 +277,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 					renderOptions: decInstanceRenderOptions,
 				};
 
-				switch (aggregatedDiagnostic[0].severity) {
+				switch (severity) {
 					case 0: decorationOptionsError.push(diagnosticDecorationOptions); break;
 					case 1: decorationOptionsWarning.push(diagnosticDecorationOptions); break;
 					case 2: decorationOptionsInfo.push(diagnosticDecorationOptions); break;

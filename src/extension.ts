@@ -7,7 +7,7 @@ import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWork
 import { promises as fs } from 'fs';
 
 export const EXTENSION_NAME = 'errorLens';
-let config = workspace.getConfiguration(EXTENSION_NAME) as any as IConfig;
+let config: IConfig;
 
 export function activate(extensionContext: vscode.ExtensionContext): void {
 	let excludeRegexp: RegExp[] = [];
@@ -38,7 +38,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	let onDidSaveTextDocumentDisposable: vscode.Disposable | undefined;
 	let onDidCursorChangeDisposable: vscode.Disposable | undefined;
 
-	updateEverything();
+	updateConfig();
 
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
 		// Many URIs can change - we only need to decorate all visible editors
@@ -319,10 +319,16 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		}
 	}
 
-	function updateConfig(e: vscode.ConfigurationChangeEvent): void {
+	function onConfigChange(e: vscode.ConfigurationChangeEvent): void {
 		if (!e.affectsConfiguration(EXTENSION_NAME)) return;
+		updateConfig();
+	}
 
+	function updateConfig(): void {
 		config = workspace.getConfiguration(EXTENSION_NAME) as any as IConfig;
+		/* develblock:start */
+		config = JSON.parse(JSON.stringify(workspace.getConfiguration(EXTENSION_NAME))) as IConfig;
+		/* develblock:end */
 
 		disposeEverything();
 		updateEverything();
@@ -512,6 +518,14 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 
 	function updateEverything(): void {
 		updateExclude();
+		// 👩‍💻 Only when developing extension: ================================================
+		// Show gutter icons
+		// Ignore `exclude` setting
+		/* develblock:start */
+		excludeRegexp = [];
+		config.gutterIconsEnabled = true;
+		/* develblock:end */
+		// 👩‍💻 ================================================================================
 		setDecorationStyle();
 		updateConfigEnabledLevels();
 
@@ -614,7 +628,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		vscode.env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
-	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(updateConfig));
+	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(onConfigChange));
 	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
 }
 /**

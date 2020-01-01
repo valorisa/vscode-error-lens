@@ -12,3 +12,10 @@ Please upvote the following VS Code issues:
 ## `editorActiveTabDecorationEnabled` setting
 
 This setting is undocumented and not recommended due to limitations: https://github.com/usernamehw/vscode-error-lens/issues/18#issuecomment-521758711.
+
+## How to build
+
+* Run from command line `npm run watch` or `yarn watch`.
+* Start debugging: **Debug: Start Debugging** `workbench.action.debug.start`
+
+To package: run from command line: `npm run vscode:prepublish`

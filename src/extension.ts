@@ -381,24 +381,24 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		if (config.useColorContributions) {
 			errorBackground = new vscode.ThemeColor('errorLens.errorBackground');
 			errorMessageBackground = new vscode.ThemeColor('errorLens.errorMessageBackground');
-			errorBackgroundLight = errorBackground;
+			errorBackgroundLight = new vscode.ThemeColor('errorLens.errorBackgroundLight');
 			errorForeground = new vscode.ThemeColor('errorLens.errorForeground');
-			errorForegroundLight = errorForeground;
+			errorForegroundLight = new vscode.ThemeColor('errorLens.errorForegroundLight');
 			warningBackground = new vscode.ThemeColor('errorLens.warningBackground');
 			warningMessageBackground = new vscode.ThemeColor('errorLens.warningMessageBackground');
-			warningBackgroundLight = warningBackground;
+			warningBackgroundLight = new vscode.ThemeColor('errorLens.warningBackgroundLight');
 			warningForeground = new vscode.ThemeColor('errorLens.warningForeground');
-			warningForegroundLight = warningForeground;
+			warningForegroundLight = new vscode.ThemeColor('errorLens.warningForegroundLight');
 			infoBackground = new vscode.ThemeColor('errorLens.infoBackground');
 			infoMessageBackground = new vscode.ThemeColor('errorLens.infoMessageBackground');
-			infoBackgroundLight = infoBackground;
+			infoBackgroundLight = new vscode.ThemeColor('errorLens.infoBackgroundLight');
 			infoForeground = new vscode.ThemeColor('errorLens.infoForeground');
-			infoForegroundLight = infoForeground;
+			infoForegroundLight = new vscode.ThemeColor('errorLens.infoForegroundLight');
 			hintBackground = new vscode.ThemeColor('errorLens.hintBackground');
 			hintMessageBackground = new vscode.ThemeColor('errorLens.hintMessageBackground');
-			hintBackgroundLight = hintBackground;
+			hintBackgroundLight = new vscode.ThemeColor('errorLens.hintBackgroundLight');
 			hintForeground = new vscode.ThemeColor('errorLens.hintForeground');
-			hintForegroundLight = hintForeground;
+			hintForegroundLight = new vscode.ThemeColor('errorLens.hintForegroundLight');
 		} else {
 			errorBackground = config.errorBackground;
 			errorMessageBackground = config.errorMessageBackground;

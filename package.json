@@ -578,9 +578,9 @@
 			{
 				"id": "errorLens.hintForegroundLight",
 				"defaults": {
-					"dark": "#17a2a2",
-					"light": "#17a2a2",
-					"highContrast": "#17a2a2"
+					"dark": "#2faf64",
+					"light": "#2faf64",
+					"highContrast": "#2faf64"
 				},
 				"description": "Text color used to highlight lines containing hints (Only in light themes)."
 			}

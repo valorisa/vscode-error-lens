@@ -32,7 +32,9 @@
 		"@typescript-eslint/explicit-member-accessibility": 0,
 		"@typescript-eslint/func-call-spacing": 1,
 		"@typescript-eslint/generic-type-naming": 0,
-		"@typescript-eslint/indent": [1, "tab"],
+		"@typescript-eslint/indent": [1, "tab", {
+			"SwitchCase": 1
+		}],
 		"@typescript-eslint/interface-name-prefix": [1, "always"],
 		"@typescript-eslint/member-delimiter-style": [1, {
 			"multiline": {
@@ -90,9 +92,6 @@
 		"@typescript-eslint/unbound-method": 0,
 		"@typescript-eslint/unified-signatures": 1,
 
-		"indent": [1, "tab", {
-			"SwitchCase": 1
-		}],
 		"valid-jsdoc": 0,
 		"camelcase": 1,
 		"comma-dangle": [1, {

@@ -153,6 +153,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		const decorationOptionsInfo: vscode.DecorationOptions[] = [];
 		const decorationOptionsHint: vscode.DecorationOptions[] = [];
 
+		// #region
 		// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
 		// where N is the source line where one or more diagnostics are being reported.
 		// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
@@ -166,7 +167,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		//         <vscode.Diagnostic #1>
 		//     ]
 		// };
-
+		// #endregion
 		const aggregatedDiagnostics: IAggregatedDiagnostics = Object.create(null);
 		const diagnostics = vscode.languages.getDiagnostics(uriToDecorate);
 		// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
@@ -292,8 +293,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
 		editor.setDecorations(decorationTypeHint, decorationOptionsHint);
 
-		if (config.editorActiveTabDecorationEnabled &&
-			editor === window.activeTextEditor) {
+		if (config.editorActiveTabDecorationEnabled && editor === window.activeTextEditor) {
 			const workspaceColorCustomizations = getWorkspaceColorCustomizations();
 
 			let newTabBackground: string | undefined = '';

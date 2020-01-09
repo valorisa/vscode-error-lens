@@ -1,7 +1,7 @@
 import debounce from 'lodash/debounce';
 import vscode, { window, workspace } from 'vscode';
 
-import { IAggregatedDiagnostics, IConfig, IGutter } from './types';
+import type { IAggregatedDiagnostics, IConfig, IGutter } from './types';
 import { truncate } from './utils';
 import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
 import { promises as fs } from 'fs';

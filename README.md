@@ -15,19 +15,6 @@ the site of the line of code which is generating the diagnostic.
 ## Settings
 
 * `errorLens.useColorContributions`: Use color contributions instead of settings. These Colors can be contributed by themes.
-* `errorLens.errorBackground`: Background color of the entire line containing error.
-* `errorLens.errorForeground`: Text color used to highlight lines containing errors.
-* `errorLens.errorMessageBackground`: Background color of the error message.
-* `errorLens.warningBackground`: Background color of the entire line containing warning.
-* `errorLens.warningForeground`: Text color used to highlight lines containing warnings.
-* `errorLens.warningMessageBackground`: Background color of the warning message.
-* `errorLens.infoBackground`: Background color of the entire line containing info.
-* `errorLens.infoForeground`: Text color used to highlight lines containing info.
-* `errorLens.infoMessageBackground`: Background color of the info message.
-* `errorLens.hintBackground`: Background color of the entire line containing hint.
-* `errorLens.hintForeground`: Text color used to highlight lines containing hints.
-* `errorLens.hintMessageBackground`: Background color of the hint message.
-* `errorLens.light`: Overwrite any of the above colors (except `message`) for light themes
 * `errorLens.fontSize`: Font size of annotations. **HACK**
 * `errorLens.fontFamily`: Font family of annotations. **HACK**
 * `errorLens.fontWeight`: Font Weight of annotations.
@@ -60,7 +47,7 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.toggleHint` Temporarily Enable/Disable Hint level.
 * `errorLens.copyProblemMessage` Copy problem message to clipboard (at the active line).
 
-## Colors (works only when `useColorContributions` setting is true)
+## Colors (when `useColorContributions` setting is true)
 
 Can be configured in `settings.json` (**`workbench.colorCustomizations`** section)
 

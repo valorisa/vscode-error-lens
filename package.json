@@ -64,13 +64,18 @@
 				"command": "errorLens.copyProblemMessage",
 				"title": "Copy Problem Message",
 				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.convertColors",
+				"title": "🎨 Convert colors from Settings to Colors.",
+				"category": "Error Lens"
 			}
 		],
 		"configuration": {
 			"properties": {
 				"errorLens.useColorContributions": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"markdownDescription": "Use color contributions instead of settings. Colors can be contributed by themes. It's also possible to change them in `workbench.colorCustomizations` property in **`settings.json`**"
 				},
 				"errorLens.errorBackground": {

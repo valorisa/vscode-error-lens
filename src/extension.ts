@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce';
-import vscode, { window, workspace } from 'vscode';
+import vscode, { window, workspace, commands } from 'vscode';
 
 import type { IAggregatedDiagnostics, IConfig, IGutter } from './types';
 import { truncate } from './utils';
@@ -606,6 +606,94 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		updateAllDecorations();
 	});
 
+	const disposableConvertColors = commands.registerCommand(`${EXTENSION_NAME}.convertColors`, async () => {
+		const inspect = workspace.getConfiguration().inspect(EXTENSION_NAME);
+		if (!inspect) {
+			return;
+		}
+		const globalConfig = inspect.globalValue as any as IConfig;
+		const defaultConfig = inspect.defaultValue as any as IConfig;
+
+		const colors: {
+			errorBackground?: string;
+			errorForeground?: string;
+			errorMessageBackground?: string;
+
+			warningBackground?: string;
+			warningForeground?: string;
+			warningMessageBackground?: string;
+
+			infoBackground?: string;
+			infoForeground?: string;
+			infoMessageBackground?: string;
+
+			hintBackground?: string;
+			hintForeground?: string;
+			hintMessageBackground?: string;
+		} = {};
+		if (globalConfig.errorBackground !== defaultConfig.errorBackground) {
+			colors.errorBackground = globalConfig.errorBackground;
+		}
+		if (globalConfig.errorForeground !== defaultConfig.errorForeground) {
+			colors.errorForeground = globalConfig.errorForeground;
+		}
+		if (globalConfig.errorMessageBackground !== defaultConfig.errorMessageBackground) {
+			colors.errorMessageBackground = globalConfig.errorMessageBackground;
+		}
+
+		if (globalConfig.warningBackground !== defaultConfig.warningBackground) {
+			colors.warningBackground = globalConfig.warningBackground;
+		}
+		if (globalConfig.warningForeground !== defaultConfig.warningForeground) {
+			colors.warningForeground = globalConfig.warningForeground;
+		}
+		if (globalConfig.warningMessageBackground !== defaultConfig.warningMessageBackground) {
+			colors.warningMessageBackground = globalConfig.warningMessageBackground;
+		}
+
+		if (globalConfig.infoBackground !== defaultConfig.infoBackground) {
+			colors.infoBackground = globalConfig.infoBackground;
+		}
+		if (globalConfig.infoForeground !== defaultConfig.infoForeground) {
+			colors.infoForeground = globalConfig.infoForeground;
+		}
+		if (globalConfig.infoMessageBackground !== defaultConfig.infoMessageBackground) {
+			colors.infoMessageBackground = globalConfig.infoMessageBackground;
+		}
+
+		if (globalConfig.hintBackground !== defaultConfig.hintBackground) {
+			colors.hintBackground = globalConfig.hintBackground;
+		}
+		if (globalConfig.hintForeground !== defaultConfig.hintForeground) {
+			colors.hintForeground = globalConfig.hintForeground;
+		}
+		if (globalConfig.hintMessageBackground !== defaultConfig.hintMessageBackground) {
+			colors.hintMessageBackground = globalConfig.hintMessageBackground;
+		}
+
+		for (const key in colors) {
+			colors[`errorLens.${key}`] = colors[key];
+			delete colors[key];
+		}
+
+		const shouldWrite = await window.showWarningMessage('💥 Do you want to write colors into global `settings.json` file? This action will remove all comments inside your `workbench.colorCustomizations` setting.', 'Yes', 'No');
+
+		if (shouldWrite === 'Yes') {
+			const globalColorCustomizations = workspace.getConfiguration('workbench.colorCustomizations');
+			const newColorCustomizations = {
+				...globalColorCustomizations,
+				...colors,
+			};
+			workspace.getConfiguration().update('workbench.colorCustomizations', newColorCustomizations, vscode.ConfigurationTarget.Global);
+		} else {
+			const document = await vscode.workspace.openTextDocument({
+				language: 'jsonc',
+				content: `// Paste these lines (excluding braces) into your \`settings.json\` file into \`workbench.colorCustomizations\` section. \n${JSON.stringify(colors, null, '	')}`,
+			});
+			vscode.window.showTextDocument(document);
+		}
+	});
+
 	const disposableCopyProblemMessage = vscode.commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
 		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
 		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
@@ -629,7 +717,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	});
 
 	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(onConfigChange));
-	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
+	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableConvertColors);
 }
 /**
  * The idea of circle gutter icons is that it should be possible to change their color. AFAIK that's only possible with writing <svg> to disk and then referencing them from extension.

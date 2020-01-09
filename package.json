@@ -81,12 +81,14 @@
 				"errorLens.errorBackground": {
 					"type": "string",
 					"default": "#e4545420",
-					"description": "Background color of the entire line containing error."
+					"description": "Background color of the entire line containing error.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.errorForeground": {
 					"type": "string",
 					"default": "#e45454",
-					"description": "Text color of the error problem message."
+					"description": "Text color of the error problem message.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.errorMessageBackground": {
 					"type": [
@@ -94,17 +96,20 @@
 						"null"
 					],
 					"default": null,
-					"description": "Background color of the error message."
+					"description": "Background color of the error message.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.warningBackground": {
 					"type": "string",
 					"default": "#ff942f20",
-					"description": "Background color of the entire line containing warning."
+					"description": "Background color of the entire line containing warning.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.warningForeground": {
 					"type": "string",
 					"default": "#ff942f",
-					"description": "Text color used to highlight lines containing warnings."
+					"description": "Text color used to highlight lines containing warnings.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.warningMessageBackground": {
 					"type": [
@@ -112,17 +117,20 @@
 						"null"
 					],
 					"default": null,
-					"description": "Background color of the warning message."
+					"description": "Background color of the warning message.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.infoBackground": {
 					"type": "string",
 					"default": "#00b7e420",
-					"description": "Background color of the entire line containing info."
+					"description": "Background color of the entire line containing info.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.infoForeground": {
 					"type": "string",
 					"default": "#00b7e4",
-					"description": "Text color used to highlight lines containing info."
+					"description": "Text color used to highlight lines containing info.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.infoMessageBackground": {
 					"type": [
@@ -130,17 +138,20 @@
 						"null"
 					],
 					"default": null,
-					"description": "Background color of the info message."
+					"description": "Background color of the info message.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.hintBackground": {
 					"type": "string",
 					"default": "#17a2a220",
-					"description": "Background color of the entire line containing hint."
+					"description": "Background color of the entire line containing hint.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.hintForeground": {
 					"type": "string",
 					"default": "#17a2a2",
-					"description": "Text color used to highlight lines containing hints."
+					"description": "Text color used to highlight lines containing hints.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.hintMessageBackground": {
 					"type": [
@@ -148,7 +159,8 @@
 						"null"
 					],
 					"default": null,
-					"description": "Background color of the hint message."
+					"description": "Background color of the hint message.",
+					"deprecationMessage": "Deprecated: Use color contributions instead."
 				},
 				"errorLens.fontFamily": {
 					"type": "string",

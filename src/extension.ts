@@ -1,10 +1,10 @@
 import debounce from 'lodash/debounce';
 import vscode, { window, workspace, commands } from 'vscode';
+import { promises as fs } from 'fs';
 
 import type { IAggregatedDiagnostics, IConfig, IGutter } from './types';
 import { truncate } from './utils';
 import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
-import { promises as fs } from 'fs';
 
 export const EXTENSION_NAME = 'errorLens';
 let config: IConfig;

@@ -37,9 +37,9 @@ the site of the line of code which is generating the diagnostic.
 | errorLens.errorGutterIconPath | | Set custom icons for gutter. Absolute path for error gutter icon. |
 | errorLens.warningGutterIconPath | | Set custom icons for gutter. Absolute path for warning gutter icon. |
 | errorLens.infoGutterIconPath | | Set custom icons for gutter. Absolute path for info gutter icon. |
-| errorLens.errorGutterIconColor | ![](https://placehold.it/15/e45454?text=+) `#e45454`  | Error color of the `circle` gutter icon set. |
-| errorLens.warningGutterIconColor | ![](https://placehold.it/15/ff942f?text=+) `#ff942f`  | Warning color of the `circle` gutter icon set. |
-| errorLens.infoGutterIconColor | ![](https://placehold.it/15/00b7e4?text=+) `#00b7e4` | Info color of the `circle` gutter icon set. |
+| errorLens.errorGutterIconColor | `#e45454` | Error color of the `circle` gutter icon set. |
+| errorLens.warningGutterIconColor | `#ff942f` | Warning color of the `circle` gutter icon set. |
+| errorLens.infoGutterIconColor | `#00b7e4` | Info color of the `circle` gutter icon set. |
 | errorLens.followCursor | allLines | Highlight only portion of the problems. Possible values: `allLines`, `activeLine`, `closestProblem`. |
 | followCursorMore | **0** | Augments `followCursor`. Adds number of lines to top and bottom when `followCursor` is `activeLine`. Adds number of closest problems when `followCursor` is `closestProblem` |
 
@@ -60,17 +60,17 @@ Can be configured in `settings.json` (**`workbench.colorCustomizations`** sectio
 
 | Name | Light | Dark |
 | --- | --- | --- |
-| errorLens.errorBackground | ![](https://placehold.it/15/e4545420?text=+) `#e4545420` | ![](https://placehold.it/15/e454541b?text=+) `#e454541b` |
-| errorLens.errorForeground | ![](https://placehold.it/15/e45454?text=+) `#e45454` | ![](https://placehold.it/15/ff6464?text=+) `#ff6464` |
+| errorLens.errorBackground | `#e4545420` | `#e454541b` |
+| errorLens.errorForeground | `#e45454` | `#ff6464` |
 | errorLens.errorMessageBackground | `#fff0` | `#fff0` |
-| errorLens.warningBackground | ![](https://placehold.it/15/ff942f20?text=+) `#ff942f20` | ![](https://placehold.it/15/ff942f1b?text=+) `#ff942f1b`|
-| errorLens.warningForeground | ![](https://placehold.it/15/ff942f?text=+) `#ff942f` | ![](https://placehold.it/15/fa973a?text=+) `#fa973a` |
+| errorLens.warningBackground | `#ff942f20` | `#ff942f1b`|
+| errorLens.warningForeground | `#ff942f` | `#fa973a` |
 | errorLens.warningMessageBackground | `#fff0` | `#fff0` |
-| errorLens.infoBackground | ![](https://placehold.it/15/00b7e420?text=+) `#00b7e420` | ![](https://placehold.it/15/00b7e420?text=+) `#00b7e420` |
-| errorLens.infoForeground | ![](https://placehold.it/15/00b7e4?text=+) `#00b7e4` | ![](https://placehold.it/15/00b7e4?text=+) `#00b7e4` |
+| errorLens.infoBackground | `#00b7e420` | `#00b7e420` |
+| errorLens.infoForeground | `#00b7e4` | `#00b7e4` |
 | errorLens.infoMessageBackground | `#fff0` | `#fff0` |
-| errorLens.hintBackground | ![](https://placehold.it/15/17a2a220?text=+) `#17a2a220` | ![](https://placehold.it/15/17a2a220?text=+) `#17a2a220` |
-| errorLens.hintForeground | ![](https://placehold.it/15/2faf64?text=+) `#2faf64` | ![](https://placehold.it/15/2faf64?text=+) `#2faf64` |
+| errorLens.hintBackground | `#17a2a220` | `#17a2a220` |
+| errorLens.hintForeground | `#2faf64` | `#2faf64` |
 | errorLens.hintMessageBackground | `#fff0` | `#fff0` |
 
 ## [Miscellaneous: `misc.md`](https://github.com/usernamehw/vscode-error-lens/blob/master/misc.md)

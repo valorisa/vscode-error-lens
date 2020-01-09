@@ -14,29 +14,36 @@ the site of the line of code which is generating the diagnostic.
 
 ## Settings
 
-* `errorLens.useColorContributions`: Use color contributions instead of settings. These Colors can be contributed by themes.
-* `errorLens.fontSize`: Font size of annotations. **HACK**
-* `errorLens.fontFamily`: Font family of annotations. **HACK**
-* `errorLens.fontWeight`: Font Weight of annotations.
-* `errorLens.fontStyleItalic`: Show ErrorLens annotations in Italics, or not?
-* `errorLens.margin`: Distance between the end of the line and the start of annotation. (CSS units)
-* `errorLens.enabledDiagnosticLevels`: Customize which diagnostic levels to highlight.
-* `errorLens.annotationPrefix`: Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is true). For example, emoji: ❗ ⚠ ℹ.
-* `errorLens.addAnnotationTextPrefixes`: If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.
-* `errorLens.exclude`: Specify messages that should not be highlighted (RegEx).
-* `errorLens.delay`: Specify delay before showing problems.
-* `errorLens.onSave`: Update decorations only on document save.
-* `errorLens.gutterIconsEnabled`: Show gutter icons (In place of debug breakpoint icon).
-* `errorLens.gutterIconSize`: Customize gutter icon size. Example: `"120%"`
-* `errorLens.gutterIconSet`: Customize gutter icon style. Possible values: `"default"`, `"defaultOutline"`, `"borderless"`, `"circle"`.
-* `errorLens.errorGutterIconPath`: Set custom icons for gutter. Absolute path for error gutter icon.
-* `errorLens.warningGutterIconPath`: Set custom icons for gutter. Absolute path for warning gutter icon.
-* `errorLens.infoGutterIconPath`: Set custom icons for gutter. Absolute path for info gutter icon.
-* `errorLens.errorGutterIconColor`: Error color of the `circle` gutter icon set.
-* `errorLens.warningGutterIconColor`: Warning color of the `circle` gutter icon set.
-* `errorLens.infoGutterIconColor`: Info color of the `circle` gutter icon set.
-* `errorLens.followCursor`: Highlight only portion of the problems. Possible values: `"allLines"`, `"activeLine"`, `"closestProblem"`.
-* `followCursorMore`: Augments `followCursor`. Adds number of lines to top and bottom when `followCursor` is `activeLine`. Adds number of closest problems when `followCursor` is `closestProblem`
+<details>
+
+<summary> Table of contributed settings:</summary>
+
+| Name | Default | Description |
+| --- | --- | --- |
+| errorLens.useColorContributions | **true** | Use color contributions instead of settings. These Colors can be contributed by themes.
+| errorLens.fontSize | | Font size of annotations. (**HACK**) |
+| errorLens.fontWeight | normal | Font Weight of annotations. |
+| errorLens.fontStyleItalic | **false** | Show ErrorLens annotations in Italics, or not? |
+| errorLens.margin | 30px | Distance between the end of the line and the start of annotation. (CSS units) |
+| errorLens.enabledDiagnosticLevels | ["error","warning","info","hint"] | Customize which diagnostic levels to highlight. |
+| errorLens.annotationPrefix | ["ERROR: ","WARNING: ","INFO: ","HINT: "] | Specify diagnostic message prefixes (when addAnnotationTextPrefixes is true). For example, emoji: ❗ ⚠ ℹ. |
+| errorLens.addAnnotationTextPrefixes | **false** | If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations. |
+| errorLens.exclude | [] | Specify messages that should not be highlighted (RegEx). |
+| errorLens.delay | **0** | Specify delay before showing problems. |
+| errorLens.onSave | **false** |  Update decorations only on document save. |
+| errorLens.gutterIconsEnabled | **false** | Show gutter icons (In place of debug breakpoint icon). |
+| errorLens.gutterIconSize | 100% | Customize gutter icon size. Example: `120%` |
+| errorLens.gutterIconSet | default | Customize gutter icon style. Possible values: `default`, `defaultOutline`, `borderless`, `circle`. |
+| errorLens.errorGutterIconPath | | Set custom icons for gutter. Absolute path for error gutter icon. |
+| errorLens.warningGutterIconPath | | Set custom icons for gutter. Absolute path for warning gutter icon. |
+| errorLens.infoGutterIconPath | | Set custom icons for gutter. Absolute path for info gutter icon. |
+| errorLens.errorGutterIconColor | `#e45454` | Error color of the `circle` gutter icon set. |
+| errorLens.warningGutterIconColor | `#ff942f` | Warning color of the `circle` gutter icon set. |
+| errorLens.infoGutterIconColor | `#00b7e4` | Info color of the `circle` gutter icon set. |
+| errorLens.followCursor | allLines | Highlight only portion of the problems. Possible values: `allLines`, `activeLine`, `closestProblem`. |
+| followCursorMore | **0** | Augments `followCursor`. Adds number of lines to top and bottom when `followCursor` is `activeLine`. Adds number of closest problems when `followCursor` is `closestProblem` |
+
+</details>
 
 ## Commands
 
@@ -51,17 +58,19 @@ the site of the line of code which is generating the diagnostic.
 
 Can be configured in `settings.json` (**`workbench.colorCustomizations`** section)
 
-* `errorLens.errorBackground`
-* `errorLens.errorMessageBackground`
-* `errorLens.errorForeground`
-* `errorLens.warningBackground`
-* `errorLens.warningMessageBackground`
-* `errorLens.warningForeground`
-* `errorLens.infoBackground`
-* `errorLens.infoMessageBackground`
-* `errorLens.infoForeground`
-* `errorLens.hintBackground`
-* `errorLens.hintMessageBackground`
-* `errorLens.hintForeground`
+| Name | Light | Dark |
+| --- | --- | --- |
+| errorLens.errorBackground | `#e4545420` | `#e454541b` |
+| errorLens.errorForeground | `#e45454` | `#ff6464` |
+| errorLens.errorMessageBackground | `#fff0` | `#fff0` |
+| errorLens.warningBackground | `#ff942f20` | `#ff942f1b`|
+| errorLens.warningForeground | `#ff942f` | `#fa973a` |
+| errorLens.warningMessageBackground | `#fff0` | `#fff0` |
+| errorLens.infoBackground | `#00b7e420` | `#00b7e420` |
+| errorLens.infoForeground | `#00b7e4` | `#00b7e4` |
+| errorLens.infoMessageBackground | `#fff0` | `#fff0` |
+| errorLens.hintBackground | `#17a2a220` | `#17a2a220` |
+| errorLens.hintForeground | `#2faf64` | `#2faf64` |
+| errorLens.hintMessageBackground | `#fff0` | `#fff0` |
 
 ## [Miscellaneous: `misc.md`](https://github.com/usernamehw/vscode-error-lens/blob/master/misc.md)

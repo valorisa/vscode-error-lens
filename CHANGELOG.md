@@ -1,3 +1,9 @@
+## 2.9.0 `09 Jan 2020`
+
+- 💥 Set `errorLens.useColorContributions` to **`true`**
+- ✨ Create command to transfer colors from `Settings` to `Colors`: **Convert colors from Settings to Colors.**. Note: colors only for light themes are not supported yet.
+- 💄 Remove number of diagnostics from annotation prefix.
+
 ## 2.8.1 `29 Nov 2019`
 
 - 🐛 Fix missing message prefix when there are multiple diagnostics on the line [Issue #33](https://github.com/usernamehw/vscode-error-lens/issues/33)

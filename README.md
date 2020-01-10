@@ -22,6 +22,7 @@ the site of the line of code which is generating the diagnostic.
 | --- | --- | --- |
 | errorLens.useColorContributions | **true** | Use color contributions instead of settings. These Colors can be contributed by themes.
 | errorLens.fontSize | | Font size of annotations. (**HACK**) |
+| errorLens.fontFamily | | Font family of annotations. (**HACK**) |
 | errorLens.fontWeight | normal | Font Weight of annotations. |
 | errorLens.fontStyleItalic | **false** | Show ErrorLens annotations in Italics, or not? |
 | errorLens.margin | 30px | Distance between the end of the line and the start of annotation. (CSS units) |

@@ -108,7 +108,7 @@
 				},
 				"errorLens.margin": {
 					"type": "string",
-					"default": "30px",
+					"default": "4ch",
 					"description": "Distance between the end of the line and the start of annotation. (CSS units)"
 				},
 				"errorLens.padding": {

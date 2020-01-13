@@ -388,7 +388,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		const onlyDigitsRegExp = /^\d+$/;
 		const fontFamily = config.fontFamily ? `font-family:${config.fontFamily}` : '';
 		const fontSize = config.fontSize ? `font-size:${onlyDigitsRegExp.test(config.fontSize) ? `${config.fontSize}px` : config.fontSize};line-height:1` : '';
-		const padding = 'padding:2px 1ch';
+		const padding = config.padding ? `padding:${onlyDigitsRegExp.test(config.padding) ? `${config.padding}px` : config.padding}` : '';
 
 		const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
 			fontStyle: config.fontStyleItalic ? 'italic' : 'normal',

@@ -111,6 +111,14 @@
 					"default": "30px",
 					"description": "Distance between the end of the line and the start of annotation. (CSS units)"
 				},
+				"errorLens.padding": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "Adds padding for the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.",
+					"examples": [
+						"2px 1ch"
+					]
+				},
 				"errorLens.enabledDiagnosticLevels": {
 					"type": "array",
 					"items": {

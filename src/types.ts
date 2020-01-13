@@ -17,6 +17,7 @@ export interface IConfig {
 	fontStyleItalic: boolean;
 
 	margin: string;
+	padding: string;
 	enabledDiagnosticLevels: string[];
 	annotationPrefix: string[];
 	addAnnotationTextPrefixes: boolean;

@@ -20,7 +20,6 @@ the site of the line of code which is generating the diagnostic.
 
 | Name | Default | Description |
 | --- | --- | --- |
-| errorLens.useColorContributions | **true** | Use color contributions instead of settings. These Colors can be contributed by themes.
 | errorLens.fontSize | | Font size of annotations. (**HACK**) |
 | errorLens.fontFamily | | Font family of annotations. (**HACK**) |
 | errorLens.fontWeight | normal | Font Weight of annotations. |
@@ -55,7 +54,7 @@ the site of the line of code which is generating the diagnostic.
 * `errorLens.toggleHint` Temporarily Enable/Disable Hint level.
 * `errorLens.copyProblemMessage` Copy problem message to clipboard (at the active line).
 
-## Colors (when `useColorContributions` setting is true)
+## Colors
 
 Can be configured in `settings.json` (**`workbench.colorCustomizations`** section)
 

@@ -1,40 +1,7 @@
 import type * as vscode from 'vscode';
 
 export interface IConfig {
-	/**
-	 * `useColorContributions` is a temporary option
-	 */
-	useColorContributions: boolean;
-
-	errorBackground: string;
-	errorForeground: string;
-	errorMessageBackground: string;
-
-	warningBackground: string;
-	warningForeground: string;
-	warningMessageBackground: string;
-
-	infoBackground: string;
-	infoForeground: string;
-	infoMessageBackground: string;
-
-	hintBackground: string;
-	hintForeground: string;
-	hintMessageBackground: string;
-
 	light: {
-		errorBackground: string;
-		errorForeground: string;
-
-		warningBackground: string;
-		warningForeground: string;
-
-		infoBackground: string;
-		infoForeground: string;
-
-		hintBackground: string;
-		hintForeground: string;
-
 		errorGutterIconPath?: string;
 		warningGutterIconPath?: string;
 		infoGutterIconPath?: string;

@@ -73,95 +73,6 @@
 		],
 		"configuration": {
 			"properties": {
-				"errorLens.useColorContributions": {
-					"type": "boolean",
-					"default": true,
-					"markdownDescription": "Use color contributions instead of settings. Colors can be contributed by themes. It's also possible to change them in `workbench.colorCustomizations` property in **`settings.json`**"
-				},
-				"errorLens.errorBackground": {
-					"type": "string",
-					"default": "#e4545420",
-					"description": "Background color of the entire line containing error.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.errorForeground": {
-					"type": "string",
-					"default": "#e45454",
-					"description": "Text color of the error problem message.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.errorMessageBackground": {
-					"type": [
-						"string",
-						"null"
-					],
-					"default": null,
-					"description": "Background color of the error message.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.warningBackground": {
-					"type": "string",
-					"default": "#ff942f20",
-					"description": "Background color of the entire line containing warning.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.warningForeground": {
-					"type": "string",
-					"default": "#ff942f",
-					"description": "Text color used to highlight lines containing warnings.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.warningMessageBackground": {
-					"type": [
-						"string",
-						"null"
-					],
-					"default": null,
-					"description": "Background color of the warning message.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.infoBackground": {
-					"type": "string",
-					"default": "#00b7e420",
-					"description": "Background color of the entire line containing info.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.infoForeground": {
-					"type": "string",
-					"default": "#00b7e4",
-					"description": "Text color used to highlight lines containing info.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.infoMessageBackground": {
-					"type": [
-						"string",
-						"null"
-					],
-					"default": null,
-					"description": "Background color of the info message.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.hintBackground": {
-					"type": "string",
-					"default": "#17a2a220",
-					"description": "Background color of the entire line containing hint.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.hintForeground": {
-					"type": "string",
-					"default": "#17a2a2",
-					"description": "Text color used to highlight lines containing hints.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
-				"errorLens.hintMessageBackground": {
-					"type": [
-						"string",
-						"null"
-					],
-					"default": null,
-					"description": "Background color of the hint message.",
-					"deprecationMessage": "Deprecated: Use color contributions instead."
-				},
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",
@@ -250,46 +161,6 @@
 					"type": "object",
 					"description": "Specify color of decorations for when the light color theme is active.",
 					"properties": {
-						"errorBackground": {
-							"type": "string",
-							"default": "",
-							"description": "Background color used to highlight lines containing errors."
-						},
-						"errorForeground": {
-							"type": "string",
-							"default": "",
-							"description": "Text color used to highlight lines containing errors."
-						},
-						"warningBackground": {
-							"type": "string",
-							"default": "",
-							"description": "Background color used to highlight lines containing warnings."
-						},
-						"warningForeground": {
-							"type": "string",
-							"default": "",
-							"description": "Text color used to highlight lines containing warnings."
-						},
-						"infoBackground": {
-							"type": "string",
-							"default": "",
-							"description": "Background color used to highlight lines containing info."
-						},
-						"infoForeground": {
-							"type": "string",
-							"default": "",
-							"description": "Text color used to highlight lines containing info."
-						},
-						"hintBackground": {
-							"type": "string",
-							"default": "",
-							"description": "Background color used to highlight lines containing hints."
-						},
-						"hintForeground": {
-							"type": "string",
-							"default": "",
-							"description": "Text color used to highlight lines containing hints."
-						},
 						"errorGutterIconPath": {
 							"type": "string",
 							"description": "Absolute path to error gutter icon for light themes."
@@ -440,6 +311,15 @@
 				"description": "Background color of the error message."
 			},
 			{
+				"id": "errorLens.errorBackgroundLight",
+				"defaults": {
+					"dark": "#e4545420",
+					"light": "#e4545420",
+					"highContrast": "#e4545420"
+				},
+				"description": "Background color of the entire line containing error (Only in light themes)."
+			},
+			{
 				"id": "errorLens.errorForeground",
 				"defaults": {
 					"dark": "#ff6464",
@@ -447,6 +327,15 @@
 					"highContrast": "#ff6464"
 				},
 				"description": "Text color used to highlight lines containing errors."
+			},
+			{
+				"id": "errorLens.errorForegroundLight",
+				"defaults": {
+					"dark": "#e45454",
+					"light": "#e45454",
+					"highContrast": "#e45454"
+				},
+				"description": "Text color used to highlight lines containing errors (Only in light themes)."
 			},
 			{
 				"id": "errorLens.warningBackground",
@@ -467,6 +356,15 @@
 				"description": "Background color of the warning message."
 			},
 			{
+				"id": "errorLens.warningBackgroundLight",
+				"defaults": {
+					"dark": "#ff942f20",
+					"light": "#ff942f20",
+					"highContrast": "#ff942f20"
+				},
+				"description": "Background color used to highlight lines containing warnings (Only in light themes)."
+			},
+			{
 				"id": "errorLens.warningForeground",
 				"defaults": {
 					"dark": "#fa973a",
@@ -474,6 +372,15 @@
 					"highContrast": "#fa973a"
 				},
 				"description": "Text color used to highlight lines containing warnings."
+			},
+			{
+				"id": "errorLens.warningForegroundLight",
+				"defaults": {
+					"dark": "#ff942f",
+					"light": "#ff942f",
+					"highContrast": "#ff942f"
+				},
+				"description": "Text color used to highlight lines containing warnings (Only in light themes)."
 			},
 			{
 				"id": "errorLens.infoBackground",
@@ -494,6 +401,15 @@
 				"description": "Background color of the info message."
 			},
 			{
+				"id": "errorLens.infoBackgroundLight",
+				"defaults": {
+					"dark": "#00b7e420",
+					"light": "#00b7e420",
+					"highContrast": "#00b7e420"
+				},
+				"description": "Background color used to highlight lines containing info (Only in light themes)."
+			},
+			{
 				"id": "errorLens.infoForeground",
 				"defaults": {
 					"dark": "#00b7e4",
@@ -501,6 +417,15 @@
 					"highContrast": "#00b7e4"
 				},
 				"description": "Text color used to highlight lines containing info."
+			},
+			{
+				"id": "errorLens.infoForegroundLight",
+				"defaults": {
+					"dark": "#00b7e4",
+					"light": "#00b7e4",
+					"highContrast": "#00b7e4"
+				},
+				"description": "Text color used to highlight lines containing info (Only in light themes)."
 			},
 			{
 				"id": "errorLens.hintBackground",
@@ -521,6 +446,15 @@
 				"description": "Background color of the hint message."
 			},
 			{
+				"id": "errorLens.hintBackgroundLight",
+				"defaults": {
+					"dark": "#17a2a220",
+					"light": "#17a2a220",
+					"highContrast": "#17a2a220"
+				},
+				"description": "Background color used to highlight lines containing hints (Only in light themes)."
+			},
+			{
 				"id": "errorLens.hintForeground",
 				"defaults": {
 					"dark": "#2faf64",
@@ -528,6 +462,15 @@
 					"highContrast": "#2faf64"
 				},
 				"description": "Text color used to highlight lines containing hints."
+			},
+			{
+				"id": "errorLens.hintForegroundLight",
+				"defaults": {
+					"dark": "#2faf64",
+					"light": "#2faf64",
+					"highContrast": "#2faf64"
+				},
+				"description": "Text color used to highlight lines containing hints (Only in light themes)."
 			}
 		]
 	},

@@ -361,84 +361,39 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			gutter = getGutterStyles(extensionContext);
 		}
 
-		let errorBackground;
-		let errorMessageBackground;
-		let errorBackgroundLight;
-		let errorForeground;
-		let errorForegroundLight;
-		let warningBackground;
-		let warningMessageBackground;
-		let warningBackgroundLight;
-		let warningForeground;
-		let warningForegroundLight;
-		let infoBackground;
-		let infoMessageBackground;
-		let infoBackgroundLight;
-		let infoForeground;
-		let infoForegroundLight;
-		let hintBackground;
-		let hintMessageBackground;
-		let hintBackgroundLight;
-		let hintForeground;
-		let hintForegroundLight;
+		const errorBackground = new vscode.ThemeColor('errorLens.errorBackground');
+		const errorBackgroundLight = new vscode.ThemeColor('errorLens.errorBackgroundLight');
+		const errorForeground = new vscode.ThemeColor('errorLens.errorForeground');
+		const errorForegroundLight = new vscode.ThemeColor('errorLens.errorForegroundLight');
+		const errorMessageBackground = new vscode.ThemeColor('errorLens.errorMessageBackground');
 
-		if (config.useColorContributions) {
-			errorBackground = new vscode.ThemeColor('errorLens.errorBackground');
-			errorMessageBackground = new vscode.ThemeColor('errorLens.errorMessageBackground');
-			errorBackgroundLight = errorBackground;
-			errorForeground = new vscode.ThemeColor('errorLens.errorForeground');
-			errorForegroundLight = errorForeground;
-			warningBackground = new vscode.ThemeColor('errorLens.warningBackground');
-			warningMessageBackground = new vscode.ThemeColor('errorLens.warningMessageBackground');
-			warningBackgroundLight = warningBackground;
-			warningForeground = new vscode.ThemeColor('errorLens.warningForeground');
-			warningForegroundLight = warningForeground;
-			infoBackground = new vscode.ThemeColor('errorLens.infoBackground');
-			infoMessageBackground = new vscode.ThemeColor('errorLens.infoMessageBackground');
-			infoBackgroundLight = infoBackground;
-			infoForeground = new vscode.ThemeColor('errorLens.infoForeground');
-			infoForegroundLight = infoForeground;
-			hintBackground = new vscode.ThemeColor('errorLens.hintBackground');
-			hintMessageBackground = new vscode.ThemeColor('errorLens.hintMessageBackground');
-			hintBackgroundLight = hintBackground;
-			hintForeground = new vscode.ThemeColor('errorLens.hintForeground');
-			hintForegroundLight = hintForeground;
-		} else {
-			errorBackground = config.errorBackground;
-			errorMessageBackground = config.errorMessageBackground;
-			errorForeground = config.errorForeground;
-			errorBackgroundLight = config.light.errorBackground;
-			errorForegroundLight = config.light.errorForeground;
-			warningBackground = config.warningBackground;
-			warningMessageBackground = config.warningMessageBackground;
-			warningForeground = config.warningForeground;
-			warningBackgroundLight = config.light.warningBackground;
-			warningForegroundLight = config.light.warningForeground;
-			infoBackground = config.infoBackground;
-			infoMessageBackground = config.infoMessageBackground;
-			infoForeground = config.infoForeground;
-			infoBackgroundLight = config.light.infoBackground;
-			infoForegroundLight = config.light.infoForeground;
-			hintBackground = config.hintBackground;
-			hintMessageBackground = config.hintMessageBackground;
-			hintForeground = config.hintForeground;
-			hintBackgroundLight = config.light.hintBackground;
-			hintForegroundLight = config.light.hintForeground;
-		}
+		const warningBackground = new vscode.ThemeColor('errorLens.warningBackground');
+		const warningBackgroundLight = new vscode.ThemeColor('errorLens.warningBackgroundLight');
+		const warningForeground = new vscode.ThemeColor('errorLens.warningForeground');
+		const warningForegroundLight = new vscode.ThemeColor('errorLens.warningForegroundLight');
+		const warningMessageBackground = new vscode.ThemeColor('errorLens.warningMessageBackground');
+
+		const infoBackground = new vscode.ThemeColor('errorLens.infoBackground');
+		const infoBackgroundLight = new vscode.ThemeColor('errorLens.infoBackgroundLight');
+		const infoForeground = new vscode.ThemeColor('errorLens.infoForeground');
+		const infoForegroundLight = new vscode.ThemeColor('errorLens.infoForegroundLight');
+		const infoMessageBackground = new vscode.ThemeColor('errorLens.infoMessageBackground');
+
+		const hintBackground = new vscode.ThemeColor('errorLens.hintBackground');
+		const hintBackgroundLight = new vscode.ThemeColor('errorLens.hintBackgroundLight');
+		const hintForeground = new vscode.ThemeColor('errorLens.hintForeground');
+		const hintForegroundLight = new vscode.ThemeColor('errorLens.hintForegroundLight');
+		const hintMessageBackground = new vscode.ThemeColor('errorLens.hintMessageBackground');
 
 		const onlyDigitsRegExp = /^\d+$/;
 		const fontFamily = config.fontFamily ? `font-family:${config.fontFamily}` : '';
 		const fontSize = config.fontSize ? `font-size:${onlyDigitsRegExp.test(config.fontSize) ? `${config.fontSize}px` : config.fontSize};line-height:1` : '';
-		const paddingAndBorderRadius =
-			config.errorMessageBackground ||
-				config.warningMessageBackground ||
-				config.infoMessageBackground ||
-				config.hintMessageBackground ? 'border-radius:0.15em;padding:0.05em 0.3em;' : '';
+		const padding = 'padding:2px 1ch';
 
 		const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
 			fontStyle: config.fontStyleItalic ? 'italic' : 'normal',
 			fontWeight: config.fontWeight,
-			textDecoration: `;${fontFamily};${fontSize};${paddingAndBorderRadius};margin-left:${onlyDigitsRegExp.test(config.margin) ? `${config.margin}px` : config.margin};`,
+			textDecoration: `;${fontFamily};${fontSize};${padding};margin-left:${onlyDigitsRegExp.test(config.margin) ? `${config.margin}px` : config.margin};border-radius:3px;`,
 		};
 
 		decorationRenderOptionsError = {
@@ -606,94 +561,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		updateAllDecorations();
 	});
 
-	const disposableConvertColors = commands.registerCommand(`${EXTENSION_NAME}.convertColors`, async () => {
-		const inspect = workspace.getConfiguration().inspect(EXTENSION_NAME);
-		if (!inspect) {
-			return;
-		}
-		const globalConfig = inspect.globalValue as any as IConfig;
-		const defaultConfig = inspect.defaultValue as any as IConfig;
-
-		const colors: {
-			errorBackground?: string;
-			errorForeground?: string;
-			errorMessageBackground?: string;
-
-			warningBackground?: string;
-			warningForeground?: string;
-			warningMessageBackground?: string;
-
-			infoBackground?: string;
-			infoForeground?: string;
-			infoMessageBackground?: string;
-
-			hintBackground?: string;
-			hintForeground?: string;
-			hintMessageBackground?: string;
-		} = {};
-		if (globalConfig.errorBackground !== defaultConfig.errorBackground) {
-			colors.errorBackground = globalConfig.errorBackground;
-		}
-		if (globalConfig.errorForeground !== defaultConfig.errorForeground) {
-			colors.errorForeground = globalConfig.errorForeground;
-		}
-		if (globalConfig.errorMessageBackground !== defaultConfig.errorMessageBackground) {
-			colors.errorMessageBackground = globalConfig.errorMessageBackground;
-		}
-
-		if (globalConfig.warningBackground !== defaultConfig.warningBackground) {
-			colors.warningBackground = globalConfig.warningBackground;
-		}
-		if (globalConfig.warningForeground !== defaultConfig.warningForeground) {
-			colors.warningForeground = globalConfig.warningForeground;
-		}
-		if (globalConfig.warningMessageBackground !== defaultConfig.warningMessageBackground) {
-			colors.warningMessageBackground = globalConfig.warningMessageBackground;
-		}
-
-		if (globalConfig.infoBackground !== defaultConfig.infoBackground) {
-			colors.infoBackground = globalConfig.infoBackground;
-		}
-		if (globalConfig.infoForeground !== defaultConfig.infoForeground) {
-			colors.infoForeground = globalConfig.infoForeground;
-		}
-		if (globalConfig.infoMessageBackground !== defaultConfig.infoMessageBackground) {
-			colors.infoMessageBackground = globalConfig.infoMessageBackground;
-		}
-
-		if (globalConfig.hintBackground !== defaultConfig.hintBackground) {
-			colors.hintBackground = globalConfig.hintBackground;
-		}
-		if (globalConfig.hintForeground !== defaultConfig.hintForeground) {
-			colors.hintForeground = globalConfig.hintForeground;
-		}
-		if (globalConfig.hintMessageBackground !== defaultConfig.hintMessageBackground) {
-			colors.hintMessageBackground = globalConfig.hintMessageBackground;
-		}
-
-		for (const key in colors) {
-			colors[`errorLens.${key}`] = colors[key];
-			delete colors[key];
-		}
-
-		const shouldWrite = await window.showWarningMessage('💥 Do you want to write colors into global `settings.json` file? This action will remove all comments inside your `workbench.colorCustomizations` setting.', 'Yes', 'No');
-
-		if (shouldWrite === 'Yes') {
-			const globalColorCustomizations = workspace.getConfiguration('workbench.colorCustomizations');
-			const newColorCustomizations = {
-				...globalColorCustomizations,
-				...colors,
-			};
-			workspace.getConfiguration().update('workbench.colorCustomizations', newColorCustomizations, vscode.ConfigurationTarget.Global);
-		} else {
-			const document = await vscode.workspace.openTextDocument({
-				language: 'jsonc',
-				content: `// Paste these lines (excluding braces) into your \`settings.json\` file into \`workbench.colorCustomizations\` section. \n${JSON.stringify(colors, null, '	')}`,
-			});
-			vscode.window.showTextDocument(document);
-		}
-	});
-
 	const disposableCopyProblemMessage = vscode.commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
 		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
 		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
@@ -717,7 +584,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	});
 
 	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(onConfigChange));
-	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableConvertColors);
+	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
 }
 
 export function deactivate(): void { }

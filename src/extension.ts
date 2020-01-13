@@ -543,10 +543,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	}
 
 	function disposeEverything(): void {
-		disposeDecorations();
-		disposeEventListeners();
-	}
-	function disposeDecorations(): void {
 		if (decorationTypeError) {
 			decorationTypeError.dispose();
 		}
@@ -559,8 +555,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		if (decorationTypeHint) {
 			decorationTypeHint.dispose();
 		}
-	}
-	function disposeEventListeners(): void {
 		if (onDidChangeVisibleTextEditors) {
 			onDidChangeVisibleTextEditors.dispose();
 		}

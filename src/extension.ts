@@ -1,13 +1,13 @@
 import debounce from 'lodash/debounce';
 import vscode, { window, workspace, commands } from 'vscode';
-import { promises as fs } from 'fs';
 
-import type { IAggregatedDiagnostics, IConfig, IGutter } from './types';
+import type { IAggregatedDiagnostics, IConfig } from './types';
 import { truncate } from './utils';
 import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
+import { getGutterStyles } from './gutter';
 
 export const EXTENSION_NAME = 'errorLens';
-let config: IConfig;
+export let config: IConfig;
 
 export function activate(extensionContext: vscode.ExtensionContext): void {
 	let excludeRegexp: RegExp[] = [];
@@ -39,18 +39,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	let onDidCursorChangeDisposable: vscode.Disposable | undefined;
 
 	updateConfig();
-
-	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
-		// Many URIs can change - we only need to decorate all visible editors
-		for (const uri of diagnosticChangeEvent.uris) {
-			for (const editor of window.visibleTextEditors) {
-				if (uri.fsPath === editor.document.uri.fsPath) {
-					updateDecorationsForUri(uri, editor);
-				}
-			}
-		}
-	}
-
+	// ────────────────────────────────────────────────────────────────────────────────
+	// ──── Event Listeners ───────────────────────────────────────────────────────────
+	// ────────────────────────────────────────────────────────────────────────────────
 	function updateChangedActiveTextEditorListener(): void {
 		if (onDidChangeActiveTextEditor) {
 			onDidChangeActiveTextEditor.dispose();
@@ -67,17 +58,25 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			}
 		});
 	}
-
 	function updateChangeVisibleTextEditorsListener(): void {
 		if (onDidChangeVisibleTextEditors) {
 			onDidChangeVisibleTextEditors.dispose();
 		}
 		onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateAllDecorations);
 	}
-
 	function updateChangeDiagnosticListener(): void {
 		if (onDidChangeDiagnosticsDisposable) {
 			onDidChangeDiagnosticsDisposable.dispose();
+		}
+		function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
+			// Many URIs can change - we only need to decorate all visible editors
+			for (const uri of diagnosticChangeEvent.uris) {
+				for (const editor of window.visibleTextEditors) {
+					if (uri.fsPath === editor.document.uri.fsPath) {
+						updateDecorationsForUri(uri, editor);
+					}
+				}
+			}
 		}
 		if (config.onSave) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(e => {
@@ -127,13 +126,54 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		if (!config.onSave) {
 			return;
 		}
-		onDidSaveTextDocumentDisposable = workspace.onDidSaveTextDocument(onSaveDocument);
+		onDidSaveTextDocumentDisposable = workspace.onDidSaveTextDocument(e => {
+			lastSavedTimestamp = Date.now();
+			setTimeout(() => {
+				updateDecorationsForUri(e.uri);
+			}, 600);
+		});
 	}
-	function onSaveDocument(e: vscode.TextDocument): void {
-		lastSavedTimestamp = Date.now();
-		setTimeout(() => {
-			updateDecorationsForUri(e.uri);
-		}, 600);
+	// ────────────────────────────────────────────────────────────────────────────────
+	//
+	// ────────────────────────────────────────────────────────────────────────────────
+
+	// #region
+	// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
+	// where N is the source line where one or more diagnostics are being reported.
+	// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
+	// This facilitates gathering info about lines which contain more than one diagnostic.
+	// {
+	//     67: [
+	//         <vscode.Diagnostic #1>,
+	//         <vscode.Diagnostic #2>
+	//     ],
+	//     93: [
+	//         <vscode.Diagnostic #1>
+	//     ]
+	// };
+	// #endregion
+	function getDiagnosticAndGroupByLine(uri: vscode.Uri): IAggregatedDiagnostics {
+		const aggregatedDiagnostics: IAggregatedDiagnostics = Object.create(null);
+		const diagnostics = vscode.languages.getDiagnostics(uri);
+
+		nextDiagnostic:
+		for (const diagnostic of diagnostics) {
+			// Exclude items specified in `errorLens.exclude` setting
+			for (const regex of excludeRegexp) {
+				if (regex.test(diagnostic.message)) {
+					continue nextDiagnostic;
+				}
+			}
+
+			const key = diagnostic.range.start.line;
+
+			if (aggregatedDiagnostics[key]) {
+				aggregatedDiagnostics[key].push(diagnostic);
+			} else {
+				aggregatedDiagnostics[key] = [diagnostic];
+			}
+		}
+		return aggregatedDiagnostics;
 	}
 
 	function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range): void {
@@ -153,44 +193,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		const decorationOptionsInfo: vscode.DecorationOptions[] = [];
 		const decorationOptionsHint: vscode.DecorationOptions[] = [];
 
-		// #region
-		// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
-		// where N is the source line where one or more diagnostics are being reported.
-		// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
-		// This facilitates gathering info about lines which contain more than one diagnostic.
-		// {
-		//     67: [
-		//         <vscode.Diagnostic #1>,
-		//         <vscode.Diagnostic #2>
-		//     ],
-		//     93: [
-		//         <vscode.Diagnostic #1>
-		//     ]
-		// };
-		// #endregion
-		const aggregatedDiagnostics: IAggregatedDiagnostics = Object.create(null);
-		const diagnostics = vscode.languages.getDiagnostics(uriToDecorate);
-		// Iterate over each diagnostic that VS Code has reported for this file. For each one, add to
-		// a list of objects, grouping together diagnostics which occur on a single line.
-		nextDiagnostic:
-		for (const diagnostic of diagnostics) {
-			// Exclude items specified in `errorLens.exclude` setting
-			for (const regex of excludeRegexp) {
-				if (regex.test(diagnostic.message)) {
-					continue nextDiagnostic;
-				}
-			}
-
-			const key = diagnostic.range.start.line;
-
-			if (aggregatedDiagnostics[key]) {
-				// Already added an object for this key, so augment the arrayDiagnostics[] array.
-				aggregatedDiagnostics[key].push(diagnostic);
-			} else {
-				// Create a new object for this key, specifying the line: and a arrayDiagnostics[] array
-				aggregatedDiagnostics[key] = [diagnostic];
-			}
-		}
+		const aggregatedDiagnostics = getDiagnosticAndGroupByLine(uriToDecorate);
 
 		let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
 		if (config.followCursor === 'closestProblem') {
@@ -295,6 +298,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 
 		if (config.editorActiveTabDecorationEnabled && editor === window.activeTextEditor) {
 			const workspaceColorCustomizations = getWorkspaceColorCustomizations();
+			const diagnostics = vscode.languages.getDiagnostics(uriToDecorate);
 
 			let newTabBackground: string | undefined = '';
 
@@ -579,7 +583,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			updateDecorationsForUri(editor.document.uri, editor);
 		}
 	}
-
+	// ────────────────────────────────────────────────────────────────────────────────
+	// ──── Commands ──────────────────────────────────────────────────────────────────
+	// ────────────────────────────────────────────────────────────────────────────────
 	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggle`, () => {
 		errorLensEnabled = !errorLensEnabled;
 
@@ -718,44 +724,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 
 	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(onConfigChange));
 	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableConvertColors);
-}
-/**
- * The idea of circle gutter icons is that it should be possible to change their color. AFAIK that's only possible with writing <svg> to disk and then referencing them from extension.
- */
-function writeCircleGutterIconsToDisk(extensionContext: vscode.ExtensionContext): void {
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.errorGutterIconColor}"/></svg>`);
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.light.errorGutterIconColor || config.errorGutterIconColor}"/></svg>`);
-
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/warning-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.warningGutterIconColor}"/></svg>`);
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/warning-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.light.warningGutterIconColor || config.warningGutterIconColor}"/></svg>`);
-
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/info-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.infoGutterIconColor}"/></svg>`);
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/info-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${config.light.infoGutterIconColor || config.infoGutterIconColor}"/></svg>`);
-}
-
-function getGutterStyles(extensionContext: vscode.ExtensionContext): IGutter {
-	const gutter: IGutter = Object.create(null);
-
-	gutter.iconSet = config.gutterIconSet;
-	if (config.gutterIconSet !== 'borderless' &&
-		config.gutterIconSet !== 'default' &&
-		config.gutterIconSet !== 'circle' &&
-		config.gutterIconSet !== 'defaultOutline') {
-		gutter.iconSet = 'default';
-	}
-
-	if (gutter.iconSet === 'circle') {
-		writeCircleGutterIconsToDisk(extensionContext);
-	}
-
-	gutter.errorIconPath = config.errorGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
-	gutter.errorIconPathLight = config.light.errorGutterIconPath || (config.errorGutterIconPath ? config.errorGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
-	gutter.warningIconPath = config.warningGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-dark.svg`);
-	gutter.warningIconPathLight = config.light.warningGutterIconPath || (config.warningGutterIconPath ? config.warningGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
-	gutter.infoIconPath = config.infoGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
-	gutter.infoIconPathLight = config.light.infoGutterIconPath || (config.infoGutterIconPath ? config.infoGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
-
-	return gutter;
 }
 
 export function deactivate(): void { }

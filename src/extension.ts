@@ -535,7 +535,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	// ────────────────────────────────────────────────────────────────────────────────
 	// ──── Commands ──────────────────────────────────────────────────────────────────
 	// ────────────────────────────────────────────────────────────────────────────────
-	const disposableToggleErrorLens = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggle`, () => {
+	const disposableToggleErrorLens = commands.registerCommand(`${EXTENSION_NAME}.toggle`, () => {
 		errorLensEnabled = !errorLensEnabled;
 
 		if (errorLensEnabled) {
@@ -544,24 +544,24 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			disposeEverything();
 		}
 	});
-	const disposableToggleError = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleError`, () => {
+	const disposableToggleError = commands.registerCommand(`${EXTENSION_NAME}.toggleError`, () => {
 		errorEnabled = !errorEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleWarning = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleWarning`, () => {
+	const disposableToggleWarning = commands.registerCommand(`${EXTENSION_NAME}.toggleWarning`, () => {
 		warningEabled = !warningEabled;
 		updateAllDecorations();
 	});
-	const disposableToggleInfo = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleInfo`, () => {
+	const disposableToggleInfo = commands.registerCommand(`${EXTENSION_NAME}.toggleInfo`, () => {
 		infoEnabled = !infoEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleHint = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleHint`, () => {
+	const disposableToggleHint = commands.registerCommand(`${EXTENSION_NAME}.toggleHint`, () => {
 		hintEnabled = !hintEnabled;
 		updateAllDecorations();
 	});
 
-	const disposableCopyProblemMessage = vscode.commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
+	const disposableCopyProblemMessage = commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
 		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
 		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;

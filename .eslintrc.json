@@ -10,13 +10,16 @@
 		"project": "./tsconfig.json"
 	},
 	"plugins": [
-		"@typescript-eslint"
+		"@typescript-eslint",
+		"no-autofix"
 	],
 	"parser": "@typescript-eslint/parser",
 	"extends": [
 		"plugin:@typescript-eslint/recommended"
 	],
 	"rules": {
+		"no-autofix/prefer-const": 1,
+
 		"@typescript-eslint/semi": 1,
 		"@typescript-eslint/adjacent-overload-signatures": 1,
 		"@typescript-eslint/array-type": [1, {
@@ -324,7 +327,7 @@
 		"func-names": 0,
 
 
-		"prefer-const": 1,
+		"prefer-const": 0,
 		"prefer-spread": 1,
 		"prefer-destructuring": 0,
 		"prefer-rest-params": 1,

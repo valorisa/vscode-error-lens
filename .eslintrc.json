@@ -49,7 +49,7 @@
 				"requireLast": false
 			}
 		}],
-		"@typescript-eslint/member-naming": [1, {
+		"@typescript-eslint/member-naming": [0, {
 			"private": "^_"
 		}],
 		"@typescript-eslint/member-ordering": 1,

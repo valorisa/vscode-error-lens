@@ -125,112 +125,7 @@ class CustomDelay {
 	updateDecorations = (stringUri: string): void => {
 		for (const editor of vscode.window.visibleTextEditors) {
 			if (editor.document.uri.toString() === stringUri) {
-				const decorationOptionsError: vscode.DecorationOptions[] = [];
-				const decorationOptionsWarning: vscode.DecorationOptions[] = [];
-				const decorationOptionsInfo: vscode.DecorationOptions[] = [];
-				const decorationOptionsHint: vscode.DecorationOptions[] = [];
-
-				const aggregatedDiagnostics = this.groupByLine(this.cachedDiagnostics[stringUri]);
-
-				let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
-				if (config.followCursor === 'closestProblem') {
-					const range = editor.selection;
-					const line = range.start.line;
-
-					const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
-					aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
-					allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
-				}
-
-				for (const key in aggregatedDiagnostics) {
-					const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-
-					let addErrorLens = false;
-					const diagnostic = aggregatedDiagnostic[0];
-					const severity = diagnostic.severity;
-
-					switch (severity) {
-						case 0: addErrorLens = configErrorEnabled && errorEnabled; break;
-						case 1: addErrorLens = configWarningEnabled && warningEabled; break;
-						case 2: addErrorLens = configInfoEnabled && infoEnabled; break;
-						case 3: addErrorLens = configHintEnabled && hintEnabled; break;
-					}
-
-					if (addErrorLens) {
-						let messagePrefix = '';
-						if (config.addNumberOfDiagnostics && aggregatedDiagnostic.length > 1) {
-							messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
-						}
-						if (config.addAnnotationTextPrefixes) {
-							messagePrefix += config.annotationPrefix[severity] || '';
-						}
-						let decorationRenderOptions: vscode.DecorationRenderOptions = {};
-						switch (severity) {
-							case 0: decorationRenderOptions = decorationRenderOptionsError; break;
-							case 1: decorationRenderOptions = decorationRenderOptionsWarning; break;
-							case 2: decorationRenderOptions = decorationRenderOptionsInfo; break;
-							case 3: decorationRenderOptions = decorationRenderOptionsHint; break;
-						}
-
-						// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
-						// after the source-code line in the editor
-						const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
-							...decorationRenderOptions,
-							after: {
-								...decorationRenderOptions.after || {},
-								contentText: truncate(messagePrefix + diagnostic.message),
-							},
-						};
-
-						let messageRange: vscode.Range | undefined;
-						if (config.followCursor === 'allLines') {
-							// Default value (most used)
-							messageRange = diagnostic.range;
-						} else {
-							// Others require cursor tracking
-							// if (range === undefined) {
-							const range = editor.selection;
-							// }
-							const diagnosticRange = diagnostic.range;
-
-							if (config.followCursor === 'activeLine') {
-								const lineStart = range.start.line - config.followCursorMore;
-								const lineEnd = range.end.line + config.followCursorMore;
-
-								if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
-							diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
-									messageRange = diagnosticRange;
-								}
-							} else if (config.followCursor === 'closestProblem') {
-								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-								if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
-									messageRange = diagnosticRange;
-								}
-							}
-
-							if (!messageRange) {
-								continue;
-							}
-						}
-
-						const diagnosticDecorationOptions: vscode.DecorationOptions = {
-							range: messageRange,
-							renderOptions: decInstanceRenderOptions,
-						};
-
-						switch (severity) {
-							case 0: decorationOptionsError.push(diagnosticDecorationOptions); break;
-							case 1: decorationOptionsWarning.push(diagnosticDecorationOptions); break;
-							case 2: decorationOptionsInfo.push(diagnosticDecorationOptions); break;
-							case 3: decorationOptionsHint.push(diagnosticDecorationOptions); break;
-						}
-					}
-				}
-
-				editor.setDecorations(decorationTypeError, decorationOptionsError);
-				editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
-				editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
-				editor.setDecorations(decorationTypeHint, decorationOptionsHint);
+				actuallyUpdateDecorations(editor, this.groupByLine(this.cachedDiagnostics[stringUri]));
 			}
 		}
 	};
@@ -361,115 +256,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			return;
 		}
 
-		const decorationOptionsError: vscode.DecorationOptions[] = [];
-		const decorationOptionsWarning: vscode.DecorationOptions[] = [];
-		const decorationOptionsInfo: vscode.DecorationOptions[] = [];
-		const decorationOptionsHint: vscode.DecorationOptions[] = [];
-
-		const aggregatedDiagnostics = getDiagnosticAndGroupByLine(uriToDecorate);
-
-		let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
-		if (config.followCursor === 'closestProblem') {
-			if (range === undefined) {
-				range = editor.selection;
-			}
-			const line = range.start.line;
-
-			const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
-			aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
-			allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
-		}
-
-		for (const key in aggregatedDiagnostics) {
-			const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-
-			let addErrorLens = false;
-			const diagnostic = aggregatedDiagnostic[0];
-			const severity = diagnostic.severity;
-
-			switch (severity) {
-				case 0: addErrorLens = configErrorEnabled && errorEnabled; break;
-				case 1: addErrorLens = configWarningEnabled && warningEabled; break;
-				case 2: addErrorLens = configInfoEnabled && infoEnabled; break;
-				case 3: addErrorLens = configHintEnabled && hintEnabled; break;
-			}
-
-			if (addErrorLens) {
-				let messagePrefix = '';
-				if (config.addNumberOfDiagnostics && aggregatedDiagnostic.length > 1) {
-					messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
-				}
-				if (config.addAnnotationTextPrefixes) {
-					messagePrefix += config.annotationPrefix[severity] || '';
-				}
-
-				let decorationRenderOptions: vscode.DecorationRenderOptions = {};
-				switch (severity) {
-					case 0: decorationRenderOptions = decorationRenderOptionsError; break;
-					case 1: decorationRenderOptions = decorationRenderOptionsWarning; break;
-					case 2: decorationRenderOptions = decorationRenderOptionsInfo; break;
-					case 3: decorationRenderOptions = decorationRenderOptionsHint; break;
-				}
-
-				// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
-				// after the source-code line in the editor
-				const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
-					...decorationRenderOptions,
-					after: {
-						...decorationRenderOptions.after || {},
-						contentText: truncate(messagePrefix + diagnostic.message),
-					},
-				};
-
-				let messageRange: vscode.Range | undefined;
-				if (config.followCursor === 'allLines') {
-					// Default value (most used)
-					messageRange = diagnostic.range;
-				} else {
-					// Others require cursor tracking
-					if (range === undefined) {
-						range = editor.selection;
-					}
-					const diagnosticRange = diagnostic.range;
-
-					if (config.followCursor === 'activeLine') {
-						const lineStart = range.start.line - config.followCursorMore;
-						const lineEnd = range.end.line + config.followCursorMore;
-
-						if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
-							diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
-							messageRange = diagnosticRange;
-						}
-					} else if (config.followCursor === 'closestProblem') {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
-							messageRange = diagnosticRange;
-						}
-					}
-
-					if (!messageRange) {
-						continue;
-					}
-				}
-
-				const diagnosticDecorationOptions: vscode.DecorationOptions = {
-					range: messageRange,
-					renderOptions: decInstanceRenderOptions,
-				};
-
-				switch (severity) {
-					case 0: decorationOptionsError.push(diagnosticDecorationOptions); break;
-					case 1: decorationOptionsWarning.push(diagnosticDecorationOptions); break;
-					case 2: decorationOptionsInfo.push(diagnosticDecorationOptions); break;
-					case 3: decorationOptionsHint.push(diagnosticDecorationOptions); break;
-				}
-			}
-		}
-
-		editor.setDecorations(decorationTypeError, decorationOptionsError);
-		editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
-		editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
-		editor.setDecorations(decorationTypeHint, decorationOptionsHint);
+		actuallyUpdateDecorations(editor, getDiagnosticAndGroupByLine(uriToDecorate), range);
 	}
 
 	function onConfigChange(e: vscode.ConfigurationChangeEvent): void {
@@ -773,6 +560,116 @@ function getDiagnosticAndGroupByLine(uri: vscode.Uri): IAggregatedByLineDiagnost
 		}
 	}
 	return aggregatedDiagnostics;
+}
+
+function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: IAggregatedByLineDiagnostics, range?: vscode.Range): void {
+	const decorationOptionsError: vscode.DecorationOptions[] = [];
+	const decorationOptionsWarning: vscode.DecorationOptions[] = [];
+	const decorationOptionsInfo: vscode.DecorationOptions[] = [];
+	const decorationOptionsHint: vscode.DecorationOptions[] = [];
+
+	let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
+	if (config.followCursor === 'closestProblem') {
+		if (range === undefined) {
+			range = editor.selection;
+		}
+		const line = range.start.line;
+
+		const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
+		aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
+		allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
+	}
+
+	for (const key in aggregatedDiagnostics) {
+		const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
+
+		let addErrorLens = false;
+		const diagnostic = aggregatedDiagnostic[0];
+		const severity = diagnostic.severity;
+
+		switch (severity) {
+			case 0: addErrorLens = configErrorEnabled && errorEnabled; break;
+			case 1: addErrorLens = configWarningEnabled && warningEabled; break;
+			case 2: addErrorLens = configInfoEnabled && infoEnabled; break;
+			case 3: addErrorLens = configHintEnabled && hintEnabled; break;
+		}
+
+		if (addErrorLens) {
+			let messagePrefix = '';
+			if (config.addNumberOfDiagnostics && aggregatedDiagnostic.length > 1) {
+				messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
+			}
+			if (config.addAnnotationTextPrefixes) {
+				messagePrefix += config.annotationPrefix[severity] || '';
+			}
+
+			let decorationRenderOptions: vscode.DecorationRenderOptions = {};
+			switch (severity) {
+				case 0: decorationRenderOptions = decorationRenderOptionsError; break;
+				case 1: decorationRenderOptions = decorationRenderOptionsWarning; break;
+				case 2: decorationRenderOptions = decorationRenderOptionsInfo; break;
+				case 3: decorationRenderOptions = decorationRenderOptionsHint; break;
+			}
+
+			// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
+			// after the source-code line in the editor
+			const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
+				...decorationRenderOptions,
+				after: {
+					...decorationRenderOptions.after || {},
+					contentText: truncate(messagePrefix + diagnostic.message),
+				},
+			};
+
+			let messageRange: vscode.Range | undefined;
+			if (config.followCursor === 'allLines') {
+				// Default value (most used)
+				messageRange = diagnostic.range;
+			} else {
+				// Others require cursor tracking
+				if (range === undefined) {
+					range = editor.selection;
+				}
+				const diagnosticRange = diagnostic.range;
+
+				if (config.followCursor === 'activeLine') {
+					const lineStart = range.start.line - config.followCursorMore;
+					const lineEnd = range.end.line + config.followCursorMore;
+
+					if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
+							diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
+						messageRange = diagnosticRange;
+					}
+				} else if (config.followCursor === 'closestProblem') {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
+						messageRange = diagnosticRange;
+					}
+				}
+
+				if (!messageRange) {
+					continue;
+				}
+			}
+
+			const diagnosticDecorationOptions: vscode.DecorationOptions = {
+				range: messageRange,
+				renderOptions: decInstanceRenderOptions,
+			};
+
+			switch (severity) {
+				case 0: decorationOptionsError.push(diagnosticDecorationOptions); break;
+				case 1: decorationOptionsWarning.push(diagnosticDecorationOptions); break;
+				case 2: decorationOptionsInfo.push(diagnosticDecorationOptions); break;
+				case 3: decorationOptionsHint.push(diagnosticDecorationOptions); break;
+			}
+		}
+	}
+
+	editor.setDecorations(decorationTypeError, decorationOptionsError);
+	editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
+	editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
+	editor.setDecorations(decorationTypeHint, decorationOptionsHint);
 }
 
 export function deactivate(): void { }

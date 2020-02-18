@@ -200,7 +200,7 @@
 				},
 				"errorLens.delay": {
 					"type": "number",
-					"description": "Delay before showing problem decorations.",
+					"markdownDescription": "**EXPERIMENTAL** Delay before showing problem decorations.",
 					"default": 0
 				},
 				"errorLens.onSave": {

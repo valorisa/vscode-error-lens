@@ -50,8 +50,15 @@ export interface IConfig {
 export type GutterIconSet = 'default' | 'defaultOutline' | 'borderless' | 'circle';
 export type FollowCursor = 'allLines' | 'activeLine' | 'closestProblem';
 
-export interface IAggregatedDiagnostics {
-	[key: string]: vscode.Diagnostic[];
+export interface IAggregatedByLineDiagnostics {
+	[lineNumber: string]: vscode.Diagnostic[];
+}
+
+export interface ISomeDiagnostics {
+	[stringUri: string]: IInnerDiag;
+}
+export interface IInnerDiag {
+	[lnmessage: string]: vscode.Diagnostic;
 }
 
 export interface IGutter {

@@ -1,43 +1,264 @@
-import debounce from 'lodash/debounce';
 import vscode, { window, workspace, commands } from 'vscode';
+import throttle from 'lodash/throttle';
 
-import type { IAggregatedDiagnostics, IConfig } from './types';
+import type { IAggregatedByLineDiagnostics, IConfig, ISomeDiagnostics, IInnerDiag } from './types';
 import { truncate } from './utils';
 import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
 import { getGutterStyles } from './gutter';
 
 export const EXTENSION_NAME = 'errorLens';
 export let config: IConfig;
+let isDelaySet = false;
+let excludeRegexp: RegExp[] = [];
+
+let errorLensEnabled = true;
+let errorEnabled = true;
+let warningEabled = true;
+let infoEnabled = true;
+let hintEnabled = true;
+let configErrorEnabled = true;
+let configWarningEnabled = true;
+let configInfoEnabled = true;
+let configHintEnabled = true;
+let lastSavedTimestamp = Date.now() + 5000;
+
+let decorationRenderOptionsError: vscode.DecorationRenderOptions;
+let decorationRenderOptionsWarning: vscode.DecorationRenderOptions;
+let decorationRenderOptionsInfo: vscode.DecorationRenderOptions;
+let decorationRenderOptionsHint: vscode.DecorationRenderOptions;
+
+let decorationTypeError: vscode.TextEditorDecorationType;
+let decorationTypeWarning: vscode.TextEditorDecorationType;
+let decorationTypeInfo: vscode.TextEditorDecorationType;
+let decorationTypeHint: vscode.TextEditorDecorationType;
+
+let onDidChangeDiagnosticsDisposable: vscode.Disposable | undefined;
+let onDidChangeActiveTextEditor: vscode.Disposable | undefined;
+let onDidChangeVisibleTextEditors: vscode.Disposable | undefined;
+let onDidSaveTextDocumentDisposable: vscode.Disposable | undefined;
+let onDidCursorChangeDisposable: vscode.Disposable | undefined;
+
+let customDelay: undefined | CustomDelay;
+
+class CustomDelay {
+	private readonly delay: number;
+	private cachedDiagnostics: ISomeDiagnostics = {};
+	private readonly updateDecorationsThrottled: (stringUri: string)=> void;
+
+
+	constructor(delay: number) {
+		this.delay = delay;
+		this.updateDecorationsThrottled = throttle(this.updateDecorations, 200, {
+			leading: false,
+			trailing: true,
+		});
+	}
+
+	static convertDiagnosticToId(diagnostic: vscode.Diagnostic): string {
+		return `${diagnostic.range.start.line}${diagnostic.message}`;
+	}
+
+	updateCachedDiagnosticForUri = (uri: vscode.Uri): void => {
+		const stringUri = uri.toString();
+		const diagnosticForUri = vscode.languages.getDiagnostics(uri);
+		const cachedDiagnosticsForUri = this.cachedDiagnostics[stringUri];
+		const transformed = {
+			[stringUri]: {},
+		};
+		for (const item of diagnosticForUri) {
+			transformed[stringUri][CustomDelay.convertDiagnosticToId(item)] = item;
+		}
+		// If there's no uri saved - save it and render all diagnostics
+		if (!cachedDiagnosticsForUri) {
+			this.cachedDiagnostics[stringUri] = transformed[stringUri];
+			setTimeout(() => {
+				this.updateDecorationsThrottled(stringUri);
+			}, this.delay);
+		} else {
+			const transformedDiagnosticForUri = transformed[stringUri];
+			const cachedKeys = Object.keys(cachedDiagnosticsForUri);
+			const transformedKeys = Object.keys(transformedDiagnosticForUri);
+
+			for (const key of cachedKeys) {
+				if (!transformedKeys.includes(key)) {
+					this.removeItem(stringUri, key);
+				}
+			}
+			for (const key of transformedKeys) {
+				if (!cachedKeys.includes(key)) {
+					this.addItem(uri, stringUri, key, transformedDiagnosticForUri[key]);
+				}
+			}
+		}
+	};
+
+	onDiagnosticChange = (event: vscode.DiagnosticChangeEvent): void => {
+		if (!event.uris.length) {
+			this.cachedDiagnostics = {};
+			return;
+		}
+		for (const uri of event.uris) {
+			this.updateCachedDiagnosticForUri(uri);
+		}
+	};
+
+	removeItem = (stringUri: string, key: string): void => {
+		delete this.cachedDiagnostics[stringUri][key];
+		this.updateDecorationsThrottled(stringUri);
+	};
+	addItem = (uri: vscode.Uri, stringUri: string, key: string, diagnostic: vscode.Diagnostic): void => {
+		setTimeout(() => {
+			// Revalidate if the diagnostic actually exists at the end of the timer
+			const diagnosticForUri = vscode.languages.getDiagnostics(uri);
+			const transformed = {
+				[stringUri]: {},
+			};
+			for (const item of diagnosticForUri) {
+				transformed[stringUri][CustomDelay.convertDiagnosticToId(item)] = item;
+			}
+			if (!(key in transformed[stringUri])) {
+				return;
+			}
+			this.cachedDiagnostics[stringUri][key] = diagnostic;
+			this.updateDecorationsThrottled(stringUri);
+		}, this.delay);
+	};
+	updateDecorations = (stringUri: string): void => {
+		for (const editor of vscode.window.visibleTextEditors) {
+			if (editor.document.uri.toString() === stringUri) {
+				const decorationOptionsError: vscode.DecorationOptions[] = [];
+				const decorationOptionsWarning: vscode.DecorationOptions[] = [];
+				const decorationOptionsInfo: vscode.DecorationOptions[] = [];
+				const decorationOptionsHint: vscode.DecorationOptions[] = [];
+
+				const aggregatedDiagnostics = this.groupByLine(this.cachedDiagnostics[stringUri]);
+
+				let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
+				if (config.followCursor === 'closestProblem') {
+					const range = editor.selection;
+					const line = range.start.line;
+
+					const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
+					aggregatedDiagnosticsAsArray.length = config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
+					allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
+				}
+
+				for (const key in aggregatedDiagnostics) {
+					const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
+
+					let addErrorLens = false;
+					const diagnostic = aggregatedDiagnostic[0];
+					const severity = diagnostic.severity;
+
+					switch (severity) {
+						case 0: addErrorLens = configErrorEnabled && errorEnabled; break;
+						case 1: addErrorLens = configWarningEnabled && warningEabled; break;
+						case 2: addErrorLens = configInfoEnabled && infoEnabled; break;
+						case 3: addErrorLens = configHintEnabled && hintEnabled; break;
+					}
+
+					if (addErrorLens) {
+						let messagePrefix = '';
+						if (config.addAnnotationTextPrefixes) {
+							messagePrefix += config.annotationPrefix[severity] || '';
+						}
+
+						let decorationRenderOptions: vscode.DecorationRenderOptions = {};
+						switch (severity) {
+							case 0: decorationRenderOptions = decorationRenderOptionsError; break;
+							case 1: decorationRenderOptions = decorationRenderOptionsWarning; break;
+							case 2: decorationRenderOptions = decorationRenderOptionsInfo; break;
+							case 3: decorationRenderOptions = decorationRenderOptionsHint; break;
+						}
+
+						// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
+						// after the source-code line in the editor
+						const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
+							...decorationRenderOptions,
+							after: {
+								...decorationRenderOptions.after || {},
+								contentText: truncate(messagePrefix + diagnostic.message),
+							},
+						};
+
+						let messageRange: vscode.Range | undefined;
+						if (config.followCursor === 'allLines') {
+							// Default value (most used)
+							messageRange = diagnostic.range;
+						} else {
+							// Others require cursor tracking
+							// if (range === undefined) {
+							const range = editor.selection;
+							// }
+							const diagnosticRange = diagnostic.range;
+
+							if (config.followCursor === 'activeLine') {
+								const lineStart = range.start.line - config.followCursorMore;
+								const lineEnd = range.end.line + config.followCursorMore;
+
+								if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
+							diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
+									messageRange = diagnosticRange;
+								}
+							} else if (config.followCursor === 'closestProblem') {
+								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+								if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
+									messageRange = diagnosticRange;
+								}
+							}
+
+							if (!messageRange) {
+								continue;
+							}
+						}
+
+						const diagnosticDecorationOptions: vscode.DecorationOptions = {
+							range: messageRange,
+							renderOptions: decInstanceRenderOptions,
+						};
+
+						switch (severity) {
+							case 0: decorationOptionsError.push(diagnosticDecorationOptions); break;
+							case 1: decorationOptionsWarning.push(diagnosticDecorationOptions); break;
+							case 2: decorationOptionsInfo.push(diagnosticDecorationOptions); break;
+							case 3: decorationOptionsHint.push(diagnosticDecorationOptions); break;
+						}
+					}
+				}
+
+				editor.setDecorations(decorationTypeError, decorationOptionsError);
+				editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
+				editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
+				editor.setDecorations(decorationTypeHint, decorationOptionsHint);
+			}
+		}
+	};
+
+	groupByLine(diag: IInnerDiag): IAggregatedByLineDiagnostics {
+		const aggregatedDiagnostics: IAggregatedByLineDiagnostics = Object.create(null);
+
+		nextDiagnostic:
+		for (const lineNumberKey in diag) {
+			const diagnostic = diag[lineNumberKey];
+			for (const regex of excludeRegexp) {
+				if (regex.test(diagnostic.message)) {
+					continue nextDiagnostic;
+				}
+			}
+
+			const key = diagnostic.range.start.line;
+
+			if (aggregatedDiagnostics[key]) {
+				aggregatedDiagnostics[key].push(diagnostic);
+			} else {
+				aggregatedDiagnostics[key] = [diagnostic];
+			}
+		}
+		return aggregatedDiagnostics;
+	}
+}
 
 export function activate(extensionContext: vscode.ExtensionContext): void {
-	let excludeRegexp: RegExp[] = [];
-	let errorLensEnabled = true;
-	let errorEnabled = true;
-	let warningEabled = true;
-	let infoEnabled = true;
-	let hintEnabled = true;
-	let configErrorEnabled = true;
-	let configWarningEnabled = true;
-	let configInfoEnabled = true;
-	let configHintEnabled = true;
-	let lastSavedTimestamp = Date.now() + 5000;
-
-	let decorationRenderOptionsError: vscode.DecorationRenderOptions;
-	let decorationRenderOptionsWarning: vscode.DecorationRenderOptions;
-	let decorationRenderOptionsInfo: vscode.DecorationRenderOptions;
-	let decorationRenderOptionsHint: vscode.DecorationRenderOptions;
-
-	let decorationTypeError: vscode.TextEditorDecorationType;
-	let decorationTypeWarning: vscode.TextEditorDecorationType;
-	let decorationTypeInfo: vscode.TextEditorDecorationType;
-	let decorationTypeHint: vscode.TextEditorDecorationType;
-
-	let onDidChangeDiagnosticsDisposable: vscode.Disposable | undefined;
-	let onDidChangeActiveTextEditor: vscode.Disposable | undefined;
-	let onDidChangeVisibleTextEditors: vscode.Disposable | undefined;
-	let onDidSaveTextDocumentDisposable: vscode.Disposable | undefined;
-	let onDidCursorChangeDisposable: vscode.Disposable | undefined;
-
 	updateConfig();
 	// ────────────────────────────────────────────────────────────────────────────────
 	// ──── Event Listeners ───────────────────────────────────────────────────────────
@@ -78,6 +299,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 				}
 			}
 		}
+		isDelaySet = false;
 		if (config.onSave) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(e => {
 				if (Date.now() - lastSavedTimestamp < 1000) {
@@ -87,14 +309,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			return;
 		}
 		if (typeof config.delay === 'number' && config.delay > 0) {
-			const debouncedOnChangeDiagnostics = debounce(onChangedDiagnostics, config.delay);
-			const onChangedDiagnosticsDebounced = (diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void => {
-				// if (config.clearDecorations) {
-				// 	clearAllDecorations();
-				// }
-				debouncedOnChangeDiagnostics(diagnosticChangeEvent);
-			};
-			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnosticsDebounced);
+			isDelaySet = true;
+			customDelay = new CustomDelay(config.delay);
+			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(customDelay.onDiagnosticChange);
 		} else {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(onChangedDiagnostics);
 		}
@@ -136,45 +353,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	// ────────────────────────────────────────────────────────────────────────────────
 	//
 	// ────────────────────────────────────────────────────────────────────────────────
-
-	// #region
-	// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
-	// where N is the source line where one or more diagnostics are being reported.
-	// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
-	// This facilitates gathering info about lines which contain more than one diagnostic.
-	// {
-	//     67: [
-	//         <vscode.Diagnostic #1>,
-	//         <vscode.Diagnostic #2>
-	//     ],
-	//     93: [
-	//         <vscode.Diagnostic #1>
-	//     ]
-	// };
-	// #endregion
-	function getDiagnosticAndGroupByLine(uri: vscode.Uri): IAggregatedDiagnostics {
-		const aggregatedDiagnostics: IAggregatedDiagnostics = Object.create(null);
-		const diagnostics = vscode.languages.getDiagnostics(uri);
-
-		nextDiagnostic:
-		for (const diagnostic of diagnostics) {
-			// Exclude items specified in `errorLens.exclude` setting
-			for (const regex of excludeRegexp) {
-				if (regex.test(diagnostic.message)) {
-					continue nextDiagnostic;
-				}
-			}
-
-			const key = diagnostic.range.start.line;
-
-			if (aggregatedDiagnostics[key]) {
-				aggregatedDiagnostics[key].push(diagnostic);
-			} else {
-				aggregatedDiagnostics[key] = [diagnostic];
-			}
-		}
-		return aggregatedDiagnostics;
-	}
 
 	function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range): void {
 		if (editor === undefined) {
@@ -290,7 +468,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			}
 		}
 
-		// The errorLensDecorationOptions<X> arrays have been built, now apply them.
 		editor.setDecorations(decorationTypeError, decorationOptionsError);
 		editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
 		editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
@@ -562,7 +739,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 	});
 
 	const disposableCopyProblemMessage = commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
-		const aggregatedDiagnostics: IAggregatedDiagnostics = {};
+		const aggregatedDiagnostics: IAggregatedByLineDiagnostics = {};
 		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;
 
@@ -585,6 +762,45 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 
 	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(onConfigChange));
 	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
+}
+
+// #region
+// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
+// where N is the source line where one or more diagnostics are being reported.
+// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
+// This facilitates gathering info about lines which contain more than one diagnostic.
+// {
+//     67: [
+//         <vscode.Diagnostic #1>,
+//         <vscode.Diagnostic #2>
+//     ],
+//     93: [
+//         <vscode.Diagnostic #1>
+//     ]
+// };
+// #endregion
+function getDiagnosticAndGroupByLine(uri: vscode.Uri): IAggregatedByLineDiagnostics {
+	const aggregatedDiagnostics: IAggregatedByLineDiagnostics = Object.create(null);
+	const diagnostics = vscode.languages.getDiagnostics(uri);
+
+	nextDiagnostic:
+	for (const diagnostic of diagnostics) {
+		// Exclude items specified in `errorLens.exclude` setting
+		for (const regex of excludeRegexp) {
+			if (regex.test(diagnostic.message)) {
+				continue nextDiagnostic;
+			}
+		}
+
+		const key = diagnostic.range.start.line;
+
+		if (aggregatedDiagnostics[key]) {
+			aggregatedDiagnostics[key].push(diagnostic);
+		} else {
+			aggregatedDiagnostics[key] = [diagnostic];
+		}
+	}
+	return aggregatedDiagnostics;
 }
 
 export function deactivate(): void { }

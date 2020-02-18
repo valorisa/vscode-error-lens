@@ -30,7 +30,7 @@ the site of the line of code which is generating the diagnostic.
 | errorLens.annotationPrefix | ["ERROR: ","WARNING: ","INFO: ","HINT: "] | Specify diagnostic message prefixes (when addAnnotationTextPrefixes is true). For example, emoji: ❗ ⚠ ℹ. |
 | errorLens.addAnnotationTextPrefixes | **false** | If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations. |
 | errorLens.exclude | [] | Specify messages that should not be highlighted (RegEx). |
-| errorLens.delay | **0** | Specify delay before showing problems. |
+| errorLens.delay | **0** | **EXPERIMENTAL** Specify delay before showing problems. |
 | errorLens.onSave | **false** |  Update decorations only on document save. |
 | errorLens.gutterIconsEnabled | **false** | Show gutter icons (In place of debug breakpoint icon). |
 | errorLens.gutterIconSize | 100% | Customize gutter icon size. Example: `120%` |

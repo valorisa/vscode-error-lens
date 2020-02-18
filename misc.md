@@ -9,10 +9,6 @@ Please upvote the following VS Code issues:
 * [Decorations with gutter icons hide breakpoint icons #5923](https://github.com/microsoft/vscode/issues/5923)
 * [Decorations: Show decorations in tabs #49382](https://github.com/Microsoft/vscode/issues/49382)
 
-## `editorActiveTabDecorationEnabled` setting
-
-This setting is undocumented and not recommended due to limitations: https://github.com/usernamehw/vscode-error-lens/issues/18#issuecomment-521758711.
-
 ## How to build
 
 * Run from command line `npm run watch` or `yarn watch`.

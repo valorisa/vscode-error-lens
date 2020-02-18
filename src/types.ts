@@ -30,10 +30,6 @@ export interface IConfig {
 
 	onSave: boolean;
 
-	editorActiveTabDecorationEnabled: boolean;
-	editorActiveTabErrorBackground?: string;
-	editorActiveTabWarningBackground?: string;
-
 	gutterIconsEnabled: boolean;
 	gutterIconSize: string;
 	gutterIconSet: GutterIconSet;

@@ -3,7 +3,6 @@ import throttle from 'lodash/throttle';
 
 import type { IAggregatedByLineDiagnostics, IConfig, ISomeDiagnostics, IInnerDiag } from './types';
 import { truncate } from './utils';
-import { updateWorkspaceColorCustomizations, removeActiveTabDecorations, getWorkspaceColorCustomizations } from './workspaceSettings';
 import { getGutterStyles } from './gutter';
 
 export const EXTENSION_NAME = 'errorLens';
@@ -270,12 +269,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(textEditor => {
 			if (textEditor) {
 				updateDecorationsForUri(textEditor.document.uri, textEditor);
-			} else {
-				if (config.editorActiveTabDecorationEnabled) {
-					// Settings GUI or image file is not a textEditor
-					// That means - Error/Warning tab color should be cleared
-					removeActiveTabDecorations();
-				}
 			}
 		});
 	}
@@ -472,32 +465,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
 		editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
 		editor.setDecorations(decorationTypeHint, decorationOptionsHint);
-
-		if (config.editorActiveTabDecorationEnabled && editor === window.activeTextEditor) {
-			const workspaceColorCustomizations = getWorkspaceColorCustomizations();
-			const diagnostics = vscode.languages.getDiagnostics(uriToDecorate);
-
-			let newTabBackground: string | undefined = '';
-
-			// File has at least one warning
-			if (diagnostics.some(diagnostic => diagnostic.severity === 1)) {
-				newTabBackground = config.editorActiveTabWarningBackground;
-			}
-			// File has at least one error
-			if (diagnostics.some(diagnostic => diagnostic.severity === 0)) {
-				newTabBackground = config.editorActiveTabErrorBackground;
-			}
-			if (newTabBackground) {
-				// Don't write the same value
-				if (newTabBackground === workspaceColorCustomizations['tab.activeBackground']) {
-					return;
-				}
-				workspaceColorCustomizations['tab.activeBackground'] = newTabBackground;
-				updateWorkspaceColorCustomizations(workspaceColorCustomizations);
-			} else {
-				removeActiveTabDecorations();
-			}
-		}
 	}
 
 	function onConfigChange(e: vscode.ConfigurationChangeEvent): void {

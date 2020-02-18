@@ -154,7 +154,12 @@
 				},
 				"errorLens.addAnnotationTextPrefixes": {
 					"type": "boolean",
-					"description": "If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.",
+					"description": "When checked prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations.",
+					"default": false
+				},
+				"errorLens.addNumberOfDiagnostics": {
+					"type": "boolean",
+					"markdownDescription": "When checked prefixes number of diagnostics on the line. Like: `[1/2]`.",
 					"default": false
 				},
 				"errorLens.exclude": {

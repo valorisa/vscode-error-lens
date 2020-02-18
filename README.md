@@ -28,7 +28,8 @@ the site of the line of code which is generating the diagnostic.
 | errorLens.padding | | Adds padding for the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`. |
 | errorLens.enabledDiagnosticLevels | ["error","warning","info","hint"] | Customize which diagnostic levels to highlight. |
 | errorLens.annotationPrefix | ["ERROR: ","WARNING: ","INFO: ","HINT: "] | Specify diagnostic message prefixes (when addAnnotationTextPrefixes is true). For example, emoji: ❗ ⚠ ℹ. |
-| errorLens.addAnnotationTextPrefixes | **false** | If 'true', prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations. |
+| errorLens.addAnnotationTextPrefixes | **false** | When checked prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations. |
+| errorLens.addNumberOfDiagnostics | **false** | When checked prefixes number of diagnostics on the line. Like: `[1/2]`. |
 | errorLens.exclude | [] | Specify messages that should not be highlighted (RegEx). |
 | errorLens.delay | **0** | **EXPERIMENTAL** Specify delay before showing problems. |
 | errorLens.onSave | **false** |  Update decorations only on document save. |

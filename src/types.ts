@@ -21,6 +21,7 @@ export interface IConfig {
 	enabledDiagnosticLevels: string[];
 	annotationPrefix: string[];
 	addAnnotationTextPrefixes: boolean;
+	addNumberOfDiagnostics: boolean;
 	exclude: string[];
 
 	delay?: number;

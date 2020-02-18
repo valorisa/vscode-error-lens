@@ -158,10 +158,12 @@ class CustomDelay {
 
 					if (addErrorLens) {
 						let messagePrefix = '';
+						if (config.addNumberOfDiagnostics && aggregatedDiagnostic.length > 1) {
+							messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
+						}
 						if (config.addAnnotationTextPrefixes) {
 							messagePrefix += config.annotationPrefix[severity] || '';
 						}
-
 						let decorationRenderOptions: vscode.DecorationRenderOptions = {};
 						switch (severity) {
 							case 0: decorationRenderOptions = decorationRenderOptionsError; break;
@@ -394,6 +396,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 
 			if (addErrorLens) {
 				let messagePrefix = '';
+				if (config.addNumberOfDiagnostics && aggregatedDiagnostic.length > 1) {
+					messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
+				}
 				if (config.addAnnotationTextPrefixes) {
 					messagePrefix += config.annotationPrefix[severity] || '';
 				}

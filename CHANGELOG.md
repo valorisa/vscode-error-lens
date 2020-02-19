@@ -1,3 +1,14 @@
+## 3.0.0 `19 Feb 2020`
+
+- 💥 Deprecate and delete `errorLens.useColorContributions`
+- 💥 Deprecate and delete `errorLens.editorActiveTabDecorationEnabled` (Move to a separate extension)
+- ✨ `delay` setting should only work for a new diagnostics (Fixed diagnostics decoration should be removed immediately) [#39](https://github.com/usernamehw/vscode-error-lens/issues/39)
+- ✨ Show closest to cursor diagnostic in status bar `errorLens.statusBarMessageEnabled`
+- ✨ Expose `addNumberOfDiagnostics` as a setting
+- ✨ Expose `padding` as a setting
+- ✨ Expose `borderRadius` as a setting
+- ✨ Update `margin` setting to use `ch` units instead of `px`
+
 ## 2.9.0 `09 Jan 2020`
 
 - 💥 Set `errorLens.useColorContributions` to **`true`**

@@ -38,6 +38,8 @@ let onDidSaveTextDocumentDisposable: vscode.Disposable | undefined;
 let onDidCursorChangeDisposable: vscode.Disposable | undefined;
 
 let customDelay: undefined | CustomDelay;
+let statusBarItem: vscode.StatusBarItem;
+// let colors: vscode.ThemeColor[] = [];
 
 class CustomDelay {
 	private readonly delay: number;
@@ -210,10 +212,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		if (onDidCursorChangeDisposable) {
 			onDidCursorChangeDisposable.dispose();
 		}
-		if (config.followCursor === 'allLines') {
-			return;
-		}
-		if (config.followCursor === 'activeLine' || config.followCursor === 'closestProblem') {
+		if (config.followCursor === 'activeLine' || config.followCursor === 'closestProblem' || config.statusBarMessageEnabled) {
 			let lastPositionLine = 999999;// Unlikely line number
 			onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 				const selection = e.selections[0];
@@ -224,6 +223,12 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 					lastPositionLine = e.selections[0].active.line;
 				}
 			});
+		}
+	}
+	function createStatusBarItem(): void {
+		if (config.statusBarMessageEnabled) {
+			statusBarItem = window.createStatusBarItem(undefined, -9999);
+			statusBarItem.show();
 		}
 	}
 	function updateOnSaveListener(): void {
@@ -409,6 +414,10 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptionsWarning);
 		decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
 		decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
+
+		// if (config.statusBarMessageEnabled) {
+		// 	colors = [errorForeground, warningForeground, infoForeground, hintForeground];
+		// }
 	}
 
 	function updateEverything(): void {
@@ -422,6 +431,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		/* develblock:end */
 		// 👩‍💻 ================================================================================
 		setDecorationStyle();
+		createStatusBarItem();
 		updateConfigEnabledLevels();
 
 		updateAllDecorations();
@@ -460,6 +470,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		}
 		if (onDidCursorChangeDisposable) {
 			onDidCursorChangeDisposable.dispose();
+		}
+		if (statusBarItem) {
+			statusBarItem.dispose();
 		}
 	}
 
@@ -600,7 +613,7 @@ function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnost
 				messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
 			}
 			if (config.addAnnotationTextPrefixes) {
-				messagePrefix += config.annotationPrefix[severity] || '';
+				messagePrefix += addAnnotationPrefix(severity);
 			}
 
 			let decorationRenderOptions: vscode.DecorationRenderOptions = {};
@@ -670,6 +683,31 @@ function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnost
 	editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
 	editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
 	editor.setDecorations(decorationTypeHint, decorationOptionsHint);
+
+	if (config.statusBarMessageEnabled) {
+		updateStatusBarMessage(editor, aggregatedDiagnostics);
+	}
+}
+
+function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics: IAggregatedByLineDiagnostics): void {
+	const keys = Object.keys(aggregatedDiagnostics);
+	if (keys.length === 0) {
+		statusBarItem.text = '';
+		return;
+	}
+	const ln = editor.selection.active.line;
+	const sorted = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b))[0];
+	const closest = aggregatedDiagnostics[sorted][0];
+	let prefix = '';
+	if (config.addAnnotationTextPrefixes) {
+		prefix = addAnnotationPrefix(closest.severity);
+	}
+	// statusBarItem.color = colors[closest.severity];
+	statusBarItem.text = `${prefix}${closest.message}`;
+}
+
+function addAnnotationPrefix(severity: number): string {
+	return config.annotationPrefix[severity] || '';
 }
 
 export function deactivate(): void { }

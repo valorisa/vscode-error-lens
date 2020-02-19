@@ -24,6 +24,8 @@ export interface IConfig {
 	addNumberOfDiagnostics: boolean;
 	exclude: string[];
 
+	statusBarMessageEnabled: boolean;
+
 	delay?: number;
 
 	followCursor: FollowCursor;

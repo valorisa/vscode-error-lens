@@ -162,6 +162,11 @@
 					"markdownDescription": "When checked prefixes number of diagnostics on the line. Like: `[1/2]`.",
 					"default": false
 				},
+				"errorLens.statusBarMessageEnabled": {
+					"type": "boolean",
+					"markdownDescription": "When checked shows current diagnostic in status bar.",
+					"default": false
+				},
 				"errorLens.exclude": {
 					"type": "array",
 					"default": [],

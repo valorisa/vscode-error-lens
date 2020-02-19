@@ -64,11 +64,6 @@
 				"command": "errorLens.copyProblemMessage",
 				"title": "Copy Problem Message",
 				"category": "Error Lens"
-			},
-			{
-				"command": "errorLens.convertColors",
-				"title": "🎨 Convert colors from Settings to Colors.",
-				"category": "Error Lens"
 			}
 		],
 		"configuration": {

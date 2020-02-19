@@ -15,5 +15,7 @@ package-lock.json
 *.todo
 misc.md
 
+img/demo.png
+
 node_modules
 webpack.config.js

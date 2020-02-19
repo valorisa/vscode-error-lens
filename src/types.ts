@@ -18,6 +18,7 @@ export interface IConfig {
 
 	margin: string;
 	padding: string;
+	borderRadius: string;
 	enabledDiagnosticLevels: string[];
 	annotationPrefix: string[];
 	addAnnotationTextPrefixes: boolean;

@@ -330,11 +330,13 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		const fontFamily = config.fontFamily ? `font-family:${config.fontFamily}` : '';
 		const fontSize = config.fontSize ? `font-size:${onlyDigitsRegExp.test(config.fontSize) ? `${config.fontSize}px` : config.fontSize};line-height:1` : '';
 		const padding = config.padding ? `padding:${onlyDigitsRegExp.test(config.padding) ? `${config.padding}px` : config.padding}` : '';
+		const margin = `margin-left:${onlyDigitsRegExp.test(config.margin) ? `${config.margin}px` : config.margin}`;
+		const borderRadius = `border-radius: ${config.borderRadius || '0'}`;
 
 		const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
 			fontStyle: config.fontStyleItalic ? 'italic' : 'normal',
 			fontWeight: config.fontWeight,
-			textDecoration: `;${fontFamily};${fontSize};${padding};margin-left:${onlyDigitsRegExp.test(config.margin) ? `${config.margin}px` : config.margin};border-radius:3px;`,
+			textDecoration: `;${fontFamily};${fontSize};${padding};${margin};${borderRadius};`,
 		};
 
 		decorationRenderOptionsError = {

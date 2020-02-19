@@ -25,6 +25,7 @@ the site of the line of code which is generating the diagnostic.
 | errorLens.fontStyleItalic | **false** | Show ErrorLens annotations in Italics, or not? |
 | errorLens.margin | 30px | Distance between the end of the line and the start of annotation. (CSS units) |
 | errorLens.padding | | Adds padding for the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`. |
+| errorLens.borderRadius | | Adds border-radius for the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `5px`. |
 | errorLens.enabledDiagnosticLevels | ["error","warning","info","hint"] | Customize which diagnostic levels to highlight. |
 | errorLens.annotationPrefix | ["ERROR: ","WARNING: ","INFO: ","HINT: "] | Specify diagnostic message prefixes (when addAnnotationTextPrefixes is true). For example, emoji: ❗ ⚠ ℹ. |
 | errorLens.addAnnotationTextPrefixes | **false** | When checked prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations. |

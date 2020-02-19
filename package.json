@@ -119,6 +119,14 @@
 						"2px 1ch"
 					]
 				},
+				"errorLens.borderRadius": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "Adds border-radius for the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `5px`.",
+					"examples": [
+						"5px"
+					]
+				},
 				"errorLens.enabledDiagnosticLevels": {
 					"type": "array",
 					"items": {

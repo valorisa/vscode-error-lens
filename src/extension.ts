@@ -7,7 +7,6 @@ import { getGutterStyles } from './gutter';
 
 export const EXTENSION_NAME = 'errorLens';
 export let config: IConfig;
-let isDelaySet = false;
 let excludeRegexp: RegExp[] = [];
 
 let errorLensEnabled = true;
@@ -191,7 +190,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 				}
 			}
 		}
-		isDelaySet = false;
 		if (config.onSave) {
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(e => {
 				if (Date.now() - lastSavedTimestamp < 1000) {
@@ -201,7 +199,6 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 			return;
 		}
 		if (typeof config.delay === 'number' && config.delay > 0) {
-			isDelaySet = true;
 			customDelay = new CustomDelay(config.delay);
 			onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(customDelay.onDiagnosticChange);
 		} else {

@@ -701,12 +701,13 @@ function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics
 	if (config.addAnnotationTextPrefixes) {
 		prefix = addAnnotationPrefix(closest.severity);
 	}
+	const text = `${prefix}${closest.message}`;
 	// statusBarItem.color = colors[closest.severity];
 	if (config.statusBarMessageType === 'closestProblem') {
-		statusBarItem.text = `${prefix}${closest.message}`;
+		statusBarItem.text = text;
 	} else if (config.statusBarMessageType === 'activeLine') {
 		if (closest.range.start.line === ln || closest.range.end.line === ln) {
-			statusBarItem.text = `${prefix}${closest.message}`;
+			statusBarItem.text = text;
 		} else {
 			statusBarItem.text = '';
 		}

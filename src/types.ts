@@ -26,6 +26,7 @@ export interface IConfig {
 	exclude: string[];
 
 	statusBarMessageEnabled: boolean;
+	statusBarMessageType: 'activeLine' | 'closestProblem';
 
 	delay?: number;
 

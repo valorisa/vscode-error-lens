@@ -702,7 +702,15 @@ function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics
 		prefix = addAnnotationPrefix(closest.severity);
 	}
 	// statusBarItem.color = colors[closest.severity];
-	statusBarItem.text = `${prefix}${closest.message}`;
+	if (config.statusBarMessageType === 'closestProblem') {
+		statusBarItem.text = `${prefix}${closest.message}`;
+	} else if (config.statusBarMessageType === 'activeLine') {
+		if (closest.range.start.line === ln || closest.range.end.line === ln) {
+			statusBarItem.text = `${prefix}${closest.message}`;
+		} else {
+			statusBarItem.text = '';
+		}
+	}
 }
 
 function addAnnotationPrefix(severity: number): string {

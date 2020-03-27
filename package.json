@@ -170,6 +170,15 @@
 					"markdownDescription": "When checked shows current diagnostic in status bar.",
 					"default": false
 				},
+				"errorLens.statusBarMessageType": {
+					"type": "boolean",
+					"markdownDescription": "Should show closest diagnostic or only for the active line.",
+					"enum": [
+						"closestProblem",
+						"activeLine"
+					],
+					"default": "activeLine"
+				},
 				"errorLens.exclude": {
 					"type": "array",
 					"default": [],

@@ -6,10 +6,10 @@ the site of the line of code which is generating the diagnostic.
 
 ## Features
 
-* Highlight lines containing diagnostics.
-* Append diagnostic descriptions to the end of the line.
-* Show icons in gutter.
-* Show closest diagnostic in status bar.
+* Highlight lines containing diagnostics
+* Append diagnostic as text to the end of the line
+* Show icons in gutter
+* Show message in status bar
 
 ## Settings
 
@@ -35,6 +35,7 @@ the site of the line of code which is generating the diagnostic.
 | errorLens.delay | **0** | **EXPERIMENTAL** Specify delay before showing problems. |
 | errorLens.onSave | **false** |  Update decorations only on document save. |
 | errorLens.gutterIconsEnabled | **false** | Show gutter icons (In place of debug breakpoint icon). |
+| errorLens.gutterIconsFollowCursorOverride | **true** | If this setting is `true` and `followCursor` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line." |
 | errorLens.gutterIconSize | 100% | Customize gutter icon size. Example: `120%` |
 | errorLens.gutterIconSet | default | Customize gutter icon style. Possible values: `default`, `defaultOutline`, `borderless`, `circle`. |
 | errorLens.errorGutterIconPath | | Set custom icons for gutter. Absolute path for error gutter icon. |

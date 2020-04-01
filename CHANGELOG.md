@@ -1,3 +1,9 @@
+## 3.1.0 `01 Apr 2020`
+
+- ✨ Add an option to render gutter icons separately from main decoration [#45 Show only gutter icons unless cursor is on line with error](https://github.com/usernamehw/vscode-error-lens/issues/45)
+- ✨ Change status bar item to show message for the active line
+- ✨ Add an option to use decoration colors for status bar message (`statusBarColorsEnabled`)
+
 ## 3.0.0 `19 Feb 2020`
 
 - 💥 Deprecate and delete `errorLens.useColorContributions`

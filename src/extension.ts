@@ -29,6 +29,9 @@ let decorationTypeError: vscode.TextEditorDecorationType;
 let decorationTypeWarning: vscode.TextEditorDecorationType;
 let decorationTypeInfo: vscode.TextEditorDecorationType;
 let decorationTypeHint: vscode.TextEditorDecorationType;
+let decorationTypeGutterError: vscode.TextEditorDecorationType;
+let decorationTypeGutterWarning: vscode.TextEditorDecorationType;
+let decorationTypeGutterInfo: vscode.TextEditorDecorationType;
 
 let onDidChangeDiagnosticsDisposable: vscode.Disposable | undefined;
 let onDidChangeActiveTextEditor: vscode.Disposable | undefined;
@@ -38,6 +41,7 @@ let onDidCursorChangeDisposable: vscode.Disposable | undefined;
 
 let customDelay: undefined | CustomDelay;
 let statusBarItem: vscode.StatusBarItem;
+let renderGutterIconsAsSeparateDecoration: boolean;
 // let colors: vscode.ThemeColor[] = [];
 
 class CustomDelay {
@@ -297,6 +301,35 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		let gutter;
 		if (config.gutterIconsEnabled) {
 			gutter = getGutterStyles(extensionContext);
+
+			if (renderGutterIconsAsSeparateDecoration) {
+				decorationTypeGutterError = window.createTextEditorDecorationType({
+					gutterIconPath: gutter.errorIconPath,
+					gutterIconSize: config.gutterIconSize,
+					light: {
+						gutterIconPath: gutter.errorIconPathLight,
+						gutterIconSize: config.gutterIconSize,
+					},
+				});
+				decorationTypeGutterWarning = window.createTextEditorDecorationType({
+					gutterIconPath: gutter.warningIconPath,
+					gutterIconSize: config.gutterIconSize,
+					light: {
+						gutterIconPath: gutter.warningIconPathLight,
+						gutterIconSize: config.gutterIconSize,
+					},
+				});
+				decorationTypeGutterInfo = window.createTextEditorDecorationType({
+					gutterIconPath: gutter.infoIconPath,
+					gutterIconSize: config.gutterIconSize,
+					light: {
+						gutterIconPath: gutter.infoIconPathLight,
+						gutterIconSize: config.gutterIconSize,
+					},
+				});
+				// gutter will be rendered as a separate decoration, delete gutter from ordinary decorations
+				gutter = undefined;
+			}
 		}
 
 		const errorBackground = new vscode.ThemeColor('errorLens.errorBackground');
@@ -429,6 +462,7 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		config.gutterIconsEnabled = true;
 		/* develblock:end */
 		// 👩‍💻 ================================================================================
+		renderGutterIconsAsSeparateDecoration = config.gutterIconsEnabled && config.gutterIconsFollowCursorOverride && config.followCursor !== 'allLines';
 		setDecorationStyle();
 		createStatusBarItem();
 		updateConfigEnabledLevels();
@@ -454,6 +488,15 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		}
 		if (decorationTypeHint) {
 			decorationTypeHint.dispose();
+		}
+		if (decorationTypeGutterError) {
+			decorationTypeGutterError.dispose();
+		}
+		if (decorationTypeGutterWarning) {
+			decorationTypeGutterWarning.dispose();
+		}
+		if (decorationTypeGutterInfo) {
+			decorationTypeGutterInfo.dispose();
 		}
 		if (onDidChangeVisibleTextEditors) {
 			onDidChangeVisibleTextEditors.dispose();
@@ -682,10 +725,44 @@ function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnost
 	editor.setDecorations(decorationTypeWarning, decorationOptionsWarning);
 	editor.setDecorations(decorationTypeInfo, decorationOptionsInfo);
 	editor.setDecorations(decorationTypeHint, decorationOptionsHint);
-
+	if (renderGutterIconsAsSeparateDecoration) {
+		actuallyUpdateGutterDecorations(editor, aggregatedDiagnostics);
+	}
 	if (config.statusBarMessageEnabled) {
 		updateStatusBarMessage(editor, aggregatedDiagnostics);
 	}
+}
+function actuallyUpdateGutterDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: IAggregatedByLineDiagnostics): void {
+	const decorationOptionsGutterError: vscode.DecorationOptions[] = [];
+	const decorationOptionsGutterWarning: vscode.DecorationOptions[] = [];
+	const decorationOptionsGutterInfo: vscode.DecorationOptions[] = [];
+
+	for (const key in aggregatedDiagnostics) {
+		const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
+		let addErrorLens = false;
+		const diagnostic = aggregatedDiagnostic[0];
+		const severity = diagnostic.severity;
+
+		switch (severity) {
+			case 0: addErrorLens = configErrorEnabled && errorEnabled; break;
+			case 1: addErrorLens = configWarningEnabled && warningEabled; break;
+			case 2: addErrorLens = configInfoEnabled && infoEnabled; break;
+			case 3: addErrorLens = configHintEnabled && hintEnabled; break;
+		}
+		if (addErrorLens) {
+			const diagnosticDecorationOptions: vscode.DecorationOptions = {
+				range: diagnostic.range,
+			};
+			switch (severity) {
+				case 0: decorationOptionsGutterError.push(diagnosticDecorationOptions); break;
+				case 1: decorationOptionsGutterWarning.push(diagnosticDecorationOptions); break;
+				case 2: decorationOptionsGutterInfo.push(diagnosticDecorationOptions); break;
+			}
+		}
+	}
+	editor.setDecorations(decorationTypeGutterError, decorationOptionsGutterError);
+	editor.setDecorations(decorationTypeGutterWarning, decorationOptionsGutterWarning);
+	editor.setDecorations(decorationTypeGutterInfo, decorationOptionsGutterInfo);
 }
 
 function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics: IAggregatedByLineDiagnostics): void {

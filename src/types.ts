@@ -36,6 +36,7 @@ export interface IConfig {
 	onSave: boolean;
 
 	gutterIconsEnabled: boolean;
+	gutterIconsFollowCursorOverride: boolean;
 	gutterIconSize: string;
 	gutterIconSet: GutterIconSet;
 

@@ -42,7 +42,7 @@ let onDidCursorChangeDisposable: vscode.Disposable | undefined;
 let customDelay: undefined | CustomDelay;
 let statusBarItem: vscode.StatusBarItem;
 let renderGutterIconsAsSeparateDecoration: boolean;
-// let colors: vscode.ThemeColor[] = [];
+let statusBarColors: vscode.ThemeColor[] = [];
 
 class CustomDelay {
 	private readonly delay: number;
@@ -447,9 +447,9 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
 		decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 
-		// if (config.statusBarMessageEnabled) {
-		// 	colors = [errorForeground, warningForeground, infoForeground, hintForeground];
-		// }
+		if (config.statusBarMessageEnabled) {
+			statusBarColors = [errorForeground, warningForeground, infoForeground, hintForeground];
+		}
 	}
 
 	function updateEverything(): void {
@@ -779,7 +779,9 @@ function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics
 		prefix = addAnnotationPrefix(closest.severity);
 	}
 	const text = `${prefix}${closest.message}`;
-	// statusBarItem.color = colors[closest.severity];
+	if (config.statusBarColorsEnabled) {
+		statusBarItem.color = statusBarColors[closest.severity];
+	}
 	if (config.statusBarMessageType === 'closestProblem') {
 		statusBarItem.text = text;
 	} else if (config.statusBarMessageType === 'activeLine') {

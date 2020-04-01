@@ -31,6 +31,7 @@ the site of the line of code which is generating the diagnostic.
 | errorLens.addAnnotationTextPrefixes | **false** | When checked prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations. |
 | errorLens.addNumberOfDiagnostics | **false** | When checked prefixes number of diagnostics on the line. Like: `[1/2]`. |
 | errorLens.statusBarMessageEnabled | **false** | When checked shows current diagnostic in status bar. |
+| errorLens.statusBarColorsEnabled | **false** | When checked - the extension uses decoration foreground as color of StatusBar text. |
 | errorLens.exclude | [] | Specify messages that should not be highlighted (RegEx). |
 | errorLens.delay | **0** | **EXPERIMENTAL** Specify delay before showing problems. |
 | errorLens.onSave | **false** |  Update decorations only on document save. |

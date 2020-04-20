@@ -71,7 +71,7 @@
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",
-					"description": "Font family of problem messages."
+					"description": "Font family of message."
 				},
 				"errorLens.fontWeight": {
 					"type": "string",
@@ -89,27 +89,27 @@
 						"900"
 					],
 					"default": "normal",
-					"description": "Specifies the font weight for ErrorLens annotations."
+					"markdownDescription": "Font Weight of message.\n\n`normal` is alias for 400\n\n`bold` is alias for 700"
 				},
 				"errorLens.fontStyleItalic": {
 					"type": "boolean",
 					"default": false,
-					"description": "Show ErrorLens annotations in Italics, or not?"
+					"description": "When enabled - shows message in italic."
 				},
 				"errorLens.fontSize": {
 					"type": "string",
 					"default": "",
-					"description": "Font size for text (problem messages). (CSS units)"
+					"description": "Font size of message (CSS units)."
 				},
 				"errorLens.margin": {
 					"type": "string",
 					"default": "4ch",
-					"description": "Distance between the end of the line and the start of annotation. (CSS units)"
+					"description": "Distance between the end of the line and the message (CSS units)."
 				},
 				"errorLens.padding": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Adds padding for the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.",
+					"markdownDescription": "Padding of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.",
 					"examples": [
 						"2px 1ch"
 					]
@@ -117,7 +117,7 @@
 				"errorLens.borderRadius": {
 					"type": "string",
 					"default": "3px",
-					"markdownDescription": "Adds border-radius for the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `5px`.",
+					"markdownDescription": "Border radius of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `5px`.",
 					"examples": [
 						"5px"
 					]
@@ -133,7 +133,7 @@
 							"hint"
 						]
 					},
-					"description": "Specify which diagnostic levels are enhanced. e.g. [ 'error', 'warning' ]. Valid values are any or all of: 'error', 'warning', 'info' & 'hint'",
+					"description": "Customize which diagnostic levels to highlight.",
 					"default": [
 						"error",
 						"warning",
@@ -146,7 +146,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is true). For example, emoji: ❗ ⚠ ℹ.",
+					"markdownDescription": "Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is enabled). For example, emoji: ❗ ⚠ ℹ.",
 					"default": [
 						"ERROR: ",
 						"WARNING: ",
@@ -157,27 +157,27 @@
 				},
 				"errorLens.addAnnotationTextPrefixes": {
 					"type": "boolean",
-					"markdownDescription": "When checked prefixes the diagnostic severity ('ERROR:', 'WARNING:' etc) to ErrorLens annotations. (Prefixes can be configured with `annotationPrefix` setting).",
+					"markdownDescription": "When enabled - prepends diagnostic severity ('ERROR:', 'WARNING:' etc) to the message. (Prefixes can be configured with `annotationPrefix` setting).",
 					"default": false
 				},
 				"errorLens.addNumberOfDiagnostics": {
 					"type": "boolean",
-					"markdownDescription": "When checked prefixes number of diagnostics on the line. Like: `[1/2]`.",
+					"markdownDescription": "When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.",
 					"default": false
 				},
 				"errorLens.statusBarMessageEnabled": {
 					"type": "boolean",
-					"markdownDescription": "When checked shows current diagnostic in status bar.",
+					"markdownDescription": "When enabled - shows message in status bar.",
 					"default": false
 				},
 				"errorLens.statusBarColorsEnabled": {
 					"type": "boolean",
-					"markdownDescription": "When checked - the extension uses decoration foreground as color of StatusBar text.",
+					"markdownDescription": "When enabled - use message decoration foreground as color of Status Bar text.",
 					"default": false
 				},
 				"errorLens.statusBarMessageType": {
 					"type": "string",
-					"markdownDescription": "Should show closest diagnostic or only for the active line.",
+					"markdownDescription": "Pick what to show in Status Bar: closest message or only message for the active line.",
 					"enum": [
 						"closestProblem",
 						"activeLine"
@@ -232,7 +232,7 @@
 				},
 				"errorLens.onSave": {
 					"type": "boolean",
-					"description": "If `true` - update decorations only on save.",
+					"description": "When enabled - updates decorations only on document save.",
 					"default": false
 				},
 				"errorLens.followCursor": {
@@ -257,12 +257,12 @@
 				},
 				"errorLens.gutterIconsEnabled": {
 					"type": "boolean",
-					"description": "If `true` - show error/warning/info icons in the gutter (In place of debug breakpoint icon).",
+					"description": "When enabled - shows gutter icons (In place of the debug breakpoint icon).",
 					"default": false
 				},
 				"errorLens.gutterIconsFollowCursorOverride": {
 					"type": "boolean",
-					"description": "If this setting is `true` and `followCursor` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line.",
+					"description": "When enabled and `followCursor` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line.",
 					"default": true
 				},
 				"errorLens.gutterIconSize": {

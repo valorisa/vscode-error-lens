@@ -6,10 +6,10 @@ the site of the line of code which is generating the diagnostic.
 
 ## Features
 
--   Highlight lines containing diagnostics
--   Append diagnostic as text to the end of the line
--   Show icons in gutter
--   Show message in status bar
+- Highlight lines containing diagnostics
+- Append diagnostic as text to the end of the line
+- Show icons in gutter
+- Show message in status bar
 
 ## Settings
 

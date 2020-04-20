@@ -28,7 +28,7 @@ export interface IConfig {
 	statusBarMessageEnabled: boolean;
 	statusBarMessageType: 'activeLine' | 'closestProblem';
 	statusBarColorsEnabled: boolean;
-	
+
 	delay?: number;
 
 	followCursor: FollowCursor;

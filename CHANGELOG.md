@@ -1,3 +1,7 @@
+## 3.1.1 `20 Apr 2020`
+
+- 🐛 Fix wrong type for a setting that generated warning [PR #49](https://github.com/usernamehw/vscode-error-lens/pull/49) by [@Luxcium](https://github.com/Luxcium)
+
 ## 3.1.0 `01 Apr 2020`
 
 - ✨ Add an option to render gutter icons separately from main decoration [#45 Show only gutter icons unless cursor is on line with error](https://github.com/usernamehw/vscode-error-lens/issues/45)

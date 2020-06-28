@@ -2,7 +2,7 @@ import vscode, { window, workspace, commands } from 'vscode';
 import throttle from 'lodash/throttle';
 
 import type { IAggregatedByLineDiagnostics, IConfig, ISomeDiagnostics, IInnerDiag } from './types';
-import { truncate } from './utils';
+import { truncate, replaceNewlines } from './utils';
 import { getGutterStyles } from './gutter';
 
 export const EXTENSION_NAME = 'errorLens';
@@ -672,7 +672,7 @@ function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnost
 				...decorationRenderOptions,
 				after: {
 					...decorationRenderOptions.after || {},
-					contentText: truncate(messagePrefix + diagnostic.message),
+					contentText: replaceNewlines(truncate(messagePrefix + diagnostic.message)),
 				},
 			};
 

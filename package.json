@@ -505,18 +505,18 @@
 		"watch": "webpack --mode development --watch --display=minimal"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.150",
-		"@types/node": "^12.12.31",
+		"@types/lodash": "^4.14.157",
+		"@types/node": "^12.12.47",
 		"@types/vscode": "^1.40.0",
 		"@typescript-eslint/eslint-plugin": "^2.28.0",
 		"@typescript-eslint/parser": "^2.28.0",
-		"eslint": "^6.8.0",
+		"eslint": "^7.3.1",
 		"eslint-plugin-no-autofix": "1.0.1",
 		"friendly-errors-webpack-plugin": "^1.7.0",
-		"ts-loader": "^7.0.1",
-		"typescript": "^3.8.3",
-		"webpack": "^4.42.1",
-		"webpack-cli": "^3.3.11",
+		"ts-loader": "^7.0.5",
+		"typescript": "^3.9.5",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.12",
 		"webpack-strip-block": "^0.2.0"
 	},
 	"dependencies": {

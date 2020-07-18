@@ -6,7 +6,7 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.40.0"
+		"vscode": "^1.47.0"
 	},
 	"categories": [
 		"Other"
@@ -30,7 +30,7 @@
 		"url": "https://github.com/usernamehw/vscode-error-lens"
 	},
 	"activationEvents": [
-		"*"
+		"onStartupFinished"
 	],
 	"main": "./dist/extension",
 	"contributes": {
@@ -71,7 +71,7 @@
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",
-					"description": "Font family of message. If new font breaks layout - try to use smaller fontSize."
+					"description": "Font family of message. If the new font breaks layout - try to use smaller fontSize."
 				},
 				"errorLens.fontWeight": {
 					"type": "string",
@@ -506,20 +506,20 @@
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.14.157",
-		"@types/node": "^12.12.47",
-		"@types/vscode": "^1.40.0",
-		"@typescript-eslint/eslint-plugin": "^2.28.0",
-		"@typescript-eslint/parser": "^2.28.0",
-		"eslint": "^7.3.1",
+		"@types/node": "^12.12.50",
+		"@types/vscode": "^1.47.0",
+		"@typescript-eslint/eslint-plugin": "^3.6.1",
+		"@typescript-eslint/parser": "^3.6.1",
+		"eslint": "^7.4.0",
 		"eslint-plugin-no-autofix": "1.0.1",
 		"friendly-errors-webpack-plugin": "^1.7.0",
-		"ts-loader": "^7.0.5",
-		"typescript": "^3.9.5",
+		"ts-loader": "^8.0.1",
+		"typescript": "^3.9.7",
 		"webpack": "^4.43.0",
 		"webpack-cli": "^3.3.12",
 		"webpack-strip-block": "^0.2.0"
 	},
 	"dependencies": {
-		"lodash": "^4.17.15"
+		"lodash": "^4.17.19"
 	}
 }

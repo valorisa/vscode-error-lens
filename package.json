@@ -17,8 +17,7 @@
 		"error",
 		"warning",
 		"diagnostics",
-		"gutter",
-		"multi-root ready"
+		"gutter"
 	],
 	"galleryBanner": {
 		"color": "#332020",

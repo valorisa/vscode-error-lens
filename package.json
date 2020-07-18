@@ -71,7 +71,7 @@
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",
-					"description": "Font family of message."
+					"description": "Font family of message. If new font breaks layout - try to use smaller fontSize."
 				},
 				"errorLens.fontWeight": {
 					"type": "string",

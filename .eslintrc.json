@@ -28,8 +28,6 @@
 		"@typescript-eslint/await-thenable": 0,
 		"@typescript-eslint/ban-ts-ignore": 0,
 		"@typescript-eslint/ban-types": 1,
-		"@typescript-eslint/camelcase": 1,
-		"@typescript-eslint/class-name-casing": 1,
 		"@typescript-eslint/consistent-type-definitions": [1, "interface"],
 		"@typescript-eslint/explicit-function-return-type": 1,
 		"@typescript-eslint/explicit-member-accessibility": 0,
@@ -38,7 +36,6 @@
 		"@typescript-eslint/indent": [1, "tab", {
 			"SwitchCase": 1
 		}],
-		"@typescript-eslint/interface-name-prefix": [1, "always"],
 		"@typescript-eslint/member-delimiter-style": [1, {
 			"multiline": {
 				"delimiter": "semi",

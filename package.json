@@ -13,16 +13,14 @@
 	],
 	"keywords": [
 		"highlight",
+		"problem",
 		"problems",
 		"error",
 		"warning",
+		"diagnostic",
 		"diagnostics",
 		"gutter"
 	],
-	"galleryBanner": {
-		"color": "#332020",
-		"theme": "dark"
-	},
 	"icon": "img/icon.png",
 	"repository": {
 		"type": "git",

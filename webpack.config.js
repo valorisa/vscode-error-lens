@@ -24,6 +24,9 @@ module.exports = (env, options) => {
 		},
 		resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
 			extensions: ['.ts', '.js'],
+			alias: {
+				"src": path.resolve('./src')
+			}
 		},
 		module: {
 			rules: [{
@@ -31,9 +34,7 @@ module.exports = (env, options) => {
 				exclude: /node_modules/,
 				use: [{
 					loader: 'ts-loader',
-				},
-				'webpack-strip-block',
-				],
+				}],
 			}],
 		},
 		plugins: [

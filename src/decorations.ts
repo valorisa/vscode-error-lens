@@ -2,7 +2,7 @@ import { extensionConfig, Global } from 'src/extension';
 import { actuallyUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { updateStatusBarMessage } from 'src/statusBar';
 import { IAggregatedByLineDiagnostics } from 'src/types';
-import { replaceNewlines, truncateString } from 'src/utils';
+import { truncateString } from 'src/utils';
 import vscode, { window } from 'vscode';
 
 export function setDecorationStyle(): void {
@@ -215,7 +215,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				...decorationRenderOptions,
 				after: {
 					...decorationRenderOptions.after || {},
-					contentText: replaceNewlines(truncateString(messagePrefix + diagnostic.message)),
+					contentText: truncateString(messagePrefix + diagnostic.message),
 				},
 			};
 

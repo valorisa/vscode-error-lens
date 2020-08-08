@@ -1,3 +1,9 @@
+## 3.2.0 `08 Aug 2020`
+
+- ✨ Exclude files by glob with `excludePatterns` setting
+- ✨ Use `onStartupFinished` activation event
+- 🔨 Refactor
+
 ## 3.1.1 `20 Apr 2020`
 
 - 🐛 Fix wrong type for a setting that generated warning [PR #49](https://github.com/usernamehw/vscode-error-lens/pull/49) by [@Luxcium](https://github.com/Luxcium)

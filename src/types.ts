@@ -43,6 +43,10 @@ export interface ExtensionConfig {
 	 * Array of diagnostic messages that should not be decorated. Matches against `Diagnostic.message`.
 	 */
 	exclude: string[];
+	/**
+	 * Glob matching files that should not be decorated. Matches against absolute file path.
+	 */
+	excludePatterns: string[];
 
 	statusBarMessageEnabled: boolean;
 	statusBarMessageType: 'activeLine' | 'closestProblem';

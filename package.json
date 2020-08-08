@@ -310,6 +310,14 @@
 					"type": "string",
 					"default": "#00b7e4",
 					"markdownDescription": "Info color of `circle` gutter icon set."
+				},
+				"errorLens.excludePatterns": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "Exclude files by using glob pattern."
 				}
 			}
 		},

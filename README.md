@@ -31,6 +31,7 @@ Table of contributed settings (prefix "errorLens."):
 |statusBarMessageType|`"activeLine"`|Pick what to show in Status Bar: closest message or only message for the active line. Possible values: `"activeLine"`, `"closestProblem"`. |
 |statusBarColorsEnabled|**`false`**|When enabled - use message decoration foreground as color of Status Bar text.|
 |exclude|**`[]`**|Specify messages that should not be highlighted (RegEx).|
+|excludePatterns|**`[]`**|Exclude files by using glob pattern.|
 |delay|**`0`**|**EXPERIMENTAL** Specify delay before showing problems.|
 |onSave|**`false`**|When enabled - updates decorations only on document save.|
 |gutterIconsEnabled|**`false`**|When enabled - shows gutter icons (In place of the debug breakpoint icon).|

@@ -48,6 +48,9 @@ export class Global {
 
 	static renderGutterIconsAsSeparateDecoration: boolean;
 	static excludeRegexp: RegExp[] = [];
+	static excludePatterns?: {
+		pattern: string;
+	}[] = undefined;
 	static lastSavedTimestamp = Date.now() + 5000;
 	static customDelay: undefined | CustomDelay;
 
@@ -98,6 +101,13 @@ function updateExclude(): void {
 		if (typeof item === 'string') {
 			Global.excludeRegexp.push(new RegExp(item, 'i'));
 		}
+	}
+	if (Array.isArray(extensionConfig.excludePatterns) && extensionConfig.excludePatterns.length !== 0) {
+		Global.excludePatterns = extensionConfig.excludePatterns.map(item => ({
+			pattern: item,
+		}));
+	} else {
+		Global.excludePatterns = undefined;
 	}
 }
 

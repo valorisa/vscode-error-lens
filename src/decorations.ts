@@ -295,6 +295,14 @@ export function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vsco
 		return;
 	}
 
+	if (Global.excludePatterns) {
+		for (const pattern of Global.excludePatterns) {
+			if (vscode.languages.match(pattern, editor.document) !== 0) {
+				return;
+			}
+		}
+	}
+
 	actuallyUpdateDecorations(editor, getDiagnosticAndGroupByLine(uriToDecorate), range);
 }
 

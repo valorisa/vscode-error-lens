@@ -16,22 +16,22 @@ Table of contributed settings (prefix "errorLens."):
 
 |Name|Default|Description|
 | --- | --- |--- |
-|fontSize|`""`|Font size of message (CSS units).|
-|fontFamily|`""`|Font family of message. If the new font breaks layout - try to use smaller fontSize.|
-|fontWeight|`"normal"`|Font weight of message.|
+|fontSize|`""`|Font size of the message (CSS units).|
+|fontFamily|`""`|Font family of the message. If the new font breaks layout - try to use smaller fontSize.|
+|fontWeight|`"normal"`|Font weight of the message. Possible values: `"100"`, `"200"`, `"300"`, `"400"`, `"normal"`, `"500"`, `"600"`, `"700"`, `"bold"`, `"800"`, `"900"`|
 |fontStyleItalic|**`false`**|When enabled - shows message in italic.|
 |margin|`"4ch"`|Distance between the end of the line and the message (CSS units).|
 |padding|`""`|Padding of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.|
 |borderRadius|`"3px"`|Border radius of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `"5px"`.|
 |enabledDiagnosticLevels|`["error", "warning", "info", "hint"]`|Customize which diagnostic levels to highlight.|
 |annotationPrefix|`["ERROR: ", "WARNING: ", "INFO: ", "HINT: "]`|Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is enabled). For example, emoji: ❗ ⚠ ℹ.|
-|addAnnotationTextPrefixes|**`false`**|When enabled - prepends diagnostic severity ('ERROR:', 'WARNING:' etc) to the message. (Prefixes can be configured with `annotationPrefix` setting).|
+|addAnnotationTextPrefixes|**`false`**|When enabled - prepends diagnostic severity (`ERROR:`, `WARNING:` etc) to the message. (Prefixes can be configured with `annotationPrefix` setting).|
 |addNumberOfDiagnostics|**`false`**|When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.|
 |statusBarMessageEnabled|**`false`**|When enabled - shows message in status bar.|
 |statusBarMessageType|`"activeLine"`|Pick what to show in Status Bar: closest message or only message for the active line. Possible values: `"activeLine"`, `"closestProblem"`. |
 |statusBarColorsEnabled|**`false`**|When enabled - use message decoration foreground as color of Status Bar text.|
 |exclude|**`[]`**|Specify messages that should not be highlighted (RegEx).|
-|excludePatterns|**`[]`**|Exclude files by using glob pattern.|
+|excludePatterns|**`[]`**|Exclude files by using glob pattern. Example of excluding all JavaScript and TypeScript files: `["**/*.{ts,js}"]` |
 |delay|**`0`**|**EXPERIMENTAL** Specify delay before showing problems.|
 |onSave|**`false`**|When enabled - updates decorations only on document save.|
 |gutterIconsEnabled|**`false`**|When enabled - shows gutter icons (In place of the debug breakpoint icon).|

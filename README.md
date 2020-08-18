@@ -46,6 +46,7 @@ Table of contributed settings (prefix "errorLens."):
 |infoGutterIconColor|`"#00b7e4"`|Info color of the `circle` gutter icon set.|
 |followCursor|`"allLines"`|Highlight only portion of the problems. Possible values: `"allLines"`, `"activeLine"`, `"closestProblem"`.|
 |followCursorMore|**`0`**|Augments `followCursor`. Adds number of lines to top and bottom when `followCursor` is `activeLine`. Adds number of closest problems when `followCursor` is `closestProblem`|
+|scrollbarHackEnabled|**`false`**|When enabled - prevents showing horizontal scrollbar for decorations. (Might have a conflict with `errorLens.fontFamily` or `errorLens.padding` settings).|
 
 ## Commands
 

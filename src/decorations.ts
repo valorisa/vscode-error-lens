@@ -66,15 +66,16 @@ export function setDecorationStyle(): void {
 
 	const onlyDigitsRegExp = /^\d+$/;
 	const fontFamily = extensionConfig.fontFamily ? `font-family:${extensionConfig.fontFamily}` : '';
-	const fontSize = extensionConfig.fontSize ? `font-size:${onlyDigitsRegExp.test(extensionConfig.fontSize) ? `${extensionConfig.fontSize}px` : extensionConfig.fontSize};line-height:1` : '';
+	const fontSize = extensionConfig.fontSize ? `font-size:${onlyDigitsRegExp.test(extensionConfig.fontSize) ? `${extensionConfig.fontSize}px` : extensionConfig.fontSize}` : '';
 	const padding = extensionConfig.padding ? `padding:${onlyDigitsRegExp.test(extensionConfig.padding) ? `${extensionConfig.padding}px` : extensionConfig.padding}` : '';
 	const margin = `margin-left:${onlyDigitsRegExp.test(extensionConfig.margin) ? `${extensionConfig.margin}px` : extensionConfig.margin}`;
 	const borderRadius = `border-radius: ${extensionConfig.borderRadius || '0'}`;
+	const scrollbarHack = extensionConfig.scrollbarHackEnabled ? 'position:absolute' : '';
 
 	const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
 		fontStyle: extensionConfig.fontStyleItalic ? 'italic' : 'normal',
 		fontWeight: extensionConfig.fontWeight,
-		textDecoration: `;${fontFamily};${fontSize};${padding};${margin};${borderRadius};`,
+		textDecoration: `none;${fontFamily};${fontSize};${padding};${margin};${borderRadius};${scrollbarHack}`,
 	};
 
 	Global.decorationRenderOptionsError = {

@@ -70,6 +70,10 @@ export interface ExtensionConfig {
 	 * Update decorations only on save
 	 */
 	onSave: boolean;
+	/**
+	 * Prevent scrollbars from appearing for decorations.
+	 */
+	scrollbarHackEnabled: boolean;
 
 	gutterIconsEnabled: boolean;
 	gutterIconsFollowCursorOverride: boolean;

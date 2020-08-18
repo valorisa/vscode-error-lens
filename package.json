@@ -318,6 +318,11 @@
 						"type": "string"
 					},
 					"markdownDescription": "Exclude files by using glob pattern."
+				},
+				"errorLens.scrollbarHackEnabled": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "When enabled - prevents showing horizontal scrollbar for decorations. (Might have a conflict with `errorLens.fontFamily` or `errorLens.padding` settings)."
 				}
 			}
 		},

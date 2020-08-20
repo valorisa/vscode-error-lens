@@ -71,6 +71,10 @@ export interface ExtensionConfig {
 	 */
 	onSave: boolean;
 	/**
+	 * Time period that used for showing decorations after the document save.
+	 */
+	onSaveTimeout: number;
+	/**
 	 * Prevent scrollbars from appearing for decorations.
 	 */
 	scrollbarHackEnabled: boolean;

@@ -232,6 +232,11 @@
 					"description": "When enabled - updates decorations only on document save.",
 					"default": false
 				},
+				"errorLens.onSaveTimeout": {
+					"type": "number",
+					"description": "Time period that used for showing decorations after the document save.",
+					"default": 1000
+				},
 				"errorLens.followCursor": {
 					"type": "string",
 					"enum": [

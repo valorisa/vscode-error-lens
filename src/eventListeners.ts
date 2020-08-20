@@ -1,7 +1,7 @@
 import { CustomDelay } from 'src/CustomDelay';
 import { updateAllDecorations, updateDecorationsForUri } from 'src/decorations';
 import { extensionConfig, Global } from 'src/extension';
-import vscode, { window, workspace } from 'vscode';
+import vscode, { TextDocumentSaveReason, window, workspace } from 'vscode';
 
 export function updateChangedActiveTextEditorListener(): void {
 	if (Global.onDidChangeActiveTextEditor) {
@@ -38,7 +38,7 @@ export function updateChangeDiagnosticListener(): void {
 	}
 	if (extensionConfig.onSave) {
 		Global.onDidChangeDiagnosticsDisposable = vscode.languages.onDidChangeDiagnostics(e => {
-			if (Date.now() - Global.lastSavedTimestamp < 1000) {
+			if (Date.now() - Global.lastSavedTimestamp < extensionConfig.onSaveTimeout) {
 				onChangedDiagnostics(e);
 			}
 		});
@@ -75,10 +75,12 @@ export function updateOnSaveListener(): void {
 	if (!extensionConfig.onSave) {
 		return;
 	}
-	Global.onDidSaveTextDocumentDisposable = workspace.onDidSaveTextDocument(e => {
-		Global.lastSavedTimestamp = Date.now();
-		setTimeout(() => {
-			updateDecorationsForUri(e.uri);
-		}, 600);
+	Global.onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
+		if (e.reason === TextDocumentSaveReason.Manual) {
+			setTimeout(() => {
+				updateDecorationsForUri(e.document.uri);
+			}, 200);
+			Global.lastSavedTimestamp = Date.now();
+		}
 	});
 }

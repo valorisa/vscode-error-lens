@@ -51,7 +51,7 @@ export class Global {
 	static excludePatterns?: {
 		pattern: string;
 	}[] = undefined;
-	static lastSavedTimestamp = Date.now() + 5000;
+	static lastSavedTimestamp = Date.now() + 2000;
 	static customDelay: undefined | CustomDelay;
 
 	static extensionContext: ExtensionContext;

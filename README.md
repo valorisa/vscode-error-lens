@@ -34,6 +34,7 @@ Table of contributed settings (prefix "errorLens."):
 |excludePatterns|**`[]`**|Exclude files by using glob pattern. Example of excluding all JavaScript and TypeScript files: `["**/*.{ts,js}"]` |
 |delay|**`0`**|**EXPERIMENTAL** Specify delay before showing problems.|
 |onSave|**`false`**|When enabled - updates decorations only on document save.|
+|onSaveTimeout|**1000**|Time period that used for showing decorations after the document save.|
 |gutterIconsEnabled|**`false`**|When enabled - shows gutter icons (In place of the debug breakpoint icon).|
 |gutterIconsFollowCursorOverride|**`true`**|When enabled and `followCursor` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line."|
 |gutterIconSize|`"100%"`|Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%`|

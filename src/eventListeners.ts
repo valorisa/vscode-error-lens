@@ -8,6 +8,9 @@ export function updateChangedActiveTextEditorListener(): void {
 		Global.onDidChangeActiveTextEditor.dispose();
 	}
 	Global.onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(textEditor => {
+		if (extensionConfig.onSave) {
+			Global.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
+		}
 		if (textEditor) {
 			updateDecorationsForUri(textEditor.document.uri, textEditor);
 		}

@@ -20,7 +20,7 @@ export class CustomDelay {
 		});
 	}
 
-	static convertDiagnosticToId(diagnostic: vscode.Diagnostic): string {
+	static convertDiagnosticToId(diagnostic: vscode.Diagnostic): string { // TODO: delay happens with crash?
 		return `${diagnostic.range.start.line}${diagnostic.message}`;
 	}
 

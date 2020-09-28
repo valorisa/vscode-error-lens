@@ -76,6 +76,10 @@ Can be configured in `settings.json` (**`workbench.colorCustomizations`** sectio
 |errorLens.hintBackground|`#17a2a220`|`#17a2a220`|
 |errorLens.hintForeground|`#2faf64` ![](https://placehold.it/15/2faf64?text=+)|`#2faf64`|
 |errorLens.hintMessageBackground|`#fff0`|`#fff0`|
+|errorLens.statusBarErrorForeground|`#e45454` ![](https://placehold.it/15/e45454?text=+)|`#ff6464`|
+|errorLens.statusBarWarningForeground|`#ff942f` ![](https://placehold.it/15/ff942f?text=+)|`#fa973a`|
+|errorLens.statusBarInfoForeground|`#00b7e4` ![](https://placehold.it/15/00b7e4?text=+)|`#00b7e4`|
+|errorLens.statusBarHintForeground|`#2faf64` ![](https://placehold.it/15/2faf64?text=+)|`#2faf64`|
 
 > `#fff0` - is a completely transparent color.
 

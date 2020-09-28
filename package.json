@@ -511,6 +511,42 @@
 					"highContrast": "#2faf64"
 				},
 				"description": "Text color used to highlight lines containing hints (Only in light themes)."
+			},
+			{
+				"id": "errorLens.statusBarErrorForeground",
+				"defaults": {
+					"dark": "#ff6464",
+					"light": "#e45454",
+					"highContrast": "#ff6464"
+				},
+				"description": "Status bar item error color."
+			},
+			{
+				"id": "errorLens.statusBarWarningForeground",
+				"defaults": {
+					"dark": "#fa973a",
+					"light": "#ff942f",
+					"highContrast": "#fa973a"
+				},
+				"description": "Status bar item warning color."
+			},
+			{
+				"id": "errorLens.statusBarInfoForeground",
+				"defaults": {
+					"dark": "#00b7e4",
+					"light": "#00b7e4",
+					"highContrast": "#00b7e4"
+				},
+				"description": "Status bar item info color."
+			},
+			{
+				"id": "errorLens.statusBarHintForeground",
+				"defaults": {
+					"dark": "#2faf64",
+					"light": "#2faf64",
+					"highContrast": "#2faf64"
+				},
+				"description": "Status bar item info color."
 			}
 		]
 	},

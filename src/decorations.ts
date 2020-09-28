@@ -64,6 +64,12 @@ export function setDecorationStyle(): void {
 	const hintForegroundLight = new vscode.ThemeColor('errorLens.hintForegroundLight');
 	const hintMessageBackground = new vscode.ThemeColor('errorLens.hintMessageBackground');
 
+	const statusBarErrorForeground = new vscode.ThemeColor('errorLens.statusBarErrorForeground');
+	const statusBarWarningForeground = new vscode.ThemeColor('errorLens.statusBarWarningForeground');
+	const statusBarInfoForeground = new vscode.ThemeColor('errorLens.statusBarInfoForeground');
+	const statusBarHintForeground = new vscode.ThemeColor('errorLens.statusBarHintForeground');
+
+
 	const onlyDigitsRegExp = /^\d+$/;
 	const fontFamily = extensionConfig.fontFamily ? `font-family:${extensionConfig.fontFamily}` : '';
 	const fontSize = extensionConfig.fontSize ? `font-size:${onlyDigitsRegExp.test(extensionConfig.fontSize) ? `${extensionConfig.fontSize}px` : extensionConfig.fontSize}` : '';
@@ -157,7 +163,7 @@ export function setDecorationStyle(): void {
 	Global.decorationTypeHint = window.createTextEditorDecorationType(Global.decorationRenderOptionsHint);
 
 	if (extensionConfig.statusBarMessageEnabled) {
-		Global.statusBarColors = [errorForeground, warningForeground, infoForeground, hintForeground];
+		Global.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 	}
 }
 

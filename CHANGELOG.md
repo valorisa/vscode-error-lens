@@ -1,6 +1,8 @@
-<!-- github.com/usernamehw/vscode-error-lens/compare/4af019f127e7fd5b1926517cc0da6ecbd68f5c80...367d123df361026d0b63970c5fdcdc44982e05df -->
+## 3.2.2 `28 Sep 2020`
 
-## 3.2.1 `23 Aug 2020` [diff](https://github.com/usernamehw/vscode-error-lens/compare/4af019f127e7fd5b1926517cc0da6ecbd68f5c80...367d123df361026d0b63970c5fdcdc44982e05df)
+- ✨ Add separate colors for status bar items
+
+## 3.2.1 `23 Aug 2020`
 
 - ✨ Add option to prevent horizontal scrollbar appearing for decorations with `errorLens.scrollbarHackEnabled`
 - ✨ `onSave` should work with vscode autosave

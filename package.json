@@ -546,7 +546,7 @@
 					"light": "#2faf64",
 					"highContrast": "#2faf64"
 				},
-				"description": "Status bar item info color."
+				"description": "Status bar item hint color."
 			}
 		]
 	},

@@ -1,3 +1,7 @@
+## 3.2.3 `03 Oct 2020`
+
+- ✨ Add setting to hide inline message `errorLens.messageEnabled`
+
 ## 3.2.2 `28 Sep 2020`
 
 - ✨ Add separate colors for status bar items

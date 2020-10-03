@@ -24,6 +24,7 @@ Table of contributed settings (prefix "errorLens."):
 |padding|`""`|Padding of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.|
 |borderRadius|`"3px"`|Border radius of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `"5px"`.|
 |enabledDiagnosticLevels|`["error", "warning", "info", "hint"]`|Customize which diagnostic levels to highlight.|
+|messageEnabled|**`true`**|Controls whether inline message is shown or not (Including background highlight).|
 |annotationPrefix|`["ERROR: ", "WARNING: ", "INFO: ", "HINT: "]`|Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is enabled). For example, emoji: ❗ ⚠ ℹ.|
 |addAnnotationTextPrefixes|**`false`**|When enabled - prepends diagnostic severity (`ERROR:`, `WARNING:` etc) to the message. (Prefixes can be configured with `annotationPrefix` setting).|
 |addNumberOfDiagnostics|**`false`**|When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.|

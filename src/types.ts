@@ -22,6 +22,11 @@ export interface ExtensionConfig {
 	margin: string;
 	padding: string;
 	borderRadius: string;
+
+	/**
+	 * Controls whether inline message is shown or not (Including background highlight).
+	 */
+	messageEnabled: boolean;
 	/**
 	 * Choose which levels of diagnostics to highlight.
 	 */

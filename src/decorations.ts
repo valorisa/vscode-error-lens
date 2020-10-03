@@ -157,6 +157,28 @@ export function setDecorationStyle(): void {
 		isWholeLine: true,
 	};
 
+	if (!extensionConfig.messageEnabled) {
+		Global.decorationRenderOptionsError.backgroundColor = undefined;
+		Global.decorationRenderOptionsError.after = undefined;
+		Global.decorationRenderOptionsError.light!.backgroundColor = undefined;
+		Global.decorationRenderOptionsError.light!.after = undefined;
+
+		Global.decorationRenderOptionsWarning.backgroundColor = undefined;
+		Global.decorationRenderOptionsWarning.after = undefined;
+		Global.decorationRenderOptionsWarning.light!.backgroundColor = undefined;
+		Global.decorationRenderOptionsWarning.light!.after = undefined;
+
+		Global.decorationRenderOptionsInfo.backgroundColor = undefined;
+		Global.decorationRenderOptionsInfo.after = undefined;
+		Global.decorationRenderOptionsInfo.light!.backgroundColor = undefined;
+		Global.decorationRenderOptionsInfo.light!.after = undefined;
+
+		Global.decorationRenderOptionsHint.backgroundColor = undefined;
+		Global.decorationRenderOptionsHint.after = undefined;
+		Global.decorationRenderOptionsHint.light!.backgroundColor = undefined;
+		Global.decorationRenderOptionsHint.light!.after = undefined;
+	}
+
 	Global.decorationTypeError = window.createTextEditorDecorationType(Global.decorationRenderOptionsError);
 	Global.decorationTypeWarning = window.createTextEditorDecorationType(Global.decorationRenderOptionsWarning);
 	Global.decorationTypeInfo = window.createTextEditorDecorationType(Global.decorationRenderOptionsInfo);
@@ -222,7 +244,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				...decorationRenderOptions,
 				after: {
 					...decorationRenderOptions.after || {},
-					contentText: truncateString(messagePrefix + diagnostic.message),
+					contentText: extensionConfig.messageEnabled ? truncateString(messagePrefix + diagnostic.message) : '',
 				},
 			};
 

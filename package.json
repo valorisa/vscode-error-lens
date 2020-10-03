@@ -168,6 +168,11 @@
 					"markdownDescription": "When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.",
 					"default": false
 				},
+				"errorLens.messageEnabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls whether inline message is shown or not (Including background highlight)."
+				},
 				"errorLens.statusBarMessageEnabled": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - shows message in status bar.",

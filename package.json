@@ -27,7 +27,13 @@
 		"url": "https://github.com/usernamehw/vscode-error-lens"
 	},
 	"activationEvents": [
-		"onStartupFinished"
+		"onStartupFinished",
+		"onCommand:errorLens.toggle",
+		"onCommand:errorLens.toggleError",
+		"onCommand:errorLens.toggleWarning",
+		"onCommand:errorLens.toggleInfo",
+		"onCommand:errorLens.toggleHint",
+		"onCommand:errorLens.copyProblemMessage"
 	],
 	"main": "./dist/extension",
 	"contributes": {

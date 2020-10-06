@@ -374,5 +374,5 @@ export function getDiagnosticAndGroupByLine(uri: vscode.Uri): IAggregatedByLineD
 }
 
 export function addAnnotationPrefix(severity: number): string {
-	return extensionConfig.annotationPrefix[severity] || '';// TODO: use ??
+	return extensionConfig.annotationPrefix[severity] ?? '';
 }

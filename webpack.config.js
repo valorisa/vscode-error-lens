@@ -46,9 +46,6 @@ module.exports = (env, options) => {
 		// Prod
 	} else {
 		// Dev
-		config.plugins.push(new webpack.DefinePlugin({
-			__DEV: JSON.stringify(true),
-		}));
 		config.module.rules[0] = {
 			test: /\.ts$/,
 			exclude: /node_modules/,

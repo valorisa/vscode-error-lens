@@ -88,7 +88,7 @@ Can be configured in `settings.json` (**`workbench.colorCustomizations`** sectio
 
 Please upvote the following VS Code issues:
 
-* [[theming] Access theme's colors programmatically #32813](https://github.com/microsoft/vscode/issues/32813)
-* [[theming] when completing color keys in settings, fill in current value #25633](https://github.com/microsoft/vscode/issues/25633)
-* [OnClick event on Gutter #5455](https://github.com/microsoft/vscode/issues/5455)
-* [Decorations: Show decorations in tabs #49382](https://github.com/Microsoft/vscode/issues/49382)
+* [[theming] Access theme's colors programmatically](https://github.com/microsoft/vscode/issues/32813)
+* [[theming] when completing color keys in settings, fill in current value](https://github.com/microsoft/vscode/issues/25633)
+* [OnClick event on Gutter](https://github.com/microsoft/vscode/issues/5455)
+* [Decorations: Show decorations in tabs](https://github.com/Microsoft/vscode/issues/49382)

@@ -1,6 +1,6 @@
 import { updateAllDecorations } from 'src/decorations';
 import { disposeEverything, EXTENSION_NAME, Global, updateEverything } from 'src/extension';
-import { IAggregatedByLineDiagnostics } from 'src/types';
+import { AggregatedByLineDiagnostics } from 'src/types';
 import vscode, { commands, ExtensionContext, window } from 'vscode';
 
 export function registerAllCommands(extensionContext: ExtensionContext): void {
@@ -31,7 +31,7 @@ export function registerAllCommands(extensionContext: ExtensionContext): void {
 	});
 
 	const disposableCopyProblemMessage = commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
-		const aggregatedDiagnostics: IAggregatedByLineDiagnostics = {};
+		const aggregatedDiagnostics: AggregatedByLineDiagnostics = {};
 		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;
 

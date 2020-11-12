@@ -1,15 +1,22 @@
 import throttle from 'lodash/throttle';
 import { actuallyUpdateDecorations } from 'src/decorations';
 import { Global } from 'src/extension';
-import { IAggregatedByLineDiagnostics, IInnerDiagnostic, ISomeDiagnostics } from 'src/types';
+import { AggregatedByLineDiagnostics } from 'src/types';
 import vscode from 'vscode';
+
+interface CachedDiagnostic {
+	[stringUri: string]: InnerDiagnostic;
+}
+interface InnerDiagnostic {
+	[lnmessage: string]: vscode.Diagnostic;
+}
 /**
  * Try to add delay to new decorations.
  * But old fixed errors should be removed immediately.
  */
 export class CustomDelay {
 	private readonly delay: number;
-	private cachedDiagnostics: ISomeDiagnostics = {};
+	private cachedDiagnostics: CachedDiagnostic = {};
 	private readonly updateDecorationsThrottled: (stringUri: string)=> void;
 
 	constructor(delay: number) {
@@ -97,8 +104,8 @@ export class CustomDelay {
 		}
 	};
 
-	groupByLine(diag: IInnerDiagnostic): IAggregatedByLineDiagnostics {
-		const aggregatedDiagnostics: IAggregatedByLineDiagnostics = Object.create(null);
+	groupByLine(diag: InnerDiagnostic): AggregatedByLineDiagnostics {
+		const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
 
 		nextDiagnostic:
 		for (const lineNumberKey in diag) {

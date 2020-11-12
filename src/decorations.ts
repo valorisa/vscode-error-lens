@@ -1,7 +1,7 @@
 import { extensionConfig, Global } from 'src/extension';
 import { actuallyUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { updateStatusBarMessage } from 'src/statusBar';
-import { IAggregatedByLineDiagnostics } from 'src/types';
+import { AggregatedByLineDiagnostics } from 'src/types';
 import { truncateString } from 'src/utils';
 import vscode, { window } from 'vscode';
 
@@ -189,7 +189,7 @@ export function setDecorationStyle(): void {
 	}
 }
 
-export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: IAggregatedByLineDiagnostics, range?: vscode.Range): void {
+export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: vscode.Range): void {
 	const decorationOptionsError: vscode.DecorationOptions[] = [];
 	const decorationOptionsWarning: vscode.DecorationOptions[] = [];
 	const decorationOptionsInfo: vscode.DecorationOptions[] = [];
@@ -350,8 +350,8 @@ export function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vsco
 //     ]
 // };
 // #endregion
-export function getDiagnosticAndGroupByLine(uri: vscode.Uri): IAggregatedByLineDiagnostics {
-	const aggregatedDiagnostics: IAggregatedByLineDiagnostics = Object.create(null);
+export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDiagnostics {
+	const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
 	const diagnostics = vscode.languages.getDiagnostics(uri);
 
 	nextDiagnostic:

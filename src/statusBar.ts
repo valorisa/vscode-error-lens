@@ -1,6 +1,6 @@
 import { addAnnotationPrefix } from 'src/decorations';
 import { extensionConfig, Global } from 'src/extension';
-import { IAggregatedByLineDiagnostics } from 'src/types';
+import { AggregatedByLineDiagnostics } from 'src/types';
 import vscode, { window } from 'vscode';
 
 export function createStatusBarItem(): void {
@@ -10,7 +10,7 @@ export function createStatusBarItem(): void {
 	}
 }
 
-export function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics: IAggregatedByLineDiagnostics): void {
+export function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
 	const keys = Object.keys(aggregatedDiagnostics);
 	if (keys.length === 0) {
 		Global.statusBarItem.text = '';

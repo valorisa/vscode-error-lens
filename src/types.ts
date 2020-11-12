@@ -1,4 +1,4 @@
-import type * as vscode from 'vscode';
+import vscode from 'vscode';
 
 export interface ExtensionConfig {
 	/**
@@ -101,18 +101,11 @@ export interface ExtensionConfig {
 export type GutterIconSet = 'default' | 'defaultOutline' | 'borderless' | 'circle';
 export type FollowCursor = 'allLines' | 'activeLine' | 'closestProblem';
 
-export interface IAggregatedByLineDiagnostics {
+export interface AggregatedByLineDiagnostics {
 	[lineNumber: string]: vscode.Diagnostic[];
 }
 
-export interface ISomeDiagnostics {
-	[stringUri: string]: IInnerDiagnostic;
-}
-export interface IInnerDiagnostic {
-	[lnmessage: string]: vscode.Diagnostic;
-}
-
-export interface IGutter {
+export interface Gutter {
 	iconSet: GutterIconSet;
 
 	errorIconPath: string;

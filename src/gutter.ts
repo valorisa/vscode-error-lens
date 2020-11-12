@@ -1,10 +1,10 @@
 import { promises as fs } from 'fs';
 import { extensionConfig, Global } from 'src/extension';
-import { IAggregatedByLineDiagnostics, IGutter } from 'src/types';
-import type * as vscode from 'vscode';
+import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
+import vscode from 'vscode';
 
-export function getGutterStyles(extensionContext: vscode.ExtensionContext): IGutter {
-	const gutter: IGutter = Object.create(null);
+export function getGutterStyles(extensionContext: vscode.ExtensionContext): Gutter {
+	const gutter: Gutter = Object.create(null);
 
 	gutter.iconSet = extensionConfig.gutterIconSet;
 	if (extensionConfig.gutterIconSet !== 'borderless' &&
@@ -42,7 +42,7 @@ function writeCircleGutterIconsToDisk(extensionContext: vscode.ExtensionContext)
 	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/info-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconColor}"/></svg>`);
 }
 
-export function actuallyUpdateGutterDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: IAggregatedByLineDiagnostics): void {
+export function actuallyUpdateGutterDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
 	const decorationOptionsGutterError: vscode.DecorationOptions[] = [];
 	const decorationOptionsGutterWarning: vscode.DecorationOptions[] = [];
 	const decorationOptionsGutterInfo: vscode.DecorationOptions[] = [];

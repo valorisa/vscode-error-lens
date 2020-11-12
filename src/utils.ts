@@ -1,5 +1,5 @@
 export function truncateString(str: string): string {
-	const truncationLimit = 500;
-	return str.length > truncationLimit ? `${str.slice(0, truncationLimit)}…` : str;
+	const charLimit = 500;
+	return str.length > charLimit ? `${str.slice(0, charLimit)}…` : str;
 }
 

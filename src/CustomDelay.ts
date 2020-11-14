@@ -35,7 +35,7 @@ export class CustomDelay {
 		const stringUri = uri.toString();
 		const diagnosticForUri = vscode.languages.getDiagnostics(uri);
 		const cachedDiagnosticsForUri = this.cachedDiagnostics[stringUri];
-		const transformed = {
+		const transformed: CachedDiagnostic = {
 			[stringUri]: {},
 		};
 		for (const item of diagnosticForUri) {
@@ -67,7 +67,9 @@ export class CustomDelay {
 
 	onDiagnosticChange = (event: vscode.DiagnosticChangeEvent): void => {
 		if (!event.uris.length) {
-			this.cachedDiagnostics = {};
+			for (const key in this.cachedDiagnostics) {
+				this.cachedDiagnostics[key] = {};
+			}
 			return;
 		}
 		for (const uri of event.uris) {
@@ -83,7 +85,7 @@ export class CustomDelay {
 		setTimeout(() => {
 			// Revalidate if the diagnostic actually exists at the end of the timer
 			const diagnosticForUri = vscode.languages.getDiagnostics(uri);
-			const transformed = {
+			const transformed: CachedDiagnostic = {
 				[stringUri]: {},
 			};
 			for (const item of diagnosticForUri) {

@@ -5,17 +5,22 @@ import { AggregatedByLineDiagnostics } from 'src/types';
 import vscode from 'vscode';
 
 interface CachedDiagnostic {
-	[stringUri: string]: InnerDiagnostic;
-}
-interface InnerDiagnostic {
-	[lnmessage: string]: vscode.Diagnostic;
+	[stringUri: string]: {
+		[lnmessage: string]: vscode.Diagnostic;
+	};
 }
 /**
  * Try to add delay to new decorations.
  * But old fixed errors should be removed immediately.
  */
 export class CustomDelay {
+	/**
+	 * Delay of adding a new decoration
+	 */
 	private readonly delay: number;
+	/**
+	 * Saved diagnostics for each Uri.
+	 */
 	private cachedDiagnostics: CachedDiagnostic = {};
 	private readonly updateDecorationsThrottled: (stringUri: string)=> void;
 
@@ -106,7 +111,7 @@ export class CustomDelay {
 		}
 	};
 
-	groupByLine(diag: InnerDiagnostic): AggregatedByLineDiagnostics {
+	groupByLine(diag: CachedDiagnostic['']): AggregatedByLineDiagnostics {
 		const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
 
 		nextDiagnostic:

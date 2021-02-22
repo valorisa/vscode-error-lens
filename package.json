@@ -6,7 +6,7 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.47.0"
+		"vscode": "^1.53.0"
 	},
 	"extensionKind": [
 		"ui"
@@ -565,25 +565,24 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "webpack --mode production --colors",
-		"compile": "webpack --mode development",
-		"watch": "webpack --mode development --watch --display=minimal"
+		"vscode:prepublish": "webpack --mode production --color",
+		"watch": "webpack --mode development --watch --stats minimal"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.165",
-		"@types/node": "^12.12.62",
-		"@types/vscode": "^1.47.0",
-		"@typescript-eslint/eslint-plugin": "^4.7.0",
-		"@typescript-eslint/parser": "^4.7.0",
-		"eslint": "^7.13.0",
-		"eslint-plugin-no-autofix": "1.0.1",
+		"@types/lodash": "^4.14.168",
+		"@types/node": "^12.20.4",
+		"@types/vscode": "^1.53.0",
+		"@typescript-eslint/eslint-plugin": "^4.15.1",
+		"@typescript-eslint/parser": "^4.15.1",
+		"eslint": "^7.20.0",
+		"eslint-plugin-no-autofix": "1.0.2",
 		"friendly-errors-webpack-plugin": "^1.7.0",
-		"ts-loader": "^8.0.11",
-		"typescript": "^4.0.5",
-		"webpack": "^4.44.2",
-		"webpack-cli": "^3.3.12"
+		"ts-loader": "^8.0.17",
+		"typescript": "^4.1.5",
+		"webpack": "^5.23.0",
+		"webpack-cli": "^4.5.0"
 	},
 	"dependencies": {
-		"lodash": "^4.17.20"
+		"lodash": "^4.17.21"
 	}
 }

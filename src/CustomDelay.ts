@@ -106,6 +106,13 @@ export class CustomDelay {
 	updateDecorations = (stringUri: string): void => {
 		for (const editor of vscode.window.visibleTextEditors) {
 			if (editor.document.uri.toString() === stringUri) {
+				if (Global.excludePatterns) {
+					for (const pattern of Global.excludePatterns) {
+						if (vscode.languages.match(pattern, editor.document) !== 0) {
+							return;
+						}
+					}
+				}
 				actuallyUpdateDecorations(editor, this.groupByLine(this.cachedDiagnostics[stringUri]));
 			}
 		}

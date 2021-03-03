@@ -52,7 +52,7 @@ export class Global {
 		pattern: string;
 	}[] = undefined;
 	static lastSavedTimestamp = Date.now() + 2000;
-	static customDelay: undefined | CustomDelay;
+	static customDelay: CustomDelay | undefined;
 
 	static extensionContext: ExtensionContext;
 }

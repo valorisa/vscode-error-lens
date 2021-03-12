@@ -98,8 +98,8 @@ export interface ExtensionConfig {
 	infoGutterIconColor: string;
 }
 
-export type GutterIconSet = 'default' | 'defaultOutline' | 'borderless' | 'circle';
-export type FollowCursor = 'allLines' | 'activeLine' | 'closestProblem';
+export type GutterIconSet = 'borderless' | 'circle' | 'default' | 'defaultOutline';
+export type FollowCursor = 'activeLine' | 'allLines' | 'closestProblem';
 
 export interface AggregatedByLineDiagnostics {
 	[lineNumber: string]: vscode.Diagnostic[];

@@ -84,6 +84,8 @@ Can be configured in `settings.json` (**`workbench.colorCustomizations`** sectio
 
 > `#fff0` - is a completely transparent color.
 
+> ℹ Colors for `light` color themes have the same name only with `Light` suffix.
+
 ## Upstream issues
 
 Please upvote the following VS Code issues:

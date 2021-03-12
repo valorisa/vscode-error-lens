@@ -1,3 +1,8 @@
+## 3.2.5 `12 Mar 2021`
+
+- 🐛 Fix custom gutter icons stopped working
+- 🐛 Fix when delay is set `excludePatterns` is ignored
+
 ## 3.2.4 `13 Nov 2020`
 
 - ✨ Use "ui" extension kind to support remote [PR #63](https://github.com/usernamehw/vscode-error-lens/pull/63) by [@Daniel15](https://github.com/Daniel15)

@@ -19,6 +19,7 @@ export function getGutterStyles(extensionContext: vscode.ExtensionContext): Gutt
 		writeCircleGutterIconsToDisk(extensionContext);
 	}
 
+	// Copy custom gutter icons into extension directory. (Workaround vscode sandbox restriction).
 	if (extensionConfig.errorGutterIconPath) {
 		const baseName = path.basename(extensionConfig.errorGutterIconPath);
 		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);

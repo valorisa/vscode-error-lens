@@ -1,4 +1,4 @@
-import { addAnnotationPrefix } from 'src/decorations';
+import { getAnnotationPrefix } from 'src/decorations';
 import { extensionConfig, Global } from 'src/extension';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import vscode, { window } from 'vscode';
@@ -23,7 +23,7 @@ export function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiag
 	let prefix = '';
 
 	if (extensionConfig.addAnnotationTextPrefixes) {
-		prefix = addAnnotationPrefix(closest.severity);
+		prefix = getAnnotationPrefix(closest.severity);
 	}
 
 	const text = `${prefix}${closest.message}`;

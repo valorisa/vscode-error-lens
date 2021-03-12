@@ -27,7 +27,7 @@ export function updateChangeDiagnosticListener(): void {
 		Global.onDidChangeDiagnosticsDisposable.dispose();
 	}
 	function onChangedDiagnostics(diagnosticChangeEvent: vscode.DiagnosticChangeEvent): void {
-		// Many URIs can change - we only need to decorate all visible editors
+		// Many URIs can change - we only need to decorate visible editors
 		for (const uri of diagnosticChangeEvent.uris) {
 			for (const editor of window.visibleTextEditors) {
 				if (uri.fsPath === editor.document.uri.fsPath) {

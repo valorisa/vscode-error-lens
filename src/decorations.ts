@@ -227,7 +227,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
 			}
 			if (extensionConfig.addAnnotationTextPrefixes) {
-				messagePrefix += addAnnotationPrefix(severity);
+				messagePrefix += getAnnotationPrefix(severity);
 			}
 
 			let decorationRenderOptions: vscode.DecorationRenderOptions = {};
@@ -244,6 +244,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				...decorationRenderOptions,
 				after: {
 					...decorationRenderOptions.after || {},
+					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
 					contentText: extensionConfig.messageEnabled ? truncateString(messagePrefix + diagnostic.message) : '',
 				},
 			};
@@ -373,6 +374,6 @@ export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDi
 	return aggregatedDiagnostics;
 }
 
-export function addAnnotationPrefix(severity: number): string {
+export function getAnnotationPrefix(severity: number): string {
 	return extensionConfig.annotationPrefix[severity] ?? '';
 }

@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import path from 'path';
 import { extensionConfig, Global } from 'src/extension';
 import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
 import vscode from 'vscode';
@@ -18,12 +19,54 @@ export function getGutterStyles(extensionContext: vscode.ExtensionContext): Gutt
 		writeCircleGutterIconsToDisk(extensionContext);
 	}
 
-	gutter.errorIconPath = extensionConfig.errorGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
-	gutter.errorIconPathLight = extensionConfig.light.errorGutterIconPath || (extensionConfig.errorGutterIconPath ? extensionConfig.errorGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
-	gutter.warningIconPath = extensionConfig.warningGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-dark.svg`);
-	gutter.warningIconPathLight = extensionConfig.light.warningGutterIconPath || (extensionConfig.warningGutterIconPath ? extensionConfig.warningGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
-	gutter.infoIconPath = extensionConfig.infoGutterIconPath || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
-	gutter.infoIconPathLight = extensionConfig.light.infoGutterIconPath || (extensionConfig.infoGutterIconPath ? extensionConfig.infoGutterIconPath : false) || extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
+	if (extensionConfig.errorGutterIconPath) {
+		const baseName = path.basename(extensionConfig.errorGutterIconPath);
+		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
+		fs.copyFile(extensionConfig.errorGutterIconPath, newPath);
+		gutter.errorIconPath = newPath;
+	} else {
+		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
+	}
+	if (extensionConfig.light.errorGutterIconPath) {
+		const baseName = path.basename(extensionConfig.light.errorGutterIconPath);
+		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
+		fs.copyFile(extensionConfig.light.errorGutterIconPath, newPath);
+		gutter.errorIconPathLight = newPath;
+	} else {
+		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
+	}
+	if (extensionConfig.warningGutterIconPath) {
+		const baseName = path.basename(extensionConfig.warningGutterIconPath);
+		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
+		fs.copyFile(extensionConfig.warningGutterIconPath, newPath);
+		gutter.warningIconPath = newPath;
+	} else {
+		gutter.warningIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-dark.svg`);
+	}
+	if (extensionConfig.light.warningGutterIconPath) {
+		const baseName = path.basename(extensionConfig.light.warningGutterIconPath);
+		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
+		fs.copyFile(extensionConfig.light.warningGutterIconPath, newPath);
+		gutter.warningIconPathLight = newPath;
+	} else {
+		gutter.warningIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
+	}
+	if (extensionConfig.infoGutterIconPath) {
+		const baseName = path.basename(extensionConfig.infoGutterIconPath);
+		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
+		fs.copyFile(extensionConfig.infoGutterIconPath, newPath);
+		gutter.infoIconPath = newPath;
+	} else {
+		gutter.infoIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
+	}
+	if (extensionConfig.light.infoGutterIconPath) {
+		const baseName = path.basename(extensionConfig.light.infoGutterIconPath);
+		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
+		fs.copyFile(extensionConfig.light.infoGutterIconPath, newPath);
+		gutter.infoIconPathLight = newPath;
+	} else {
+		gutter.infoIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
+	}
 
 	return gutter;
 }

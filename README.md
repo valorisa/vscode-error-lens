@@ -21,8 +21,8 @@ Table of contributed settings (prefix "errorLens."):
 |fontWeight|`"normal"`|Font weight of the message. Possible values: `"100"`, `"200"`, `"300"`, `"400"`, `"normal"`, `"500"`, `"600"`, `"700"`, `"bold"`, `"800"`, `"900"`|
 |fontStyleItalic|**`false`**|When enabled - shows message in italic.|
 |margin|`"4ch"`|Distance between the end of the line and the message (CSS units).|
-|padding|`""`|Padding of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.|
-|borderRadius|`"3px"`|Border radius of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `"5px"`.|
+|padding|`""`|Padding of the message. Visible difference when `message` colors are set. [Issue 23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.|
+|borderRadius|`"3px"`|Border radius of the message. Visible difference when `message` colors are set. [Issue 23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `"5px"`.|
 |enabledDiagnosticLevels|`["error", "warning", "info", "hint"]`|Customize which diagnostic levels to highlight.|
 |messageEnabled|**`true`**|Controls whether inline message is shown or not (Including background highlight).|
 |annotationPrefix|`["ERROR: ", "WARNING: ", "INFO: ", "HINT: "]`|Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is enabled). For example, emoji: ❗ ⚠ ℹ.|

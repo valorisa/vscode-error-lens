@@ -92,5 +92,5 @@ Please upvote the following VS Code issues:
 
 * [[theming] Access theme's colors programmatically](https://github.com/microsoft/vscode/issues/32813)
 * [[theming] when completing color keys in settings, fill in current value](https://github.com/microsoft/vscode/issues/25633)
+* [Inline text adornments break word wrapping](https://github.com/microsoft/vscode/issues/32856)
 * [OnClick event on Gutter](https://github.com/microsoft/vscode/issues/5455)
-* [Decorations: Show decorations in tabs](https://github.com/Microsoft/vscode/issues/49382)

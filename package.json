@@ -238,7 +238,7 @@
 				},
 				"errorLens.delay": {
 					"type": "number",
-					"markdownDescription": "**EXPERIMENTAL** Delay before showing problem decorations.",
+					"markdownDescription": "**EXPERIMENTAL** Delay (ms) before showing problem decorations.",
 					"default": 0
 				},
 				"errorLens.onSave": {
@@ -248,7 +248,7 @@
 				},
 				"errorLens.onSaveTimeout": {
 					"type": "number",
-					"description": "Time period that used for showing decorations after the document save.",
+					"description": "Time period (ms) that used for showing decorations after the document save.",
 					"default": 1000
 				},
 				"errorLens.followCursor": {

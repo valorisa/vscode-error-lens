@@ -1,3 +1,7 @@
+## 3.2.6 `18 Apr 2021`
+
+- ✨ Exclude diagnostics by source `"errorLens.excludeBySource"`
+
 ## 3.2.5 `12 Mar 2021`
 
 - 🐛 Fix custom gutter icons stopped working

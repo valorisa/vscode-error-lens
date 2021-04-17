@@ -201,7 +201,23 @@
 					"items": {
 						"type": "string"
 					},
-					"description": "Specify messages that should not be highlighted (RegEx)."
+					"description": "Specify messages that should not be highlighted (RegExp)."
+				},
+				"errorLens.excludeBySource": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"description": "Specify sources that should not be highlighted (string). Example: `[\"eslint\"]`"
+				},
+				"errorLens.excludePatterns": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "Exclude files by using glob pattern. Example `[\"**/*.{ts,js}\"]`"
 				},
 				"errorLens.light": {
 					"type": "object",
@@ -237,8 +253,8 @@
 					}
 				},
 				"errorLens.delay": {
-					"type": "number",
-					"markdownDescription": "**EXPERIMENTAL** Delay (ms) before showing problem decorations.",
+					"type": "integer",
+					"markdownDescription": "**EXPERIMENTAL** Delay (ms) before showing problem decorations (0 to disable).",
 					"default": 0
 				},
 				"errorLens.onSave": {
@@ -329,14 +345,6 @@
 					"type": "string",
 					"default": "#00b7e4",
 					"markdownDescription": "Info color of `circle` gutter icon set."
-				},
-				"errorLens.excludePatterns": {
-					"type": "array",
-					"default": [],
-					"items": {
-						"type": "string"
-					},
-					"markdownDescription": "Exclude files by using glob pattern."
 				},
 				"errorLens.scrollbarHackEnabled": {
 					"type": "boolean",

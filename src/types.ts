@@ -49,6 +49,10 @@ export interface ExtensionConfig {
 	 */
 	exclude: string[];
 	/**
+	 * Specify sources that should not be highlighted (string).
+	 */
+	excludeBySource: string[];
+	/**
 	 * Glob matching files that should not be decorated. Matches against absolute file path.
 	 */
 	excludePatterns: string[];

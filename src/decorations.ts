@@ -3,7 +3,7 @@ import { actuallyUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { updateStatusBarMessage } from 'src/statusBar';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import { truncateString } from 'src/utils';
-import vscode, { window } from 'vscode';
+import vscode, { Diagnostic, window } from 'vscode';
 
 export function setDecorationStyle(): void {
 	let gutter;
@@ -355,12 +355,9 @@ export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDi
 	const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
 	const diagnostics = vscode.languages.getDiagnostics(uri);
 
-	nextDiagnostic:
 	for (const diagnostic of diagnostics) {
-		for (const regex of Global.excludeRegexp) {
-			if (regex.test(diagnostic.message)) {
-				continue nextDiagnostic;
-			}
+		if (shoudExcludeDiagnostic(diagnostic)) {
+			continue;
 		}
 
 		const key = diagnostic.range.start.line;
@@ -372,6 +369,22 @@ export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDi
 		}
 	}
 	return aggregatedDiagnostics;
+}
+
+export function shoudExcludeDiagnostic(diagnostic: Diagnostic) {
+	for (const regex of Global.excludeRegexp) {
+		if (regex.test(diagnostic.message)) {
+			return true;
+		}
+	}
+	if (diagnostic.source) {
+		for (const source of Global.excludeSources) {
+			if (source === diagnostic.source) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 export function getAnnotationPrefix(severity: number): string {

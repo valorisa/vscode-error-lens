@@ -1,5 +1,5 @@
 import throttle from 'lodash/throttle';
-import { actuallyUpdateDecorations } from 'src/decorations';
+import { actuallyUpdateDecorations, shoudExcludeDiagnostic } from 'src/decorations';
 import { Global } from 'src/extension';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import vscode from 'vscode';
@@ -121,13 +121,10 @@ export class CustomDelay {
 	groupByLine(diag: CachedDiagnostic['']): AggregatedByLineDiagnostics {
 		const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
 
-		nextDiagnostic:
 		for (const lineNumberKey in diag) {
 			const diagnostic = diag[lineNumberKey];
-			for (const regex of Global.excludeRegexp) {
-				if (regex.test(diagnostic.message)) {
-					continue nextDiagnostic;
-				}
+			if (shoudExcludeDiagnostic(diagnostic)) {
+				continue;
 			}
 
 			const key = diagnostic.range.start.line;

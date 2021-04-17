@@ -47,7 +47,17 @@ export class Global {
 	static statusBarColors: vscode.ThemeColor[] = [];
 
 	static renderGutterIconsAsSeparateDecoration: boolean;
+	/**
+	 * Array of RegExp (that would match against diagnostic message)
+	 */
 	static excludeRegexp: RegExp[] = [];
+	/**
+	 * Array of sources to ignore (that would match against diagnostic source)
+	 */
+	static excludeSources: string[] = [];
+	/**
+	 * Array of document selectors (that would match against document)
+	 */
 	static excludePatterns?: {
 		pattern: string;
 	}[] = undefined;
@@ -96,6 +106,7 @@ export function updateEverything(): void {
 
 function updateExclude(): void {
 	Global.excludeRegexp = [];
+	Global.excludeSources = extensionConfig.excludeBySource;
 
 	for (const item of extensionConfig.exclude) {
 		if (typeof item === 'string') {

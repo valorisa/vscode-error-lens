@@ -6,4 +6,5 @@
 	"eslint.validate": [
 		"typescript",
 	],
+	"contributions.settings.moveOutPrefix": true,
 }

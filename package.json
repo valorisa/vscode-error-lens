@@ -95,7 +95,7 @@
 						"900"
 					],
 					"default": "normal",
-					"markdownDescription": "Font Weight of message.\n\n`normal` is alias for 400\n\n`bold` is alias for 700"
+					"markdownDescription": "Font Weight of message.`\"normal\"` is alias for 400, `\"bold\"` is alias for 700)"
 				},
 				"errorLens.fontStyleItalic": {
 					"type": "boolean",
@@ -115,7 +115,7 @@
 				"errorLens.padding": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Padding of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.",
+					"markdownDescription": "Padding of the message. Visible difference when `message` colors are set. [issues/23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.",
 					"examples": [
 						"2px 1ch"
 					]
@@ -123,7 +123,7 @@
 				"errorLens.borderRadius": {
 					"type": "string",
 					"default": "3px",
-					"markdownDescription": "Border radius of the message. Visible difference when `message` colors are set. [Issue #23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `5px`.",
+					"markdownDescription": "Border radius of the message. Visible difference when `message` colors are set. [issues/23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `5px`.",
 					"examples": [
 						"5px"
 					]

@@ -25,7 +25,7 @@ export class CustomDelay {
 	private readonly updateDecorationsThrottled: (stringUri: string)=> void;
 
 	constructor(delay: number) {
-		this.delay = delay;
+		this.delay = Math.max(delay, 500);
 		this.updateDecorationsThrottled = throttle(this.updateDecorations, 200, {
 			leading: false,
 			trailing: true,

@@ -7,4 +7,5 @@
 		"typescript",
 	],
 	"contributions.settings.moveOutPrefix": true,
+	"contributions.settings.includeTypes": false,
 }

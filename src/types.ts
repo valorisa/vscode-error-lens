@@ -87,6 +87,10 @@ export interface ExtensionConfig {
 	 * Prevent scrollbars from appearing for decorations.
 	 */
 	scrollbarHackEnabled: boolean;
+	/**
+	 * When enabled - replaces line breaks in inline diagnostic message with `⏎` sign.
+	 */
+	removeLinebreaks: boolean;
 
 	gutterIconsEnabled: boolean;
 	gutterIconsFollowCursorOverride: boolean;

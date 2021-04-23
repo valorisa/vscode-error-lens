@@ -2,7 +2,7 @@ import { extensionConfig, Global } from 'src/extension';
 import { actuallyUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { updateStatusBarMessage } from 'src/statusBar';
 import { AggregatedByLineDiagnostics } from 'src/types';
-import { truncateString } from 'src/utils';
+import { replaceLinebreaks, truncateString } from 'src/utils';
 import vscode, { Diagnostic, window } from 'vscode';
 
 export function setDecorationStyle(): void {
@@ -245,7 +245,8 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				after: {
 					...decorationRenderOptions.after || {},
 					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-					contentText: extensionConfig.messageEnabled ? truncateString(messagePrefix + diagnostic.message) : '',
+					contentText: extensionConfig.messageEnabled ?
+						truncateString(messagePrefix + (extensionConfig.removeLinebreaks ? replaceLinebreaks(diagnostic.message) : diagnostic.message)) : '',
 				},
 			};
 

@@ -3,3 +3,6 @@ export function truncateString(str: string): string {
 	return str.length > charLimit ? `${str.slice(0, charLimit)}…` : str;
 }
 
+export function replaceLinebreaks(str: string): string {
+	return str.replace(/\n/g, '⏎');
+}

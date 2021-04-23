@@ -347,6 +347,11 @@
 					"default": "#00b7e4",
 					"markdownDescription": "Info color of `circle` gutter icon set."
 				},
+				"errorLens.removeLinebreaks": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "When enabled - replaces line breaks in inline diagnostic message with `⏎` sign."
+				},
 				"errorLens.scrollbarHackEnabled": {
 					"type": "boolean",
 					"default": false,

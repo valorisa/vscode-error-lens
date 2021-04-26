@@ -4,5 +4,5 @@ export function truncateString(str: string): string {
 }
 
 export function replaceLinebreaks(str: string): string {
-	return str.replace(/\n/g, '⏎');
+	return str.replace(/\n/g, ' ');
 }

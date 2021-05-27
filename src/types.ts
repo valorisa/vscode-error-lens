@@ -125,3 +125,16 @@ export interface Gutter {
 	infoIconPath: string;
 	infoIconPathLight: string;
 }
+
+export const enum CommandIds {
+	toggle = 'errorLens.toggle',
+	toggleError = 'errorLens.toggleError',
+	toggleWarning = 'errorLens.toggleWarning',
+	toggleInfo = 'errorLens.toggleInfo',
+	toggleHint = 'errorLens.toggleHint',
+	copyProblemMessage = 'errorLens.copyProblemMessage',
+}
+
+export const enum Constants {
+	EXTENSION_NAME = 'errorLens',
+}

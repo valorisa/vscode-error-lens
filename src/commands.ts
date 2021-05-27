@@ -1,10 +1,10 @@
 import { updateAllDecorations } from 'src/decorations';
-import { disposeEverything, EXTENSION_NAME, Global, updateEverything } from 'src/extension';
-import { AggregatedByLineDiagnostics } from 'src/types';
+import { disposeEverything, Global, updateEverything } from 'src/extension';
+import { AggregatedByLineDiagnostics, CommandIds } from 'src/types';
 import vscode, { commands, ExtensionContext, window } from 'vscode';
 
 export function registerAllCommands(extensionContext: ExtensionContext): void {
-	const disposableToggleErrorLens = commands.registerCommand(`${EXTENSION_NAME}.toggle`, () => {
+	const disposableToggleErrorLens = commands.registerCommand(CommandIds.toggle, () => {
 		Global.errorLensEnabled = !Global.errorLensEnabled;
 
 		if (Global.errorLensEnabled) {
@@ -13,24 +13,24 @@ export function registerAllCommands(extensionContext: ExtensionContext): void {
 			disposeEverything();
 		}
 	});
-	const disposableToggleError = commands.registerCommand(`${EXTENSION_NAME}.toggleError`, () => {
+	const disposableToggleError = commands.registerCommand(CommandIds.toggleError, () => {
 		Global.errorEnabled = !Global.errorEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleWarning = commands.registerCommand(`${EXTENSION_NAME}.toggleWarning`, () => {
+	const disposableToggleWarning = commands.registerCommand(CommandIds.toggleWarning, () => {
 		Global.warningEabled = !Global.warningEabled;
 		updateAllDecorations();
 	});
-	const disposableToggleInfo = commands.registerCommand(`${EXTENSION_NAME}.toggleInfo`, () => {
+	const disposableToggleInfo = commands.registerCommand(CommandIds.toggleInfo, () => {
 		Global.infoEnabled = !Global.infoEnabled;
 		updateAllDecorations();
 	});
-	const disposableToggleHint = commands.registerCommand(`${EXTENSION_NAME}.toggleHint`, () => {
+	const disposableToggleHint = commands.registerCommand(CommandIds.toggleHint, () => {
 		Global.hintEnabled = !Global.hintEnabled;
 		updateAllDecorations();
 	});
 
-	const disposableCopyProblemMessage = commands.registerTextEditorCommand(`${EXTENSION_NAME}.copyProblemMessage`, editor => {
+	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandIds.copyProblemMessage, editor => {
 		const aggregatedDiagnostics: AggregatedByLineDiagnostics = {};
 		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;

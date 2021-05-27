@@ -3,10 +3,9 @@ import { CustomDelay } from 'src/CustomDelay';
 import { setDecorationStyle, updateAllDecorations } from 'src/decorations';
 import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/eventListeners';
 import { createStatusBarItem } from 'src/statusBar';
-import { ExtensionConfig } from 'src/types';
+import { Constants, ExtensionConfig } from 'src/types';
 import vscode, { ExtensionContext, workspace } from 'vscode';
 
-export const EXTENSION_NAME = 'errorLens';
 export let extensionConfig: ExtensionConfig;
 
 /**
@@ -73,14 +72,14 @@ export function activate(extensionContext: ExtensionContext): void {
 	registerAllCommands(extensionContext);
 
 	function onConfigChange(e: vscode.ConfigurationChangeEvent): void {
-		if (!e.affectsConfiguration(EXTENSION_NAME)) {
+		if (!e.affectsConfiguration(Constants.EXTENSION_NAME)) {
 			return;
 		}
 		updateConfigAndEverything();
 	}
 
 	function updateConfigAndEverything(): void {
-		extensionConfig = workspace.getConfiguration(EXTENSION_NAME) as any as ExtensionConfig;
+		extensionConfig = workspace.getConfiguration(Constants.EXTENSION_NAME) as any as ExtensionConfig;
 		disposeEverything();
 		updateEverything();
 	}

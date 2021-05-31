@@ -40,7 +40,11 @@ export class StatusBar {
 			prefix = getAnnotationPrefix(closest.severity);
 		}
 
-		const text = `${prefix}${closest.message}`;
+		let text = `${prefix}${closest.message}`;
+		if (text.includes('\n')) {
+			text = text.split('\n')[0];
+		}
+
 
 		if (this.colorsEnabled) {
 			this.statusBarItem.color = this.statusBarColors[closest.severity];

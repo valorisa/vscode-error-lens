@@ -1,10 +1,13 @@
 import { getAnnotationPrefix } from 'src/decorations';
-import { AggregatedByLineDiagnostics, ExtensionConfig } from 'src/types';
-import { StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
+import { AggregatedByLineDiagnostics, CommandIds, ExtensionConfig } from 'src/types';
+import { Position, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
 
 export class StatusBar {
 	statusBarItem: StatusBarItem;
 	statusBarColors: ThemeColor[] = [];
+	activeMessagePosition: Position = new Position(0, 0);
+	activeMessageText = '';
+	activeMessageSource?: string = '';
 
 	constructor(
 		public readonly isEnabled: boolean,
@@ -17,6 +20,7 @@ export class StatusBar {
 		this.addPrefix = addPrefix;
 
 		this.statusBarItem = window.createStatusBarItem(undefined, -9999);
+		this.statusBarItem.command = CommandIds.statusBarCommand;
 		if (this.isEnabled) {
 			this.statusBarItem.show();
 		}
@@ -34,6 +38,7 @@ export class StatusBar {
 		const ln = editor.selection.active.line;
 		const sorted = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b))[0];
 		const closest = aggregatedDiagnostics[sorted][0];
+		this.activeMessagePosition = closest.range.start;
 		let prefix = '';
 
 		if (this.addPrefix) {
@@ -44,6 +49,8 @@ export class StatusBar {
 		if (text.includes('\n')) {
 			text = text.split('\n')[0];
 		}
+		this.activeMessageText = text;
+		this.activeMessageSource = closest.source;
 
 
 		if (this.colorsEnabled) {

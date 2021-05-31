@@ -60,6 +60,7 @@ export interface ExtensionConfig {
 	statusBarMessageEnabled: boolean;
 	statusBarMessageType: 'activeLine' | 'closestProblem';
 	statusBarColorsEnabled: boolean;
+	statusBarCommand: 'copyMessage' | 'goToLine' | 'goToProblem';
 	/**
 	 * Adds delay before showing diagnostic.
 	 */
@@ -133,6 +134,7 @@ export const enum CommandIds {
 	toggleInfo = 'errorLens.toggleInfo',
 	toggleHint = 'errorLens.toggleHint',
 	copyProblemMessage = 'errorLens.copyProblemMessage',
+	statusBarCommand = 'errorLens.statusBarCommand',
 }
 
 export const enum Constants {

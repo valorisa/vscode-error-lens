@@ -196,6 +196,16 @@
 					],
 					"default": "activeLine"
 				},
+				"errorLens.statusBarCommand": {
+					"type": "string",
+					"markdownDescription": "Pick command that activates on click for Status Bar.",
+					"enum": [
+						"goToProblem",
+						"goToLine",
+						"copyMessage"
+					],
+					"default": "goToProblem"
+				},
 				"errorLens.exclude": {
 					"type": "array",
 					"default": [],

@@ -1,5 +1,5 @@
 import { updateAllDecorations } from 'src/decorations';
-import { disposeEverything, Global, updateEverything } from 'src/extension';
+import { disposeEverything, extensionConfig, Global, updateEverything } from 'src/extension';
 import { AggregatedByLineDiagnostics, CommandIds } from 'src/types';
 import vscode, { commands, ExtensionContext, window } from 'vscode';
 
@@ -52,6 +52,22 @@ export function registerAllCommands(extensionContext: ExtensionContext): void {
 		vscode.env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
-	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage);
+	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandIds.statusBarCommand, async editor => {
+		if (extensionConfig.statusBarCommand === 'goToLine' || extensionConfig.statusBarCommand === 'goToProblem') {
+			const range = new vscode.Range(Global.statusBar.activeMessagePosition, Global.statusBar.activeMessagePosition);
+			editor.selection = new vscode.Selection(range.start, range.end);
+			editor.revealRange(range, vscode.TextEditorRevealType.Default);
+			await commands.executeCommand('workbench.action.focusActiveEditorGroup');
+
+			if (extensionConfig.statusBarCommand === 'goToProblem') {
+				commands.executeCommand('editor.action.marker.next');
+			}
+		} else if (extensionConfig.statusBarCommand === 'copyMessage') {
+			const source = Global.statusBar.activeMessageSource ? `[${Global.statusBar.activeMessageSource}] ` : '';
+			vscode.env.clipboard.writeText(source + Global.statusBar.activeMessageText);
+		}
+	});
+
+	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableStatusBarCommand);
 }
 

@@ -1,3 +1,8 @@
+## 3.2.7 `31 May 2021`
+
+- ✨ Replace linebreaks in inline diagnostics with whitespace
+- ✨ Click on Status Bar Item to go to the problem
+
 ## 3.2.6 `18 Apr 2021`
 
 - ✨ Exclude diagnostics by source `"errorLens.excludeBySource"`

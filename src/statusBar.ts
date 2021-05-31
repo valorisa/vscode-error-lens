@@ -1,44 +1,63 @@
 import { getAnnotationPrefix } from 'src/decorations';
-import { extensionConfig, Global } from 'src/extension';
-import { AggregatedByLineDiagnostics } from 'src/types';
-import vscode, { window } from 'vscode';
+import { AggregatedByLineDiagnostics, ExtensionConfig } from 'src/types';
+import { StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
 
-export function createStatusBarItem(): void {
-	if (extensionConfig.statusBarMessageEnabled) {
-		Global.statusBarItem = window.createStatusBarItem(undefined, -9999);
-		Global.statusBarItem.show();
-	}
-}
+export class StatusBar {
+	statusBarItem: StatusBarItem;
+	statusBarColors: ThemeColor[] = [];
 
-export function updateStatusBarMessage(editor: vscode.TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
-	const keys = Object.keys(aggregatedDiagnostics);
-	if (keys.length === 0) {
-		Global.statusBarItem.text = '';
-		return;
-	}
+	constructor(
+		public readonly isEnabled: boolean,
+		public colorsEnabled: boolean,
+		public readonly addPrefix: boolean,
+		public readonly messageType: ExtensionConfig['statusBarMessageType'],
+	) {
+		this.colorsEnabled = colorsEnabled;
+		this.messageType = messageType;
+		this.addPrefix = addPrefix;
 
-	const ln = editor.selection.active.line;
-	const sorted = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b))[0];
-	const closest = aggregatedDiagnostics[sorted][0];
-	let prefix = '';
-
-	if (extensionConfig.addAnnotationTextPrefixes) {
-		prefix = getAnnotationPrefix(closest.severity);
-	}
-
-	const text = `${prefix}${closest.message}`;
-
-	if (extensionConfig.statusBarColorsEnabled) {
-		Global.statusBarItem.color = Global.statusBarColors[closest.severity];
-	}
-
-	if (extensionConfig.statusBarMessageType === 'closestProblem') {
-		Global.statusBarItem.text = text;
-	} else if (extensionConfig.statusBarMessageType === 'activeLine') {
-		if (closest.range.start.line === ln || closest.range.end.line === ln) {
-			Global.statusBarItem.text = text;
-		} else {
-			Global.statusBarItem.text = '';
+		this.statusBarItem = window.createStatusBarItem(undefined, -9999);
+		if (this.isEnabled) {
+			this.statusBarItem.show();
 		}
+	}
+	updateText(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics) {
+		if (!this.isEnabled) {
+			return;
+		}
+		const keys = Object.keys(aggregatedDiagnostics);
+		if (keys.length === 0) {
+			this.statusBarItem.text = '';
+			return;
+		}
+
+		const ln = editor.selection.active.line;
+		const sorted = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b))[0];
+		const closest = aggregatedDiagnostics[sorted][0];
+		let prefix = '';
+
+		if (this.addPrefix) {
+			prefix = getAnnotationPrefix(closest.severity);
+		}
+
+		const text = `${prefix}${closest.message}`;
+
+		if (this.colorsEnabled) {
+			this.statusBarItem.color = this.statusBarColors[closest.severity];
+		}
+
+		if (this.messageType === 'closestProblem') {
+			this.statusBarItem.text = text;
+		} else if (this.messageType === 'activeLine') {
+			if (closest.range.start.line === ln || closest.range.end.line === ln) {
+				this.statusBarItem.text = text;
+			} else {
+				this.statusBarItem.text = '';
+			}
+		}
+	}
+
+	dispose() {
+		this.statusBarItem.dispose();
 	}
 }

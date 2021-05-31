@@ -1,6 +1,5 @@
 import { extensionConfig, Global } from 'src/extension';
 import { actuallyUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
-import { updateStatusBarMessage } from 'src/statusBar';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
 import vscode, { Diagnostic, window } from 'vscode';
@@ -184,9 +183,7 @@ export function setDecorationStyle(): void {
 	Global.decorationTypeInfo = window.createTextEditorDecorationType(Global.decorationRenderOptionsInfo);
 	Global.decorationTypeHint = window.createTextEditorDecorationType(Global.decorationRenderOptionsHint);
 
-	if (extensionConfig.statusBarMessageEnabled) {
-		Global.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
-	}
+	Global.statusBar.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 }
 
 export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: vscode.Range): void {
@@ -303,9 +300,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 	if (Global.renderGutterIconsAsSeparateDecoration) {
 		actuallyUpdateGutterDecorations(editor, aggregatedDiagnostics);
 	}
-	if (extensionConfig.statusBarMessageEnabled) {
-		updateStatusBarMessage(editor, aggregatedDiagnostics);
-	}
+	Global.statusBar.updateText(editor, aggregatedDiagnostics);
 }
 
 export function updateAllDecorations(): void {

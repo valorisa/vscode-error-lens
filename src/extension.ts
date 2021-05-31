@@ -2,7 +2,7 @@ import { registerAllCommands } from 'src/commands';
 import { CustomDelay } from 'src/CustomDelay';
 import { setDecorationStyle, updateAllDecorations } from 'src/decorations';
 import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/eventListeners';
-import { createStatusBarItem } from 'src/statusBar';
+import { StatusBar } from 'src/StatusBar';
 import { Constants, ExtensionConfig } from 'src/types';
 import vscode, { ExtensionContext, workspace } from 'vscode';
 
@@ -42,8 +42,7 @@ export class Global {
 	static onDidSaveTextDocumentDisposable: vscode.Disposable | undefined;
 	static onDidCursorChangeDisposable: vscode.Disposable | undefined;
 
-	static statusBarItem: vscode.StatusBarItem;
-	static statusBarColors: vscode.ThemeColor[] = [];
+	static statusBar: StatusBar;
 
 	static renderGutterIconsAsSeparateDecoration: boolean;
 	/**
@@ -90,8 +89,9 @@ export function activate(extensionContext: ExtensionContext): void {
 export function updateEverything(): void {
 	updateExclude();
 	Global.renderGutterIconsAsSeparateDecoration = extensionConfig.gutterIconsEnabled && extensionConfig.gutterIconsFollowCursorOverride && extensionConfig.followCursor !== 'allLines';
+	Global.statusBar?.statusBarItem?.dispose();
+	Global.statusBar = new StatusBar(extensionConfig.statusBarMessageEnabled, extensionConfig.statusBarColorsEnabled, extensionConfig.addAnnotationTextPrefixes, extensionConfig.statusBarMessageType);
 	setDecorationStyle();
-	createStatusBarItem();
 	updateConfigEnabledLevels();
 
 	updateAllDecorations();
@@ -165,8 +165,8 @@ export function disposeEverything(): void {
 	if (Global.onDidCursorChangeDisposable) {
 		Global.onDidCursorChangeDisposable.dispose();
 	}
-	if (Global.statusBarItem) {
-		Global.statusBarItem.dispose();
+	if (Global.statusBar?.statusBarItem) {
+		Global.statusBar.statusBarItem.dispose();
 	}
 }
 

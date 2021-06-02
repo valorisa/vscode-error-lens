@@ -365,8 +365,8 @@
 				},
 				"errorLens.removeLinebreaks": {
 					"type": "boolean",
-					"default": false,
-					"markdownDescription": "When enabled - replaces line breaks in inline diagnostic message with `⏎` sign."
+					"default": true,
+					"markdownDescription": "When enabled - replaces line breaks in inline diagnostic message with whitespaces."
 				},
 				"errorLens.scrollbarHackEnabled": {
 					"type": "boolean",

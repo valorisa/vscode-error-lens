@@ -68,6 +68,10 @@ export class StatusBar {
 		}
 	}
 
+	clear() {
+		this.statusBarItem.text = '';
+	}
+
 	dispose() {
 		this.statusBarItem.dispose();
 	}

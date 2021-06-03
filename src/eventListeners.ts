@@ -13,6 +13,8 @@ export function updateChangedActiveTextEditorListener(): void {
 		}
 		if (textEditor) {
 			updateDecorationsForUri(textEditor.document.uri, textEditor);
+		} else {
+			Global.statusBar.clear();
 		}
 	});
 }

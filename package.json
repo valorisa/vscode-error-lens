@@ -219,7 +219,7 @@
 					"items": {
 						"type": "string"
 					},
-					"description": "Specify sources that should not be highlighted (string). Example: `[\"eslint\"]`"
+					"markdownDescription": "Specify sources that should not be highlighted (string). Example: `[\"eslint\"]`"
 				},
 				"errorLens.excludePatterns": {
 					"type": "array",
@@ -307,7 +307,7 @@
 				},
 				"errorLens.gutterIconsFollowCursorOverride": {
 					"type": "boolean",
-					"description": "When enabled and `followCursor` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line.",
+					"markdownDescription": "When enabled and `#errorLens.followCursor#` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line.",
 					"default": true
 				},
 				"errorLens.gutterIconSize": {

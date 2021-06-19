@@ -2,7 +2,7 @@ import { registerAllCommands } from 'src/commands';
 import { CustomDelay } from 'src/CustomDelay';
 import { setDecorationStyle, updateAllDecorations } from 'src/decorations';
 import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/eventListeners';
-import { StatusBar } from 'src/StatusBar';
+import { StatusBar } from 'src/statusBar';
 import { Constants, ExtensionConfig } from 'src/types';
 import vscode, { ExtensionContext, workspace } from 'vscode';
 

@@ -1,5 +1,6 @@
 import { getAnnotationPrefix } from 'src/decorations';
 import { AggregatedByLineDiagnostics, CommandIds, ExtensionConfig } from 'src/types';
+import { replaceLinebreaks } from 'src/utils';
 import { Position, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
 
 export class StatusBar {
@@ -47,7 +48,7 @@ export class StatusBar {
 
 		let text = `${prefix}${closest.message}`;
 		if (text.includes('\n')) {
-			text = text.split('\n')[0];
+			text = replaceLinebreaks(text);
 		}
 		this.activeMessageText = text;
 		this.activeMessageSource = closest.source;
@@ -59,11 +60,14 @@ export class StatusBar {
 
 		if (this.messageType === 'closestProblem') {
 			this.statusBarItem.text = text;
+			this.statusBarItem.tooltip = text;
 		} else if (this.messageType === 'activeLine') {
 			if (closest.range.start.line === ln || closest.range.end.line === ln) {
 				this.statusBarItem.text = text;
+				this.statusBarItem.tooltip = text;
 			} else {
 				this.statusBarItem.text = '';
+				this.statusBarItem.tooltip = '';
 			}
 		}
 	}

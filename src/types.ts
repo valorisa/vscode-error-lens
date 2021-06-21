@@ -89,7 +89,7 @@ export interface ExtensionConfig {
 	 */
 	scrollbarHackEnabled: boolean;
 	/**
-	 * When enabled - replaces line breaks in inline diagnostic message with `⏎` sign.
+	 * When enabled - replaces line breaks in inline diagnostic message with whitespace sign.
 	 */
 	removeLinebreaks: boolean;
 

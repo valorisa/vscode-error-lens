@@ -61,9 +61,11 @@ export function updateCursorChangeListener(): void {
 		let lastPositionLine = 999999;// Unlikely line number
 		Global.onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];
-			if (e.selections.length === 1 &&
-					selection.isEmpty &&
-					lastPositionLine !== selection.active.line) {
+			if (
+				e.selections.length === 1 &&
+				selection.isEmpty &&
+				lastPositionLine !== selection.active.line
+			) {
 				updateDecorationsForUri(e.textEditor.document.uri, e.textEditor, selection);
 				lastPositionLine = e.selections[0].active.line;
 			}

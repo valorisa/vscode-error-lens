@@ -352,7 +352,7 @@ export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDi
 	const diagnostics = vscode.languages.getDiagnostics(uri);
 
 	for (const diagnostic of diagnostics) {
-		if (shoudExcludeDiagnostic(diagnostic)) {
+		if (shouldExcludeDiagnostic(diagnostic)) {
 			continue;
 		}
 
@@ -367,7 +367,7 @@ export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDi
 	return aggregatedDiagnostics;
 }
 
-export function shoudExcludeDiagnostic(diagnostic: Diagnostic) {
+export function shouldExcludeDiagnostic(diagnostic: Diagnostic) {
 	for (const regex of Global.excludeRegexp) {
 		if (regex.test(diagnostic.message)) {
 			return true;

@@ -152,7 +152,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is enabled). For example, emoji: ❗ ⚠ ℹ.",
+					"markdownDescription": "Specify diagnostic message prefixes (when `#errorLens.addAnnotationTextPrefixes#` is enabled). For example, emoji: ❗ ⚠ ℹ.",
 					"default": [
 						"ERROR: ",
 						"WARNING: ",

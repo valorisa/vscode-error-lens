@@ -186,6 +186,11 @@
 					"markdownDescription": "When enabled - use message decoration foreground as color of Status Bar text.",
 					"default": false
 				},
+				"errorLens.statusBarPrefixEnabled": {
+					"type": "boolean",
+					"markdownDescription": "When enabled - add `#errorLens.annotationPrefix#` to Status Bar text.",
+					"default": false
+				},
 				"errorLens.statusBarMessageType": {
 					"type": "string",
 					"markdownDescription": "Pick what to show in Status Bar: closest message or only message for the active line.",

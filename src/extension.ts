@@ -115,7 +115,11 @@ export function updateEverything() {
 	updateExclude();
 	Global.renderGutterIconsAsSeparateDecoration = extensionConfig.gutterIconsEnabled && extensionConfig.gutterIconsFollowCursorOverride && extensionConfig.followCursor !== 'allLines';
 	Global.statusBar?.dispose();
-	Global.statusBar = new StatusBar(extensionConfig.statusBarMessageEnabled, extensionConfig.statusBarColorsEnabled, extensionConfig.addAnnotationTextPrefixes, extensionConfig.statusBarMessageType);
+	Global.statusBar = new StatusBar(
+		extensionConfig.statusBarMessageEnabled,
+		extensionConfig.statusBarColorsEnabled,
+		extensionConfig.addAnnotationTextPrefixes || extensionConfig.statusBarPrefixEnabled,
+		extensionConfig.statusBarMessageType);
 	setDecorationStyle();
 	updateConfigEnabledLevels();
 

@@ -92,6 +92,10 @@ export type ExtensionConfig = Readonly<{
 	 */
 	statusBarCommand: 'copyMessage' | 'goToLine' | 'goToProblem';
 	/**
+	 * When enabled - add `#errorLens.annotationPrefix#` to Status Bar text.
+	 */
+	statusBarPrefixEnabled: boolean;
+	/**
 	 * Adds delay before showing diagnostic.
 	 */
 	delay?: number;

@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { isSeverityEnabled } from 'src/decorations';
 import { extensionConfig, Global } from 'src/extension';
 import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
 import vscode from 'vscode';
@@ -93,17 +94,10 @@ export function actuallyUpdateGutterDecorations(editor: vscode.TextEditor, aggre
 
 	for (const key in aggregatedDiagnostics) {
 		const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-		let addErrorLens = false;
 		const diagnostic = aggregatedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		switch (severity) {
-			case 0: addErrorLens = Global.configErrorEnabled && Global.errorEnabled; break;
-			case 1: addErrorLens = Global.configWarningEnabled && Global.warningEabled; break;
-			case 2: addErrorLens = Global.configInfoEnabled && Global.infoEnabled; break;
-			case 3: addErrorLens = Global.configHintEnabled && Global.hintEnabled; break;
-		}
-		if (addErrorLens) {
+		if (isSeverityEnabled(severity)) {
 			const diagnosticDecorationOptions: vscode.DecorationOptions = {
 				range: diagnostic.range,
 			};

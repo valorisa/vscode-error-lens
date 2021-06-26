@@ -206,19 +206,10 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 
 	for (const key in aggregatedDiagnostics) {
 		const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-
-		let addErrorLens = false;
 		const diagnostic = aggregatedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		switch (severity) {
-			case 0: addErrorLens = Global.configErrorEnabled && Global.errorEnabled; break;
-			case 1: addErrorLens = Global.configWarningEnabled && Global.warningEabled; break;
-			case 2: addErrorLens = Global.configInfoEnabled && Global.infoEnabled; break;
-			case 3: addErrorLens = Global.configHintEnabled && Global.hintEnabled; break;
-		}
-
-		if (addErrorLens) {
+		if (isSeverityEnabled(severity)) {
 			let messagePrefix = '';
 			if (extensionConfig.addNumberOfDiagnostics && aggregatedDiagnostic.length > 1) {
 				messagePrefix += `[1/${aggregatedDiagnostic.length}] `;

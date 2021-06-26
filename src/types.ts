@@ -56,10 +56,21 @@ export interface ExtensionConfig {
 	 * Glob matching files that should not be decorated. Matches against absolute file path.
 	 */
 	excludePatterns: string[];
-
+	/**
+	 * Whether to show status bar item or not. Default is **false**.
+	 */
 	statusBarMessageEnabled: boolean;
-	statusBarMessageType: 'activeLine' | 'closestProblem';
+	/**
+	 * Pick what to show in Status Bar: closest message or only message for the active line.
+	 */
+	statusBarMessageType: 'activeLine' | 'closestProblem' | 'closestSeverity';
+	/**
+	 * Whether to use color for status bar items or not.
+	 */
 	statusBarColorsEnabled: boolean;
+	/**
+	 * Command to execute when clicking on status bar item.
+	 */
 	statusBarCommand: 'copyMessage' | 'goToLine' | 'goToProblem';
 	/**
 	 * Adds delay before showing diagnostic.
@@ -89,7 +100,7 @@ export interface ExtensionConfig {
 	 */
 	scrollbarHackEnabled: boolean;
 	/**
-	 * When enabled - replaces line breaks in inline diagnostic message with whitespace sign.
+	 * When enabled - replaces line breaks in inline diagnostic message with the whitespace ` ` sign.
 	 */
 	removeLinebreaks: boolean;
 

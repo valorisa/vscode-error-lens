@@ -78,6 +78,17 @@ export class StatusBar {
 					}
 				}
 			}
+		} else if (this.messageType === 'closestSeverity') {
+			const allDiagnosticsSorted = keys.map(key => aggregatedDiagnostics[key]).flat().sort((d1, d2) => {
+				const severityScore = d1.severity > d2.severity ? d1.severity * 1e4 : 0;
+				return severityScore + (Math.abs(ln - d1.range.start.line) - Math.abs(ln - d2.range.start.line));
+			});
+			for (const diag of allDiagnosticsSorted) {
+				if (isSeverityEnabled(diag.severity)) {
+					diagnostic = diag;
+					break;
+				}
+			}
 		}
 
 		if (!diagnostic) {

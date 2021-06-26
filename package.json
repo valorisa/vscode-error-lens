@@ -191,7 +191,13 @@
 					"markdownDescription": "Pick what to show in Status Bar: closest message or only message for the active line.",
 					"enum": [
 						"closestProblem",
+						"closestSeverity",
 						"activeLine"
+					],
+					"enumDescriptions": [
+						"Show closest to the cursor diagnostic.",
+						"Show closest to the cursor diagnostic (sorted by severity e.g. error will be shown before warning even if it's farther from the cursor).",
+						"Show only diagnostic that is on the same line as the cursor."
 					],
 					"default": "activeLine"
 				},

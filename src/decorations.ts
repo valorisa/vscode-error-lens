@@ -382,7 +382,23 @@ export function shouldExcludeDiagnostic(diagnostic: Diagnostic) {
 	}
 	return false;
 }
-
+/**
+ * Add user defined prefix to diagnostics.
+ */
 export function getAnnotationPrefix(severity: number): string {
 	return extensionConfig.annotationPrefix[severity] ?? '';
+}
+/**
+ * `true` when diagnostic enabled in config & in temp variable
+ */
+export function isSeverityEnabled(severity: number) {
+	if (
+		severity === 0 && Global.configErrorEnabled && Global.errorEnabled ||
+		severity === 1 && Global.configWarningEnabled && Global.warningEabled ||
+		severity === 2 && Global.configInfoEnabled && Global.infoEnabled ||
+		severity === 3 && Global.configHintEnabled && Global.hintEnabled
+	) {
+		return true;
+	}
+	return false;
 }

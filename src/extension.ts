@@ -89,7 +89,7 @@ export function activate(extensionContext: ExtensionContext): void {
 export function updateEverything(): void {
 	updateExclude();
 	Global.renderGutterIconsAsSeparateDecoration = extensionConfig.gutterIconsEnabled && extensionConfig.gutterIconsFollowCursorOverride && extensionConfig.followCursor !== 'allLines';
-	Global.statusBar?.statusBarItem?.dispose();
+	Global.statusBar?.dispose();
 	Global.statusBar = new StatusBar(extensionConfig.statusBarMessageEnabled, extensionConfig.statusBarColorsEnabled, extensionConfig.addAnnotationTextPrefixes, extensionConfig.statusBarMessageType);
 	setDecorationStyle();
 	updateConfigEnabledLevels();
@@ -165,9 +165,7 @@ export function disposeEverything(): void {
 	if (Global.onDidCursorChangeDisposable) {
 		Global.onDidCursorChangeDisposable.dispose();
 	}
-	if (Global.statusBar?.statusBarItem) {
-		Global.statusBar.statusBarItem.dispose();
-	}
+	Global.statusBar?.dispose();
 }
 
 export function deactivate(): void { }

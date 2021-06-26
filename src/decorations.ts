@@ -1,10 +1,12 @@
 import { extensionConfig, Global } from 'src/extension';
-import { actuallyUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
+import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
-import vscode, { Diagnostic, window } from 'vscode';
-
-export function setDecorationStyle(): void {
+import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window } from 'vscode';
+/**
+ * Update all decoration styles: editor, gutter, status bar
+ */
+export function setDecorationStyle() {
 	let gutter;
 	if (extensionConfig.gutterIconsEnabled) {
 		gutter = getGutterStyles(Global.extensionContext);
@@ -39,34 +41,34 @@ export function setDecorationStyle(): void {
 		}
 	}
 
-	const errorBackground = new vscode.ThemeColor('errorLens.errorBackground');
-	const errorBackgroundLight = new vscode.ThemeColor('errorLens.errorBackgroundLight');
-	const errorForeground = new vscode.ThemeColor('errorLens.errorForeground');
-	const errorForegroundLight = new vscode.ThemeColor('errorLens.errorForegroundLight');
-	const errorMessageBackground = new vscode.ThemeColor('errorLens.errorMessageBackground');
+	const errorBackground = new ThemeColor('errorLens.errorBackground');
+	const errorBackgroundLight = new ThemeColor('errorLens.errorBackgroundLight');
+	const errorForeground = new ThemeColor('errorLens.errorForeground');
+	const errorForegroundLight = new ThemeColor('errorLens.errorForegroundLight');
+	const errorMessageBackground = new ThemeColor('errorLens.errorMessageBackground');
 
-	const warningBackground = new vscode.ThemeColor('errorLens.warningBackground');
-	const warningBackgroundLight = new vscode.ThemeColor('errorLens.warningBackgroundLight');
-	const warningForeground = new vscode.ThemeColor('errorLens.warningForeground');
-	const warningForegroundLight = new vscode.ThemeColor('errorLens.warningForegroundLight');
-	const warningMessageBackground = new vscode.ThemeColor('errorLens.warningMessageBackground');
+	const warningBackground = new ThemeColor('errorLens.warningBackground');
+	const warningBackgroundLight = new ThemeColor('errorLens.warningBackgroundLight');
+	const warningForeground = new ThemeColor('errorLens.warningForeground');
+	const warningForegroundLight = new ThemeColor('errorLens.warningForegroundLight');
+	const warningMessageBackground = new ThemeColor('errorLens.warningMessageBackground');
 
-	const infoBackground = new vscode.ThemeColor('errorLens.infoBackground');
-	const infoBackgroundLight = new vscode.ThemeColor('errorLens.infoBackgroundLight');
-	const infoForeground = new vscode.ThemeColor('errorLens.infoForeground');
-	const infoForegroundLight = new vscode.ThemeColor('errorLens.infoForegroundLight');
-	const infoMessageBackground = new vscode.ThemeColor('errorLens.infoMessageBackground');
+	const infoBackground = new ThemeColor('errorLens.infoBackground');
+	const infoBackgroundLight = new ThemeColor('errorLens.infoBackgroundLight');
+	const infoForeground = new ThemeColor('errorLens.infoForeground');
+	const infoForegroundLight = new ThemeColor('errorLens.infoForegroundLight');
+	const infoMessageBackground = new ThemeColor('errorLens.infoMessageBackground');
 
-	const hintBackground = new vscode.ThemeColor('errorLens.hintBackground');
-	const hintBackgroundLight = new vscode.ThemeColor('errorLens.hintBackgroundLight');
-	const hintForeground = new vscode.ThemeColor('errorLens.hintForeground');
-	const hintForegroundLight = new vscode.ThemeColor('errorLens.hintForegroundLight');
-	const hintMessageBackground = new vscode.ThemeColor('errorLens.hintMessageBackground');
+	const hintBackground = new ThemeColor('errorLens.hintBackground');
+	const hintBackgroundLight = new ThemeColor('errorLens.hintBackgroundLight');
+	const hintForeground = new ThemeColor('errorLens.hintForeground');
+	const hintForegroundLight = new ThemeColor('errorLens.hintForegroundLight');
+	const hintMessageBackground = new ThemeColor('errorLens.hintMessageBackground');
 
-	const statusBarErrorForeground = new vscode.ThemeColor('errorLens.statusBarErrorForeground');
-	const statusBarWarningForeground = new vscode.ThemeColor('errorLens.statusBarWarningForeground');
-	const statusBarInfoForeground = new vscode.ThemeColor('errorLens.statusBarInfoForeground');
-	const statusBarHintForeground = new vscode.ThemeColor('errorLens.statusBarHintForeground');
+	const statusBarErrorForeground = new ThemeColor('errorLens.statusBarErrorForeground');
+	const statusBarWarningForeground = new ThemeColor('errorLens.statusBarWarningForeground');
+	const statusBarInfoForeground = new ThemeColor('errorLens.statusBarInfoForeground');
+	const statusBarHintForeground = new ThemeColor('errorLens.statusBarHintForeground');
 
 
 	const onlyDigitsRegExp = /^\d+$/;
@@ -77,7 +79,7 @@ export function setDecorationStyle(): void {
 	const borderRadius = `border-radius: ${extensionConfig.borderRadius || '0'}`;
 	const scrollbarHack = extensionConfig.scrollbarHackEnabled ? 'position:absolute;pointer-events:none' : '';
 
-	const afterProps: vscode.ThemableDecorationAttachmentRenderOptions = {
+	const afterProps: ThemableDecorationAttachmentRenderOptions = {
 		fontStyle: extensionConfig.fontStyleItalic ? 'italic' : 'normal',
 		fontWeight: extensionConfig.fontWeight,
 		textDecoration: `none;${fontFamily};${fontSize};${padding};${margin};${borderRadius};${scrollbarHack}`,
@@ -185,12 +187,14 @@ export function setDecorationStyle(): void {
 
 	Global.statusBar.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 }
-
-export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: vscode.Range): void {
-	const decorationOptionsError: vscode.DecorationOptions[] = [];
-	const decorationOptionsWarning: vscode.DecorationOptions[] = [];
-	const decorationOptionsInfo: vscode.DecorationOptions[] = [];
-	const decorationOptionsHint: vscode.DecorationOptions[] = [];
+/**
+ * Actually apply decorations for editor.
+ */
+export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: Range) {
+	const decorationOptionsError: DecorationOptions[] = [];
+	const decorationOptionsWarning: DecorationOptions[] = [];
+	const decorationOptionsInfo: DecorationOptions[] = [];
+	const decorationOptionsHint: DecorationOptions[] = [];
 
 	let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
 	if (extensionConfig.followCursor === 'closestProblem') {
@@ -217,8 +221,15 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 			if (extensionConfig.addAnnotationTextPrefixes) {
 				messagePrefix += getAnnotationPrefix(severity);
 			}
-
-			let decorationRenderOptions: vscode.DecorationRenderOptions = {};
+			/**
+			 * Usually, it's enough to use `decoration type`,
+			 * but decorations from different extensions can conflict.
+			 * This code puts global `decoration type` options into `decoration instance` options,
+			 * which is not great for perf, but probably the only workaround.
+			 *
+			 * https://github.com/usernamehw/vscode-error-lens/issues/25
+			 */
+			let decorationRenderOptions: DecorationRenderOptions = {};
 			switch (severity) {
 				case 0: decorationRenderOptions = Global.decorationRenderOptionsError; break;
 				case 1: decorationRenderOptions = Global.decorationRenderOptionsWarning; break;
@@ -226,9 +237,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				case 3: decorationRenderOptions = Global.decorationRenderOptionsHint; break;
 			}
 
-			// Generate a DecorationInstanceRenderOptions object which specifies the text which will be rendered
-			// after the source-code line in the editor
-			const decInstanceRenderOptions: vscode.DecorationInstanceRenderOptions = {
+			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 				...decorationRenderOptions,
 				after: {
 					...decorationRenderOptions.after || {},
@@ -238,7 +247,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				},
 			};
 
-			let messageRange: vscode.Range | undefined;
+			let messageRange: Range | undefined;
 			if (extensionConfig.followCursor === 'allLines') {
 				// Default value (most used)
 				messageRange = diagnostic.range;
@@ -269,7 +278,7 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 				}
 			}
 
-			const diagnosticDecorationOptions: vscode.DecorationOptions = {
+			const diagnosticDecorationOptions: DecorationOptions = {
 				range: messageRange,
 				renderOptions: decInstanceRenderOptions,
 			};
@@ -289,18 +298,20 @@ export function actuallyUpdateDecorations(editor: vscode.TextEditor, aggregatedD
 	editor.setDecorations(Global.decorationTypeHint, decorationOptionsHint);
 
 	if (Global.renderGutterIconsAsSeparateDecoration) {
-		actuallyUpdateGutterDecorations(editor, aggregatedDiagnostics);
+		doUpdateGutterDecorations(editor, aggregatedDiagnostics);
 	}
 	Global.statusBar.updateText(editor, aggregatedDiagnostics);
 }
 
-export function updateAllDecorations(): void {
+export function updateDecorationsForAllVisibleEditors() {
 	for (const editor of window.visibleTextEditors) {
 		updateDecorationsForUri(editor.document.uri, editor);
 	}
 }
-
-export function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vscode.TextEditor, range?: vscode.Range): void {
+/**
+ * Update decorations for one editor.
+ */
+export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, range?: Range) {
 	if (editor === undefined) {
 		editor = window.activeTextEditor;
 	}
@@ -314,33 +325,36 @@ export function updateDecorationsForUri(uriToDecorate: vscode.Uri, editor?: vsco
 
 	if (Global.excludePatterns) {
 		for (const pattern of Global.excludePatterns) {
-			if (vscode.languages.match(pattern, editor.document) !== 0) {
+			if (languages.match(pattern, editor.document) !== 0) {
 				return;
 			}
 		}
 	}
 
-	actuallyUpdateDecorations(editor, getDiagnosticAndGroupByLine(uriToDecorate), range);
+	doUpdateDecorations(editor, getDiagnosticAndGroupByLine(uriToDecorate), range);
 }
 
-// #region
-// The aggregatedDiagnostics object will contain one or more objects, each object being keyed by "N",
-// where N is the source line where one or more diagnostics are being reported.
-// Each object which is keyed by "N" will contain one or more arrayDiagnostics[] array of objects.
-// This facilitates gathering info about lines which contain more than one diagnostic.
-// {
-//     67: [
-//         <vscode.Diagnostic #1>,
-//         <vscode.Diagnostic #2>
-//     ],
-//     93: [
-//         <vscode.Diagnostic #1>
-//     ]
-// };
-// #endregion
-export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDiagnostics {
+/**
+ * The aggregatedDiagnostics object will contain one or more objects, each object being keyed by `N`, where `N` is the line number where one or more diagnostics are being reported.
+ *
+ * Each object which is keyed by `N` will contain one or more `arrayDiagnostics[]` array of objects.
+ * This facilitates gathering info about lines which contain more than one diagnostic.
+ *
+ * ```json
+ * {
+ *   67: [
+ *     <Diagnostic #1>,
+ *     <Diagnostic #2>
+ *   ],
+ *   93: [
+ *     <Diagnostic #1>
+ *   ]
+ * }
+ * ```
+ */
+export function getDiagnosticAndGroupByLine(uri: Uri): AggregatedByLineDiagnostics {
 	const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
-	const diagnostics = vscode.languages.getDiagnostics(uri);
+	const diagnostics = languages.getDiagnostics(uri);
 
 	for (const diagnostic of diagnostics) {
 		if (shouldExcludeDiagnostic(diagnostic)) {
@@ -357,7 +371,9 @@ export function getDiagnosticAndGroupByLine(uri: vscode.Uri): AggregatedByLineDi
 	}
 	return aggregatedDiagnostics;
 }
-
+/**
+ * Check multiple exclude sources if the diagnostic should not be shown.
+ */
 export function shouldExcludeDiagnostic(diagnostic: Diagnostic) {
 	for (const regex of Global.excludeRegexp) {
 		if (regex.test(diagnostic.message)) {

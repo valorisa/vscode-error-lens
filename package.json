@@ -78,7 +78,7 @@
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",
-					"description": "Font family of message. If the new font breaks layout - try to use smaller fontSize."
+					"description": "Font family of inline message."
 				},
 				"errorLens.fontWeight": {
 					"type": "string",
@@ -96,22 +96,22 @@
 						"900"
 					],
 					"default": "normal",
-					"markdownDescription": "Font Weight of message.`\"normal\"` is alias for 400, `\"bold\"` is alias for 700)"
+					"markdownDescription": "Font weight of inline message. `\"normal\"` is alias for 400, `\"bold\"` is alias for 700)."
 				},
 				"errorLens.fontStyleItalic": {
 					"type": "boolean",
 					"default": false,
-					"description": "When enabled - shows message in italic."
+					"description": "When enabled - shows inline message in italic font style."
 				},
 				"errorLens.fontSize": {
 					"type": "string",
 					"default": "",
-					"description": "Font size of message (CSS units)."
+					"description": "Font size of inline message (CSS units)."
 				},
 				"errorLens.margin": {
 					"type": "string",
 					"default": "4ch",
-					"description": "Distance between the end of the line and the message (CSS units)."
+					"description": "Distance between the last word on the line and the start of inline message (CSS units)."
 				},
 				"errorLens.padding": {
 					"type": "string",
@@ -278,7 +278,7 @@
 				},
 				"errorLens.onSave": {
 					"type": "boolean",
-					"description": "When enabled - updates decorations only on document save.",
+					"description": "When enabled - updates decorations only on document save (manual).",
 					"default": false
 				},
 				"errorLens.onSaveTimeout": {

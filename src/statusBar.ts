@@ -2,7 +2,9 @@ import { getAnnotationPrefix, isSeverityEnabled } from 'src/decorations';
 import { AggregatedByLineDiagnostics, CommandIds, ExtensionConfig } from 'src/types';
 import { replaceLinebreaks } from 'src/utils';
 import { Diagnostic, Position, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
-
+/**
+ * Handle status bar updates.
+ */
 export class StatusBar {
 	/**
 	 * Status bar item reference.
@@ -118,12 +120,16 @@ export class StatusBar {
 		this.statusBarItem.text = text;
 		this.statusBarItem.tooltip = text;
 	}
-
+	/**
+	 * Clear status bar message.
+	 */
 	clear() {
 		this.statusBarItem.text = '';
 		this.statusBarItem.tooltip = '';
 	}
-
+	/**
+	 * Dispose status bar item.
+	 */
 	dispose() {
 		this.statusBarItem.dispose();
 	}

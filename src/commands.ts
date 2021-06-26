@@ -1,9 +1,11 @@
-import { updateAllDecorations } from 'src/decorations';
+import { updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { disposeEverything, extensionConfig, Global, updateEverything } from 'src/extension';
 import { AggregatedByLineDiagnostics, CommandIds } from 'src/types';
-import vscode, { commands, ExtensionContext, window } from 'vscode';
-
-export function registerAllCommands(extensionContext: ExtensionContext): void {
+import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window } from 'vscode';
+/**
+ * Register all commands contributed by this extension.
+ */
+export function registerAllCommands(extensionContext: ExtensionContext) {
 	const disposableToggleErrorLens = commands.registerCommand(CommandIds.toggle, () => {
 		Global.errorLensEnabled = !Global.errorLensEnabled;
 
@@ -15,24 +17,24 @@ export function registerAllCommands(extensionContext: ExtensionContext): void {
 	});
 	const disposableToggleError = commands.registerCommand(CommandIds.toggleError, () => {
 		Global.errorEnabled = !Global.errorEnabled;
-		updateAllDecorations();
+		updateDecorationsForAllVisibleEditors();
 	});
 	const disposableToggleWarning = commands.registerCommand(CommandIds.toggleWarning, () => {
 		Global.warningEabled = !Global.warningEabled;
-		updateAllDecorations();
+		updateDecorationsForAllVisibleEditors();
 	});
 	const disposableToggleInfo = commands.registerCommand(CommandIds.toggleInfo, () => {
 		Global.infoEnabled = !Global.infoEnabled;
-		updateAllDecorations();
+		updateDecorationsForAllVisibleEditors();
 	});
 	const disposableToggleHint = commands.registerCommand(CommandIds.toggleHint, () => {
 		Global.hintEnabled = !Global.hintEnabled;
-		updateAllDecorations();
+		updateDecorationsForAllVisibleEditors();
 	});
 
 	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandIds.copyProblemMessage, editor => {
 		const aggregatedDiagnostics: AggregatedByLineDiagnostics = {};
-		for (const diagnostic of vscode.languages.getDiagnostics(editor.document.uri)) {
+		for (const diagnostic of languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;
 
 			if (aggregatedDiagnostics[key]) {
@@ -49,14 +51,14 @@ export function registerAllCommands(extensionContext: ExtensionContext): void {
 		}
 		const renderedDiagnostic = diagnosticAtActiveLineNumber.sort((a, b) => a.severity - b.severity)[0];
 		const source = renderedDiagnostic.source ? `[${renderedDiagnostic.source}] ` : '';
-		vscode.env.clipboard.writeText(source + renderedDiagnostic.message);
+		env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
 	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandIds.statusBarCommand, async editor => {
 		if (extensionConfig.statusBarCommand === 'goToLine' || extensionConfig.statusBarCommand === 'goToProblem') {
-			const range = new vscode.Range(Global.statusBar.activeMessagePosition, Global.statusBar.activeMessagePosition);
-			editor.selection = new vscode.Selection(range.start, range.end);
-			editor.revealRange(range, vscode.TextEditorRevealType.Default);
+			const range = new Range(Global.statusBar.activeMessagePosition, Global.statusBar.activeMessagePosition);
+			editor.selection = new Selection(range.start, range.end);
+			editor.revealRange(range, TextEditorRevealType.Default);
 			await commands.executeCommand('workbench.action.focusActiveEditorGroup');
 
 			if (extensionConfig.statusBarCommand === 'goToProblem') {
@@ -64,7 +66,7 @@ export function registerAllCommands(extensionContext: ExtensionContext): void {
 			}
 		} else if (extensionConfig.statusBarCommand === 'copyMessage') {
 			const source = Global.statusBar.activeMessageSource ? `[${Global.statusBar.activeMessageSource}] ` : '';
-			vscode.env.clipboard.writeText(source + Global.statusBar.activeMessageText);
+			env.clipboard.writeText(source + Global.statusBar.activeMessageText);
 		}
 	});
 

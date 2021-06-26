@@ -1,12 +1,12 @@
 import throttle from 'lodash/throttle';
-import { actuallyUpdateDecorations, shouldExcludeDiagnostic } from 'src/decorations';
+import { doUpdateDecorations, shouldExcludeDiagnostic } from 'src/decorations';
 import { Global } from 'src/extension';
 import { AggregatedByLineDiagnostics } from 'src/types';
-import vscode from 'vscode';
+import { Diagnostic, DiagnosticChangeEvent, languages, Uri, window } from 'vscode';
 
 interface CachedDiagnostic {
 	[stringUri: string]: {
-		[lnmessage: string]: vscode.Diagnostic;
+		[lnmessage: string]: Diagnostic;
 	};
 }
 /**
@@ -32,13 +32,13 @@ export class CustomDelay {
 		});
 	}
 
-	static convertDiagnosticToId(diagnostic: vscode.Diagnostic): string { // TODO: delay happens with crash?
+	static convertDiagnosticToId(diagnostic: Diagnostic): string { // TODO: delay happens with crash?
 		return `${diagnostic.range.start.line}${diagnostic.message}`;
 	}
 
-	updateCachedDiagnosticForUri = (uri: vscode.Uri): void => {
+	updateCachedDiagnosticForUri = (uri: Uri) => {
 		const stringUri = uri.toString();
-		const diagnosticForUri = vscode.languages.getDiagnostics(uri);
+		const diagnosticForUri = languages.getDiagnostics(uri);
 		const cachedDiagnosticsForUri = this.cachedDiagnostics[stringUri];
 		const transformed: CachedDiagnostic = {
 			[stringUri]: {},
@@ -70,7 +70,7 @@ export class CustomDelay {
 		}
 	};
 
-	onDiagnosticChange = (event: vscode.DiagnosticChangeEvent): void => {
+	onDiagnosticChange = (event: DiagnosticChangeEvent) => {
 		if (!event.uris.length) {
 			for (const key in this.cachedDiagnostics) {
 				this.cachedDiagnostics[key] = {};
@@ -82,14 +82,14 @@ export class CustomDelay {
 		}
 	};
 
-	removeItem = (stringUri: string, key: string): void => {
+	removeItem = (stringUri: string, key: string) => {
 		delete this.cachedDiagnostics[stringUri][key];
 		this.updateDecorationsThrottled(stringUri);
 	};
-	addItem = (uri: vscode.Uri, stringUri: string, key: string, diagnostic: vscode.Diagnostic): void => {
+	addItem = (uri: Uri, stringUri: string, key: string, diagnostic: Diagnostic) => {
 		setTimeout(() => {
 			// Revalidate if the diagnostic actually exists at the end of the timer
-			const diagnosticForUri = vscode.languages.getDiagnostics(uri);
+			const diagnosticForUri = languages.getDiagnostics(uri);
 			const transformed: CachedDiagnostic = {
 				[stringUri]: {},
 			};
@@ -103,17 +103,17 @@ export class CustomDelay {
 			this.updateDecorationsThrottled(stringUri);
 		}, this.delay);
 	};
-	updateDecorations = (stringUri: string): void => {
-		for (const editor of vscode.window.visibleTextEditors) {
+	updateDecorations = (stringUri: string) => {
+		for (const editor of window.visibleTextEditors) {
 			if (editor.document.uri.toString() === stringUri) {
 				if (Global.excludePatterns) {
 					for (const pattern of Global.excludePatterns) {
-						if (vscode.languages.match(pattern, editor.document) !== 0) {
+						if (languages.match(pattern, editor.document) !== 0) {
 							return;
 						}
 					}
 				}
-				actuallyUpdateDecorations(editor, this.groupByLine(this.cachedDiagnostics[stringUri]));
+				doUpdateDecorations(editor, this.groupByLine(this.cachedDiagnostics[stringUri]));
 			}
 		}
 	};

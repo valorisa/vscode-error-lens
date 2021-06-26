@@ -1,6 +1,6 @@
-import vscode from 'vscode';
+import { Diagnostic } from 'vscode';
 
-export interface ExtensionConfig {
+export type ExtensionConfig = Readonly<{
 	/**
 	 * Overwrite gutter items for light theme
 	 */
@@ -13,14 +13,33 @@ export interface ExtensionConfig {
 		warningGutterIconColor: string;
 		infoGutterIconColor: string;
 	};
-
+	/**
+	 * Font family of inline message.
+	 */
 	fontFamily: string;
+	/**
+	 * Font weight of inline message.
+	 */
 	fontWeight: string;
+	/**
+	 * Font size of inline message
+	 */
 	fontSize: string;
+	/**
+	 * When enabled - shows inline message in italic font style.
+	 */
 	fontStyleItalic: boolean;
-
+	/**
+	 * Distance between the last word on the line and the start of inline message.
+	 */
 	margin: string;
+	/**
+	 * Inner margin of the inline message.
+	 */
 	padding: string;
+	/**
+	 * Border radius of the inline message.
+	 */
 	borderRadius: string;
 
 	/**
@@ -92,7 +111,7 @@ export interface ExtensionConfig {
 	 */
 	onSave: boolean;
 	/**
-	 * Time period that used for showing decorations after the document save.
+	 * Time period that used for showing decorations after the document save (manual).
 	 */
 	onSaveTimeout: number;
 	/**
@@ -116,13 +135,13 @@ export interface ExtensionConfig {
 	errorGutterIconColor: string;
 	warningGutterIconColor: string;
 	infoGutterIconColor: string;
-}
+}>;
 
 export type GutterIconSet = 'borderless' | 'circle' | 'default' | 'defaultOutline';
 export type FollowCursor = 'activeLine' | 'allLines' | 'closestProblem';
 
 export interface AggregatedByLineDiagnostics {
-	[lineNumber: string]: vscode.Diagnostic[];
+	[lineNumber: string]: Diagnostic[];
 }
 
 export interface Gutter {
@@ -137,7 +156,9 @@ export interface Gutter {
 	infoIconPath: string;
 	infoIconPathLight: string;
 }
-
+/**
+ * All command ids contributed by this extensions.
+ */
 export const enum CommandIds {
 	toggle = 'errorLens.toggle',
 	toggleError = 'errorLens.toggleError',
@@ -149,5 +170,12 @@ export const enum CommandIds {
 }
 
 export const enum Constants {
+	/**
+	 * Not really this extension's name. In `package.json` it's `errorlens`.
+	 *
+	 * Extension id is derived from it: `usernamehw.errorlens`.
+	 *
+	 * But `errorLens` is used as a prefix for commands, settings, colors (everything, basically).
+	 */
 	EXTENSION_NAME = 'errorLens',
 }

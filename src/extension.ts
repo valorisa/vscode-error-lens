@@ -118,7 +118,6 @@ export function updateEverything() {
 	Global.statusBar = new StatusBar(
 		extensionConfig.statusBarMessageEnabled,
 		extensionConfig.statusBarColorsEnabled,
-		extensionConfig.addAnnotationTextPrefixes || extensionConfig.statusBarPrefixEnabled,
 		extensionConfig.statusBarMessageType);
 	setDecorationStyle();
 	updateConfigEnabledLevels();

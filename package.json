@@ -147,12 +147,32 @@
 						"info"
 					]
 				},
+				"errorLens.messageTemplate": {
+					"type": "string",
+					"default": "$message",
+					"markdownDescription": "Template used for all inline messages. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
+				},
+				"errorLens.severityText": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "Replaces `$severity` variable in `#errorLens.messageTemplate#`.",
+					"default": [
+						"ERROR",
+						"WARNING",
+						"INFO",
+						"HINT"
+					],
+					"maxItems": 4
+				},
 				"errorLens.annotationPrefix": {
 					"type": "array",
 					"items": {
 						"type": "string"
 					},
 					"markdownDescription": "Specify diagnostic message prefixes (when `#errorLens.addAnnotationTextPrefixes#` is enabled). For example, emoji: ❗ ⚠ ℹ.",
+					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.severityText#` & `#errorLens.messageTemplate#`.\n\nhttps://github.com/usernamehw/vscode-error-lens/issues/92",
 					"default": [
 						"ERROR: ",
 						"WARNING: ",
@@ -164,11 +184,13 @@
 				"errorLens.addAnnotationTextPrefixes": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - prepends diagnostic severity ('ERROR:', 'WARNING:' etc) to the message. (Prefixes can be configured with `annotationPrefix` setting).",
+					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`.\n\nhttps://github.com/usernamehw/vscode-error-lens/issues/92",
 					"default": false
 				},
 				"errorLens.addNumberOfDiagnostics": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.",
+					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`.\n\nhttps://github.com/usernamehw/vscode-error-lens/issues/92",
 					"default": false
 				},
 				"errorLens.messageEnabled": {
@@ -184,11 +206,6 @@
 				"errorLens.statusBarColorsEnabled": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - use message decoration foreground as color of Status Bar text.",
-					"default": false
-				},
-				"errorLens.statusBarPrefixEnabled": {
-					"type": "boolean",
-					"markdownDescription": "When enabled - add `#errorLens.annotationPrefix#` to Status Bar text.",
 					"default": false
 				},
 				"errorLens.statusBarMessageType": {
@@ -215,6 +232,11 @@
 						"copyMessage"
 					],
 					"default": "goToProblem"
+				},
+				"errorLens.statusBarMessageTemplate": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "Template for status bar message. See `#errorLens.messageTemplate#`."
 				},
 				"errorLens.exclude": {
 					"type": "array",

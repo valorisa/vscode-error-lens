@@ -1,4 +1,5 @@
-import { getAnnotationPrefix, isSeverityEnabled } from 'src/decorations';
+import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
+import { extensionConfig } from 'src/extension';
 import { AggregatedByLineDiagnostics, CommandIds, ExtensionConfig } from 'src/types';
 import { replaceLinebreaks } from 'src/utils';
 import { Diagnostic, Position, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
@@ -30,12 +31,10 @@ export class StatusBar {
 	constructor(
 		private readonly isEnabled: boolean,
 		private readonly colorsEnabled: boolean,
-		private readonly addPrefix: boolean,
 		private readonly messageType: ExtensionConfig['statusBarMessageType'],
 	) {
 		this.colorsEnabled = colorsEnabled;
 		this.messageType = messageType;
-		this.addPrefix = addPrefix;
 
 		this.statusBarItem = window.createStatusBarItem(undefined, -9999);
 		this.statusBarItem.command = CommandIds.statusBarCommand;
@@ -55,12 +54,14 @@ export class StatusBar {
 
 		const ln = editor.selection.active.line;
 		let diagnostic: Diagnostic | undefined;
+		let numberOfDiagnosticsOnThatLine = 0;
 
 		if (this.messageType === 'activeLine') {
 			if (aggregatedDiagnostics[ln]) {
 				for (const diag of aggregatedDiagnostics[ln]) {
 					if (isSeverityEnabled(diag.severity)) {
 						diagnostic = diag;
+						numberOfDiagnosticsOnThatLine = aggregatedDiagnostics[ln].length;
 					}
 				}
 			} else {
@@ -76,6 +77,7 @@ export class StatusBar {
 				for (const diag of diagnosticsAtLine) {
 					if (isSeverityEnabled(diag.severity)) {
 						diagnostic = diag;
+						numberOfDiagnosticsOnThatLine = diagnosticsAtLine.length;
 						break outerLoop;
 					}
 				}
@@ -88,6 +90,7 @@ export class StatusBar {
 			for (const diag of allDiagnosticsSorted) {
 				if (isSeverityEnabled(diag.severity)) {
 					diagnostic = diag;
+					numberOfDiagnosticsOnThatLine = aggregatedDiagnostics[diag.range.start.line].length;
 					break;
 				}
 			}
@@ -99,17 +102,18 @@ export class StatusBar {
 		}
 
 		this.activeMessagePosition = diagnostic.range.start;
-		let prefix = '';
 
-		if (this.addPrefix) {
-			prefix = getAnnotationPrefix(diagnostic.severity);
+		let message = diagnosticToInlineMessage(
+			extensionConfig.statusBarMessageTemplate || extensionConfig.messageTemplate,
+			diagnostic,
+			numberOfDiagnosticsOnThatLine,
+		);
+
+		if (extensionConfig.removeLinebreaks) {
+			message = replaceLinebreaks(message);
 		}
 
-		let text = `${prefix}${diagnostic.message}`;
-		if (text.includes('\n')) {
-			text = replaceLinebreaks(text);
-		}
-		this.activeMessageText = text;
+		this.activeMessageText = message;
 		this.activeMessageSource = diagnostic.source;
 
 
@@ -117,8 +121,8 @@ export class StatusBar {
 			this.statusBarItem.color = this.statusBarColors[diagnostic.severity];
 		}
 
-		this.statusBarItem.text = text;
-		this.statusBarItem.tooltip = text;
+		this.statusBarItem.text = message;
+		this.statusBarItem.tooltip = message;
 	}
 	/**
 	 * Clear status bar message.

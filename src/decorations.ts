@@ -214,13 +214,6 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 		const severity = diagnostic.severity;
 
 		if (isSeverityEnabled(severity)) {
-			let messagePrefix = '';
-			if (extensionConfig.addNumberOfDiagnostics && aggregatedDiagnostic.length > 1) {
-				messagePrefix += `[1/${aggregatedDiagnostic.length}] `;
-			}
-			if (extensionConfig.addAnnotationTextPrefixes) {
-				messagePrefix += getAnnotationPrefix(severity);
-			}
 			/**
 			 * Usually, it's enough to use `decoration type`,
 			 * but decorations from different extensions can conflict.
@@ -237,13 +230,15 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 				case 3: decorationRenderOptions = Global.decorationRenderOptionsHint; break;
 			}
 
+			const message = diagnosticToInlineMessage(extensionConfig.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+
 			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 				...decorationRenderOptions,
 				after: {
 					...decorationRenderOptions.after || {},
 					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
 					contentText: extensionConfig.messageEnabled ?
-						truncateString(messagePrefix + (extensionConfig.removeLinebreaks ? replaceLinebreaks(diagnostic.message) : diagnostic.message)) : '',
+						truncateString(extensionConfig.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
 				},
 			};
 
@@ -390,12 +385,6 @@ export function shouldExcludeDiagnostic(diagnostic: Diagnostic) {
 	return false;
 }
 /**
- * Add user defined prefix to diagnostics.
- */
-export function getAnnotationPrefix(severity: number): string {
-	return extensionConfig.annotationPrefix[severity] ?? '';
-}
-/**
  * `true` when diagnostic enabled in config & in temp variable
  */
 export function isSeverityEnabled(severity: number) {
@@ -408,4 +397,57 @@ export function isSeverityEnabled(severity: number) {
 		return true;
 	}
 	return false;
+}
+/**
+ * Generate inline message from template.
+ */
+export function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, count: number) {
+	if (template === TemplateVars.message) {
+		// When default template - no need to use RegExps or other stuff.
+		return diagnostic.message;
+	} else {
+		// Message & severity is always present.
+		let result = template
+			.replace(TemplateVars.message, diagnostic.message)
+			.replace(TemplateVars.severity, extensionConfig.severityText[diagnostic.severity] || '');
+		/**
+		 * Count, source & code can be absent.
+		 * If present - replace them as simple string.
+		 * If absent - replace by RegExp removing all adjacent non-whitespace symbols with them.
+		 */
+		if (template.includes(TemplateVars.count)) {
+			if (count > 1) {
+				result = result.replace(TemplateVars.count, String(count));
+			} else {
+				// no `$count` in the template - remove it
+				result = result.replace(/(\s*?)?(\S*?)?(\$count)(\S*?)?(\s*?)?/, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 || '') + (g5 || ''));
+			}
+		}
+		if (template.includes(TemplateVars.source)) {
+			if (diagnostic.source) {
+				result = result.replace(TemplateVars.source, String(diagnostic.source));
+			} else {
+				result = result.replace(/(\s*?)?(\S*?)?(\$source)(\S*?)?(\s*?)?/, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 || '') + (g5 || ''));
+			}
+		}
+
+		if (template.includes(TemplateVars.code)) {
+			const code = typeof diagnostic.code === 'object' ? String(diagnostic.code.value) : String(diagnostic.code);
+			if (diagnostic.code) {
+				result = result.replace(TemplateVars.code, code);
+			} else {
+				result = result.replace(/(\s*?)?(\S*?)?(\$code)(\S*?)?(\s*?)?/, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 || '') + (g5 || ''));
+			}
+		}
+
+		return result;
+	}
+}
+
+const enum TemplateVars {
+	message = '$message',
+	source = '$source',
+	code = '$code',
+	count = '$count',
+	severity = '$severity',
 }

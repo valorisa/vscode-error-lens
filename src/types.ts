@@ -1,6 +1,6 @@
 import { Diagnostic } from 'vscode';
 
-export type ExtensionConfig = Readonly<{
+interface ExtensionConfigType {
 	/**
 	 * Overwrite gutter items for light theme
 	 */
@@ -51,18 +51,13 @@ export type ExtensionConfig = Readonly<{
 	 */
 	enabledDiagnosticLevels: string[];
 	/**
-	 * Specify diagnostic message prefixes (when `addAnnotationTextPrefixes` is enabled)
+	 * Template used for all inline messages. Interpolates `$message`, `$source`, `$code`, `$count`, `$severity`.
 	 */
-	annotationPrefix: string[];
+	messageTemplate: string;
 	/**
-	 * When enabled - prepends diagnostic severity ('ERROR:', 'WARNING:' etc) to the message.
-	 * (Prefixes can be configured with `annotationPrefix` setting).
+	 * Replaces `$severity` variable in `#errorLens.messageTemplate#`.
 	 */
-	addAnnotationTextPrefixes: boolean;
-	/**
-	 * When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.
-	 */
-	addNumberOfDiagnostics: boolean;
+	severityText: string[];
 	/**
 	 * Array of diagnostic messages that should not be decorated. Matches against `Diagnostic.message`.
 	 */
@@ -92,9 +87,9 @@ export type ExtensionConfig = Readonly<{
 	 */
 	statusBarCommand: 'copyMessage' | 'goToLine' | 'goToProblem';
 	/**
-	 * When enabled - add `#errorLens.annotationPrefix#` to Status Bar text.
+	 * See `#errorLens.messageTemplate#`.
 	 */
-	statusBarPrefixEnabled: boolean;
+	statusBarMessageTemplate: string;
 	/**
 	 * Adds delay before showing diagnostic.
 	 */
@@ -139,7 +134,9 @@ export type ExtensionConfig = Readonly<{
 	errorGutterIconColor: string;
 	warningGutterIconColor: string;
 	infoGutterIconColor: string;
-}>;
+}
+
+export type ExtensionConfig = Readonly<ExtensionConfigType>;
 
 export type GutterIconSet = 'borderless' | 'circle' | 'default' | 'defaultOutline';
 export type FollowCursor = 'activeLine' | 'allLines' | 'closestProblem';

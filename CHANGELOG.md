@@ -1,3 +1,11 @@
+## 3.3.0 `27 Jun 2021`
+
+- 💥 Remove hint diagnostics from default. To revert - change `errorLens.enabledDiagnosticLevels` to **["error", "warning", "info", "hint"]**
+- 💥 `errorLens.addAnnotationTextPrefixes` & `errorLens.addNumberOfDiagnostics` settings are deprecated in favor of `errorLens.messageTemplate` [vscode-error-lens/issues/92](https://github.com/usernamehw/vscode-error-lens/issues/92)
+- 💥 Change default value of setting `errorLens.removeLinebreaks` to **true**
+- 🐛 Status bar should honor enabled diagnostic levels
+- ✨ Add `closestSeverity` option for status bar setting `errorLens.statusBarMessageType`. Show most severe closest problem in status bar.
+
 ## 3.2.7 `31 May 2021`
 
 - ✨ Replace linebreaks in inline diagnostics with whitespace

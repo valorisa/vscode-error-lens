@@ -150,7 +150,7 @@
 				"errorLens.messageTemplate": {
 					"type": "string",
 					"default": "$message",
-					"markdownDescription": "Template used for all inline messages. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
+					"markdownDescription": "Template used for all inline messages. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
 				},
 				"errorLens.severityText": {
 					"type": "array",

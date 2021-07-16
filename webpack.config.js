@@ -2,7 +2,6 @@
 
 'use strict';
 
-const webpack = require('webpack');
 const path = require('path');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
@@ -38,21 +37,16 @@ module.exports = (env, options) => {
 			}],
 		},
 		plugins: [
+			// @ts-ignore
 			new FriendlyErrorsWebpackPlugin(),
 		],
 	};
 
 	if (options.mode === 'production') {
 		// Prod
+		config.devtool = false;
 	} else {
 		// Dev
-		config.module.rules[0] = {
-			test: /\.ts$/,
-			exclude: /node_modules/,
-			use: [{
-				loader: 'ts-loader',
-			}],
-		};
 	}
 
 	return config;

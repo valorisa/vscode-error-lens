@@ -404,7 +404,7 @@
 				"errorLens.scrollbarHackEnabled": {
 					"type": "boolean",
 					"default": false,
-					"markdownDescription": "When enabled - prevents showing horizontal scrollbar for decorations. (Might have a conflict with `errorLens.fontFamily` or `errorLens.padding` settings)."
+					"markdownDescription": "When enabled - prevents showing horizontal scrollbar in editor (caused by inline decorations)."
 				}
 			}
 		},

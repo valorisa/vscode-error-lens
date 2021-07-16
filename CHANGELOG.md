@@ -1,3 +1,7 @@
+## 3.3.1 `16 Jul 2021`
+
+- ✨ Make extension work on remote VSCode (github codespaces) #91
+
 ## 3.3.0 `27 Jun 2021`
 
 - 💥 Remove hint diagnostics from default. To revert - change `errorLens.enabledDiagnosticLevels` to **["error", "warning", "info", "hint"]**

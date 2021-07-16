@@ -77,7 +77,7 @@ export function setDecorationStyle() {
 	const padding = extensionConfig.padding ? `padding:${onlyDigitsRegExp.test(extensionConfig.padding) ? `${extensionConfig.padding}px` : extensionConfig.padding}` : '';
 	const margin = `margin-left:${onlyDigitsRegExp.test(extensionConfig.margin) ? `${extensionConfig.margin}px` : extensionConfig.margin}`;
 	const borderRadius = `border-radius: ${extensionConfig.borderRadius || '0'}`;
-	const scrollbarHack = extensionConfig.scrollbarHackEnabled ? 'position:absolute;pointer-events:none' : '';
+	const scrollbarHack = extensionConfig.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
 
 	const afterProps: ThemableDecorationAttachmentRenderOptions = {
 		fontStyle: extensionConfig.fontStyleItalic ? 'italic' : 'normal',

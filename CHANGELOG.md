@@ -1,3 +1,7 @@
+## 3.3.2 `29 Jul 2021`
+
+- 🐛 Try to fix `errorLens.delay` setting
+
 ## 3.3.1 `16 Jul 2021`
 
 - ✨ Make extension work on remote VSCode (github codespaces) #91

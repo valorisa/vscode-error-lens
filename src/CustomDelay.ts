@@ -26,13 +26,13 @@ export class CustomDelay {
 
 	constructor(delay: number) {
 		this.delay = Math.max(delay, 500);
-		this.updateDecorationsThrottled = throttle(this.updateDecorations, 200, {
-			leading: false,
+		this.updateDecorationsThrottled = throttle(this.updateDecorations, 300, {
+			leading: true,
 			trailing: true,
 		});
 	}
 
-	static convertDiagnosticToId(diagnostic: Diagnostic): string { // TODO: delay happens with crash?
+	static convertDiagnosticToId(diagnostic: Diagnostic): string {
 		return `${diagnostic.range.start.line}${diagnostic.message}`;
 	}
 
@@ -44,7 +44,9 @@ export class CustomDelay {
 			[stringUri]: {},
 		};
 		for (const item of diagnosticForUri) {
-			transformed[stringUri][CustomDelay.convertDiagnosticToId(item)] = item;
+			if (transformed[stringUri]) {
+				transformed[stringUri][CustomDelay.convertDiagnosticToId(item)] = item;
+			}
 		}
 		// If there's no uri saved - save it and render all diagnostics
 		if (!cachedDiagnosticsForUri) {
@@ -72,9 +74,7 @@ export class CustomDelay {
 
 	onDiagnosticChange = (event: DiagnosticChangeEvent) => {
 		if (!event.uris.length) {
-			for (const key in this.cachedDiagnostics) {
-				this.cachedDiagnostics[key] = {};
-			}
+			this.cachedDiagnostics = {};
 			return;
 		}
 		for (const uri of event.uris) {
@@ -83,7 +83,7 @@ export class CustomDelay {
 	};
 
 	removeItem = (stringUri: string, key: string) => {
-		delete this.cachedDiagnostics[stringUri][key];
+		delete this.cachedDiagnostics[stringUri]?.[key];
 		this.updateDecorationsThrottled(stringUri);
 	};
 	addItem = (uri: Uri, stringUri: string, key: string, diagnostic: Diagnostic) => {
@@ -94,12 +94,16 @@ export class CustomDelay {
 				[stringUri]: {},
 			};
 			for (const item of diagnosticForUri) {
-				transformed[stringUri][CustomDelay.convertDiagnosticToId(item)] = item;
+				if (transformed[stringUri]) {
+					transformed[stringUri][CustomDelay.convertDiagnosticToId(item)] = item;
+				}
 			}
 			if (!(key in transformed[stringUri])) {
 				return;
 			}
-			this.cachedDiagnostics[stringUri][key] = diagnostic;
+			if (this.cachedDiagnostics[stringUri]) {
+				this.cachedDiagnostics[stringUri][key] = diagnostic;
+			}
 			this.updateDecorationsThrottled(stringUri);
 		}, this.delay);
 	};

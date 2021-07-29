@@ -301,7 +301,7 @@
 				},
 				"errorLens.delay": {
 					"type": "integer",
-					"markdownDescription": "**EXPERIMENTAL** Delay (ms) before showing problem decorations (0 to disable).",
+					"markdownDescription": "Delay (ms) before showing problem decorations (**0** to disable). Minimum delay of **500** is enforced by the extension. New errors will be added with this delay; old errors that were fixed should disappear faster.",
 					"default": 0
 				},
 				"errorLens.onSave": {

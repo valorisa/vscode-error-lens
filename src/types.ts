@@ -1,4 +1,4 @@
-import { Diagnostic } from 'vscode';
+import { Diagnostic, Uri } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
@@ -148,14 +148,14 @@ export interface AggregatedByLineDiagnostics {
 export interface Gutter {
 	iconSet: GutterIconSet;
 
-	errorIconPath: string;
-	errorIconPathLight: string;
+	errorIconPath: Uri | string;
+	errorIconPathLight: Uri | string;
 
-	warningIconPath: string;
-	warningIconPathLight: string;
+	warningIconPath: Uri | string;
+	warningIconPathLight: Uri | string;
 
-	infoIconPath: string;
-	infoIconPathLight: string;
+	infoIconPath: Uri | string;
+	infoIconPathLight: Uri | string;
 }
 /**
  * All command ids contributed by this extensions.

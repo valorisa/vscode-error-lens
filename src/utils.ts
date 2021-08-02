@@ -1,3 +1,5 @@
+import { Uri } from 'vscode';
+
 /**
  * Cut off string if it's longer than **500** characters.
  */
@@ -10,4 +12,8 @@ export function truncateString(str: string): string {
  */
 export function replaceLinebreaks(str: string): string {
 	return str.replace(/[\n\r\t]+?/g, ' ');
+}
+
+export function svgToUri(svg: string): Uri {
+	return Uri.parse(`data:image/svg+xml;utf8,${svg}`);
 }

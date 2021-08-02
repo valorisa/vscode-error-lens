@@ -3,6 +3,7 @@ import path from 'path';
 import { isSeverityEnabled } from 'src/decorations';
 import { extensionConfig, Global } from 'src/extension';
 import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
+import { svgToUri } from 'src/utils';
 import { DecorationOptions, ExtensionContext, TextEditor } from 'vscode';
 /**
  * Set some defaults for gutter styles and return it.
@@ -18,8 +19,14 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.iconSet = 'default';
 	}
 
-	if (gutter.iconSet === 'circle') {
-		writeCircleGutterIconsToDisk(extensionContext);
+	if (extensionConfig.gutterIconSet === 'circle') {
+		gutter.errorIconPath = svgToUri(createCircleIcon(extensionConfig.errorGutterIconColor));
+		gutter.errorIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.errorGutterIconColor || extensionConfig.errorGutterIconColor));
+		gutter.warningIconPath = svgToUri(createCircleIcon(extensionConfig.warningGutterIconColor));
+		gutter.warningIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.warningGutterIconColor || extensionConfig.warningGutterIconColor));
+		gutter.infoIconPath = svgToUri(createCircleIcon(extensionConfig.infoGutterIconColor));
+		gutter.infoIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconColor));
+		return gutter;
 	}
 
 	// Copy custom gutter icons into extension directory. (Workaround vscode sandbox restriction).
@@ -76,19 +83,6 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 }
 
 /**
- * The idea of circle gutter icons is that it should be possible to change their color. AFAIK that's only possible with writing <svg> to disk and then referencing them from extension.
- */
-function writeCircleGutterIconsToDisk(extensionContext: ExtensionContext) {
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${extensionConfig.errorGutterIconColor}"/></svg>`);
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/error-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${extensionConfig.light.errorGutterIconColor || extensionConfig.errorGutterIconColor}"/></svg>`);
-
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/warning-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${extensionConfig.warningGutterIconColor}"/></svg>`);
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/warning-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${extensionConfig.light.warningGutterIconColor || extensionConfig.warningGutterIconColor}"/></svg>`);
-
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/info-dark.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${extensionConfig.infoGutterIconColor}"/></svg>`);
-	fs.writeFile(extensionContext.asAbsolutePath('./img/circle/info-light.svg'), `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="${extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconColor}"/></svg>`);
-}
-/**
  * Actually apply gutter decorations.
  */
 export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics) {
@@ -115,4 +109,8 @@ export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnost
 	editor.setDecorations(Global.decorationTypeGutterError, decorationOptionsGutterError);
 	editor.setDecorations(Global.decorationTypeGutterWarning, decorationOptionsGutterWarning);
 	editor.setDecorations(Global.decorationTypeGutterInfo, decorationOptionsGutterInfo);
+}
+
+function createCircleIcon(color: string) {
+	return `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="%23${color.slice(1)}"/></svg>`;
 }

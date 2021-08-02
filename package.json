@@ -271,15 +271,18 @@
 					"properties": {
 						"errorGutterIconPath": {
 							"type": "string",
-							"description": "Absolute path to error gutter icon for light themes."
+							"description": "Absolute path to error gutter icon for light themes.",
+							"default": ""
 						},
 						"warningGutterIconPath": {
 							"type": "string",
-							"description": "Absolute path to warning gutter icon for light themes."
+							"description": "Absolute path to warning gutter icon for light themes.",
+							"default": ""
 						},
 						"infoGutterIconPath": {
 							"type": "string",
-							"description": "Absolute path to info gutter icon for light themes."
+							"description": "Absolute path to info gutter icon for light themes.",
+							"default": ""
 						},
 						"errorGutterIconColor": {
 							"type": "string",
@@ -370,15 +373,18 @@
 				},
 				"errorLens.errorGutterIconPath": {
 					"type": "string",
-					"description": "Absolute path to error gutter icon."
+					"description": "Absolute path to error gutter icon.",
+					"default": ""
 				},
 				"errorLens.warningGutterIconPath": {
 					"type": "string",
-					"description": "Absolute path to warning gutter icon."
+					"description": "Absolute path to warning gutter icon.",
+					"default": ""
 				},
 				"errorLens.infoGutterIconPath": {
 					"type": "string",
-					"description": "Absolute path to info gutter icon."
+					"description": "Absolute path to info gutter icon.",
+					"default": ""
 				},
 				"errorLens.errorGutterIconColor": {
 					"type": "string",

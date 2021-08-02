@@ -5,9 +5,9 @@ interface ExtensionConfigType {
 	 * Overwrite gutter items for light theme
 	 */
 	light: {
-		errorGutterIconPath?: string;
-		warningGutterIconPath?: string;
-		infoGutterIconPath?: string;
+		errorGutterIconPath: string;
+		warningGutterIconPath: string;
+		infoGutterIconPath: string;
 
 		errorGutterIconColor: string;
 		warningGutterIconColor: string;
@@ -127,9 +127,9 @@ interface ExtensionConfigType {
 	gutterIconSize: string;
 	gutterIconSet: GutterIconSet;
 
-	errorGutterIconPath?: string;
-	warningGutterIconPath?: string;
-	infoGutterIconPath?: string;
+	errorGutterIconPath: string;
+	warningGutterIconPath: string;
+	infoGutterIconPath: string;
 
 	errorGutterIconColor: string;
 	warningGutterIconColor: string;

@@ -1,5 +1,3 @@
-import { promises as fs } from 'fs';
-import path from 'path';
 import { isSeverityEnabled } from 'src/decorations';
 import { extensionConfig, Global } from 'src/extension';
 import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
@@ -29,52 +27,33 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		return gutter;
 	}
 
-	// Copy custom gutter icons into extension directory. (Workaround vscode sandbox restriction).
 	if (extensionConfig.errorGutterIconPath) {
-		const baseName = path.basename(extensionConfig.errorGutterIconPath);
-		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
-		fs.copyFile(extensionConfig.errorGutterIconPath, newPath);
-		gutter.errorIconPath = newPath;
+		gutter.errorIconPath = extensionConfig.errorGutterIconPath;
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
 	}
-	if (extensionConfig.light.errorGutterIconPath) {
-		const baseName = path.basename(extensionConfig.light.errorGutterIconPath);
-		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
-		fs.copyFile(extensionConfig.light.errorGutterIconPath, newPath);
-		gutter.errorIconPathLight = newPath;
+	if (extensionConfig.light.errorGutterIconPath || extensionConfig.errorGutterIconPath) {
+		gutter.errorIconPathLight = extensionConfig.light.errorGutterIconPath || extensionConfig.errorGutterIconPath;
 	} else {
 		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
 	}
 	if (extensionConfig.warningGutterIconPath) {
-		const baseName = path.basename(extensionConfig.warningGutterIconPath);
-		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
-		fs.copyFile(extensionConfig.warningGutterIconPath, newPath);
-		gutter.warningIconPath = newPath;
+		gutter.warningIconPath = extensionConfig.warningGutterIconPath;
 	} else {
 		gutter.warningIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-dark.svg`);
 	}
-	if (extensionConfig.light.warningGutterIconPath) {
-		const baseName = path.basename(extensionConfig.light.warningGutterIconPath);
-		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
-		fs.copyFile(extensionConfig.light.warningGutterIconPath, newPath);
-		gutter.warningIconPathLight = newPath;
+	if (extensionConfig.light.warningGutterIconPath || extensionConfig.warningGutterIconPath) {
+		gutter.warningIconPathLight = extensionConfig.light.warningGutterIconColor || extensionConfig.warningGutterIconPath;
 	} else {
 		gutter.warningIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
 	}
 	if (extensionConfig.infoGutterIconPath) {
-		const baseName = path.basename(extensionConfig.infoGutterIconPath);
-		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
-		fs.copyFile(extensionConfig.infoGutterIconPath, newPath);
-		gutter.infoIconPath = newPath;
+		gutter.infoIconPath = extensionConfig.infoGutterIconPath;
 	} else {
 		gutter.infoIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
 	}
-	if (extensionConfig.light.infoGutterIconPath) {
-		const baseName = path.basename(extensionConfig.light.infoGutterIconPath);
-		const newPath = path.join(Global.extensionContext.asAbsolutePath('./img'), baseName);
-		fs.copyFile(extensionConfig.light.infoGutterIconPath, newPath);
-		gutter.infoIconPathLight = newPath;
+	if (extensionConfig.light.infoGutterIconPath || extensionConfig.infoGutterIconPath) {
+		gutter.infoIconPathLight = extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconPath;
 	} else {
 		gutter.infoIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
 	}
@@ -110,7 +89,9 @@ export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnost
 	editor.setDecorations(Global.decorationTypeGutterWarning, decorationOptionsGutterWarning);
 	editor.setDecorations(Global.decorationTypeGutterInfo, decorationOptionsGutterInfo);
 }
-
+/**
+ * Create circle gutter icons with different colors. `%23` is encoded `#` sign (need it to work).
+ */
 function createCircleIcon(color: string) {
 	return `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="%23${color.slice(1)}"/></svg>`;
 }

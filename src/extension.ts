@@ -93,7 +93,7 @@ export function activate(extensionContext: ExtensionContext) {
 	 * - Update everything
 	 */
 	function updateConfigAndEverything() {
-		extensionConfig = workspace.getConfiguration(Constants.EXTENSION_NAME) as unknown as ExtensionConfig;
+		extensionConfig = workspace.getConfiguration().get(Constants.EXTENSION_NAME) as ExtensionConfig;
 		disposeEverything();
 		updateEverything();
 	}

@@ -33,7 +33,7 @@ export class CustomDelay {
 	}
 
 	static convertDiagnosticToId(diagnostic: Diagnostic): string {
-		return `${diagnostic.range.start.line}${diagnostic.message}`;
+		return `${diagnostic.range.start.line}__${diagnostic.message}`;
 	}
 
 	updateCachedDiagnosticForUri = (uri: Uri) => {

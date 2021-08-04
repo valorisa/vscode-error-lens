@@ -47,7 +47,7 @@
 		"commands": [
 			{
 				"command": "errorLens.toggle",
-				"title": "Toggle (Enable/Disable) All Decorations",
+				"title": "Toggle (Enable/Disable) Everything",
 				"category": "Error Lens"
 			},
 			{
@@ -78,6 +78,11 @@
 		],
 		"configuration": {
 			"properties": {
+				"errorLens.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls all decorations and features (except commands)."
+				},
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",

@@ -1,5 +1,5 @@
-import { updateDecorationsForAllVisibleEditors } from 'src/decorations';
-import { disposeEverything, extensionConfig, Global, updateEverything } from 'src/extension';
+import { extensionConfig, Global } from 'src/extension';
+import { toggleEnabledLevels, updateGlobalSetting } from 'src/settings';
 import { AggregatedByLineDiagnostics, CommandIds } from 'src/types';
 import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window } from 'vscode';
 /**
@@ -7,29 +7,19 @@ import { commands, env, ExtensionContext, languages, Range, Selection, TextEdito
  */
 export function registerAllCommands(extensionContext: ExtensionContext) {
 	const disposableToggleErrorLens = commands.registerCommand(CommandIds.toggle, () => {
-		Global.errorLensEnabled = !Global.errorLensEnabled;
-
-		if (Global.errorLensEnabled) {
-			updateEverything();
-		} else {
-			disposeEverything();
-		}
+		updateGlobalSetting('errorLens.enabled', !extensionConfig.enabled);
 	});
 	const disposableToggleError = commands.registerCommand(CommandIds.toggleError, () => {
-		Global.errorEnabled = !Global.errorEnabled;
-		updateDecorationsForAllVisibleEditors();
+		toggleEnabledLevels('error', extensionConfig.enabledDiagnosticLevels);
 	});
 	const disposableToggleWarning = commands.registerCommand(CommandIds.toggleWarning, () => {
-		Global.warningEabled = !Global.warningEabled;
-		updateDecorationsForAllVisibleEditors();
+		toggleEnabledLevels('warning', extensionConfig.enabledDiagnosticLevels);
 	});
 	const disposableToggleInfo = commands.registerCommand(CommandIds.toggleInfo, () => {
-		Global.infoEnabled = !Global.infoEnabled;
-		updateDecorationsForAllVisibleEditors();
+		toggleEnabledLevels('info', extensionConfig.enabledDiagnosticLevels);
 	});
 	const disposableToggleHint = commands.registerCommand(CommandIds.toggleHint, () => {
-		Global.hintEnabled = !Global.hintEnabled;
-		updateDecorationsForAllVisibleEditors();
+		toggleEnabledLevels('hint', extensionConfig.enabledDiagnosticLevels);
 	});
 
 	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandIds.copyProblemMessage, editor => {

@@ -2,17 +2,9 @@ import { Diagnostic, Uri } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
-	 * Overwrite gutter items for light theme
+	 * If extension is enabled.
 	 */
-	light: {
-		errorGutterIconPath: string;
-		warningGutterIconPath: string;
-		infoGutterIconPath: string;
-
-		errorGutterIconColor: string;
-		warningGutterIconColor: string;
-		infoGutterIconColor: string;
-	};
+	enabled: boolean;
 	/**
 	 * Font family of inline message.
 	 */
@@ -49,7 +41,7 @@ interface ExtensionConfigType {
 	/**
 	 * Choose which levels of diagnostics to highlight.
 	 */
-	enabledDiagnosticLevels: string[];
+	enabledDiagnosticLevels: ('error' | 'hint' | 'info' | 'warning')[];
 	/**
 	 * Template used for all inline messages. Interpolates `$message`, `$source`, `$code`, `$count`, `$severity`.
 	 */
@@ -134,6 +126,18 @@ interface ExtensionConfigType {
 	errorGutterIconColor: string;
 	warningGutterIconColor: string;
 	infoGutterIconColor: string;
+	/**
+	 * Overwrite gutter items for light theme
+	 */
+	light: {
+		errorGutterIconPath: string;
+		warningGutterIconPath: string;
+		infoGutterIconPath: string;
+
+		errorGutterIconColor: string;
+		warningGutterIconColor: string;
+		infoGutterIconColor: string;
+	};
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;

@@ -14,12 +14,6 @@ export let extensionConfig: ExtensionConfig;
  * Global variables
  */
 export class Global {
-	static errorLensEnabled = true;
-	static errorEnabled = true;
-	static warningEabled = true;
-	static infoEnabled = true;
-	static hintEnabled = true;
-
 	static configErrorEnabled = true;
 	static configWarningEnabled = true;
 	static configInfoEnabled = true;
@@ -95,7 +89,9 @@ export function activate(extensionContext: ExtensionContext) {
 	function updateConfigAndEverything() {
 		extensionConfig = workspace.getConfiguration().get(Constants.EXTENSION_NAME) as ExtensionConfig;
 		disposeEverything();
-		updateEverything();
+		if (extensionConfig.enabled) {
+			updateEverything();
+		}
 	}
 
 	extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(e => {

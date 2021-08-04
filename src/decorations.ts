@@ -189,6 +189,7 @@ export function setDecorationStyle() {
 }
 /**
  * Actually apply decorations for editor.
+ * @param range Only allow decorating lines in this range.
  */
 export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: Range) {
 	const decorationOptionsError: DecorationOptions[] = [];
@@ -389,10 +390,10 @@ export function shouldExcludeDiagnostic(diagnostic: Diagnostic) {
  */
 export function isSeverityEnabled(severity: number) {
 	if (
-		severity === 0 && Global.configErrorEnabled && Global.errorEnabled ||
-		severity === 1 && Global.configWarningEnabled && Global.warningEabled ||
-		severity === 2 && Global.configInfoEnabled && Global.infoEnabled ||
-		severity === 3 && Global.configHintEnabled && Global.hintEnabled
+		severity === 0 && Global.configErrorEnabled ||
+		severity === 1 && Global.configWarningEnabled ||
+		severity === 2 && Global.configInfoEnabled ||
+		severity === 3 && Global.configHintEnabled
 	) {
 		return true;
 	}

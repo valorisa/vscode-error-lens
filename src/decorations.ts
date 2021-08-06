@@ -74,15 +74,16 @@ export function setDecorationStyle() {
 	const onlyDigitsRegExp = /^\d+$/;
 	const fontFamily = extensionConfig.fontFamily ? `font-family:${extensionConfig.fontFamily}` : '';
 	const fontSize = extensionConfig.fontSize ? `font-size:${onlyDigitsRegExp.test(extensionConfig.fontSize) ? `${extensionConfig.fontSize}px` : extensionConfig.fontSize}` : '';
+	const marginLeft = onlyDigitsRegExp.test(extensionConfig.margin) ? `${extensionConfig.margin}px` : extensionConfig.margin;
 	const padding = extensionConfig.padding ? `padding:${onlyDigitsRegExp.test(extensionConfig.padding) ? `${extensionConfig.padding}px` : extensionConfig.padding}` : '';
-	const margin = `margin-left:${onlyDigitsRegExp.test(extensionConfig.margin) ? `${extensionConfig.margin}px` : extensionConfig.margin}`;
 	const borderRadius = `border-radius: ${extensionConfig.borderRadius || '0'}`;
 	const scrollbarHack = extensionConfig.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
 
 	const afterProps: ThemableDecorationAttachmentRenderOptions = {
 		fontStyle: extensionConfig.fontStyleItalic ? 'italic' : 'normal',
 		fontWeight: extensionConfig.fontWeight,
-		textDecoration: `none;${fontFamily};${fontSize};${padding};${margin};${borderRadius};${scrollbarHack}`,
+		margin: `0 0 0 ${marginLeft}`,
+		textDecoration: `none;${fontFamily};${fontSize};${padding};${borderRadius};${scrollbarHack}`,
 	};
 
 	Global.decorationRenderOptionsError = {
@@ -263,7 +264,6 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 						messageRange = diagnosticRange;
 					}
 				} else if (extensionConfig.followCursor === 'closestProblem') {
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
 						messageRange = diagnosticRange;
 					}

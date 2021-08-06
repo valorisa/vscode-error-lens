@@ -1,3 +1,11 @@
+## 3.4.0 `06 Aug 2021`
+
+- 💥 Create setting `errorLens.enabled` . Toggle commands now use global `settigns.json` to save their state.
+
+> **Error Lens: Toggle (Enable/Disable) Everything** - toggles `errorLens.enabled` <br>
+> **Error Lens: Toggle Errors** - toggles items inside `errorLens.enabledDiagnosticLevels`
+- ✨ Create status bar icons with highlighted background #96
+
 ## 3.3.2 `29 Jul 2021`
 
 - 🐛 Try to fix `errorLens.delay` setting

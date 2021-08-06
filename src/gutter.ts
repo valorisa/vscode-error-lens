@@ -8,14 +8,7 @@ import { DecorationOptions, ExtensionContext, TextEditor } from 'vscode';
  */
 export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 	const gutter: Gutter = Object.create(null);
-
 	gutter.iconSet = extensionConfig.gutterIconSet;
-	if (extensionConfig.gutterIconSet !== 'borderless' &&
-		extensionConfig.gutterIconSet !== 'default' &&
-		extensionConfig.gutterIconSet !== 'circle' &&
-		extensionConfig.gutterIconSet !== 'defaultOutline') {
-		gutter.iconSet = 'default';
-	}
 
 	if (extensionConfig.gutterIconSet === 'circle') {
 		gutter.errorIconPath = svgToUri(createCircleIcon(extensionConfig.errorGutterIconColor));
@@ -24,38 +17,32 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.warningIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.warningGutterIconColor || extensionConfig.warningGutterIconColor));
 		gutter.infoIconPath = svgToUri(createCircleIcon(extensionConfig.infoGutterIconColor));
 		gutter.infoIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconColor));
-		return gutter;
-	}
-
-	if (extensionConfig.errorGutterIconPath) {
-		gutter.errorIconPath = extensionConfig.errorGutterIconPath;
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
+		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
+		gutter.warningIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-dark.svg`);
+		gutter.warningIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
+		gutter.infoIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
+		gutter.infoIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
+	}
+	// ──── User specified custom gutter path ─────────────────────
+	if (extensionConfig.errorGutterIconPath) {
+		gutter.errorIconPath = extensionConfig.errorGutterIconPath;
 	}
 	if (extensionConfig.light.errorGutterIconPath || extensionConfig.errorGutterIconPath) {
 		gutter.errorIconPathLight = extensionConfig.light.errorGutterIconPath || extensionConfig.errorGutterIconPath;
-	} else {
-		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
 	}
 	if (extensionConfig.warningGutterIconPath) {
 		gutter.warningIconPath = extensionConfig.warningGutterIconPath;
-	} else {
-		gutter.warningIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-dark.svg`);
 	}
 	if (extensionConfig.light.warningGutterIconPath || extensionConfig.warningGutterIconPath) {
 		gutter.warningIconPathLight = extensionConfig.light.warningGutterIconColor || extensionConfig.warningGutterIconPath;
-	} else {
-		gutter.warningIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
 	}
 	if (extensionConfig.infoGutterIconPath) {
 		gutter.infoIconPath = extensionConfig.infoGutterIconPath;
-	} else {
-		gutter.infoIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
 	}
 	if (extensionConfig.light.infoGutterIconPath || extensionConfig.infoGutterIconPath) {
 		gutter.infoIconPathLight = extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconPath;
-	} else {
-		gutter.infoIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
 	}
 
 	return gutter;

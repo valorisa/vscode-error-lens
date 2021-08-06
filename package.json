@@ -149,6 +149,7 @@
 							"hint"
 						]
 					},
+					"uniqueItems": true,
 					"description": "Customize which diagnostic levels to highlight.",
 					"default": [
 						"error",

@@ -185,7 +185,7 @@ export function setDecorationStyle() {
 	Global.decorationTypeInfo = window.createTextEditorDecorationType(Global.decorationRenderOptionsInfo);
 	Global.decorationTypeHint = window.createTextEditorDecorationType(Global.decorationRenderOptionsHint);
 
-	Global.statusBar.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
+	Global.statusBarMessage.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 }
 /**
  * Actually apply decorations for editor.
@@ -296,7 +296,7 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 	if (Global.renderGutterIconsAsSeparateDecoration) {
 		doUpdateGutterDecorations(editor, aggregatedDiagnostics);
 	}
-	Global.statusBar.updateText(editor, aggregatedDiagnostics);
+	Global.statusBarMessage.updateText(editor, aggregatedDiagnostics);
 }
 
 export function updateDecorationsForAllVisibleEditors() {

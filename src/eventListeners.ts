@@ -15,7 +15,7 @@ export function updateChangedActiveTextEditorListener() {
 		if (textEditor) {
 			updateDecorationsForUri(textEditor.document.uri, textEditor);
 		} else {
-			Global.statusBar.clear();
+			Global.statusBarMessage.clear();
 		}
 	});
 }
@@ -41,6 +41,9 @@ export function updateChangeDiagnosticListener() {
 					updateDecorationsForUri(uri, editor);
 				}
 			}
+		}
+		if (extensionConfig.statusBarIconsEnabled) {
+			Global.statusBarIcons.updateText();
 		}
 	}
 	if (extensionConfig.onSave) {

@@ -1,7 +1,7 @@
 import { extensionConfig, Global } from 'src/extension';
 import { toggleEnabledLevels, updateGlobalSetting } from 'src/settings';
 import { AggregatedByLineDiagnostics, CommandIds } from 'src/types';
-import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window } from 'vscode';
+import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window, workspace } from 'vscode';
 /**
  * Register all commands contributed by this extension.
  */
@@ -46,7 +46,7 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 
 	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandIds.statusBarCommand, async editor => {
 		if (extensionConfig.statusBarCommand === 'goToLine' || extensionConfig.statusBarCommand === 'goToProblem') {
-			const range = new Range(Global.statusBar.activeMessagePosition, Global.statusBar.activeMessagePosition);
+			const range = new Range(Global.statusBarMessage.activeMessagePosition, Global.statusBarMessage.activeMessagePosition);
 			editor.selection = new Selection(range.start, range.end);
 			editor.revealRange(range, TextEditorRevealType.Default);
 			await commands.executeCommand('workbench.action.focusActiveEditorGroup');
@@ -55,11 +55,19 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 				commands.executeCommand('editor.action.marker.next');
 			}
 		} else if (extensionConfig.statusBarCommand === 'copyMessage') {
-			const source = Global.statusBar.activeMessageSource ? `[${Global.statusBar.activeMessageSource}] ` : '';
-			env.clipboard.writeText(source + Global.statusBar.activeMessageText);
+			const source = Global.statusBarMessage.activeMessageSource ? `[${Global.statusBarMessage.activeMessageSource}] ` : '';
+			env.clipboard.writeText(source + Global.statusBarMessage.activeMessageText);
 		}
 	});
 
-	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableStatusBarCommand);
+	const disposableRevealLine = commands.registerCommand(CommandIds.revealLine, async (fsPath: string, [line, char]) => {
+		const range = new Range(line, char, line, char);
+		const document = await workspace.openTextDocument(fsPath);
+		const editor = await window.showTextDocument(document);
+		editor.revealRange(range);
+		editor.selection = new Selection(range.start.line, range.start.character, range.start.line, range.start.character);
+	});
+
+	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableStatusBarCommand, disposableRevealLine);
 }
 

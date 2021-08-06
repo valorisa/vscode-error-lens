@@ -62,6 +62,10 @@ interface ExtensionConfigType {
 	 * Glob matching files that should not be decorated. Matches against absolute file path.
 	 */
 	excludePatterns: string[];
+	/** When enabled - shows highlighted error/warning icons in status bar. */
+	statusBarIconsEnabled: boolean;
+	/** What to do when there are 0 errors/warnings - hide the item or strip its background color. */
+	statusBarIconsAtZero: 'hide' | 'removeBackground';
 	/**
 	 * Whether to show status bar item or not. Default is **false**.
 	 */
@@ -172,6 +176,7 @@ export const enum CommandIds {
 	toggleHint = 'errorLens.toggleHint',
 	copyProblemMessage = 'errorLens.copyProblemMessage',
 	statusBarCommand = 'errorLens.statusBarCommand',
+	revealLine = 'errorLens.revealLine',
 }
 
 export const enum Constants {
@@ -183,4 +188,5 @@ export const enum Constants {
 	 * But `errorLens` is used as a prefix for commands, settings, colors (everything, basically).
 	 */
 	EXTENSION_NAME = 'errorLens',
+	openProblemsViewId = 'workbench.actions.view.problems',
 }

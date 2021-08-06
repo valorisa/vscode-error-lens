@@ -2,7 +2,8 @@ import { registerAllCommands } from 'src/commands';
 import { CustomDelay } from 'src/CustomDelay';
 import { setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/eventListeners';
-import { StatusBar } from 'src/statusBar';
+import { StatusBarIcons } from 'src/statusBarIcons';
+import { StatusBarMessage } from 'src/statusBarMessage';
 import { Constants, ExtensionConfig } from 'src/types';
 import { DecorationRenderOptions, Disposable, ExtensionContext, TextEditorDecorationType, workspace } from 'vscode';
 /**
@@ -37,10 +38,10 @@ export class Global {
 	static onDidChangeVisibleTextEditors: Disposable | undefined;
 	static onDidSaveTextDocumentDisposable: Disposable | undefined;
 	static onDidCursorChangeDisposable: Disposable | undefined;
-	/**
-	 * Status bar object. Handles all status bar stuff.
-	 */
-	static statusBar: StatusBar;
+	/** Status bar object. Handles all status bar stuff (for text message) */
+	static statusBarMessage: StatusBarMessage;
+	/** Status bar object. Handles all status bar stuff (for icons)  */
+	static statusBarIcons: StatusBarIcons;
 	/**
 	 * Editor icons can be rendered only for active line (to reduce the visual noise).
 	 * But it might be useful to show gutter icons for all lines. With `gutterIconsFollowCursorOverride`
@@ -110,11 +111,13 @@ export function activate(extensionContext: ExtensionContext) {
 export function updateEverything() {
 	updateExclude();
 	Global.renderGutterIconsAsSeparateDecoration = extensionConfig.gutterIconsEnabled && extensionConfig.gutterIconsFollowCursorOverride && extensionConfig.followCursor !== 'allLines';
-	Global.statusBar?.dispose();
-	Global.statusBar = new StatusBar(
+	Global.statusBarMessage?.dispose();
+	Global.statusBarIcons?.dispose();
+	Global.statusBarMessage = new StatusBarMessage(
 		extensionConfig.statusBarMessageEnabled,
 		extensionConfig.statusBarColorsEnabled,
 		extensionConfig.statusBarMessageType);
+	Global.statusBarIcons = new StatusBarIcons(extensionConfig.statusBarIconsEnabled, extensionConfig.statusBarIconsAtZero);
 	setDecorationStyle();
 	updateConfigEnabledLevels();
 
@@ -172,7 +175,8 @@ export function disposeEverything() {
 	Global.onDidChangeActiveTextEditor?.dispose();
 	Global.onDidSaveTextDocumentDisposable?.dispose();
 	Global.onDidCursorChangeDisposable?.dispose();
-	Global.statusBar?.dispose();
+	Global.statusBarMessage?.dispose();
+	Global.statusBarIcons?.dispose();
 }
 
 export function deactivate() { }

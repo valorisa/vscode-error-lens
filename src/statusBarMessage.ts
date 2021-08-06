@@ -6,7 +6,7 @@ import { Diagnostic, Position, StatusBarItem, TextEditor, ThemeColor, window } f
 /**
  * Handle status bar updates.
  */
-export class StatusBar {
+export class StatusBarMessage {
 	/**
 	 * Status bar item reference.
 	 */
@@ -36,10 +36,13 @@ export class StatusBar {
 		this.colorsEnabled = colorsEnabled;
 		this.messageType = messageType;
 
-		this.statusBarItem = window.createStatusBarItem(undefined, -9999);
+		this.statusBarItem = window.createStatusBarItem('errorLensMessage', -9999);
+		this.statusBarItem.name = 'Error Lens: Message';
 		this.statusBarItem.command = CommandIds.statusBarCommand;
 		if (this.isEnabled) {
 			this.statusBarItem.show();
+		} else {
+			this.dispose();
 		}
 	}
 	updateText(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics) {
@@ -128,6 +131,9 @@ export class StatusBar {
 	 * Clear status bar message.
 	 */
 	clear() {
+		if (!this.isEnabled) {
+			return;
+		}
 		this.statusBarItem.text = '';
 		this.statusBarItem.tooltip = '';
 	}

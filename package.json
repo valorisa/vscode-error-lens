@@ -6,7 +6,7 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.58.0"
+		"vscode": "^1.59.0"
 	},
 	"extensionKind": [
 		"ui",
@@ -23,6 +23,7 @@
 		"error",
 		"warning",
 		"inline",
+		"message",
 		"diagnostic",
 		"diagnostics",
 		"status bar",
@@ -205,6 +206,20 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Controls whether inline message is shown or not (Including background highlight)."
+				},
+				"errorLens.statusBarIconsEnabled": {
+					"type": "boolean",
+					"markdownDescription": "When enabled - shows highlighted error/warning icons in status bar.",
+					"default": false
+				},
+				"errorLens.statusBarIconsAtZero": {
+					"type": "string",
+					"markdownDescription": "What to do when there are 0 errors/warnings - hide the item or strip its background color.",
+					"enum": [
+						"hide",
+						"removeBackground"
+					],
+					"default": "hide"
 				},
 				"errorLens.statusBarMessageEnabled": {
 					"type": "boolean",
@@ -648,7 +663,7 @@
 		"@soda/friendly-errors-webpack-plugin": "^1.8.0",
 		"@types/lodash": "^4.14.171",
 		"@types/node": "^14.17.7",
-		"@types/vscode": "^1.58.0",
+		"@types/vscode": "^1.59.0",
 		"@typescript-eslint/eslint-plugin": "^4.29.0",
 		"@typescript-eslint/parser": "^4.29.0",
 		"eslint": "^7.32.0",

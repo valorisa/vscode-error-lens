@@ -25,7 +25,7 @@ export class StatusBarIcons {
 		private readonly isEnabled: boolean,
 		private readonly atZero: ExtensionConfig['statusBarIconsAtZero'],
 	) {
-		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', StatusBarAlignment.Left, -8000);
+		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', StatusBarAlignment.Left, -8999);
 		this.errorStatusBarItem.name = 'Error Lens: Error icon';
 		this.errorStatusBarItem.backgroundColor = this.errorBackground;
 		this.errorStatusBarItem.command = Constants.openProblemsViewId;

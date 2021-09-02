@@ -47,6 +47,10 @@ interface ExtensionConfigType {
 	 */
 	messageTemplate: string;
 	/**
+	 * Cut off inline message if it's longer than this value.
+	 */
+	messageMaxChars: number;
+	/**
 	 * Replaces `$severity` variable in `#errorLens.messageTemplate#`.
 	 */
 	severityText: string[];

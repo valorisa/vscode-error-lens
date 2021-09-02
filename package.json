@@ -162,6 +162,12 @@
 					"default": "$message",
 					"markdownDescription": "Template used for all inline messages. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
 				},
+				"errorLens.messageMaxChars": {
+					"type": "integer",
+					"default": 500,
+					"minimum": 10,
+					"markdownDescription": "Cut off inline message if it's longer than this value."
+				},
 				"errorLens.severityText": {
 					"type": "array",
 					"items": {

@@ -6,7 +6,8 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.59.0"
+		"vscode": "^1.59.0",
+		"npm": ">=7.0.0"
 	},
 	"extensionKind": [
 		"ui",
@@ -668,17 +669,17 @@
 	},
 	"devDependencies": {
 		"@soda/friendly-errors-webpack-plugin": "^1.8.0",
-		"@types/lodash": "^4.14.171",
-		"@types/node": "^14.17.7",
+		"@types/lodash": "^4.14.172",
+		"@types/node": "^14.17.14",
 		"@types/vscode": "^1.59.0",
-		"@typescript-eslint/eslint-plugin": "^4.29.0",
-		"@typescript-eslint/parser": "^4.29.0",
+		"@typescript-eslint/eslint-plugin": "^4.30.0",
+		"@typescript-eslint/parser": "^4.30.0",
 		"eslint": "^7.32.0",
 		"eslint-plugin-no-autofix": "1.1.2",
-		"ts-loader": "^9.2.4",
-		"typescript": "^4.3.5",
-		"webpack": "^5.48.0",
-		"webpack-cli": "^4.7.2"
+		"ts-loader": "^9.2.5",
+		"typescript": "^4.4.2",
+		"webpack": "^5.51.2",
+		"webpack-cli": "^4.8.0"
 	},
 	"dependencies": {
 		"lodash": "^4.17.21"

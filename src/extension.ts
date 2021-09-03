@@ -117,7 +117,7 @@ export function updateEverything() {
 		extensionConfig.statusBarMessageEnabled,
 		extensionConfig.statusBarColorsEnabled,
 		extensionConfig.statusBarMessageType);
-	Global.statusBarIcons = new StatusBarIcons(extensionConfig.statusBarIconsEnabled, extensionConfig.statusBarIconsAtZero);
+	Global.statusBarIcons = new StatusBarIcons(extensionConfig.statusBarIconsEnabled, extensionConfig.statusBarIconsAtZero, extensionConfig.statusBarIconsUseBackground);
 	setDecorationStyle();
 	updateConfigEnabledLevels();
 

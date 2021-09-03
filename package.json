@@ -220,6 +220,11 @@
 					"markdownDescription": "When enabled - shows highlighted error/warning icons in status bar.",
 					"default": false
 				},
+				"errorLens.statusBarIconsUseBackground": {
+					"type": "boolean",
+					"markdownDescription": "When enabled - highlights status bar icons with background, when disabled - with foreground.",
+					"default": true
+				},
 				"errorLens.statusBarIconsAtZero": {
 					"type": "string",
 					"markdownDescription": "What to do when there are 0 errors/warnings - hide the item or strip its background color.",
@@ -624,6 +629,24 @@
 					"highContrast": "#2faf64"
 				},
 				"description": "Text color used to highlight lines containing hints (Only in light themes)."
+			},
+			{
+				"id": "errorLens.statusBarIconErrorForeground",
+				"defaults": {
+					"dark": "#ff6464",
+					"light": "#e45454",
+					"highContrast": "#ff6464"
+				},
+				"description": "Status bar icon item error color."
+			},
+			{
+				"id": "errorLens.statusBarIconWarningForeground",
+				"defaults": {
+					"dark": "#fa973a",
+					"light": "#ff942f",
+					"highContrast": "#fa973a"
+				},
+				"description": "Status bar icon item error color."
 			},
 			{
 				"id": "errorLens.statusBarErrorForeground",

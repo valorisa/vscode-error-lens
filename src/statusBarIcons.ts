@@ -12,6 +12,9 @@ export class StatusBarIcons {
 	private readonly errorBackground = new ThemeColor('statusBarItem.errorBackground');
 	/** Warning background (status bar) */
 	private readonly warningBackground = new ThemeColor('statusBarItem.warningBackground');
+	private readonly errorForeground = new ThemeColor('errorLens.statusBarIconErrorForeground');
+	private readonly warningForeground = new ThemeColor('errorLens.statusBarIconWarningForeground');
+
 	/** Array of vscode `ThemeColor` for each of 4 diagnostic severity states. */
 	statusBarColors: ThemeColor[] = [];
 	/** Position in editor of active message. Needed to jump to error on click. */
@@ -24,15 +27,18 @@ export class StatusBarIcons {
 	constructor(
 		private readonly isEnabled: boolean,
 		private readonly atZero: ExtensionConfig['statusBarIconsAtZero'],
+		private readonly useBackground: ExtensionConfig['statusBarIconsUseBackground'],
 	) {
 		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', StatusBarAlignment.Left, -8999);
 		this.errorStatusBarItem.name = 'Error Lens: Error icon';
-		this.errorStatusBarItem.backgroundColor = this.errorBackground;
 		this.errorStatusBarItem.command = Constants.openProblemsViewId;
 		this.warningStatusBarItem = window.createStatusBarItem('errorLensWarning', StatusBarAlignment.Left, -9000);
 		this.warningStatusBarItem.name = 'Error Lens: Warning icon';
-		this.warningStatusBarItem.backgroundColor = this.warningBackground;
 		this.warningStatusBarItem.command = Constants.openProblemsViewId;
+		this.setBackground('error', this.errorBackground);
+		this.setBackground('warning', this.warningBackground);
+		this.errorStatusBarItem.color = this.errorForeground;
+		this.warningStatusBarItem.color = this.warningForeground;
 		if (this.isEnabled) {
 			this.errorStatusBarItem.show();
 			this.warningStatusBarItem.show();
@@ -80,12 +86,12 @@ export class StatusBarIcons {
 			if (this.atZero === 'hide') {
 				this.errorStatusBarItem.text = '';
 			} else {
-				this.errorStatusBarItem.backgroundColor = '';
+				this.setBackground('error', '');
 				this.errorStatusBarItem.text = `$(error) ${errorCount}`;
 				this.errorStatusBarItem.tooltip = this.makeTooltip(errorsWithUri, 'error');
 			}
 		} else {
-			this.errorStatusBarItem.backgroundColor = this.errorBackground;
+			this.setBackground('error', this.errorBackground);
 			this.errorStatusBarItem.text = `$(error) ${errorCount}`;
 			this.errorStatusBarItem.tooltip = this.makeTooltip(errorsWithUri, 'error');
 		}
@@ -93,12 +99,12 @@ export class StatusBarIcons {
 			if (this.atZero === 'hide') {
 				this.warningStatusBarItem.text = '';
 			} else {
-				this.warningStatusBarItem.backgroundColor = '';
+				this.setBackground('warning', '');
 				this.warningStatusBarItem.text = `$(warning) ${warningCount}`;
 				this.warningStatusBarItem.tooltip = this.makeTooltip(warningsWithUri, 'warning');
 			}
 		} else {
-			this.warningStatusBarItem.backgroundColor = this.warningBackground;
+			this.setBackground('warning', this.warningBackground);
 			this.warningStatusBarItem.text = `$(warning) ${warningCount}`;
 			this.warningStatusBarItem.tooltip = this.makeTooltip(warningsWithUri, 'warning');
 		}
@@ -120,6 +126,18 @@ export class StatusBarIcons {
 			}
 		}
 		return md;
+	}
+	/**
+	 * Set background of the item (only if it's enabled).
+	 */
+	setBackground(which: 'error' | 'warning', color: ThemeColor | string) {
+		if (this.useBackground) {
+			if (which === 'error') {
+				this.errorStatusBarItem.backgroundColor = color;
+			} else if (which === 'warning') {
+				this.warningStatusBarItem.backgroundColor = color;
+			}
+		}
 	}
 	/**
 	 * Dispose status bar item.

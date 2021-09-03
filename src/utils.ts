@@ -5,7 +5,8 @@ import { Uri } from 'vscode';
  * Cut off string if it's longer than configured number of characters.
  */
 export function truncateString(str: string): string {
-	return str.length > extensionConfig.messageMaxChars ? `${str.slice(0, extensionConfig.messageMaxChars)}…` : str;
+	const chars = [...str];
+	return chars.length > extensionConfig.messageMaxChars ? `${chars.slice(0, extensionConfig.messageMaxChars).join('')}…` : str;
 }
 /**
  * Replace linebreaks with the one whitespace symbol.

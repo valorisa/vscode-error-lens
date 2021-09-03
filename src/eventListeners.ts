@@ -1,6 +1,6 @@
 import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
-import { extensionConfig, Global } from 'src/extension';
+import { $config, Global } from 'src/extension';
 import { DiagnosticChangeEvent, languages, TextDocumentSaveReason, window, workspace } from 'vscode';
 /**
  * Update listener for when active editor changes.
@@ -9,7 +9,7 @@ export function updateChangedActiveTextEditorListener() {
 	Global.onDidChangeActiveTextEditor?.dispose();
 
 	Global.onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(textEditor => {
-		if (extensionConfig.onSave) {
+		if ($config.onSave) {
 			Global.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
 		}
 		if (textEditor) {
@@ -42,20 +42,20 @@ export function updateChangeDiagnosticListener() {
 				}
 			}
 		}
-		if (extensionConfig.statusBarIconsEnabled) {
+		if ($config.statusBarIconsEnabled) {
 			Global.statusBarIcons.updateText();
 		}
 	}
-	if (extensionConfig.onSave) {
+	if ($config.onSave) {
 		Global.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
-			if (Date.now() - Global.lastSavedTimestamp < extensionConfig.onSaveTimeout) {
+			if (Date.now() - Global.lastSavedTimestamp < $config.onSaveTimeout) {
 				onChangedDiagnostics(e);
 			}
 		});
 		return;
 	}
-	if (typeof extensionConfig.delay === 'number' && extensionConfig.delay > 0) {
-		Global.customDelay = new CustomDelay(extensionConfig.delay);
+	if (typeof $config.delay === 'number' && $config.delay > 0) {
+		Global.customDelay = new CustomDelay($config.delay);
 		Global.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(Global.customDelay.onDiagnosticChange);
 	} else {
 		Global.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnostics);
@@ -67,7 +67,7 @@ export function updateChangeDiagnosticListener() {
 export function updateCursorChangeListener() {
 	Global.onDidCursorChangeDisposable?.dispose();
 
-	if (extensionConfig.followCursor === 'activeLine' || extensionConfig.followCursor === 'closestProblem' || extensionConfig.statusBarMessageEnabled) {
+	if ($config.followCursor === 'activeLine' || $config.followCursor === 'closestProblem' || $config.statusBarMessageEnabled) {
 		let lastPositionLine = 999999;// Unlikely line number
 		Global.onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];
@@ -90,7 +90,7 @@ export function updateCursorChangeListener() {
 export function updateOnSaveListener() {
 	Global.onDidSaveTextDocumentDisposable?.dispose();
 
-	if (!extensionConfig.onSave) {
+	if (!$config.onSave) {
 		return;
 	}
 	Global.onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {

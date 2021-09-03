@@ -1,4 +1,4 @@
-import { extensionConfig, Global } from 'src/extension';
+import { $config, Global } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
@@ -8,32 +8,32 @@ import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOpt
  */
 export function setDecorationStyle() {
 	let gutter;
-	if (extensionConfig.gutterIconsEnabled) {
+	if ($config.gutterIconsEnabled) {
 		gutter = getGutterStyles(Global.extensionContext);
 
 		if (Global.renderGutterIconsAsSeparateDecoration) {
 			Global.decorationTypeGutterError = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.errorIconPath,
-				gutterIconSize: extensionConfig.gutterIconSize,
+				gutterIconSize: $config.gutterIconSize,
 				light: {
 					gutterIconPath: gutter.errorIconPathLight,
-					gutterIconSize: extensionConfig.gutterIconSize,
+					gutterIconSize: $config.gutterIconSize,
 				},
 			});
 			Global.decorationTypeGutterWarning = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.warningIconPath,
-				gutterIconSize: extensionConfig.gutterIconSize,
+				gutterIconSize: $config.gutterIconSize,
 				light: {
 					gutterIconPath: gutter.warningIconPathLight,
-					gutterIconSize: extensionConfig.gutterIconSize,
+					gutterIconSize: $config.gutterIconSize,
 				},
 			});
 			Global.decorationTypeGutterInfo = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.infoIconPath,
-				gutterIconSize: extensionConfig.gutterIconSize,
+				gutterIconSize: $config.gutterIconSize,
 				light: {
 					gutterIconPath: gutter.infoIconPathLight,
-					gutterIconSize: extensionConfig.gutterIconSize,
+					gutterIconSize: $config.gutterIconSize,
 				},
 			});
 			// gutter will be rendered as a separate decoration, delete gutter from ordinary decorations
@@ -72,23 +72,23 @@ export function setDecorationStyle() {
 
 
 	const onlyDigitsRegExp = /^\d+$/;
-	const fontFamily = extensionConfig.fontFamily ? `font-family:${extensionConfig.fontFamily}` : '';
-	const fontSize = extensionConfig.fontSize ? `font-size:${onlyDigitsRegExp.test(extensionConfig.fontSize) ? `${extensionConfig.fontSize}px` : extensionConfig.fontSize}` : '';
-	const marginLeft = onlyDigitsRegExp.test(extensionConfig.margin) ? `${extensionConfig.margin}px` : extensionConfig.margin;
-	const padding = extensionConfig.padding ? `padding:${onlyDigitsRegExp.test(extensionConfig.padding) ? `${extensionConfig.padding}px` : extensionConfig.padding}` : '';
-	const borderRadius = `border-radius: ${extensionConfig.borderRadius || '0'}`;
-	const scrollbarHack = extensionConfig.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
+	const fontFamily = $config.fontFamily ? `font-family:${$config.fontFamily}` : '';
+	const fontSize = $config.fontSize ? `font-size:${onlyDigitsRegExp.test($config.fontSize) ? `${$config.fontSize}px` : $config.fontSize}` : '';
+	const marginLeft = onlyDigitsRegExp.test($config.margin) ? `${$config.margin}px` : $config.margin;
+	const padding = $config.padding ? `padding:${onlyDigitsRegExp.test($config.padding) ? `${$config.padding}px` : $config.padding}` : '';
+	const borderRadius = `border-radius: ${$config.borderRadius || '0'}`;
+	const scrollbarHack = $config.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
 
 	const afterProps: ThemableDecorationAttachmentRenderOptions = {
-		fontStyle: extensionConfig.fontStyleItalic ? 'italic' : 'normal',
-		fontWeight: extensionConfig.fontWeight,
+		fontStyle: $config.fontStyleItalic ? 'italic' : 'normal',
+		fontWeight: $config.fontWeight,
 		margin: `0 0 0 ${marginLeft}`,
 		textDecoration: `none;${fontFamily};${fontSize};${padding};${borderRadius};${scrollbarHack}`,
 	};
 
 	Global.decorationRenderOptionsError = {
 		backgroundColor: errorBackground,
-		gutterIconSize: extensionConfig.gutterIconSize,
+		gutterIconSize: $config.gutterIconSize,
 		gutterIconPath: gutter?.errorIconPath,
 		after: {
 			...afterProps,
@@ -97,7 +97,7 @@ export function setDecorationStyle() {
 		},
 		light: {
 			backgroundColor: errorBackgroundLight,
-			gutterIconSize: extensionConfig.gutterIconSize,
+			gutterIconSize: $config.gutterIconSize,
 			gutterIconPath: gutter?.errorIconPathLight,
 			after: {
 				color: errorForegroundLight,
@@ -107,7 +107,7 @@ export function setDecorationStyle() {
 	};
 	Global.decorationRenderOptionsWarning = {
 		backgroundColor: warningBackground,
-		gutterIconSize: extensionConfig.gutterIconSize,
+		gutterIconSize: $config.gutterIconSize,
 		gutterIconPath: gutter?.warningIconPath,
 		after: {
 			...afterProps,
@@ -116,7 +116,7 @@ export function setDecorationStyle() {
 		},
 		light: {
 			backgroundColor: warningBackgroundLight,
-			gutterIconSize: extensionConfig.gutterIconSize,
+			gutterIconSize: $config.gutterIconSize,
 			gutterIconPath: gutter?.warningIconPathLight,
 			after: {
 				color: warningForegroundLight,
@@ -126,7 +126,7 @@ export function setDecorationStyle() {
 	};
 	Global.decorationRenderOptionsInfo = {
 		backgroundColor: infoBackground,
-		gutterIconSize: extensionConfig.gutterIconSize,
+		gutterIconSize: $config.gutterIconSize,
 		gutterIconPath: gutter?.infoIconPath,
 		after: {
 			...afterProps,
@@ -135,7 +135,7 @@ export function setDecorationStyle() {
 		},
 		light: {
 			backgroundColor: infoBackgroundLight,
-			gutterIconSize: extensionConfig.gutterIconSize,
+			gutterIconSize: $config.gutterIconSize,
 			gutterIconPath: gutter?.infoIconPathLight,
 			after: {
 				color: infoForegroundLight,
@@ -159,7 +159,7 @@ export function setDecorationStyle() {
 		isWholeLine: true,
 	};
 
-	if (!extensionConfig.messageEnabled) {
+	if (!$config.messageEnabled) {
 		Global.decorationRenderOptionsError.backgroundColor = undefined;
 		Global.decorationRenderOptionsError.after = undefined;
 		Global.decorationRenderOptionsError.light!.backgroundColor = undefined;
@@ -199,14 +199,14 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 	const decorationOptionsHint: DecorationOptions[] = [];
 
 	let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
-	if (extensionConfig.followCursor === 'closestProblem') {
+	if ($config.followCursor === 'closestProblem') {
 		if (range === undefined) {
 			range = editor.selection;
 		}
 		const line = range.start.line;
 
 		const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
-		aggregatedDiagnosticsAsArray.length = extensionConfig.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
+		aggregatedDiagnosticsAsArray.length = $config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
 		allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
 	}
 
@@ -232,20 +232,20 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 				case 3: decorationRenderOptions = Global.decorationRenderOptionsHint; break;
 			}
 
-			const message = diagnosticToInlineMessage(extensionConfig.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+			const message = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
 
 			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 				...decorationRenderOptions,
 				after: {
 					...decorationRenderOptions.after || {},
 					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-					contentText: extensionConfig.messageEnabled ?
-						truncateString(extensionConfig.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
+					contentText: $config.messageEnabled ?
+						truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
 				},
 			};
 
 			let messageRange: Range | undefined;
-			if (extensionConfig.followCursor === 'allLines') {
+			if ($config.followCursor === 'allLines') {
 				// Default value (most used)
 				messageRange = diagnostic.range;
 			} else {
@@ -255,15 +255,15 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 				}
 				const diagnosticRange = diagnostic.range;
 
-				if (extensionConfig.followCursor === 'activeLine') {
-					const lineStart = range.start.line - extensionConfig.followCursorMore;
-					const lineEnd = range.end.line + extensionConfig.followCursorMore;
+				if ($config.followCursor === 'activeLine') {
+					const lineStart = range.start.line - $config.followCursorMore;
+					const lineEnd = range.end.line + $config.followCursorMore;
 
 					if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
 							diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
 						messageRange = diagnosticRange;
 					}
-				} else if (extensionConfig.followCursor === 'closestProblem') {
+				} else if ($config.followCursor === 'closestProblem') {
 					if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
 						messageRange = diagnosticRange;
 					}
@@ -410,7 +410,7 @@ export function diagnosticToInlineMessage(template: string, diagnostic: Diagnost
 		// Message & severity is always present.
 		let result = template
 			.replace(TemplateVars.message, diagnostic.message)
-			.replace(TemplateVars.severity, extensionConfig.severityText[diagnostic.severity] || '');
+			.replace(TemplateVars.severity, $config.severityText[diagnostic.severity] || '');
 		/**
 		 * Count, source & code can be absent.
 		 * If present - replace them as simple string.

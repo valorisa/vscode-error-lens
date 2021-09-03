@@ -1,5 +1,5 @@
 import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
-import { extensionConfig } from 'src/extension';
+import { $config } from 'src/extension';
 import { AggregatedByLineDiagnostics, CommandIds, ExtensionConfig } from 'src/types';
 import { replaceLinebreaks } from 'src/utils';
 import { Diagnostic, Position, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
@@ -107,12 +107,12 @@ export class StatusBarMessage {
 		this.activeMessagePosition = diagnostic.range.start;
 
 		let message = diagnosticToInlineMessage(
-			extensionConfig.statusBarMessageTemplate || extensionConfig.messageTemplate,
+			$config.statusBarMessageTemplate || $config.messageTemplate,
 			diagnostic,
 			numberOfDiagnosticsOnThatLine,
 		);
 
-		if (extensionConfig.removeLinebreaks) {
+		if ($config.removeLinebreaks) {
 			message = replaceLinebreaks(message);
 		}
 

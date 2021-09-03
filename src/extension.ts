@@ -9,7 +9,7 @@ import { DecorationRenderOptions, Disposable, ExtensionContext, TextEditorDecora
 /**
  * All user settings.
  */
-export let extensionConfig: ExtensionConfig;
+export let $config: ExtensionConfig;
 
 /**
  * Global variables
@@ -88,9 +88,9 @@ export function activate(extensionContext: ExtensionContext) {
 	 * - Update everything
 	 */
 	function updateConfigAndEverything() {
-		extensionConfig = workspace.getConfiguration().get(Constants.EXTENSION_NAME) as ExtensionConfig;
+		$config = workspace.getConfiguration().get(Constants.EXTENSION_NAME) as ExtensionConfig;
 		disposeEverything();
-		if (extensionConfig.enabled) {
+		if ($config.enabled) {
 			updateEverything();
 		}
 	}
@@ -110,14 +110,14 @@ export function activate(extensionContext: ExtensionContext) {
  */
 export function updateEverything() {
 	updateExclude();
-	Global.renderGutterIconsAsSeparateDecoration = extensionConfig.gutterIconsEnabled && extensionConfig.gutterIconsFollowCursorOverride && extensionConfig.followCursor !== 'allLines';
+	Global.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled && $config.gutterIconsFollowCursorOverride && $config.followCursor !== 'allLines';
 	Global.statusBarMessage?.dispose();
 	Global.statusBarIcons?.dispose();
 	Global.statusBarMessage = new StatusBarMessage(
-		extensionConfig.statusBarMessageEnabled,
-		extensionConfig.statusBarColorsEnabled,
-		extensionConfig.statusBarMessageType);
-	Global.statusBarIcons = new StatusBarIcons(extensionConfig.statusBarIconsEnabled, extensionConfig.statusBarIconsAtZero, extensionConfig.statusBarIconsUseBackground);
+		$config.statusBarMessageEnabled,
+		$config.statusBarColorsEnabled,
+		$config.statusBarMessageType);
+	Global.statusBarIcons = new StatusBarIcons($config.statusBarIconsEnabled, $config.statusBarIconsAtZero, $config.statusBarIconsUseBackground);
 	setDecorationStyle();
 	updateConfigEnabledLevels();
 
@@ -135,15 +135,15 @@ export function updateEverything() {
  */
 function updateExclude() {
 	Global.excludeRegexp = [];
-	Global.excludeSources = extensionConfig.excludeBySource;
+	Global.excludeSources = $config.excludeBySource;
 
-	for (const item of extensionConfig.exclude) {
+	for (const item of $config.exclude) {
 		if (typeof item === 'string') {
 			Global.excludeRegexp.push(new RegExp(item, 'i'));
 		}
 	}
-	if (Array.isArray(extensionConfig.excludePatterns) && extensionConfig.excludePatterns.length !== 0) {
-		Global.excludePatterns = extensionConfig.excludePatterns.map(item => ({
+	if (Array.isArray($config.excludePatterns) && $config.excludePatterns.length !== 0) {
+		Global.excludePatterns = $config.excludePatterns.map(item => ({
 			pattern: item,
 		}));
 	} else {
@@ -154,10 +154,10 @@ function updateExclude() {
  * Update global varialbes for enabled severity levels of diagnostics based on user setting `enabledDiagnosticLevels`.
  */
 function updateConfigEnabledLevels() {
-	Global.configErrorEnabled = extensionConfig.enabledDiagnosticLevels.includes('error');
-	Global.configWarningEnabled = extensionConfig.enabledDiagnosticLevels.includes('warning');
-	Global.configInfoEnabled = extensionConfig.enabledDiagnosticLevels.includes('info');
-	Global.configHintEnabled = extensionConfig.enabledDiagnosticLevels.includes('hint');
+	Global.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
+	Global.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
+	Global.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
+	Global.configHintEnabled = $config.enabledDiagnosticLevels.includes('hint');
 }
 /**
  * Dispose all known disposables (except `onDidChangeConfiguration`).

@@ -1,4 +1,4 @@
-import { extensionConfig } from 'src/extension';
+import { $config } from 'src/extension';
 import { Uri } from 'vscode';
 
 /**
@@ -6,7 +6,7 @@ import { Uri } from 'vscode';
  */
 export function truncateString(str: string): string {
 	const chars = [...str];
-	return chars.length > extensionConfig.messageMaxChars ? `${chars.slice(0, extensionConfig.messageMaxChars).join('')}…` : str;
+	return chars.length > $config.messageMaxChars ? `${chars.slice(0, $config.messageMaxChars).join('')}…` : str;
 }
 /**
  * Replace linebreaks with the one whitespace symbol.

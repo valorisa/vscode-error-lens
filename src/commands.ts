@@ -1,4 +1,4 @@
-import { extensionConfig, Global } from 'src/extension';
+import { $config, Global } from 'src/extension';
 import { toggleEnabledLevels, updateGlobalSetting } from 'src/settings';
 import { AggregatedByLineDiagnostics, CommandIds } from 'src/types';
 import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window, workspace } from 'vscode';
@@ -7,19 +7,19 @@ import { commands, env, ExtensionContext, languages, Range, Selection, TextEdito
  */
 export function registerAllCommands(extensionContext: ExtensionContext) {
 	const disposableToggleErrorLens = commands.registerCommand(CommandIds.toggle, () => {
-		updateGlobalSetting('errorLens.enabled', !extensionConfig.enabled);
+		updateGlobalSetting('errorLens.enabled', !$config.enabled);
 	});
 	const disposableToggleError = commands.registerCommand(CommandIds.toggleError, () => {
-		toggleEnabledLevels('error', extensionConfig.enabledDiagnosticLevels);
+		toggleEnabledLevels('error', $config.enabledDiagnosticLevels);
 	});
 	const disposableToggleWarning = commands.registerCommand(CommandIds.toggleWarning, () => {
-		toggleEnabledLevels('warning', extensionConfig.enabledDiagnosticLevels);
+		toggleEnabledLevels('warning', $config.enabledDiagnosticLevels);
 	});
 	const disposableToggleInfo = commands.registerCommand(CommandIds.toggleInfo, () => {
-		toggleEnabledLevels('info', extensionConfig.enabledDiagnosticLevels);
+		toggleEnabledLevels('info', $config.enabledDiagnosticLevels);
 	});
 	const disposableToggleHint = commands.registerCommand(CommandIds.toggleHint, () => {
-		toggleEnabledLevels('hint', extensionConfig.enabledDiagnosticLevels);
+		toggleEnabledLevels('hint', $config.enabledDiagnosticLevels);
 	});
 
 	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandIds.copyProblemMessage, editor => {
@@ -45,16 +45,16 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 	});
 
 	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandIds.statusBarCommand, async editor => {
-		if (extensionConfig.statusBarCommand === 'goToLine' || extensionConfig.statusBarCommand === 'goToProblem') {
+		if ($config.statusBarCommand === 'goToLine' || $config.statusBarCommand === 'goToProblem') {
 			const range = new Range(Global.statusBarMessage.activeMessagePosition, Global.statusBarMessage.activeMessagePosition);
 			editor.selection = new Selection(range.start, range.end);
 			editor.revealRange(range, TextEditorRevealType.Default);
 			await commands.executeCommand('workbench.action.focusActiveEditorGroup');
 
-			if (extensionConfig.statusBarCommand === 'goToProblem') {
+			if ($config.statusBarCommand === 'goToProblem') {
 				commands.executeCommand('editor.action.marker.next');
 			}
-		} else if (extensionConfig.statusBarCommand === 'copyMessage') {
+		} else if ($config.statusBarCommand === 'copyMessage') {
 			const source = Global.statusBarMessage.activeMessageSource ? `[${Global.statusBarMessage.activeMessageSource}] ` : '';
 			env.clipboard.writeText(source + Global.statusBarMessage.activeMessageText);
 		}

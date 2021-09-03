@@ -1,5 +1,5 @@
 import { isSeverityEnabled } from 'src/decorations';
-import { extensionConfig, Global } from 'src/extension';
+import { $config, Global } from 'src/extension';
 import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
 import { svgToUri } from 'src/utils';
 import { DecorationOptions, ExtensionContext, TextEditor } from 'vscode';
@@ -8,15 +8,15 @@ import { DecorationOptions, ExtensionContext, TextEditor } from 'vscode';
  */
 export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 	const gutter: Gutter = Object.create(null);
-	gutter.iconSet = extensionConfig.gutterIconSet;
+	gutter.iconSet = $config.gutterIconSet;
 
-	if (extensionConfig.gutterIconSet === 'circle') {
-		gutter.errorIconPath = svgToUri(createCircleIcon(extensionConfig.errorGutterIconColor));
-		gutter.errorIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.errorGutterIconColor || extensionConfig.errorGutterIconColor));
-		gutter.warningIconPath = svgToUri(createCircleIcon(extensionConfig.warningGutterIconColor));
-		gutter.warningIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.warningGutterIconColor || extensionConfig.warningGutterIconColor));
-		gutter.infoIconPath = svgToUri(createCircleIcon(extensionConfig.infoGutterIconColor));
-		gutter.infoIconPathLight = svgToUri(createCircleIcon(extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconColor));
+	if ($config.gutterIconSet === 'circle') {
+		gutter.errorIconPath = svgToUri(createCircleIcon($config.errorGutterIconColor));
+		gutter.errorIconPathLight = svgToUri(createCircleIcon($config.light.errorGutterIconColor || $config.errorGutterIconColor));
+		gutter.warningIconPath = svgToUri(createCircleIcon($config.warningGutterIconColor));
+		gutter.warningIconPathLight = svgToUri(createCircleIcon($config.light.warningGutterIconColor || $config.warningGutterIconColor));
+		gutter.infoIconPath = svgToUri(createCircleIcon($config.infoGutterIconColor));
+		gutter.infoIconPathLight = svgToUri(createCircleIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
 		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
@@ -26,23 +26,23 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.infoIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
 	}
 	// ──── User specified custom gutter path ─────────────────────
-	if (extensionConfig.errorGutterIconPath) {
-		gutter.errorIconPath = extensionConfig.errorGutterIconPath;
+	if ($config.errorGutterIconPath) {
+		gutter.errorIconPath = $config.errorGutterIconPath;
 	}
-	if (extensionConfig.light.errorGutterIconPath || extensionConfig.errorGutterIconPath) {
-		gutter.errorIconPathLight = extensionConfig.light.errorGutterIconPath || extensionConfig.errorGutterIconPath;
+	if ($config.light.errorGutterIconPath || $config.errorGutterIconPath) {
+		gutter.errorIconPathLight = $config.light.errorGutterIconPath || $config.errorGutterIconPath;
 	}
-	if (extensionConfig.warningGutterIconPath) {
-		gutter.warningIconPath = extensionConfig.warningGutterIconPath;
+	if ($config.warningGutterIconPath) {
+		gutter.warningIconPath = $config.warningGutterIconPath;
 	}
-	if (extensionConfig.light.warningGutterIconPath || extensionConfig.warningGutterIconPath) {
-		gutter.warningIconPathLight = extensionConfig.light.warningGutterIconColor || extensionConfig.warningGutterIconPath;
+	if ($config.light.warningGutterIconPath || $config.warningGutterIconPath) {
+		gutter.warningIconPathLight = $config.light.warningGutterIconColor || $config.warningGutterIconPath;
 	}
-	if (extensionConfig.infoGutterIconPath) {
-		gutter.infoIconPath = extensionConfig.infoGutterIconPath;
+	if ($config.infoGutterIconPath) {
+		gutter.infoIconPath = $config.infoGutterIconPath;
 	}
-	if (extensionConfig.light.infoGutterIconPath || extensionConfig.infoGutterIconPath) {
-		gutter.infoIconPathLight = extensionConfig.light.infoGutterIconColor || extensionConfig.infoGutterIconPath;
+	if ($config.light.infoGutterIconPath || $config.infoGutterIconPath) {
+		gutter.infoIconPathLight = $config.light.infoGutterIconColor || $config.infoGutterIconPath;
 	}
 
 	return gutter;

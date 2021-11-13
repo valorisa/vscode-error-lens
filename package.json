@@ -189,7 +189,7 @@
 						"type": "string"
 					},
 					"markdownDescription": "Specify diagnostic message prefixes (when `#errorLens.addAnnotationTextPrefixes#` is enabled). For example, emoji: ❗ ⚠ ℹ.",
-					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.severityText#` & `#errorLens.messageTemplate#`.\n\nhttps://github.com/usernamehw/vscode-error-lens/issues/92",
+					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.severityText#` & `#errorLens.messageTemplate#`. https://github.com/usernamehw/vscode-error-lens/issues/92",
 					"default": [
 						"ERROR: ",
 						"WARNING: ",
@@ -201,13 +201,13 @@
 				"errorLens.addAnnotationTextPrefixes": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - prepends diagnostic severity ('ERROR:', 'WARNING:' etc) to the message. (Prefixes can be configured with `annotationPrefix` setting).",
-					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`.\n\nhttps://github.com/usernamehw/vscode-error-lens/issues/92",
+					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`. https://github.com/usernamehw/vscode-error-lens/issues/92",
 					"default": false
 				},
 				"errorLens.addNumberOfDiagnostics": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.",
-					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`.\n\nhttps://github.com/usernamehw/vscode-error-lens/issues/92",
+					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`. https://github.com/usernamehw/vscode-error-lens/issues/92",
 					"default": false
 				},
 				"errorLens.messageEnabled": {

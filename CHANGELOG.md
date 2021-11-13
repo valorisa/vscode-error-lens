@@ -1,3 +1,10 @@
+## 3.4.1 `13 Nov 2021`
+
+- ✨ Create foreground colors for status bar icons #98
+- ✨ Maximum Message Length #100
+- 🐛 Fix separated status bar icons #96
+- 🐛 Remove newlines from the deprecation message #99
+
 ## 3.4.0 `06 Aug 2021`
 
 - 💥 Create setting `errorLens.enabled` . Toggle commands now use global `settigns.json` to save their state.

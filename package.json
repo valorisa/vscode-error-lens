@@ -637,7 +637,7 @@
 					"light": "#e45454",
 					"highContrast": "#ff6464"
 				},
-				"description": "Status bar icon item error color."
+				"description": "Status bar icon item error color. Foreground is used when the `errorLens.statusBarIconsUseBackground` setting is disabled."
 			},
 			{
 				"id": "errorLens.statusBarIconWarningForeground",
@@ -646,7 +646,7 @@
 					"light": "#ff942f",
 					"highContrast": "#fa973a"
 				},
-				"description": "Status bar icon item error color."
+				"description": "Status bar icon item error color. Foreground is used when the `errorLens.statusBarIconsUseBackground` setting is disabled."
 			},
 			{
 				"id": "errorLens.statusBarErrorForeground",

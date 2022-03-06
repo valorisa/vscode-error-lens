@@ -3,6 +3,7 @@ import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
 import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window } from 'vscode';
+
 /**
  * Update all decoration styles: editor, gutter, status bar
  */
@@ -41,35 +42,64 @@ export function setDecorationStyle() {
 		}
 	}
 
-	const errorBackground = new ThemeColor('errorLens.errorBackground');
-	const errorBackgroundLight = new ThemeColor('errorLens.errorBackgroundLight');
+	let errorBackground: ThemeColor | undefined = new ThemeColor('errorLens.errorBackground');
+	let errorBackgroundLight: ThemeColor | undefined = new ThemeColor('errorLens.errorBackgroundLight');
 	const errorForeground = new ThemeColor('errorLens.errorForeground');
 	const errorForegroundLight = new ThemeColor('errorLens.errorForegroundLight');
-	const errorMessageBackground = new ThemeColor('errorLens.errorMessageBackground');
+	let errorMessageBackground: ThemeColor | undefined = new ThemeColor('errorLens.errorMessageBackground');
 
-	const warningBackground = new ThemeColor('errorLens.warningBackground');
-	const warningBackgroundLight = new ThemeColor('errorLens.warningBackgroundLight');
+	let warningBackground: ThemeColor | undefined = new ThemeColor('errorLens.warningBackground');
+	let warningBackgroundLight: ThemeColor | undefined = new ThemeColor('errorLens.warningBackgroundLight');
 	const warningForeground = new ThemeColor('errorLens.warningForeground');
 	const warningForegroundLight = new ThemeColor('errorLens.warningForegroundLight');
-	const warningMessageBackground = new ThemeColor('errorLens.warningMessageBackground');
+	let warningMessageBackground: ThemeColor | undefined = new ThemeColor('errorLens.warningMessageBackground');
 
-	const infoBackground = new ThemeColor('errorLens.infoBackground');
-	const infoBackgroundLight = new ThemeColor('errorLens.infoBackgroundLight');
+	let infoBackground: ThemeColor | undefined = new ThemeColor('errorLens.infoBackground');
+	let infoBackgroundLight: ThemeColor | undefined = new ThemeColor('errorLens.infoBackgroundLight');
 	const infoForeground = new ThemeColor('errorLens.infoForeground');
 	const infoForegroundLight = new ThemeColor('errorLens.infoForegroundLight');
-	const infoMessageBackground = new ThemeColor('errorLens.infoMessageBackground');
+	let infoMessageBackground: ThemeColor | undefined = new ThemeColor('errorLens.infoMessageBackground');
 
-	const hintBackground = new ThemeColor('errorLens.hintBackground');
-	const hintBackgroundLight = new ThemeColor('errorLens.hintBackgroundLight');
+	let hintBackground: ThemeColor | undefined = new ThemeColor('errorLens.hintBackground');
+	let hintBackgroundLight: ThemeColor | undefined = new ThemeColor('errorLens.hintBackgroundLight');
 	const hintForeground = new ThemeColor('errorLens.hintForeground');
 	const hintForegroundLight = new ThemeColor('errorLens.hintForegroundLight');
-	const hintMessageBackground = new ThemeColor('errorLens.hintMessageBackground');
+	let hintMessageBackground: ThemeColor | undefined = new ThemeColor('errorLens.hintMessageBackground');
 
 	const statusBarErrorForeground = new ThemeColor('errorLens.statusBarErrorForeground');
 	const statusBarWarningForeground = new ThemeColor('errorLens.statusBarWarningForeground');
 	const statusBarInfoForeground = new ThemeColor('errorLens.statusBarInfoForeground');
 	const statusBarHintForeground = new ThemeColor('errorLens.statusBarHintForeground');
 
+	if ($config.messageBackgroundMode === 'line') {
+		errorMessageBackground = undefined;
+		warningMessageBackground = undefined;
+		infoMessageBackground = undefined;
+		hintMessageBackground = undefined;
+	} else if ($config.messageBackgroundMode === 'message') {
+		errorBackground = undefined;
+		errorBackgroundLight = undefined;
+		warningBackground = undefined;
+		warningBackgroundLight = undefined;
+		infoBackground = undefined;
+		infoBackgroundLight = undefined;
+		hintBackground = undefined;
+		hintBackgroundLight = undefined;
+	} else if ($config.messageBackgroundMode === 'none') {
+		errorBackground = undefined;
+		errorBackgroundLight = undefined;
+		warningBackground = undefined;
+		warningBackgroundLight = undefined;
+		infoBackground = undefined;
+		infoBackgroundLight = undefined;
+		hintBackground = undefined;
+		hintBackgroundLight = undefined;
+
+		errorMessageBackground = undefined;
+		warningMessageBackground = undefined;
+		infoMessageBackground = undefined;
+		hintMessageBackground = undefined;
+	}
 
 	const onlyDigitsRegExp = /^\d+$/;
 	const fontFamily = $config.fontFamily ? `font-family:${$config.fontFamily}` : '';

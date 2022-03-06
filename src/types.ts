@@ -19,6 +19,8 @@ interface ExtensionConfigType {
 	borderRadius: string;
 	/** Controls whether inline message is shown or not (Including background highlight). */
 	messageEnabled: boolean;
+	/** Controls how inline message is highlighted in the editor (entire line / only message / none). */
+	messageBackgroundMode: 'line' | 'message' | 'none';
 	/** Choose which levels of diagnostics to highlight. */
 	enabledDiagnosticLevels: ('error' | 'hint' | 'info' | 'warning')[];
 	/** Template used for all inline messages. Interpolates `$message`, `$source`, `$code`, `$count`, `$severity`. */

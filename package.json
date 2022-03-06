@@ -215,6 +215,21 @@
 					"default": true,
 					"description": "Controls whether inline message is shown or not (Including background highlight)."
 				},
+				"errorLens.messageBackgroundMode": {
+					"type": "string",
+					"default": "line",
+					"enum": [
+						"line",
+						"message",
+						"none"
+					],
+					"enumDescriptions": [
+						"The entire line is highlighted.",
+						"Inline message is highlighted.",
+						"Message is not highlighted (only has foreground colors)."
+					],
+					"description": "Controls how inline message is highlighted in the editor (entire line / only message / none)."
+				},
 				"errorLens.statusBarIconsEnabled": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - shows highlighted error/warning icons in status bar.",
@@ -462,9 +477,9 @@
 			{
 				"id": "errorLens.errorMessageBackground",
 				"defaults": {
-					"dark": "#fff0",
-					"light": "#fff0",
-					"highContrast": "#fff0"
+					"dark": "#e4545419",
+					"light": "#e4545419",
+					"highContrast": "#e4545419"
 				},
 				"description": "Background color of the error message."
 			},
@@ -507,9 +522,9 @@
 			{
 				"id": "errorLens.warningMessageBackground",
 				"defaults": {
-					"dark": "#fff0",
-					"light": "#fff0",
-					"highContrast": "#fff0"
+					"dark": "#ff942f19",
+					"light": "#ff942f19",
+					"highContrast": "#ff942f19"
 				},
 				"description": "Background color of the warning message."
 			},
@@ -552,9 +567,9 @@
 			{
 				"id": "errorLens.infoMessageBackground",
 				"defaults": {
-					"dark": "#fff0",
-					"light": "#fff0",
-					"highContrast": "#fff0"
+					"dark": "#00b7e419",
+					"light": "#00b7e419",
+					"highContrast": "#00b7e419"
 				},
 				"description": "Background color of the info message."
 			},
@@ -597,9 +612,9 @@
 			{
 				"id": "errorLens.hintMessageBackground",
 				"defaults": {
-					"dark": "#fff0",
-					"light": "#fff0",
-					"highContrast": "#fff0"
+					"dark": "#17a2a219",
+					"light": "#17a2a219",
+					"highContrast": "#17a2a219"
 				},
 				"description": "Background color of the hint message."
 			},

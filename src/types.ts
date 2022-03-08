@@ -68,6 +68,8 @@ interface ExtensionConfigType {
 	onSave: boolean;
 	/** Time period that used for showing decorations after the document save (manual). */
 	onSaveTimeout: number;
+	/** Enable decorations when viewing a diff view in the editor (e.g. Git diff). */
+	enableOnDiffView: boolean;
 	/** Prevent scrollbars from appearing for decorations. */
 	scrollbarHackEnabled: boolean;
 	/** When enabled - replaces line breaks in inline diagnostic message with the whitespace ` ` sign. */

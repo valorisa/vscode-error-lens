@@ -367,6 +367,11 @@
 					"description": "Time period (ms) that used for showing decorations after the document save.",
 					"default": 1000
 				},
+				"errorLens.enableOnDiffView": {
+					"type": "boolean",
+					"markdownDescription": "Enable decorations when viewing a diff view in the editor (e.g. Git diff).",
+					"default": false
+				},
 				"errorLens.followCursor": {
 					"type": "string",
 					"enum": [

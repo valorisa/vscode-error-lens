@@ -349,6 +349,10 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		return;
 	}
 
+	if (!$config.enableOnDiffView && editor.viewColumn === undefined) {
+		return;
+	}
+
 	if (Global.excludePatterns) {
 		for (const pattern of Global.excludePatterns) {
 			if (languages.match(pattern, editor.document) !== 0) {

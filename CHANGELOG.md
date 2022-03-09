@@ -1,3 +1,8 @@
+## 3.4.2 `09 Mar 2022`
+
+- ✨ Add option to disable decorations on diff view **`"errorLens.enableOnDiffView"`** (#72)
+- ✨ Add option to quickly switch between line background highlighting modes **`"errorLens.messageBackgroundMode"`** (#113)
+
 ## 3.4.1 `13 Nov 2021`
 
 - ✨ Create foreground colors for status bar icons #98

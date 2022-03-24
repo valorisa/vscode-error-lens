@@ -376,11 +376,13 @@
 					"type": "string",
 					"enum": [
 						"allLines",
+						"allLinesExceptActive",
 						"activeLine",
 						"closestProblem"
 					],
 					"enumDescriptions": [
 						"Highlight all problems in file",
+						"Highlight all problems in file (except the line at the cursor)",
 						"Highlight only the problem at the cursor",
 						"Highlight only closest to the cursor problem"
 					],

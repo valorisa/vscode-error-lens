@@ -67,7 +67,12 @@ export function updateChangeDiagnosticListener() {
 export function updateCursorChangeListener() {
 	Global.onDidCursorChangeDisposable?.dispose();
 
-	if ($config.followCursor === 'activeLine' || $config.followCursor === 'closestProblem' || $config.statusBarMessageEnabled) {
+	if (
+		$config.followCursor === 'activeLine' ||
+		$config.followCursor === 'closestProblem' ||
+		$config.followCursor === 'allLinesExceptActive' ||
+		$config.statusBarMessageEnabled
+	) {
 		let lastPositionLine = 999999;// Unlikely line number
 		Global.onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];

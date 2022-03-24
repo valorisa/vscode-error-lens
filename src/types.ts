@@ -102,7 +102,7 @@ interface ExtensionConfigType {
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
 
 export type GutterIconSet = 'borderless' | 'circle' | 'default' | 'defaultOutline';
-export type FollowCursor = 'activeLine' | 'allLines' | 'closestProblem';
+export type FollowCursor = 'activeLine' | 'allLines' | 'allLinesExceptActive' | 'closestProblem';
 
 export interface AggregatedByLineDiagnostics {
 	[lineNumber: string]: Diagnostic[];

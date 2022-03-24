@@ -290,7 +290,17 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 					const lineEnd = range.end.line + $config.followCursorMore;
 
 					if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
-							diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
+						diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
+						messageRange = diagnosticRange;
+					}
+				} else if ($config.followCursor === 'allLinesExceptActive') {
+					const lineStart = range.start.line;
+					const lineEnd = range.end.line;
+
+					if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
+						diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
+						messageRange = undefined;
+					} else {
 						messageRange = diagnosticRange;
 					}
 				} else if ($config.followCursor === 'closestProblem') {

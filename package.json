@@ -122,17 +122,17 @@
 				"errorLens.fontSize": {
 					"type": "string",
 					"default": "",
-					"description": "Font size of inline message (CSS units)."
+					"markdownDescription": "Font size of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length))."
 				},
 				"errorLens.margin": {
 					"type": "string",
 					"default": "4ch",
-					"description": "Distance between the last word on the line and the start of inline message (CSS units)."
+					"description": "Distance between the last word on the line and the start of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length))."
 				},
 				"errorLens.padding": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Padding of the message. Visible difference when `message` colors are set. [issues/23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `2px 1ch`.",
+					"markdownDescription": "Padding of the inline message. Visible when `#errorLens.messageBackgroundMode#` is set to \"message\".",
 					"examples": [
 						"2px 1ch"
 					]
@@ -140,9 +140,11 @@
 				"errorLens.borderRadius": {
 					"type": "string",
 					"default": "3px",
-					"markdownDescription": "Border radius of the message. Visible difference when `message` colors are set. [issues/23](https://github.com/usernamehw/vscode-error-lens/issues/23). Example: `5px`.",
+					"markdownDescription": "Border radius of the inline message. Visible when `#errorLens.messageBackgroundMode#` is set to \"message\".",
 					"examples": [
-						"5px"
+						"5px",
+						"5em 0px",
+						"0px 5em 5em 0px"
 					]
 				},
 				"errorLens.enabledDiagnosticLevels": {
@@ -173,7 +175,7 @@
 					"type": "integer",
 					"default": 500,
 					"minimum": 10,
-					"markdownDescription": "Cut off inline message if it's longer than this value."
+					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long)."
 				},
 				"errorLens.severityText": {
 					"type": "array",
@@ -187,6 +189,7 @@
 						"INFO",
 						"HINT"
 					],
+					"minItems": 4,
 					"maxItems": 4
 				},
 				"errorLens.annotationPrefix": {
@@ -293,7 +296,7 @@
 				"errorLens.statusBarMessageTemplate": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Template for status bar message. See `#errorLens.messageTemplate#`."
+					"markdownDescription": "Template for status bar message. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
 				},
 				"errorLens.exclude": {
 					"type": "array",
@@ -301,7 +304,7 @@
 					"items": {
 						"type": "string"
 					},
-					"description": "Specify messages that should not be highlighted (RegExp)."
+					"markdownDescription": "Specify messages that should not be highlighted (RegExp). Strings passed to the RegExp constructor: `new RegExp(EXCLUDE_ITEM, 'i');`"
 				},
 				"errorLens.excludeBySource": {
 					"type": "array",
@@ -397,7 +400,7 @@
 				},
 				"errorLens.followCursorMore": {
 					"type": "number",
-					"markdownDescription": "Augments `followCursor`.\nAdds number of lines to top and bottom when `followCursor` is `activeLine`.\n Adds number of closest problems when `followCursor` is `closestProblem`",
+					"markdownDescription": "Augments `#errorLens.followCursor#`.\nAdds number of lines to top and bottom when `#errorLens.followCursor#` is set to `activeLine`.\n Adds number of closest problems when `#errorLens.followCursor#` is `closestProblem`",
 					"default": 0
 				},
 				"errorLens.gutterIconsEnabled": {
@@ -413,6 +416,13 @@
 				"errorLens.gutterIconSize": {
 					"type": "string",
 					"markdownDescription": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%`",
+					"examples": [
+						"auto",
+						"contain",
+						"cover",
+						"50%",
+						"150%"
+					],
 					"default": "100%"
 				},
 				"errorLens.gutterIconSet": {

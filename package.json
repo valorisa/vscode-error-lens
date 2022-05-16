@@ -50,31 +50,37 @@
 			{
 				"command": "errorLens.toggle",
 				"title": "Toggle (Enable/Disable) Everything",
+				"description": "Toggle (Enable/Disable) Everything (toggle global setting `errorLens.enabled`)",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleError",
 				"title": "Toggle Errors",
+				"description": "Enable/Disable Errors in `errorLens.enabledDiagnosticLevels` setting.",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleWarning",
 				"title": "Toggle Warnings",
+				"description": "Enable/Disable Warnings in `errorLens.enabledDiagnosticLevels` setting.",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleInfo",
 				"title": "Toggle Info",
+				"description": "Enable/Disable Info in `errorLens.enabledDiagnosticLevels` setting.",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleHint",
 				"title": "Toggle Hint",
+				"description": "Enable/Disable Hint in `errorLens.enabledDiagnosticLevels` setting.",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.copyProblemMessage",
 				"title": "Copy Problem Message",
+				"description": "Copy problem message to the clipboard (at the active cursor).",
 				"category": "Error Lens"
 			}
 		],

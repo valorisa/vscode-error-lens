@@ -259,7 +259,7 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 				after: {
 					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-					contentText: $config.messageEnabled ? truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
+					contentText: $config.messageEnabled ? truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message, $config.messageMaxChars) : '',
 				},
 			};
 

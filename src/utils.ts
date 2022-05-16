@@ -1,12 +1,11 @@
-import { $config } from 'src/extension';
 import { Uri } from 'vscode';
 
 /**
- * Cut off string if it's longer than configured number of characters.
+ * Cut off string if it's longer than provided number of characters.
  */
-export function truncateString(str: string): string {
+export function truncateString(str: string, max: number): string {
 	const chars = [...str];
-	return chars.length > $config.messageMaxChars ? `${chars.slice(0, $config.messageMaxChars).join('')}…` : str;
+	return chars.length > max ? `${chars.slice(0, max).join('')}…` : str;
 }
 /**
  * Replace linebreaks with the one whitespace symbol.

@@ -8,6 +8,14 @@ import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOpt
  * Update all decoration styles: editor, gutter, status bar
  */
 export function setDecorationStyle() {
+	Global.decorationTypeError?.dispose();
+	Global.decorationTypeWarning?.dispose();
+	Global.decorationTypeInfo?.dispose();
+	Global.decorationTypeHint?.dispose();
+	Global.decorationTypeGutterError?.dispose();
+	Global.decorationTypeGutterWarning?.dispose();
+	Global.decorationTypeGutterInfo?.dispose();
+
 	let gutter;
 	if ($config.gutterIconsEnabled) {
 		gutter = getGutterStyles(Global.extensionContext);

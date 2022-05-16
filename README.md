@@ -122,8 +122,9 @@ Can be specified in `settings.json` (**`workbench.colorCustomizations`** section
 
 Please upvote the following VS Code issues:
 
-* [Api for editor insets](https://github.com/microsoft/vscode/issues/85682)
-* [[theming] Access theme's colors programmatically](https://github.com/microsoft/vscode/issues/32813)
-* [[theming] when completing color keys in settings, fill in current value](https://github.com/microsoft/vscode/issues/25633)
-* [Inline text adornments break word wrapping](https://github.com/microsoft/vscode/issues/32856)
-* [OnClick event on Gutter](https://github.com/microsoft/vscode/issues/5455)
+- [Api for editor insets](https://github.com/microsoft/vscode/issues/85682)
+- [Access theme's colors programmatically](https://github.com/microsoft/vscode/issues/32813)
+- [When completing color keys in settings, fill in current value](https://github.com/microsoft/vscode/issues/25633)
+- [Inline text adornments break word wrapping](https://github.com/microsoft/vscode/issues/32856)
+- [OnClick event on Gutter](https://github.com/microsoft/vscode/issues/5455)
+- [Support hover decorations over the line numbers i.e. gutter](https://github.com/microsoft/vscode/issues/28080)

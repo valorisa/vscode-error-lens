@@ -124,7 +124,7 @@ export function setDecorationStyle() {
 		textDecoration: `none;${fontFamily};${fontSize};${padding};${borderRadius};${scrollbarHack}`,
 	};
 
-	Global.decorationRenderOptionsError = {
+	const decorationRenderOptionsError: DecorationRenderOptions = {
 		backgroundColor: errorBackground,
 		gutterIconSize: $config.gutterIconSize,
 		gutterIconPath: gutter?.errorIconPath,
@@ -143,7 +143,7 @@ export function setDecorationStyle() {
 		},
 		isWholeLine: true,
 	};
-	Global.decorationRenderOptionsWarning = {
+	const decorationRenderOptionsWarning: DecorationRenderOptions = {
 		backgroundColor: warningBackground,
 		gutterIconSize: $config.gutterIconSize,
 		gutterIconPath: gutter?.warningIconPath,
@@ -162,7 +162,7 @@ export function setDecorationStyle() {
 		},
 		isWholeLine: true,
 	};
-	Global.decorationRenderOptionsInfo = {
+	const decorationRenderOptionsInfo: DecorationRenderOptions = {
 		backgroundColor: infoBackground,
 		gutterIconSize: $config.gutterIconSize,
 		gutterIconPath: gutter?.infoIconPath,
@@ -181,7 +181,7 @@ export function setDecorationStyle() {
 		},
 		isWholeLine: true,
 	};
-	Global.decorationRenderOptionsHint = {
+	const decorationRenderOptionsHint: DecorationRenderOptions = {
 		backgroundColor: hintBackground,
 		after: {
 			...afterProps,
@@ -198,31 +198,31 @@ export function setDecorationStyle() {
 	};
 
 	if (!$config.messageEnabled) {
-		Global.decorationRenderOptionsError.backgroundColor = undefined;
-		Global.decorationRenderOptionsError.after = undefined;
-		Global.decorationRenderOptionsError.light!.backgroundColor = undefined;
-		Global.decorationRenderOptionsError.light!.after = undefined;
+		decorationRenderOptionsError.backgroundColor = undefined;
+		decorationRenderOptionsError.after = undefined;
+		decorationRenderOptionsError.light!.backgroundColor = undefined;
+		decorationRenderOptionsError.light!.after = undefined;
 
-		Global.decorationRenderOptionsWarning.backgroundColor = undefined;
-		Global.decorationRenderOptionsWarning.after = undefined;
-		Global.decorationRenderOptionsWarning.light!.backgroundColor = undefined;
-		Global.decorationRenderOptionsWarning.light!.after = undefined;
+		decorationRenderOptionsWarning.backgroundColor = undefined;
+		decorationRenderOptionsWarning.after = undefined;
+		decorationRenderOptionsWarning.light!.backgroundColor = undefined;
+		decorationRenderOptionsWarning.light!.after = undefined;
 
-		Global.decorationRenderOptionsInfo.backgroundColor = undefined;
-		Global.decorationRenderOptionsInfo.after = undefined;
-		Global.decorationRenderOptionsInfo.light!.backgroundColor = undefined;
-		Global.decorationRenderOptionsInfo.light!.after = undefined;
+		decorationRenderOptionsInfo.backgroundColor = undefined;
+		decorationRenderOptionsInfo.after = undefined;
+		decorationRenderOptionsInfo.light!.backgroundColor = undefined;
+		decorationRenderOptionsInfo.light!.after = undefined;
 
-		Global.decorationRenderOptionsHint.backgroundColor = undefined;
-		Global.decorationRenderOptionsHint.after = undefined;
-		Global.decorationRenderOptionsHint.light!.backgroundColor = undefined;
-		Global.decorationRenderOptionsHint.light!.after = undefined;
+		decorationRenderOptionsHint.backgroundColor = undefined;
+		decorationRenderOptionsHint.after = undefined;
+		decorationRenderOptionsHint.light!.backgroundColor = undefined;
+		decorationRenderOptionsHint.light!.after = undefined;
 	}
 
-	Global.decorationTypeError = window.createTextEditorDecorationType(Global.decorationRenderOptionsError);
-	Global.decorationTypeWarning = window.createTextEditorDecorationType(Global.decorationRenderOptionsWarning);
-	Global.decorationTypeInfo = window.createTextEditorDecorationType(Global.decorationRenderOptionsInfo);
-	Global.decorationTypeHint = window.createTextEditorDecorationType(Global.decorationRenderOptionsHint);
+	Global.decorationTypeError = window.createTextEditorDecorationType(decorationRenderOptionsError);
+	Global.decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptionsWarning);
+	Global.decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
+	Global.decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 
 	Global.statusBarMessage.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 }
@@ -254,31 +254,12 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 		const severity = diagnostic.severity;
 
 		if (isSeverityEnabled(severity)) {
-			/**
-			 * Usually, it's enough to use `decoration type`,
-			 * but decorations from different extensions can conflict.
-			 * This code puts global `decoration type` options into `decoration instance` options,
-			 * which is not great for perf, but probably the only workaround.
-			 *
-			 * https://github.com/usernamehw/vscode-error-lens/issues/25
-			 */
-			let decorationRenderOptions: DecorationRenderOptions = {};
-			switch (severity) {
-				case 0: decorationRenderOptions = Global.decorationRenderOptionsError; break;
-				case 1: decorationRenderOptions = Global.decorationRenderOptionsWarning; break;
-				case 2: decorationRenderOptions = Global.decorationRenderOptionsInfo; break;
-				case 3: decorationRenderOptions = Global.decorationRenderOptionsHint; break;
-			}
-
 			const message = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
 
 			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
-				...decorationRenderOptions,
 				after: {
-					...decorationRenderOptions.after || {},
 					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-					contentText: $config.messageEnabled ?
-						truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
+					contentText: $config.messageEnabled ? truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
 				},
 			};
 

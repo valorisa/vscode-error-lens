@@ -5,7 +5,8 @@ import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, 
 import { StatusBarIcons } from 'src/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBarMessage';
 import { Constants, ExtensionConfig } from 'src/types';
-import { DecorationRenderOptions, Disposable, ExtensionContext, TextEditorDecorationType, workspace } from 'vscode';
+import { Disposable, ExtensionContext, TextEditorDecorationType, workspace } from 'vscode';
+
 /**
  * All user settings.
  */
@@ -19,11 +20,6 @@ export class Global {
 	static configWarningEnabled = true;
 	static configInfoEnabled = true;
 	static configHintEnabled = true;
-
-	static decorationRenderOptionsError: DecorationRenderOptions;
-	static decorationRenderOptionsWarning: DecorationRenderOptions;
-	static decorationRenderOptionsInfo: DecorationRenderOptions;
-	static decorationRenderOptionsHint: DecorationRenderOptions;
 
 	static decorationTypeError: TextEditorDecorationType;
 	static decorationTypeWarning: TextEditorDecorationType;

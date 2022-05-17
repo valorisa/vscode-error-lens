@@ -2,7 +2,7 @@ import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
 import { $config } from 'src/extension';
 import { AggregatedByLineDiagnostics, CommandId, ExtensionConfig } from 'src/types';
 import { replaceLinebreaks } from 'src/utils';
-import { Diagnostic, Position, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
+import { Diagnostic, Position, StatusBarAlignment, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
 
 /**
  * Handle status bar updates.
@@ -33,11 +33,14 @@ export class StatusBarMessage {
 		private readonly isEnabled: boolean,
 		private readonly colorsEnabled: boolean,
 		private readonly messageType: ExtensionConfig['statusBarMessageType'],
+		priority: ExtensionConfig['statusBarMessagePriority'],
+		alignment: ExtensionConfig['statusBarMessageAlignment'],
 	) {
+		const statusBarAlignment = alignment === 'right' ? StatusBarAlignment.Right : StatusBarAlignment.Left;
 		this.colorsEnabled = colorsEnabled;
 		this.messageType = messageType;
 
-		this.statusBarItem = window.createStatusBarItem('errorLensMessage', -9999);
+		this.statusBarItem = window.createStatusBarItem('errorLensMessage', statusBarAlignment, priority);
 		this.statusBarItem.name = 'Error Lens: Message';
 		this.statusBarItem.command = CommandId.statusBarCommand;
 		if (this.isEnabled) {

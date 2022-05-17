@@ -110,12 +110,26 @@ export function updateEverything(context: ExtensionContext) {
 		$config.followCursor !== 'allLines';
 	Global.statusBarMessage?.dispose();
 	Global.statusBarIcons?.dispose();
-	Global.statusBarMessage = new StatusBarMessage($config.statusBarMessageEnabled, $config.statusBarColorsEnabled, $config.statusBarMessageType);
-	Global.statusBarIcons = new StatusBarIcons($config.statusBarIconsEnabled, $config.statusBarIconsAtZero, $config.statusBarIconsUseBackground);
+	Global.statusBarMessage = new StatusBarMessage(
+		$config.statusBarMessageEnabled,
+		$config.statusBarColorsEnabled,
+		$config.statusBarMessageType,
+		$config.statusBarMessagePriority,
+		$config.statusBarMessageAlignment,
+	);
+	Global.statusBarIcons = new StatusBarIcons(
+		$config.statusBarIconsEnabled,
+		$config.statusBarIconsAtZero,
+		$config.statusBarIconsUseBackground,
+		$config.statusBarIconsPriority,
+		$config.statusBarIconsAlignment,
+	);
 	setDecorationStyle(context);
 	updateConfigEnabledLevels();
 
 	updateDecorationsForAllVisibleEditors();
+
+	Global.statusBarIcons.updateText();
 
 	updateChangeDiagnosticListener();
 	updateChangeVisibleTextEditorsListener();

@@ -44,11 +44,14 @@ export class StatusBarIcons {
 		private readonly isEnabled: boolean,
 		private readonly atZero: ExtensionConfig['statusBarIconsAtZero'],
 		private readonly useBackground: ExtensionConfig['statusBarIconsUseBackground'],
+		priority: ExtensionConfig['statusBarIconsPriority'],
+		alignment: ExtensionConfig['statusBarIconsAlignment'],
 	) {
-		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', StatusBarAlignment.Left, -8999);
+		const statusBarAlignment = alignment === 'right' ? StatusBarAlignment.Right : StatusBarAlignment.Left;
+		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', statusBarAlignment, priority);
 		this.errorStatusBarItem.name = 'Error Lens: Error icon';
 		this.errorStatusBarItem.command = Constants.OpenProblemsViewCommandId;
-		this.warningStatusBarItem = window.createStatusBarItem('errorLensWarning', StatusBarAlignment.Left, -9000);
+		this.warningStatusBarItem = window.createStatusBarItem('errorLensWarning', statusBarAlignment, priority + 1);
 		this.warningStatusBarItem.name = 'Error Lens: Warning icon';
 		this.warningStatusBarItem.command = Constants.OpenProblemsViewCommandId;
 		this.setBackground('error', this.errorBackground);

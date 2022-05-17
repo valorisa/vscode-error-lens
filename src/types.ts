@@ -74,6 +74,14 @@ interface ExtensionConfigType {
 	 */
 	statusBarIconsEnabled: boolean;
 	/**
+	 * Move status bar icons left or right by adjasting the number priority.
+	 */
+	statusBarIconsPriority: number;
+	/**
+	 * Choose on which side the icons status bar is on: left or right.
+	 */
+	statusBarIconsAlignment: 'left' | 'right';
+	/**
 	 * When enabled - highlights status bar icons with background, when disabled - with foreground.
 	 */
 	statusBarIconsUseBackground: boolean;
@@ -85,6 +93,14 @@ interface ExtensionConfigType {
 	 * Whether to show status bar item or not. Default is **false**.
 	 */
 	statusBarMessageEnabled: boolean;
+	/**
+	 * Move status bar message left or right by adjasting the number priority.
+	 */
+	statusBarMessagePriority: number;
+	/**
+	 * Choose on which side the message status bar is on: left or right.
+	 */
+	statusBarMessageAlignment: 'left' | 'right';
 	/**
 	 * Pick what to show in Status Bar: closest message or only message for the active line.
 	 */

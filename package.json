@@ -244,6 +244,20 @@
 					"markdownDescription": "When enabled - shows highlighted error/warning icons in status bar.",
 					"default": false
 				},
+				"errorLens.statusBarIconsPriority": {
+					"type": "integer",
+					"markdownDescription": "Move status bar icons left or right by adjasting the number priority.",
+					"default": -9000
+				},
+				"errorLens.statusBarIconsAlignment": {
+					"type": "string",
+					"markdownDescription": "Choose on which side the icons status bar is on: left or right.",
+					"enum": [
+						"left",
+						"right"
+					],
+					"default": "left"
+				},
 				"errorLens.statusBarIconsUseBackground": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - highlights status bar icons with background, when disabled - with foreground.",
@@ -262,6 +276,20 @@
 					"type": "boolean",
 					"markdownDescription": "When enabled - shows message in status bar.",
 					"default": false
+				},
+				"errorLens.statusBarMessagePriority": {
+					"type": "integer",
+					"markdownDescription": "Move status bar message left or right by adjasting the number priority.",
+					"default": -10000
+				},
+				"errorLens.statusBarMessageAlignment": {
+					"type": "string",
+					"markdownDescription": "Choose on which side the message status bar is on: left or right.",
+					"enum": [
+						"left",
+						"right"
+					],
+					"default": "left"
 				},
 				"errorLens.statusBarColorsEnabled": {
 					"type": "boolean",

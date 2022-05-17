@@ -1,28 +1,29 @@
 import { $config, Global } from 'src/extension';
 import { toggleEnabledLevels, updateGlobalSetting } from 'src/settings';
-import { AggregatedByLineDiagnostics, CommandIds } from 'src/types';
+import { AggregatedByLineDiagnostics, CommandId, Constants } from 'src/types';
 import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window, workspace } from 'vscode';
+
 /**
  * Register all commands contributed by this extension.
  */
 export function registerAllCommands(extensionContext: ExtensionContext) {
-	const disposableToggleErrorLens = commands.registerCommand(CommandIds.toggle, () => {
+	const disposableToggleErrorLens = commands.registerCommand(CommandId.toggle, () => {
 		updateGlobalSetting('errorLens.enabled', !$config.enabled);
 	});
-	const disposableToggleError = commands.registerCommand(CommandIds.toggleError, () => {
+	const disposableToggleError = commands.registerCommand(CommandId.toggleError, () => {
 		toggleEnabledLevels('error', $config.enabledDiagnosticLevels);
 	});
-	const disposableToggleWarning = commands.registerCommand(CommandIds.toggleWarning, () => {
+	const disposableToggleWarning = commands.registerCommand(CommandId.toggleWarning, () => {
 		toggleEnabledLevels('warning', $config.enabledDiagnosticLevels);
 	});
-	const disposableToggleInfo = commands.registerCommand(CommandIds.toggleInfo, () => {
+	const disposableToggleInfo = commands.registerCommand(CommandId.toggleInfo, () => {
 		toggleEnabledLevels('info', $config.enabledDiagnosticLevels);
 	});
-	const disposableToggleHint = commands.registerCommand(CommandIds.toggleHint, () => {
+	const disposableToggleHint = commands.registerCommand(CommandId.toggleHint, () => {
 		toggleEnabledLevels('hint', $config.enabledDiagnosticLevels);
 	});
 
-	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandIds.copyProblemMessage, editor => {
+	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandId.copyProblemMessage, editor => {
 		const aggregatedDiagnostics: AggregatedByLineDiagnostics = {};
 		for (const diagnostic of languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;
@@ -44,15 +45,15 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 		env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
-	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandIds.statusBarCommand, async editor => {
+	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandId.statusBarCommand, async editor => {
 		if ($config.statusBarCommand === 'goToLine' || $config.statusBarCommand === 'goToProblem') {
 			const range = new Range(Global.statusBarMessage.activeMessagePosition, Global.statusBarMessage.activeMessagePosition);
 			editor.selection = new Selection(range.start, range.end);
 			editor.revealRange(range, TextEditorRevealType.Default);
-			await commands.executeCommand('workbench.action.focusActiveEditorGroup');
+			await commands.executeCommand(Constants.FocusActiveEditorCommandId);
 
 			if ($config.statusBarCommand === 'goToProblem') {
-				commands.executeCommand('editor.action.marker.next');
+				commands.executeCommand(Constants.NextProblemCommandId);
 			}
 		} else if ($config.statusBarCommand === 'copyMessage') {
 			const source = Global.statusBarMessage.activeMessageSource ? `[${Global.statusBarMessage.activeMessageSource}] ` : '';
@@ -60,7 +61,7 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 		}
 	});
 
-	const disposableRevealLine = commands.registerCommand(CommandIds.revealLine, async (fsPath: string, [line, char]) => {
+	const disposableRevealLine = commands.registerCommand(CommandId.revealLine, async (fsPath: string, [line, char]) => {
 		const range = new Range(line, char, line, char);
 		const document = await workspace.openTextDocument(fsPath);
 		const editor = await window.showTextDocument(document);

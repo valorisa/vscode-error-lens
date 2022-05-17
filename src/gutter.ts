@@ -3,6 +3,7 @@ import { $config, Global } from 'src/extension';
 import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
 import { svgToUri } from 'src/utils';
 import { DecorationOptions, ExtensionContext, TextEditor } from 'vscode';
+
 /**
  * Set some defaults for gutter styles and return it.
  */
@@ -51,7 +52,7 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 /**
  * Actually apply gutter decorations.
  */
-export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics) {
+export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
 	const decorationOptionsGutterError: DecorationOptions[] = [];
 	const decorationOptionsGutterWarning: DecorationOptions[] = [];
 	const decorationOptionsGutterInfo: DecorationOptions[] = [];
@@ -79,6 +80,6 @@ export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnost
 /**
  * Create circle gutter icons with different colors. `%23` is encoded `#` sign (need it to work).
  */
-function createCircleIcon(color: string) {
+function createCircleIcon(color: string): string {
 	return `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="%23${color.slice(1)}"/></svg>`;
 }

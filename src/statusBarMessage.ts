@@ -1,8 +1,9 @@
 import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
 import { $config } from 'src/extension';
-import { AggregatedByLineDiagnostics, CommandIds, ExtensionConfig } from 'src/types';
+import { AggregatedByLineDiagnostics, CommandId, ExtensionConfig } from 'src/types';
 import { replaceLinebreaks } from 'src/utils';
 import { Diagnostic, Position, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
+
 /**
  * Handle status bar updates.
  */
@@ -38,14 +39,14 @@ export class StatusBarMessage {
 
 		this.statusBarItem = window.createStatusBarItem('errorLensMessage', -9999);
 		this.statusBarItem.name = 'Error Lens: Message';
-		this.statusBarItem.command = CommandIds.statusBarCommand;
+		this.statusBarItem.command = CommandId.statusBarCommand;
 		if (this.isEnabled) {
 			this.statusBarItem.show();
 		} else {
 			this.dispose();
 		}
 	}
-	updateText(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics) {
+	updateText(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -130,7 +131,7 @@ export class StatusBarMessage {
 	/**
 	 * Clear status bar message.
 	 */
-	clear() {
+	clear(): void {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -140,7 +141,7 @@ export class StatusBarMessage {
 	/**
 	 * Dispose status bar item.
 	 */
-	dispose() {
+	dispose(): void {
 		this.statusBarItem.dispose();
 	}
 }

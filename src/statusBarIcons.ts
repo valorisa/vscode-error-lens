@@ -1,27 +1,43 @@
 import path from 'path';
-import { CommandIds, Constants, ExtensionConfig } from 'src/types';
+import { CommandId, Constants, ExtensionConfig } from 'src/types';
 import { Diagnostic, languages, MarkdownString, Position, StatusBarAlignment, StatusBarItem, ThemeColor, Uri, window } from 'vscode';
 
 /** Handle status bar updates. */
 export class StatusBarIcons {
-	/** Error icon */
+	/**
+	 * Error icon
+	 */
 	private errorStatusBarItem: StatusBarItem;
-	/** Warning icon */
+	/**
+	 * Warning icon
+	 */
 	private readonly warningStatusBarItem: StatusBarItem;
-	/** Error background (status bar) */
+	/**
+	 * Error background (status bar)
+	 */
 	private readonly errorBackground = new ThemeColor('statusBarItem.errorBackground');
-	/** Warning background (status bar) */
+	/**
+	 * Warning background (status bar)
+	 */
 	private readonly warningBackground = new ThemeColor('statusBarItem.warningBackground');
 	private readonly errorForeground = new ThemeColor('errorLens.statusBarIconErrorForeground');
 	private readonly warningForeground = new ThemeColor('errorLens.statusBarIconWarningForeground');
 
-	/** Array of vscode `ThemeColor` for each of 4 diagnostic severity states. */
+	/**
+	 * Array of vscode `ThemeColor` for each of 4 diagnostic severity states.
+	 */
 	statusBarColors: ThemeColor[] = [];
-	/** Position in editor of active message. Needed to jump to error on click. */
+	/**
+	 * Position in editor of active message. Needed to jump to error on click.
+	 */
 	activeMessagePosition: Position = new Position(0, 0);
-	/** Active message text. Needed to copy to clipboard on click. */
+	/**
+	 * Active message text. Needed to copy to clipboard on click.
+	 */
 	activeMessageText = '';
-	/** Active message source. Needed to copy to clipboard on click. */
+	/**
+	 * Active message source. Needed to copy to clipboard on click.
+	 */
 	activeMessageSource?: string = '';
 
 	constructor(
@@ -31,10 +47,10 @@ export class StatusBarIcons {
 	) {
 		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', StatusBarAlignment.Left, -8999);
 		this.errorStatusBarItem.name = 'Error Lens: Error icon';
-		this.errorStatusBarItem.command = Constants.openProblemsViewId;
+		this.errorStatusBarItem.command = Constants.OpenProblemsViewCommandId;
 		this.warningStatusBarItem = window.createStatusBarItem('errorLensWarning', StatusBarAlignment.Left, -9000);
 		this.warningStatusBarItem.name = 'Error Lens: Warning icon';
-		this.warningStatusBarItem.command = Constants.openProblemsViewId;
+		this.warningStatusBarItem.command = Constants.OpenProblemsViewCommandId;
 		this.setBackground('error', this.errorBackground);
 		this.setBackground('warning', this.warningBackground);
 		this.errorStatusBarItem.color = this.errorForeground;
@@ -46,7 +62,7 @@ export class StatusBarIcons {
 			this.dispose();
 		}
 	}
-	updateText() {
+	updateText(): void {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -109,7 +125,7 @@ export class StatusBarIcons {
 			this.warningStatusBarItem.tooltip = this.makeTooltip(warningsWithUri, 'warning');
 		}
 	}
-	makeTooltip(allDiagnostics: [Uri, Diagnostic[]][], type: 'error' | 'warning') {
+	makeTooltip(allDiagnostics: [Uri, Diagnostic[]][], type: 'error' | 'warning'): MarkdownString {
 		const md = new MarkdownString(undefined, true);
 		md.isTrusted = true;
 		for (const diagWithUri of allDiagnostics) {
@@ -120,7 +136,7 @@ export class StatusBarIcons {
 			}
 			for (const diag of diagnostics) {
 				const revealLineUri = Uri.parse(
-					`command:${CommandIds.revealLine}?${encodeURIComponent(JSON.stringify([uri.fsPath, [diag.range.start.line, diag.range.start.character]]))}`,
+					`command:${CommandId.revealLine}?${encodeURIComponent(JSON.stringify([uri.fsPath, [diag.range.start.line, diag.range.start.character]]))}`,
 				);
 				md.appendMarkdown(`<span style="color:${type === 'error' ? '#e45454' : '#ff942f'};">$(${type})</span> [${diag.message} \`${diag.source}\`](${revealLineUri})\n\n`);
 			}
@@ -130,7 +146,7 @@ export class StatusBarIcons {
 	/**
 	 * Set background of the item (only if it's enabled).
 	 */
-	setBackground(which: 'error' | 'warning', color: ThemeColor | string) {
+	setBackground(which: 'error' | 'warning', color: ThemeColor | string): void {
 		if (this.useBackground) {
 			if (which === 'error') {
 				this.errorStatusBarItem.backgroundColor = color;
@@ -142,7 +158,7 @@ export class StatusBarIcons {
 	/**
 	 * Dispose status bar item.
 	 */
-	dispose() {
+	dispose(): void {
 		this.errorStatusBarItem.dispose();
 		this.warningStatusBarItem.dispose();
 	}

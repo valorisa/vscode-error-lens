@@ -2,12 +2,12 @@ import { $config, Global } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { AggregatedByLineDiagnostics } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
-import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window } from 'vscode';
+import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, ExtensionContext, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window } from 'vscode';
 
 /**
  * Update all decoration styles: editor, gutter, status bar
  */
-export function setDecorationStyle() {
+export function setDecorationStyle(context: ExtensionContext) {
 	Global.decorationTypeError?.dispose();
 	Global.decorationTypeWarning?.dispose();
 	Global.decorationTypeInfo?.dispose();
@@ -18,7 +18,7 @@ export function setDecorationStyle() {
 
 	let gutter;
 	if ($config.gutterIconsEnabled) {
-		gutter = getGutterStyles(Global.extensionContext);
+		gutter = getGutterStyles(context);
 
 		if (Global.renderGutterIconsAsSeparateDecoration) {
 			Global.decorationTypeGutterError = window.createTextEditorDecorationType({
@@ -403,12 +403,7 @@ export function getDiagnosticAndGroupByLine(uri: Uri): AggregatedByLineDiagnosti
 /**
  * Check multiple exclude sources if the diagnostic should not be shown.
  */
-export function shouldExcludeDiagnostic(diagnostic: Diagnostic) {
-	for (const regex of Global.excludeRegexp) {
-		if (regex.test(diagnostic.message)) {
-			return true;
-		}
-	}
+export function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
 	if (diagnostic.source) {
 		for (const source of Global.excludeSources) {
 			if (source === diagnostic.source) {
@@ -416,12 +411,17 @@ export function shouldExcludeDiagnostic(diagnostic: Diagnostic) {
 			}
 		}
 	}
+	for (const regex of Global.excludeRegexp) {
+		if (regex.test(diagnostic.message)) {
+			return true;
+		}
+	}
 	return false;
 }
 /**
  * `true` when diagnostic enabled in config & in temp variable
  */
-export function isSeverityEnabled(severity: number) {
+export function isSeverityEnabled(severity: number): boolean {
 	if (
 		severity === 0 && Global.configErrorEnabled ||
 		severity === 1 && Global.configWarningEnabled ||
@@ -435,7 +435,7 @@ export function isSeverityEnabled(severity: number) {
 /**
  * Generate inline message from template.
  */
-export function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, count: number) {
+export function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, count: number): string {
 	if (template === TemplateVars.message) {
 		// When default template - no need to use RegExps or other stuff.
 		return diagnostic.message;
@@ -478,6 +478,9 @@ export function diagnosticToInlineMessage(template: string, diagnostic: Diagnost
 	}
 }
 
+/**
+ * Variables to replace inside the `messageTemplate` & `statusBarMessageTemplate` settings.
+ */
 const enum TemplateVars {
 	message = '$message',
 	source = '$source',

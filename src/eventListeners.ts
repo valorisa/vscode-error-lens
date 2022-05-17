@@ -43,9 +43,7 @@ export function updateChangeDiagnosticListener(): void {
 				}
 			}
 		}
-		if ($config.statusBarIconsEnabled) {
-			Global.statusBarIcons.updateText();
-		}
+		Global.statusBarIcons.updateText();
 	}
 	if ($config.onSave) {
 		Global.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {

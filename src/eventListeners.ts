@@ -80,7 +80,7 @@ export function updateCursorChangeListener(): void {
 				selection.isEmpty &&
 				lastPositionLine !== selection.active.line
 			) {
-				updateDecorationsForUri(e.textEditor.document.uri, e.textEditor, selection);
+				updateDecorationsForUri(e.textEditor.document.uri, e.textEditor, undefined, selection);
 				lastPositionLine = e.selections[0].active.line;
 			}
 		});

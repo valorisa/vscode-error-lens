@@ -336,7 +336,7 @@ export function updateDecorationsForAllVisibleEditors() {
 /**
  * Update decorations for one editor.
  */
-export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, range?: Range) {
+export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, groupedDiagnostics?: AggregatedByLineDiagnostics, range?: Range) {
 	if (editor === undefined) {
 		editor = window.activeTextEditor;
 	}
@@ -360,7 +360,7 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		}
 	}
 
-	doUpdateDecorations(editor, getDiagnosticAndGroupByLine(uriToDecorate), range);
+	doUpdateDecorations(editor, groupedDiagnostics || groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);
 }
 
 /**
@@ -381,10 +381,8 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
  * }
  * ```
  */
-export function getDiagnosticAndGroupByLine(uri: Uri): AggregatedByLineDiagnostics {
+export function groupDiagnosticsByLine(diagnostics: Diagnostic[]): AggregatedByLineDiagnostics {
 	const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
-	const diagnostics = languages.getDiagnostics(uri);
-
 	for (const diagnostic of diagnostics) {
 		if (shouldExcludeDiagnostic(diagnostic)) {
 			continue;

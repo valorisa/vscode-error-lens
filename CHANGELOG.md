@@ -1,3 +1,9 @@
+## 3.5.2 `13 Jul 2022`
+
+- 🐛 When zero errors/warnings should remove status bar icon foreground color
+- 🐛 When delay is set - status bar icons is not updated
+- 💥 Change default setting `statusBarIconsAtZero` to `"removeBackground"`
+
 ## 3.5.1 `26 May 2022`
 
 - 🐛 Fix broken **`errorLens.delay`** setting #121

@@ -1,6 +1,7 @@
 import debounce from 'lodash/debounce';
 import throttle from 'lodash/throttle';
 import { groupDiagnosticsByLine, updateDecorationsForUri } from 'src/decorations';
+import { Global } from 'src/extension';
 import { Diagnostic, DiagnosticChangeEvent, languages, Uri, window } from 'vscode';
 
 interface CachedDiagnostic {
@@ -119,5 +120,7 @@ export class CustomDelay {
 				updateDecorationsForUri(uri, editor, groupedDiagnostics);
 			}
 		}
+
+		Global.statusBarIcons.updateText();
 	};
 }

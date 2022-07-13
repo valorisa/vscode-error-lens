@@ -15,7 +15,7 @@ export let $config: ExtensionConfig;
 /**
  * Global variables.
  */
-export class Global {
+export abstract class Global {
 	static configErrorEnabled = true;
 	static configWarningEnabled = true;
 	static configInfoEnabled = true;

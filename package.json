@@ -270,7 +270,7 @@
 						"hide",
 						"removeBackground"
 					],
-					"default": "hide"
+					"default": "removeBackground"
 				},
 				"errorLens.statusBarMessageEnabled": {
 					"type": "boolean",

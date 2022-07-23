@@ -1,3 +1,9 @@
+## 3.6.0 `24 Jul 2022`
+
+- ✨ Allow ignoring errors by code #126
+- ✨ Don't show decorations on files with merge conflict markers #129
+- ✨ Disable inline message: Make `"errorLens.messageMaxChars: 0"` possible #130
+
 ## 3.5.2 `13 Jul 2022`
 
 - 🐛 When zero errors/warnings should remove status bar icon foreground color

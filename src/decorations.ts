@@ -254,12 +254,19 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 		const severity = diagnostic.severity;
 
 		if (isSeverityEnabled(severity)) {
-			const message = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+			let message: string | undefined = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+
+			if (!$config.messageEnabled || $config.messageMaxChars === 0) {
+				message = undefined;
+			} else {
+				// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
+				// If the message has linebreaks - it will cut off the message in that place.
+				message = truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message, $config.messageMaxChars);
+			}
 
 			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 				after: {
-					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-					contentText: $config.messageEnabled ? truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message, $config.messageMaxChars) : '',
+					contentText: message,
 				},
 			};
 

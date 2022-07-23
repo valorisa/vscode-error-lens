@@ -174,8 +174,8 @@
 				"errorLens.messageMaxChars": {
 					"type": "integer",
 					"default": 500,
-					"minimum": 10,
-					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long)."
+					"minimum": 0,
+					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long). Set to **0** to disable inline message."
 				},
 				"errorLens.severityText": {
 					"type": "array",

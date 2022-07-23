@@ -423,17 +423,34 @@ export function groupDiagnosticsByLine(diagnostics: Diagnostic[]): AggregatedByL
  */
 export function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
 	if (diagnostic.source) {
-		for (const source of Global.excludeSources) {
-			if (source === diagnostic.source) {
-				return true;
+		for (const excludeSourceCode of Global.excludeSources) {
+			if (excludeSourceCode.source === diagnostic.source) {
+				let diagnosticCode = '';
+				if (typeof diagnostic.code === 'number') {
+					diagnosticCode = String(diagnostic.code);
+				} else if (typeof diagnostic.code === 'string') {
+					diagnosticCode = diagnostic.code;
+				} else if (diagnostic.code?.value) {
+					diagnosticCode = String(diagnostic.code.value);
+				}
+				if (!excludeSourceCode.code) {
+					// only source exclusion
+					return true;
+				}
+				if (excludeSourceCode.code && diagnosticCode && excludeSourceCode.code === diagnosticCode) {
+					// source and code matches
+					return true;
+				}
 			}
 		}
 	}
+
 	for (const regex of Global.excludeRegexp) {
 		if (regex.test(diagnostic.message)) {
 			return true;
 		}
 	}
+
 	return false;
 }
 /**

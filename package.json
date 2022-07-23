@@ -345,7 +345,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Specify sources that should not be highlighted (string). Example: `[\"eslint\"]`"
+					"markdownDescription": "Specify source or source(code) pair that should not be highlighted. Examples: `[\"eslint\"]`, `[\"eslint(padded-blocks)\"]`"
 				},
 				"errorLens.excludePatterns": {
 					"type": "array",

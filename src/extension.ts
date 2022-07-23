@@ -53,9 +53,12 @@ export abstract class Global {
 	 */
 	static excludeRegexp: RegExp[] = [];
 	/**
-	 * Array of sources to ignore (that would match against diagnostic source)
+	 * Array of source/code to ignore (that would match against diagnostic object)
 	 */
-	static excludeSources: string[] = [];
+	static excludeSources: {
+		source: string;
+		code?: string;
+	}[] = [];
 	/**
 	 * Array of document selectors (that would match against document)
 	 */
@@ -138,16 +141,31 @@ export function updateEverything(context: ExtensionContext) {
 	updateChangedActiveTextEditorListener();
 }
 /**
- * - Construct `RegExp` from string for messages.
- * - Construct `DocumentFilter[]` for document match.
+ * - Create `RegExp` from string for messages.
+ * - Create `DocumentFilter[]` for document match.
+ * - Create `source/code` exclusion object.
  */
 function updateExclude() {
 	Global.excludeRegexp = [];
-	Global.excludeSources = $config.excludeBySource;
+	Global.excludeSources = [];
 
-	for (const item of $config.exclude) {
-		if (typeof item === 'string') {
-			Global.excludeRegexp.push(new RegExp(item, 'i'));
+	for (const excludeSourceCode of $config.excludeBySource) {
+		// Match source/code like:  eslint(padded-blocks)
+		const sourceCodeMatch = /([^()]+)(\((.+)\))?/.exec(excludeSourceCode);
+		const source = sourceCodeMatch?.[1];
+		const code = sourceCodeMatch?.[3];
+		if (!source) {
+			continue;
+		}
+		Global.excludeSources.push({
+			source,
+			code,
+		});
+	}
+
+	for (const excludeMessage of $config.exclude) {
+		if (typeof excludeMessage === 'string') {
+			Global.excludeRegexp.push(new RegExp(excludeMessage, 'i'));
 		}
 	}
 	if (Array.isArray($config.excludePatterns) && $config.excludePatterns.length !== 0) {

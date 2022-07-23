@@ -6,6 +6,10 @@ interface ExtensionConfigType {
 	 */
 	enabled: boolean;
 	/**
+	 * Controls if decorations are shown if the editor has git merge conflict indicators `<<<<<<<` or `=======` or `>>>>>>>`.
+	 */
+	enabledInMergeConflict: boolean;
+	/**
 	 * Font family of inline message.
 	 */
 	fontFamily: string;
@@ -257,4 +261,8 @@ export const enum Constants {
 	 * Command id of vscode command to open next problem marker.
 	 */
 	NextProblemCommandId = 'editor.action.marker.next',
+
+	MergeConflictSymbol1 = '<<<<<<<',
+	MergeConflictSymbol2 = '=======',
+	MergeConflictSymbol3 = '>>>>>>>',
 }

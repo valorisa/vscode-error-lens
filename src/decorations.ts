@@ -1,6 +1,6 @@
 import { $config, Global } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
-import { AggregatedByLineDiagnostics } from 'src/types';
+import { AggregatedByLineDiagnostics, Constants } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
 import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, ExtensionContext, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window } from 'vscode';
 
@@ -356,7 +356,20 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 	}
 
 	if (!$config.enableOnDiffView && editor.viewColumn === undefined) {
+		doUpdateDecorations(editor, {});
 		return;
+	}
+
+	if (!$config.enabledInMergeConflict) {
+		const editorText = editor.document.getText();
+		if (
+			editorText.includes(Constants.MergeConflictSymbol1) ||
+			editorText.includes(Constants.MergeConflictSymbol2) ||
+			editorText.includes(Constants.MergeConflictSymbol3)
+		) {
+			doUpdateDecorations(editor, {});
+			return;
+		}
 	}
 
 	if (Global.excludePatterns) {

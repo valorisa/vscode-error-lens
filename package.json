@@ -91,6 +91,11 @@
 					"default": true,
 					"description": "Controls all decorations and features (except commands)."
 				},
+				"errorLens.enabledInMergeConflict": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "Controls if decorations are shown if the editor has git merge conflict indicators `<<<<<<<` or `=======` or `>>>>>>>`."
+				},
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",

@@ -117,7 +117,7 @@ export class StatusBarMessage {
 		);
 
 		if ($config.removeLinebreaks) {
-			message = replaceLinebreaks(message);
+			message = replaceLinebreaks(message, $config.replaceLinebreaksSymbol);
 		}
 
 		this.activeMessageText = message;

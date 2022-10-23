@@ -513,6 +513,11 @@
 					"default": true,
 					"markdownDescription": "When enabled - replaces line breaks in inline diagnostic message with whitespaces."
 				},
+				"errorLens.replaceLinebreaksSymbol": {
+					"type": "string",
+					"default": "⏎",
+					"markdownDescription": "Symbol to replace linebreaks. Requires enabling `#errorLens.removeLinebreaks#`."
+				},
 				"errorLens.scrollbarHackEnabled": {
 					"type": "boolean",
 					"default": false,

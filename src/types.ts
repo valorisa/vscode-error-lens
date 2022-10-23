@@ -157,6 +157,10 @@ interface ExtensionConfigType {
 	 */
 	removeLinebreaks: boolean;
 	/**
+	 * Symbol to replace linebreaks. Requires enabling `#errorLens.removeLinebreaks#`.
+	 */
+	replaceLinebreaksSymbol: string;
+	/**
 	 * When enabled - shows gutter icons (In place of the debug breakpoint icon).
 	 */
 	gutterIconsEnabled: boolean;

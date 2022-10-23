@@ -261,7 +261,7 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 			} else {
 				// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
 				// If the message has linebreaks - it will cut off the message in that place.
-				message = truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message, $config.messageMaxChars);
+				message = truncateString($config.removeLinebreaks ? replaceLinebreaks(message, $config.replaceLinebreaksSymbol) : message, $config.messageMaxChars);
 			}
 
 			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {

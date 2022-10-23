@@ -10,8 +10,8 @@ export function truncateString(str: string, max: number): string {
 /**
  * Replace linebreaks with the one whitespace symbol.
  */
-export function replaceLinebreaks(str: string): string {
-	return str.replace(/[\n\r\t]+/g, ' ');
+export function replaceLinebreaks(str: string, replaceSymbol: string): string {
+	return str.replace(/[\n\r\t]+/g, replaceSymbol);
 }
 /**
  * Transform string svg to {@link Uri}

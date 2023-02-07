@@ -1,3 +1,8 @@
+## 3.7.0 `07 Feb 2023`
+
+- ✨ Make extension available on the web
+- ✨ Configure symbol replacing newlines `"errorLens.replaceLinebreaksSymbol"` #137
+
 ## 3.6.0 `24 Jul 2022`
 
 - ✨ Allow ignoring errors by code #126

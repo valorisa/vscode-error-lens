@@ -16,6 +16,7 @@ package-lock.json
 misc.md
 
 img/demo.png
+docs
 
 node_modules
 webpack.config.js

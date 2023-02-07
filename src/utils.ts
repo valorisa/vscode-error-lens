@@ -19,3 +19,9 @@ export function replaceLinebreaks(str: string, replaceSymbol: string): string {
 export function svgToUri(svg: string): Uri {
 	return Uri.parse(`data:image/svg+xml;utf8,${svg}`);
 }
+/**
+ * To work on the web - use this instead of `path.basename`.
+ */
+export function basename(filePath: string): string {
+	return filePath.split(/[\\/]/).pop() || '';
+}

@@ -355,7 +355,10 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		return;
 	}
 
-	if (!$config.enableOnDiffView && editor.viewColumn === undefined) {
+	if (
+		(!$config.enableOnDiffView && editor.viewColumn === undefined) &&
+		editor.document.uri.scheme !== 'vscode-notebook-cell'
+	) {
 		doUpdateDecorations(editor, {});
 		return;
 	}

@@ -311,7 +311,7 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 			}
 
 			const diagnosticDecorationOptions: DecorationOptions = {
-				range: messageRange,
+				range: new Range(messageRange.start.line, messageRange.start.character, messageRange.start.line, messageRange.start.character),
 				renderOptions: decInstanceRenderOptions,
 			};
 

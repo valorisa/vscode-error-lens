@@ -1,3 +1,8 @@
+## 3.8.0 `14 Mar 2023`
+
+- 🐛 Error range should use starting point #147
+- 🐛 Ignore notebook cells for `enableOnDiffView` setting #116
+
 ## 3.7.0 `07 Feb 2023`
 
 - ✨ Make extension available on the web

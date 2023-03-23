@@ -2,7 +2,7 @@ import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
 import { $config } from 'src/extension';
 import { AggregatedByLineDiagnostics, CommandId, ExtensionConfig } from 'src/types';
 import { replaceLinebreaks } from 'src/utils';
-import { Diagnostic, Position, StatusBarAlignment, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
+import { Diagnostic, MarkdownString, Position, StatusBarAlignment, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
 
 /**
  * Handle status bar updates.
@@ -11,7 +11,7 @@ export class StatusBarMessage {
 	/**
 	 * Status bar item reference.
 	 */
-	private statusBarItem: StatusBarItem;
+	private readonly statusBarItem: StatusBarItem;
 	/**
 	 * Array of vscode `ThemeColor` for each of 4 diagnostic severity states.
 	 */
@@ -129,7 +129,18 @@ export class StatusBarMessage {
 		}
 
 		this.statusBarItem.text = message;
-		this.statusBarItem.tooltip = message;
+		this.statusBarItem.tooltip = this.makeTooltip(message, diagnostic);
+	}
+	makeTooltip(message: string, diagnostic: Diagnostic): MarkdownString {
+		const md = new MarkdownString();
+		md.isTrusted = true;
+		md.appendText(message);
+		md.appendMarkdown('\n\n---\n\n');
+		const code = typeof diagnostic.code === 'string' ?
+			diagnostic.code : typeof diagnostic.code === 'number' ?
+				String(diagnostic.code) : `${diagnostic.code?.value}`;
+		md.appendMarkdown(`[${diagnostic.source} [${code}]`);
+		return md;
 	}
 	/**
 	 * Clear status bar message.

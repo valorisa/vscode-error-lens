@@ -41,7 +41,8 @@
 		"onCommand:errorLens.toggleWarning",
 		"onCommand:errorLens.toggleInfo",
 		"onCommand:errorLens.toggleHint",
-		"onCommand:errorLens.copyProblemMessage"
+		"onCommand:errorLens.copyProblemMessage",
+		"onCommand:errorLens.toggleWorkspace"
 	],
 	"main": "./dist/extension.js",
 	"browser": "./dist/extension.js",
@@ -81,6 +82,12 @@
 				"command": "errorLens.copyProblemMessage",
 				"title": "Copy Problem Message",
 				"description": "Copy problem message to the clipboard (at the active cursor).",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorlens.toggleWorkspace",
+				"title": "Toggle Workspace in Disabled List",
+				"description": "Exclude/Include current workspace from Error Lens",
 				"category": "Error Lens"
 			}
 		],
@@ -354,6 +361,14 @@
 						"type": "string"
 					},
 					"markdownDescription": "Exclude files by using glob pattern. Example `[\"**/*.{ts,js}\"]`"
+				},
+				"errorLens.excludeWorkspaces": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "Exclude workspaces by workspace path"
 				},
 				"errorLens.light": {
 					"type": "object",

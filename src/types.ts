@@ -214,6 +214,11 @@ interface ExtensionConfigType {
 		warningGutterIconColor: string;
 		infoGutterIconColor: string;
 	};
+
+	/**
+	 * Disable highlighting for selected workspaces
+	 */
+	excludeWorkspaces: string[];
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
@@ -243,6 +248,7 @@ export const enum CommandId {
 	toggleWarning = 'errorLens.toggleWarning',
 	toggleInfo = 'errorLens.toggleInfo',
 	toggleHint = 'errorLens.toggleHint',
+	toggleWorkspace = 'errorlens.toggleWorkspace',
 	copyProblemMessage = 'errorLens.copyProblemMessage',
 	statusBarCommand = 'errorLens.statusBarCommand',
 	revealLine = 'errorLens.revealLine',

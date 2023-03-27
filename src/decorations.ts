@@ -337,12 +337,6 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 
 export function updateDecorationsForAllVisibleEditors() {
 	for (const editor of window.visibleTextEditors) {
-		const excludeWorkspaces = $config.excludeWorkspaces;
-		const currentWorkspacePath = workspace.getWorkspaceFolder(editor.document.uri)?.uri.path;
-		if (currentWorkspacePath && excludeWorkspaces.includes(currentWorkspacePath)) {
-			continue;
-		}
-
 		updateDecorationsForUri(editor.document.uri, editor);
 	}
 }
@@ -387,6 +381,14 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 				return;
 			}
 		}
+	}
+
+	const currentWorkspacePath = workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath;
+	if (
+		currentWorkspacePath &&
+		$config.excludeWorkspaces.includes(currentWorkspacePath)
+	) {
+		return;
 	}
 
 	doUpdateDecorations(editor, groupedDiagnostics || groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);

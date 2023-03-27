@@ -72,6 +72,6 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 		editor.selection = new Selection(range.start.line, range.start.character, range.start.line, range.start.character);
 	});
 
-	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableStatusBarCommand, disposableRevealLine);
+	extensionContext.subscriptions.push(disposableToggleErrorLens, disposableToggleError, disposableToggleWarning, disposableToggleInfo, disposableToggleHint, disposableCopyProblemMessage, disposableStatusBarCommand, disposableRevealLine, disposableToggleWorkspace);
 }
 

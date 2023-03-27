@@ -87,7 +87,7 @@
 			{
 				"command": "errorlens.toggleWorkspace",
 				"title": "Toggle Workspace in Disabled List",
-				"description": "Exclude/Include current workspace from Error Lens",
+				"description": "Exclude/Include current workspace by path.",
 				"category": "Error Lens"
 			}
 		],
@@ -368,7 +368,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Exclude workspaces by workspace path"
+					"markdownDescription": "Exclude workspaces by path."
 				},
 				"errorLens.light": {
 					"type": "object",

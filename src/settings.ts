@@ -27,25 +27,28 @@ export function toggleEnabledLevels(
 }
 
 export function toggleWorkspace(): void {
-	const activeEditor = window.activeTextEditor;
-	const config = $config;
+	const activeTextEditor = window.activeTextEditor;
 
-	if (!activeEditor) {
+	if (!activeTextEditor) {
+		window.showWarningMessage('No acitive text editor.');
 		return;
 	}
 
-	const currentWorkspacePath = workspace.getWorkspaceFolder(activeEditor.document.uri)?.uri.path;
+	const currentWorkspacePath = workspace.getWorkspaceFolder(activeTextEditor.document.uri)?.uri.fsPath;
 
 	if (!currentWorkspacePath) {
+		window.showWarningMessage(`Counldn't find workspace folder for "${activeTextEditor.document.uri.toString()}".`);
 		return;
 	}
 
 	let newExcludeWorkspaceList: string[];
 
-	if (config.excludeWorkspaces?.includes(currentWorkspacePath)) {
-		newExcludeWorkspaceList = config.excludeWorkspaces.filter(workspacePath => workspacePath !== currentWorkspacePath);
+	if ($config.excludeWorkspaces?.includes(currentWorkspacePath)) {
+		newExcludeWorkspaceList = $config.excludeWorkspaces.filter(workspacePath => workspacePath !== currentWorkspacePath);
+		window.showInformationMessage(`Included: "${currentWorkspacePath}"`);
 	} else {
-		newExcludeWorkspaceList = [...(config.excludeWorkspaces || []), currentWorkspacePath];
+		newExcludeWorkspaceList = [...($config.excludeWorkspaces || []), currentWorkspacePath];
+		window.showInformationMessage(`Excluded: "${currentWorkspacePath}"`);
 	}
 
 	updateGlobalSetting('errorLens.excludeWorkspaces', newExcludeWorkspaceList);

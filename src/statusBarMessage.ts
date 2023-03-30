@@ -1,55 +1,71 @@
+import { CommandId } from 'src/commands';
 import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
 import { $config } from 'src/extension';
-import { AggregatedByLineDiagnostics, CommandId, ExtensionConfig } from 'src/types';
+import { type AggregatedByLineDiagnostics, type ExtensionConfig } from 'src/types';
 import { replaceLinebreaks } from 'src/utils';
-import { Diagnostic, MarkdownString, Position, StatusBarAlignment, StatusBarItem, TextEditor, ThemeColor, window } from 'vscode';
+import { MarkdownString, Position, StatusBarAlignment, window, type Diagnostic, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
+
+interface StatusBarMessageInit {
+	isEnabled: boolean;
+	colorsEnabled: boolean;
+	messageType: ExtensionConfig['statusBarMessageType'];
+	priority: ExtensionConfig['statusBarMessagePriority'];
+	alignment: ExtensionConfig['statusBarMessageAlignment'];
+}
 
 /**
  * Handle status bar updates.
  */
 export class StatusBarMessage {
 	/**
-	 * Status bar item reference.
-	 */
-	private readonly statusBarItem: StatusBarItem;
-	/**
 	 * Array of vscode `ThemeColor` for each of 4 diagnostic severity states.
 	 */
-	statusBarColors: ThemeColor[] = [];
+	public statusBarColors: ThemeColor[] = [];
 	/**
 	 * Position in editor of active message. Needed to jump to error on click.
 	 */
-	activeMessagePosition: Position = new Position(0, 0);
+	public activeMessagePosition: Position = new Position(0, 0);
 	/**
 	 * Active message text. Needed to copy to clipboard on click.
 	 */
-	activeMessageText = '';
+	public activeMessageText = '';
 	/**
 	 * Active message source. Needed to copy to clipboard on click.
 	 */
-	activeMessageSource?: string = '';
+	public activeMessageSource?: string = '';
+	/**
+	 * Status bar item reference.
+	 */
+	private readonly statusBarItem: StatusBarItem;
+	private readonly isEnabled: boolean;
+	private readonly colorsEnabled: boolean;
+	private readonly messageType: ExtensionConfig['statusBarMessageType'];
 
 	constructor(
-		private readonly isEnabled: boolean,
-		private readonly colorsEnabled: boolean,
-		private readonly messageType: ExtensionConfig['statusBarMessageType'],
-		priority: ExtensionConfig['statusBarMessagePriority'],
-		alignment: ExtensionConfig['statusBarMessageAlignment'],
+		{
+			isEnabled,
+			colorsEnabled,
+			messageType,
+			priority,
+			alignment,
+		}: StatusBarMessageInit,
 	) {
 		const statusBarAlignment = alignment === 'right' ? StatusBarAlignment.Right : StatusBarAlignment.Left;
+		this.isEnabled = isEnabled;
 		this.colorsEnabled = colorsEnabled;
 		this.messageType = messageType;
 
 		this.statusBarItem = window.createStatusBarItem('errorLensMessage', statusBarAlignment, priority);
 		this.statusBarItem.name = 'Error Lens: Message';
-		this.statusBarItem.command = CommandId.statusBarCommand;
+		this.statusBarItem.command = CommandId.StatusBarCommand;
 		if (this.isEnabled) {
 			this.statusBarItem.show();
 		} else {
 			this.dispose();
 		}
 	}
-	updateText(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
+
+	public updateText(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -91,7 +107,7 @@ export class StatusBarMessage {
 			}
 		} else if (this.messageType === 'closestSeverity') {
 			const allDiagnosticsSorted = keys.map(key => aggregatedDiagnostics[key]).flat().sort((d1, d2) => {
-				const severityScore = d1.severity * 1e4 - d2.severity * 1e4;
+				const severityScore = (d1.severity * 1e4) - (d2.severity * 1e4);
 				return severityScore + (Math.abs(ln - d1.range.start.line) - Math.abs(ln - d2.range.start.line));
 			});
 			for (const diag of allDiagnosticsSorted) {
@@ -123,7 +139,6 @@ export class StatusBarMessage {
 		this.activeMessageText = message;
 		this.activeMessageSource = diagnostic.source;
 
-
 		if (this.colorsEnabled) {
 			this.statusBarItem.color = this.statusBarColors[diagnostic.severity];
 		}
@@ -131,31 +146,36 @@ export class StatusBarMessage {
 		this.statusBarItem.text = message;
 		this.statusBarItem.tooltip = this.makeTooltip(message, diagnostic);
 	}
-	makeTooltip(message: string, diagnostic: Diagnostic): MarkdownString {
-		const md = new MarkdownString();
-		md.isTrusted = true;
-		md.appendText(message);
-		md.appendMarkdown('\n\n---\n\n');
-		const code = typeof diagnostic.code === 'string' ?
-			diagnostic.code : typeof diagnostic.code === 'number' ?
-				String(diagnostic.code) : `${diagnostic.code?.value}`;
-		md.appendMarkdown(`[${diagnostic.source} [${code}]`);
-		return md;
-	}
+
 	/**
 	 * Clear status bar message.
 	 */
-	clear(): void {
+	public clear(): void {
 		if (!this.isEnabled) {
 			return;
 		}
 		this.statusBarItem.text = '';
 		this.statusBarItem.tooltip = '';
 	}
+
 	/**
 	 * Dispose status bar item.
 	 */
-	dispose(): void {
+	public dispose(): void {
 		this.statusBarItem.dispose();
+	}
+
+	private makeTooltip(message: string, diagnostic: Diagnostic): MarkdownString {
+		const markdown = new MarkdownString();
+		markdown.isTrusted = true;
+		markdown.appendText(message);
+		markdown.appendMarkdown('\n\n---\n\n');
+		const code = typeof diagnostic.code === 'string' ?
+			diagnostic.code :
+			typeof diagnostic.code === 'number' ?
+				String(diagnostic.code) :
+				`${diagnostic.code?.value ?? '<No code>'}`;
+		markdown.appendMarkdown(`[${diagnostic.source ?? '<No source>'} [${code}]`);
+		return markdown;
 	}
 }

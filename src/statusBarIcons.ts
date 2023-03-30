@@ -1,14 +1,23 @@
-import { CommandId, Constants, ExtensionConfig } from 'src/types';
+import { CommandId } from 'src/commands';
+import { Constants, type ExtensionConfig } from 'src/types';
 import { basename } from 'src/utils';
-import { Diagnostic, languages, MarkdownString, Position, StatusBarAlignment, StatusBarItem, ThemeColor, Uri, window } from 'vscode';
+import { languages, MarkdownString, StatusBarAlignment, ThemeColor, Uri, window, type Diagnostic, type StatusBarItem } from 'vscode';
 
 type StatusBarProblemType = 'error' | 'warning';
+
+interface StatusBarIconsInit {
+	isEnabled: boolean;
+	atZero: ExtensionConfig['statusBarIconsAtZero'];
+	useBackground: ExtensionConfig['statusBarIconsUseBackground'];
+	priority: ExtensionConfig['statusBarMessagePriority'];
+	alignment: ExtensionConfig['statusBarMessageAlignment'];
+}
 
 /**
  * Handle status bar updates.
  */
 export class StatusBarIcons {
-	private errorStatusBarItem: StatusBarItem;
+	private readonly errorStatusBarItem: StatusBarItem;
 	private readonly warningStatusBarItem: StatusBarItem;
 
 	private readonly errorBackgroundThemeColor = new ThemeColor('statusBarItem.errorBackground');
@@ -16,30 +25,20 @@ export class StatusBarIcons {
 	private readonly errorForegroundThemeColor = new ThemeColor('errorLens.statusBarIconErrorForeground');
 	private readonly warningForegroundThemeColor = new ThemeColor('errorLens.statusBarIconWarningForeground');
 
-	/**
-	 * Array of vscode `ThemeColor` for each of 4 diagnostic severity states.
-	 */
-	statusBarColors: ThemeColor[] = [];
-	/**
-	 * Position in editor of active message. Needed to jump to error on click.
-	 */
-	activeMessagePosition: Position = new Position(0, 0);
-	/**
-	 * Active message text. Needed to copy to clipboard on click.
-	 */
-	activeMessageText = '';
-	/**
-	 * Active message source. Needed to copy to clipboard on click.
-	 */
-	activeMessageSource?: string = '';
+	private readonly isEnabled: boolean;
+	private readonly atZero: ExtensionConfig['statusBarIconsAtZero'];
+	private readonly useBackground: ExtensionConfig['statusBarIconsUseBackground'];
 
-	constructor(
-		private readonly isEnabled: boolean,
-		private readonly atZero: ExtensionConfig['statusBarIconsAtZero'],
-		private readonly useBackground: ExtensionConfig['statusBarIconsUseBackground'],
-		priority: ExtensionConfig['statusBarIconsPriority'],
-		alignment: ExtensionConfig['statusBarIconsAlignment'],
-	) {
+	constructor({
+		isEnabled,
+		atZero,
+		useBackground,
+		priority,
+		alignment,
+	}: StatusBarIconsInit) {
+		this.isEnabled = isEnabled;
+		this.atZero = atZero;
+		this.useBackground = useBackground;
 		const statusBarAlignment = alignment === 'right' ? StatusBarAlignment.Right : StatusBarAlignment.Left;
 		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', statusBarAlignment, priority);
 		this.errorStatusBarItem.name = 'Error Lens: Error icon';
@@ -59,7 +58,8 @@ export class StatusBarIcons {
 			this.dispose();
 		}
 	}
-	updateText(): void {
+
+	public updateText(): void {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -128,42 +128,55 @@ export class StatusBarIcons {
 			this.warningStatusBarItem.tooltip = this.makeTooltip(warningsWithUri, 'warning');
 		}
 	}
-	makeTooltip(allDiagnostics: [Uri, Diagnostic[]][], type: 'error' | 'warning'): MarkdownString {
-		const md = new MarkdownString(undefined, true);
-		md.isTrusted = true;
+
+	/**
+	 * Dispose both status bar items.
+	 */
+	public dispose(): void {
+		this.errorStatusBarItem.dispose();
+		this.warningStatusBarItem.dispose();
+	}
+
+	private makeTooltip(allDiagnostics: [Uri, Diagnostic[]][], type: 'error' | 'warning'): MarkdownString {
+		const markdown = new MarkdownString(undefined, true);
+		markdown.isTrusted = true;
 		for (const diagWithUri of allDiagnostics) {
 			const uri = diagWithUri[0];
 			const diagnostics = diagWithUri[1];
 			if (diagnostics.length) {
-				md.appendMarkdown(`**${basename(uri.path)}**\n\n`);
+				markdown.appendMarkdown(`**${basename(uri.path)}**\n\n`);
 			}
 			for (const diag of diagnostics) {
 				const revealLineUri = Uri.parse(
-					`command:${CommandId.revealLine}?${encodeURIComponent(JSON.stringify([uri.fsPath, [diag.range.start.line, diag.range.start.character]]))}`,
+					`command:${CommandId.RevealLine}?${encodeURIComponent(JSON.stringify([uri.fsPath, [diag.range.start.line, diag.range.start.character]]))}`,
 				);
-				md.appendMarkdown(`<span style="color:${type === 'error' ? '#e45454' : '#ff942f'};">$(${type})</span> [${diag.message} \`${diag.source}\`](${revealLineUri})\n\n`);
+				// TODO: use variables --vscode-editorWarning-foreground && --vscode-editorError-foreground for **1.77.0**
+				markdown.appendMarkdown(`<span style="color:${type === 'error' ? '#e45454' : '#ff942f'};">$(${type})</span> [${diag.message} \`${diag.source ?? '<No source>'}\`](${revealLineUri.toString()})\n\n`);
 			}
 		}
-		return md;
+		return markdown;
 	}
-	setForeground(statusBarType: StatusBarProblemType): void {
+
+	private setForeground(statusBarType: StatusBarProblemType): void {
 		if (statusBarType === 'error') {
 			this.errorStatusBarItem.color = this.errorForegroundThemeColor;
 		} else if (statusBarType === 'warning') {
 			this.warningStatusBarItem.color = this.warningForegroundThemeColor;
 		}
 	}
-	clearForeground(statusBarType: StatusBarProblemType): void {
+
+	private clearForeground(statusBarType: StatusBarProblemType): void {
 		if (statusBarType === 'error') {
 			this.errorStatusBarItem.color = undefined;
 		} else if (statusBarType === 'warning') {
 			this.warningStatusBarItem.color = undefined;
 		}
 	}
+
 	/**
 	 * Set background (only if it's enabled) or clear it.
 	 */
-	setBackground(statusBarType: StatusBarProblemType): void {
+	private setBackground(statusBarType: StatusBarProblemType): void {
 		if (!this.useBackground) {
 			return;
 		}
@@ -174,18 +187,12 @@ export class StatusBarIcons {
 			this.warningStatusBarItem.backgroundColor = this.warningBackgroundThemeColor;
 		}
 	}
-	clearBackground(statusBarType: StatusBarProblemType): void {
+
+	private clearBackground(statusBarType: StatusBarProblemType): void {
 		if (statusBarType === 'error') {
 			this.errorStatusBarItem.backgroundColor = undefined;
 		} else if (statusBarType === 'warning') {
 			this.warningStatusBarItem.backgroundColor = undefined;
 		}
-	}
-	/**
-	 * Dispose both status bar items.
-	 */
-	dispose(): void {
-		this.errorStatusBarItem.dispose();
-		this.warningStatusBarItem.dispose();
 	}
 }

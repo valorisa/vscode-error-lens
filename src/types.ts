@@ -1,4 +1,4 @@
-import { Diagnostic, Uri } from 'vscode';
+import { type Diagnostic, type Uri } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
@@ -223,9 +223,7 @@ interface ExtensionConfigType {
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
 
-export interface AggregatedByLineDiagnostics {
-	[lineNumber: string]: Diagnostic[];
-}
+export type AggregatedByLineDiagnostics = Record<string, Diagnostic[]>;
 
 export interface Gutter {
 	iconSet: ExtensionConfig['gutterIconSet'];
@@ -238,20 +236,6 @@ export interface Gutter {
 
 	infoIconPath: Uri | string;
 	infoIconPathLight: Uri | string;
-}
-/**
- * All command ids contributed by this extensions.
- */
-export const enum CommandId {
-	toggle = 'errorLens.toggle',
-	toggleError = 'errorLens.toggleError',
-	toggleWarning = 'errorLens.toggleWarning',
-	toggleInfo = 'errorLens.toggleInfo',
-	toggleHint = 'errorLens.toggleHint',
-	toggleWorkspace = 'errorlens.toggleWorkspace',
-	copyProblemMessage = 'errorLens.copyProblemMessage',
-	statusBarCommand = 'errorLens.statusBarCommand',
-	revealLine = 'errorLens.revealLine',
 }
 
 export const enum Constants {

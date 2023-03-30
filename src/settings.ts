@@ -1,29 +1,30 @@
-import { ExtensionConfig } from 'src/types';
+import { type ExtensionConfig } from 'src/types';
 import { ConfigurationTarget, window, workspace } from 'vscode';
 import { $config } from './extension';
 
 /**
  * Update global settings.json file with the new settign value.
  */
-export function updateGlobalSetting(settingId: string, newValue: unknown): void {
+export async function updateGlobalSetting(settingId: string, newValue: unknown): Promise<void> {
 	const config = workspace.getConfiguration();
-	config.update(settingId, newValue, ConfigurationTarget.Global);
+	await config.update(settingId, newValue, ConfigurationTarget.Global);
 }
 /**
  * Update global setting `errorLens.enabledDiagnosticLevels`.
  * Either add a diagnostic severity or remove it.
  */
-export function toggleEnabledLevels(
+export async function toggleEnabledLevels(
 	severity: ExtensionConfig['enabledDiagnosticLevels'][number],
 	arrayValue: ExtensionConfig['enabledDiagnosticLevels'],
-): void {
+): Promise<void> {
 	const oldValueIndex = arrayValue.indexOf(severity);
-	if (oldValueIndex !== -1) {
-		arrayValue.splice(oldValueIndex, 1);
-	} else {
+	if (oldValueIndex === -1) {
 		arrayValue.push(severity);
+	} else {
+		arrayValue.splice(oldValueIndex, 1);
 	}
-	updateGlobalSetting('errorLens.enabledDiagnosticLevels', arrayValue);
+
+	await updateGlobalSetting('errorLens.enabledDiagnosticLevels', arrayValue);
 }
 
 export function toggleWorkspace(): void {

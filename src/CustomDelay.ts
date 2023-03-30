@@ -2,13 +2,9 @@ import debounce from 'lodash/debounce';
 import throttle from 'lodash/throttle';
 import { groupDiagnosticsByLine, updateDecorationsForUri } from 'src/decorations';
 import { Global } from 'src/extension';
-import { Diagnostic, DiagnosticChangeEvent, languages, Uri, window } from 'vscode';
+import { languages, window, type Diagnostic, type DiagnosticChangeEvent, type Uri } from 'vscode';
 
-interface CachedDiagnostic {
-	[stringUri: string]: {
-		[lnmessage: string]: Diagnostic;
-	};
-}
+type CachedDiagnostic = Record<string, Record<string, Diagnostic>>;
 
 export class CustomDelay {
 	/**
@@ -45,18 +41,7 @@ export class CustomDelay {
 		});
 	}
 
-	/**
-	 * Make id from diagnostic:
-	 *
-	 * ```js
-	 * "1_Missing semicolon"
-	 * ```
-	 */
-	convertDiagnosticToId(diagnostic: Diagnostic): string {
-		return `${diagnostic.range.start.line}_${diagnostic.message}`;
-	}
-
-	onDiagnosticChange = (event: DiagnosticChangeEvent) => {
+	public onDiagnosticChange = (event: DiagnosticChangeEvent): void => {
 		if (!event.uris.length) {
 			this.cachedDiagnostics = {};
 			return;
@@ -66,7 +51,7 @@ export class CustomDelay {
 		}
 	};
 
-	updateCachedDiagnosticForUri = (uri: Uri) => {
+	private readonly updateCachedDiagnosticForUri = (uri: Uri): void => {
 		const stringUri = uri.toString();
 		const diagnosticForUri = languages.getDiagnostics(uri);
 		const cachedDiagnosticsForUri = this.cachedDiagnostics[stringUri];
@@ -78,11 +63,7 @@ export class CustomDelay {
 				transformed[stringUri][this.convertDiagnosticToId(diagnostic)] = diagnostic;
 			}
 		}
-		// If there's no uri saved - save it and render all diagnostics
-		if (!cachedDiagnosticsForUri) {
-			this.cachedDiagnostics[stringUri] = transformed[stringUri];
-			this.updateDecorationsThrottled(uri);
-		} else {
+		if (cachedDiagnosticsForUri) {
 			const transformedDiagnosticForUri = transformed[stringUri];
 			const cachedKeys = Object.keys(cachedDiagnosticsForUri);
 			const transformedKeys = Object.keys(transformedDiagnosticForUri);
@@ -102,10 +83,14 @@ export class CustomDelay {
 					return;
 				}
 			}
+		} else {
+			// If there's no uri saved - save it and render all diagnostics
+			this.cachedDiagnostics[stringUri] = transformed[stringUri];
+			this.updateDecorationsThrottled(uri);
 		}
 	};
 
-	updateDecorations = (uri: Uri) => {
+	private readonly updateDecorations = (uri: Uri): void => {
 		const stringUri = uri.toString();
 		const diagnostics = languages.getDiagnostics(uri);
 		const groupedDiagnostics = groupDiagnosticsByLine(diagnostics);
@@ -123,4 +108,15 @@ export class CustomDelay {
 
 		Global.statusBarIcons.updateText();
 	};
+
+	/**
+	 * Make id from diagnostic:
+	 *
+	 * ```js
+	 * "1_Missing semicolon"
+	 * ```
+	 */
+	private convertDiagnosticToId(diagnostic: Diagnostic): string {
+		return `${diagnostic.range.start.line}_${diagnostic.message}`;
+	}
 }

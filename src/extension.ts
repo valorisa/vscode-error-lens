@@ -1,11 +1,11 @@
 import { registerAllCommands } from 'src/commands';
-import { CustomDelay } from 'src/CustomDelay';
+import { type CustomDelay } from 'src/CustomDelay';
 import { setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/eventListeners';
 import { StatusBarIcons } from 'src/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBarMessage';
-import { Constants, ExtensionConfig } from 'src/types';
-import { Disposable, ExtensionContext, TextEditorDecorationType, workspace } from 'vscode';
+import { Constants, type ExtensionConfig } from 'src/types';
+import { workspace, type Disposable, type ExtensionContext, type TextEditorDecorationType } from 'vscode';
 
 /**
  * All user settings.
@@ -16,67 +16,69 @@ export let $config: ExtensionConfig;
  * Global variables.
  */
 export abstract class Global {
-	static configErrorEnabled = true;
-	static configWarningEnabled = true;
-	static configInfoEnabled = true;
-	static configHintEnabled = true;
+	public static configErrorEnabled = true;
+	public static configWarningEnabled = true;
+	public static configInfoEnabled = true;
+	public static configHintEnabled = true;
 
-	static decorationTypeError: TextEditorDecorationType;
-	static decorationTypeWarning: TextEditorDecorationType;
-	static decorationTypeInfo: TextEditorDecorationType;
-	static decorationTypeHint: TextEditorDecorationType;
-	static decorationTypeGutterError: TextEditorDecorationType;
-	static decorationTypeGutterWarning: TextEditorDecorationType;
-	static decorationTypeGutterInfo: TextEditorDecorationType;
+	public static decorationTypeError: TextEditorDecorationType;
+	public static decorationTypeWarning: TextEditorDecorationType;
+	public static decorationTypeInfo: TextEditorDecorationType;
+	public static decorationTypeHint: TextEditorDecorationType;
+	public static decorationTypeGutterError: TextEditorDecorationType;
+	public static decorationTypeGutterWarning: TextEditorDecorationType;
+	public static decorationTypeGutterInfo: TextEditorDecorationType;
 
-	static onDidChangeDiagnosticsDisposable: Disposable | undefined;
-	static onDidChangeActiveTextEditor: Disposable | undefined;
-	static onDidChangeVisibleTextEditors: Disposable | undefined;
-	static onDidSaveTextDocumentDisposable: Disposable | undefined;
-	static onDidCursorChangeDisposable: Disposable | undefined;
+	public static onDidChangeDiagnosticsDisposable: Disposable | undefined;
+	public static onDidChangeActiveTextEditor: Disposable | undefined;
+	public static onDidChangeVisibleTextEditors: Disposable | undefined;
+	public static onDidSaveTextDocumentDisposable: Disposable | undefined;
+	public static onDidCursorChangeDisposable: Disposable | undefined;
 	/**
 	 * Status bar object. Handles all status bar stuff (for text message)
 	 */
-	static statusBarMessage: StatusBarMessage;
+	public static statusBarMessage: StatusBarMessage;
 	/**
 	 * Status bar object. Handles all status bar stuff (for icons)
 	 */
-	static statusBarIcons: StatusBarIcons;
+	public static statusBarIcons: StatusBarIcons;
 	/**
 	 * Editor icons can be rendered only for active line (to reduce the visual noise).
 	 * But it might be useful to show gutter icons for all lines. With `gutterIconsFollowCursorOverride`
 	 * setting then gutter icons will be rendered as a separate set of decorations.
 	 */
-	static renderGutterIconsAsSeparateDecoration: boolean;
+	public static renderGutterIconsAsSeparateDecoration: boolean;
 	/**
 	 * Array of RegExp (that would match against diagnostic message)
 	 */
-	static excludeRegexp: RegExp[] = [];
+	public static excludeRegexp: RegExp[] = [];
 	/**
 	 * Array of source/code to ignore (that would match against diagnostic object)
 	 */
-	static excludeSources: {
+	public static excludeSources: {
 		source: string;
 		code?: string;
 	}[] = [];
+
 	/**
 	 * Array of document selectors (that would match against document)
 	 */
-	static excludePatterns?: {
+	public static excludePatterns?: {
 		pattern: string;
 	}[] = undefined;
+
 	/**
 	 * Timestamp when last time user manually saved the document.
 	 * Used to determine if the save was recently (1s?) to show decorations.
 	 */
-	static lastSavedTimestamp = Date.now() + 2000;
+	public static lastSavedTimestamp = Date.now() + 2000;
 	/**
 	 * CustomDelay object. Handles updating decorations with a delay.
 	 */
-	static customDelay: CustomDelay | undefined;
+	public static customDelay: CustomDelay | undefined;
 }
 
-export function activate(context: ExtensionContext) {
+export function activate(context: ExtensionContext): void {
 	updateConfigAndEverything();
 	registerAllCommands(context);
 
@@ -85,8 +87,8 @@ export function activate(context: ExtensionContext) {
 	 * - Dispose everything
 	 * - Update everything
 	 */
-	function updateConfigAndEverything() {
-		$config = workspace.getConfiguration().get(Constants.SettingsPrefix) as ExtensionConfig;
+	function updateConfigAndEverything(): void {
+		$config = workspace.getConfiguration().get(Constants.SettingsPrefix)!;
 		disposeEverything();
 		if ($config.enabled) {
 			updateEverything(context);
@@ -106,27 +108,27 @@ export function activate(context: ExtensionContext) {
  * - Update decorations for all visible editors
  * - Update all event listeners
  */
-export function updateEverything(context: ExtensionContext) {
+export function updateEverything(context: ExtensionContext): void {
 	updateExclude();
 	Global.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled &&
 		$config.gutterIconsFollowCursorOverride &&
 		$config.followCursor !== 'allLines';
 	Global.statusBarMessage?.dispose();
 	Global.statusBarIcons?.dispose();
-	Global.statusBarMessage = new StatusBarMessage(
-		$config.statusBarMessageEnabled,
-		$config.statusBarColorsEnabled,
-		$config.statusBarMessageType,
-		$config.statusBarMessagePriority,
-		$config.statusBarMessageAlignment,
-	);
-	Global.statusBarIcons = new StatusBarIcons(
-		$config.statusBarIconsEnabled,
-		$config.statusBarIconsAtZero,
-		$config.statusBarIconsUseBackground,
-		$config.statusBarIconsPriority,
-		$config.statusBarIconsAlignment,
-	);
+	Global.statusBarMessage = new StatusBarMessage({
+		isEnabled: $config.statusBarMessageEnabled,
+		colorsEnabled: $config.statusBarColorsEnabled,
+		messageType: $config.statusBarMessageType,
+		priority: $config.statusBarMessagePriority,
+		alignment: $config.statusBarMessageAlignment,
+	});
+	Global.statusBarIcons = new StatusBarIcons({
+		isEnabled: $config.statusBarIconsEnabled,
+		atZero: $config.statusBarIconsAtZero,
+		useBackground: $config.statusBarIconsUseBackground,
+		priority: $config.statusBarIconsPriority,
+		alignment: $config.statusBarIconsAlignment,
+	});
 	setDecorationStyle(context);
 	updateConfigEnabledLevels();
 
@@ -145,15 +147,15 @@ export function updateEverything(context: ExtensionContext) {
  * - Create `DocumentFilter[]` for document match.
  * - Create `source/code` exclusion object.
  */
-function updateExclude() {
+function updateExclude(): void {
 	Global.excludeRegexp = [];
 	Global.excludeSources = [];
 
 	for (const excludeSourceCode of $config.excludeBySource) {
 		// Match source/code like:  eslint(padded-blocks)
-		const sourceCodeMatch = /([^()]+)(\((.+)\))?/.exec(excludeSourceCode);
-		const source = sourceCodeMatch?.[1];
-		const code = sourceCodeMatch?.[3];
+		const sourceCodeMatch = /(?<source>[^()]+)(?:\((?<code>.+)\))?/u.exec(excludeSourceCode);
+		const source = sourceCodeMatch?.groups?.source;
+		const code = sourceCodeMatch?.groups?.code;
 		if (!source) {
 			continue;
 		}
@@ -165,7 +167,7 @@ function updateExclude() {
 
 	for (const excludeMessage of $config.exclude) {
 		if (typeof excludeMessage === 'string') {
-			Global.excludeRegexp.push(new RegExp(excludeMessage, 'i'));
+			Global.excludeRegexp.push(new RegExp(excludeMessage, 'iu'));
 		}
 	}
 	if (Array.isArray($config.excludePatterns) && $config.excludePatterns.length !== 0) {
@@ -179,7 +181,7 @@ function updateExclude() {
 /**
  * Update global varialbes for enabled severity levels of diagnostics based on user setting `enabledDiagnosticLevels`.
  */
-function updateConfigEnabledLevels() {
+function updateConfigEnabledLevels(): void {
 	Global.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
 	Global.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
 	Global.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
@@ -188,7 +190,7 @@ function updateConfigEnabledLevels() {
 /**
  * Dispose all known disposables (except `onDidChangeConfiguration`).
  */
-export function disposeEverything() {
+export function disposeEverything(): void {
 	Global.decorationTypeError?.dispose();
 	Global.decorationTypeWarning?.dispose();
 	Global.decorationTypeInfo?.dispose();
@@ -205,4 +207,4 @@ export function disposeEverything() {
 	Global.statusBarIcons?.dispose();
 }
 
-export function deactivate() { }
+export function deactivate(): void { }

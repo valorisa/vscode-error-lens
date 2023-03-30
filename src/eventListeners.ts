@@ -1,7 +1,7 @@
 import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
 import { $config, Global } from 'src/extension';
-import { DiagnosticChangeEvent, languages, TextDocumentSaveReason, window, workspace } from 'vscode';
+import { languages, TextDocumentSaveReason, window, workspace, type DiagnosticChangeEvent } from 'vscode';
 
 /**
  * Update listener for when active editor changes.
@@ -72,7 +72,7 @@ export function updateCursorChangeListener(): void {
 		$config.followCursor === 'allLinesExceptActive' ||
 		$config.statusBarMessageEnabled
 	) {
-		let lastPositionLine = 999999;// Unlikely line number
+		let lastPositionLine = -1;
 		Global.onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];
 			if (

@@ -1,32 +1,47 @@
 import { $config, Global } from 'src/extension';
 import { toggleEnabledLevels, toggleWorkspace, updateGlobalSetting } from 'src/settings';
-import { AggregatedByLineDiagnostics, CommandId, Constants } from 'src/types';
-import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window, workspace } from 'vscode';
+import { Constants, type AggregatedByLineDiagnostics } from 'src/types';
+import { commands, env, languages, Range, Selection, TextEditorRevealType, window, workspace, type ExtensionContext } from 'vscode';
+
+/**
+ * All command ids contributed by this extensions.
+ */
+export const enum CommandId {
+	Toggle = 'errorLens.toggle',
+	ToggleError = 'errorLens.toggleError',
+	ToggleWarning = 'errorLens.toggleWarning',
+	ToggleInfo = 'errorLens.toggleInfo',
+	ToggleHint = 'errorLens.toggleHint',
+	ToggleWorkspace = 'errorlens.toggleWorkspace',
+	CopyProblemMessage = 'errorLens.copyProblemMessage',
+	StatusBarCommand = 'errorLens.statusBarCommand',
+	RevealLine = 'errorLens.revealLine',
+}
 
 /**
  * Register all commands contributed by this extension.
  */
-export function registerAllCommands(extensionContext: ExtensionContext) {
-	const disposableToggleErrorLens = commands.registerCommand(CommandId.toggle, () => {
+export function registerAllCommands(extensionContext: ExtensionContext): void {
+	const disposableToggleErrorLens = commands.registerCommand(CommandId.Toggle, () => {
 		updateGlobalSetting('errorLens.enabled', !$config.enabled);
 	});
-	const disposableToggleError = commands.registerCommand(CommandId.toggleError, () => {
+	const disposableToggleError = commands.registerCommand(CommandId.ToggleError, () => {
 		toggleEnabledLevels('error', $config.enabledDiagnosticLevels);
 	});
-	const disposableToggleWarning = commands.registerCommand(CommandId.toggleWarning, () => {
+	const disposableToggleWarning = commands.registerCommand(CommandId.ToggleWarning, () => {
 		toggleEnabledLevels('warning', $config.enabledDiagnosticLevels);
 	});
-	const disposableToggleInfo = commands.registerCommand(CommandId.toggleInfo, () => {
+	const disposableToggleInfo = commands.registerCommand(CommandId.ToggleInfo, () => {
 		toggleEnabledLevels('info', $config.enabledDiagnosticLevels);
 	});
-	const disposableToggleHint = commands.registerCommand(CommandId.toggleHint, () => {
+	const disposableToggleHint = commands.registerCommand(CommandId.ToggleHint, () => {
 		toggleEnabledLevels('hint', $config.enabledDiagnosticLevels);
 	});
-	const disposableToggleWorkspace = commands.registerCommand(CommandId.toggleWorkspace, () => {
+	const disposableToggleWorkspace = commands.registerCommand(CommandId.ToggleWorkspace, () => {
 		toggleWorkspace();
 	});
 
-	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandId.copyProblemMessage, editor => {
+	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandId.CopyProblemMessage, editor => {
 		const aggregatedDiagnostics: AggregatedByLineDiagnostics = {};
 		for (const diagnostic of languages.getDiagnostics(editor.document.uri)) {
 			const key = diagnostic.range.start.line;
@@ -48,7 +63,7 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 		env.clipboard.writeText(source + renderedDiagnostic.message);
 	});
 
-	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandId.statusBarCommand, async editor => {
+	const disposableStatusBarCommand = commands.registerTextEditorCommand(CommandId.StatusBarCommand, async editor => {
 		if ($config.statusBarCommand === 'goToLine' || $config.statusBarCommand === 'goToProblem') {
 			const range = new Range(Global.statusBarMessage.activeMessagePosition, Global.statusBarMessage.activeMessagePosition);
 			editor.selection = new Selection(range.start, range.end);
@@ -64,7 +79,7 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 		}
 	});
 
-	const disposableRevealLine = commands.registerCommand(CommandId.revealLine, async (fsPath: string, [line, char]) => {
+	const disposableRevealLine = commands.registerCommand(CommandId.RevealLine, async (fsPath: string, [line, char]: [number, number]) => {
 		const range = new Range(line, char, line, char);
 		const document = await workspace.openTextDocument(fsPath);
 		const editor = await window.showTextDocument(document);

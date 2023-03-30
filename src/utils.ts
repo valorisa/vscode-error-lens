@@ -11,7 +11,7 @@ export function truncateString(str: string, max: number): string {
  * Replace linebreaks with the one whitespace symbol.
  */
 export function replaceLinebreaks(str: string, replaceSymbol: string): string {
-	return str.replace(/[\n\r\t]+/g, replaceSymbol);
+	return str.replace(/[\n\r\t]+/gu, replaceSymbol);
 }
 /**
  * Transform string svg to {@link Uri}
@@ -23,5 +23,5 @@ export function svgToUri(svg: string): Uri {
  * To work on the web - use this instead of `path.basename`.
  */
 export function basename(filePath: string): string {
-	return filePath.split(/[\\/]/).pop() || '';
+	return filePath.split(/[\\/]/u).pop() ?? '';
 }

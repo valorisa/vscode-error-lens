@@ -1,14 +1,15 @@
 import { isSeverityEnabled } from 'src/decorations';
 import { $config, Global } from 'src/extension';
-import { AggregatedByLineDiagnostics, Gutter } from 'src/types';
+import { type AggregatedByLineDiagnostics, type Gutter } from 'src/types';
 import { svgToUri } from 'src/utils';
-import { DecorationOptions, ExtensionContext, TextEditor } from 'vscode';
+import { type DecorationOptions, type ExtensionContext, type TextEditor } from 'vscode';
 
 /**
  * Set some defaults for gutter styles and return it.
  */
 export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
-	const gutter: Gutter = Object.create(null);
+	const gutter: Partial<Gutter> = {};
+
 	gutter.iconSet = $config.gutterIconSet;
 
 	if ($config.gutterIconSet === 'circle') {
@@ -46,7 +47,15 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.infoIconPathLight = $config.light.infoGutterIconColor || $config.infoGutterIconPath;
 	}
 
-	return gutter;
+	return {
+		errorIconPath: gutter.errorIconPath,
+		errorIconPathLight: gutter.errorIconPathLight,
+		warningIconPath: gutter.warningIconPath,
+		warningIconPathLight: gutter.warningIconPathLight,
+		infoIconPath: gutter.infoIconPath,
+		infoIconPathLight: gutter.infoIconPathLight,
+		iconSet: gutter.iconSet,
+	};
 }
 
 /**
@@ -67,9 +76,19 @@ export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnost
 				range: diagnostic.range,
 			};
 			switch (severity) {
-				case 0: decorationOptionsGutterError.push(diagnosticDecorationOptions); break;
-				case 1: decorationOptionsGutterWarning.push(diagnosticDecorationOptions); break;
-				case 2: decorationOptionsGutterInfo.push(diagnosticDecorationOptions); break;
+				case 0: {
+					decorationOptionsGutterError.push(diagnosticDecorationOptions);
+					break;
+				}
+				case 1: {
+					decorationOptionsGutterWarning.push(diagnosticDecorationOptions);
+					break;
+				}
+				case 2: {
+					decorationOptionsGutterInfo.push(diagnosticDecorationOptions);
+					break;
+				}
+				default: // gutter only shows error(0) warning(1) info(2) icons
 			}
 		}
 	}

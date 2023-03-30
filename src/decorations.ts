@@ -1,13 +1,14 @@
+/* eslint-disable no-param-reassign */
 import { $config, Global } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
-import { AggregatedByLineDiagnostics, Constants } from 'src/types';
+import { Constants, type AggregatedByLineDiagnostics, type Gutter } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
-import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, ExtensionContext, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window, workspace } from 'vscode';
+import { languages, Range, ThemeColor, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type Diagnostic, type ExtensionContext, type TextEditor, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 /**
  * Update all decoration styles: editor, gutter, status bar
  */
-export function setDecorationStyle(context: ExtensionContext) {
+export function setDecorationStyle(context: ExtensionContext): void {
 	Global.decorationTypeError?.dispose();
 	Global.decorationTypeWarning?.dispose();
 	Global.decorationTypeInfo?.dispose();
@@ -16,7 +17,7 @@ export function setDecorationStyle(context: ExtensionContext) {
 	Global.decorationTypeGutterWarning?.dispose();
 	Global.decorationTypeGutterInfo?.dispose();
 
-	let gutter;
+	let gutter: Gutter | undefined;
 	if ($config.gutterIconsEnabled) {
 		gutter = getGutterStyles(context);
 
@@ -109,7 +110,7 @@ export function setDecorationStyle(context: ExtensionContext) {
 		hintMessageBackground = undefined;
 	}
 
-	const onlyDigitsRegExp = /^\d+$/;
+	const onlyDigitsRegExp = /^\d+$/u;
 	const fontFamily = $config.fontFamily ? `font-family:${$config.fontFamily}` : '';
 	const fontSize = $config.fontSize ? `font-size:${onlyDigitsRegExp.test($config.fontSize) ? `${$config.fontSize}px` : $config.fontSize}` : '';
 	const marginLeft = onlyDigitsRegExp.test($config.margin) ? `${$config.margin}px` : $config.margin;
@@ -230,7 +231,7 @@ export function setDecorationStyle(context: ExtensionContext) {
  * Actually apply decorations for editor.
  * @param range Only allow decorating lines in this range.
  */
-export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: Range) {
+export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: Range): void {
 	const decorationOptionsError: DecorationOptions[] = [];
 	const decorationOptionsWarning: DecorationOptions[] = [];
 	const decorationOptionsInfo: DecorationOptions[] = [];
@@ -253,74 +254,93 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 		const diagnostic = aggregatedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		if (isSeverityEnabled(severity)) {
-			let message: string | undefined = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+		if (!isSeverityEnabled(severity)) {
+			continue;
+		}
 
-			if (!$config.messageEnabled || $config.messageMaxChars === 0) {
-				message = undefined;
-			} else {
-				// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-				// If the message has linebreaks - it will cut off the message in that place.
-				message = truncateString($config.removeLinebreaks ? replaceLinebreaks(message, $config.replaceLinebreaksSymbol) : message, $config.messageMaxChars);
+		let message: string | undefined = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+
+		if (!$config.messageEnabled || $config.messageMaxChars === 0) {
+			message = undefined;
+		} else {
+			// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
+			// If the message has linebreaks - it will cut off the message in that place.
+			message = truncateString($config.removeLinebreaks ? replaceLinebreaks(message, $config.replaceLinebreaksSymbol) : message, $config.messageMaxChars);
+		}
+
+		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
+			after: {
+				contentText: message,
+			},
+		};
+
+		let messageRange: Range | undefined;
+		if ($config.followCursor === 'allLines') {
+			// Default value (most used)
+			messageRange = diagnostic.range;
+		} else {
+			// Others require cursor tracking
+			if (range === undefined) {
+				range = editor.selection;
+			}
+			const diagnosticRange = diagnostic.range;
+
+			if ($config.followCursor === 'activeLine') {
+				const lineStart = range.start.line - $config.followCursorMore;
+				const lineEnd = range.end.line + $config.followCursorMore;
+
+				if (
+					((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
+						((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))
+				) {
+					messageRange = diagnosticRange;
+				}
+			} else if ($config.followCursor === 'allLinesExceptActive') {
+				const lineStart = range.start.line;
+				const lineEnd = range.end.line;
+
+				if (
+					((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
+						((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))
+				) {
+					messageRange = undefined;
+				} else {
+					messageRange = diagnosticRange;
+				}
+			} else if ($config.followCursor === 'closestProblem') {
+				if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
+					messageRange = diagnosticRange;
+				}
 			}
 
-			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
-				after: {
-					contentText: message,
-				},
-			};
-
-			let messageRange: Range | undefined;
-			if ($config.followCursor === 'allLines') {
-				// Default value (most used)
-				messageRange = diagnostic.range;
-			} else {
-				// Others require cursor tracking
-				if (range === undefined) {
-					range = editor.selection;
-				}
-				const diagnosticRange = diagnostic.range;
-
-				if ($config.followCursor === 'activeLine') {
-					const lineStart = range.start.line - $config.followCursorMore;
-					const lineEnd = range.end.line + $config.followCursorMore;
-
-					if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
-						diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
-						messageRange = diagnosticRange;
-					}
-				} else if ($config.followCursor === 'allLinesExceptActive') {
-					const lineStart = range.start.line;
-					const lineEnd = range.end.line;
-
-					if (diagnosticRange.start.line >= lineStart && diagnosticRange.start.line <= lineEnd ||
-						diagnosticRange.end.line >= lineStart && diagnosticRange.end.line <= lineEnd) {
-						messageRange = undefined;
-					} else {
-						messageRange = diagnosticRange;
-					}
-				} else if ($config.followCursor === 'closestProblem') {
-					if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
-						messageRange = diagnosticRange;
-					}
-				}
-
-				if (!messageRange) {
-					continue;
-				}
+			if (!messageRange) {
+				continue;
 			}
+		}
 
-			const diagnosticDecorationOptions: DecorationOptions = {
-				range: new Range(messageRange.start.line, messageRange.start.character, messageRange.start.line, messageRange.start.character),
-				renderOptions: decInstanceRenderOptions,
-			};
+		const diagnosticDecorationOptions: DecorationOptions = {
+			range: new Range(messageRange.start.line, messageRange.start.character, messageRange.start.line, messageRange.start.character),
+			renderOptions: decInstanceRenderOptions,
+		};
 
-			switch (severity) {
-				case 0: decorationOptionsError.push(diagnosticDecorationOptions); break;
-				case 1: decorationOptionsWarning.push(diagnosticDecorationOptions); break;
-				case 2: decorationOptionsInfo.push(diagnosticDecorationOptions); break;
-				case 3: decorationOptionsHint.push(diagnosticDecorationOptions); break;
+		switch (severity) {
+			case 0: {
+				decorationOptionsError.push(diagnosticDecorationOptions);
+				break;
 			}
+			case 1: {
+				decorationOptionsWarning.push(diagnosticDecorationOptions);
+				break;
+			}
+			case 2: {
+				decorationOptionsInfo.push(diagnosticDecorationOptions);
+				break;
+			}
+			case 3: {
+				decorationOptionsHint.push(diagnosticDecorationOptions);
+				break;
+			}
+			default: {}
 		}
 	}
 
@@ -335,7 +355,7 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 	Global.statusBarMessage.updateText(editor, aggregatedDiagnostics);
 }
 
-export function updateDecorationsForAllVisibleEditors() {
+export function updateDecorationsForAllVisibleEditors(): void {
 	for (const editor of window.visibleTextEditors) {
 		updateDecorationsForUri(editor.document.uri, editor);
 	}
@@ -343,7 +363,7 @@ export function updateDecorationsForAllVisibleEditors() {
 /**
  * Update decorations for one editor.
  */
-export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, groupedDiagnostics?: AggregatedByLineDiagnostics, range?: Range) {
+export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, groupedDiagnostics?: AggregatedByLineDiagnostics, range?: Range): void {
 	if (editor === undefined) {
 		editor = window.activeTextEditor;
 	}
@@ -391,7 +411,7 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		return;
 	}
 
-	doUpdateDecorations(editor, groupedDiagnostics || groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);
+	doUpdateDecorations(editor, groupedDiagnostics ?? groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);
 }
 
 /**
@@ -413,7 +433,7 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
  * ```
  */
 export function groupDiagnosticsByLine(diagnostics: Diagnostic[]): AggregatedByLineDiagnostics {
-	const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
+	const aggregatedDiagnostics: AggregatedByLineDiagnostics = {};
 	for (const diagnostic of diagnostics) {
 		if (shouldExcludeDiagnostic(diagnostic)) {
 			continue;
@@ -468,57 +488,57 @@ export function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
  * `true` when diagnostic enabled in config & in temp variable
  */
 export function isSeverityEnabled(severity: number): boolean {
-	if (
-		severity === 0 && Global.configErrorEnabled ||
-		severity === 1 && Global.configWarningEnabled ||
-		severity === 2 && Global.configInfoEnabled ||
-		severity === 3 && Global.configHintEnabled
-	) {
-		return true;
-	}
-	return false;
+	return (
+		(severity === 0 && Global.configErrorEnabled) ||
+		(severity === 1 && Global.configWarningEnabled) ||
+		(severity === 2 && Global.configInfoEnabled) ||
+		(severity === 3 && Global.configHintEnabled)
+	);
 }
 /**
  * Generate inline message from template.
  */
 export function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, count: number): string {
-	if (template === TemplateVars.message) {
+	if (template === TemplateVars.Message) {
 		// When default template - no need to use RegExps or other stuff.
 		return diagnostic.message;
 	} else {
 		// Message & severity is always present.
 		let result = template
-			.replace(TemplateVars.message, diagnostic.message)
-			.replace(TemplateVars.severity, $config.severityText[diagnostic.severity] || '');
+			.replace(TemplateVars.Message, diagnostic.message)
+			.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '');
 		/**
 		 * Count, source & code can be absent.
 		 * If present - replace them as simple string.
 		 * If absent - replace by RegExp removing all adjacent non-whitespace symbols with them.
 		 */
-		if (template.includes(TemplateVars.count)) {
+
+		/* eslint-disable prefer-named-capture-group, max-params */
+		if (template.includes(TemplateVars.Count)) {
 			if (count > 1) {
-				result = result.replace(TemplateVars.count, String(count));
+				result = result.replace(TemplateVars.Count, String(count));
 			} else {
 				// no `$count` in the template - remove it
-				result = result.replace(/(\s*?)?(\S*?)?(\$count)(\S*?)?(\s*?)?/, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 || '') + (g5 || ''));
+				result = result.replace(/(\s*?)?(\S*?)?(\$count)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
 			}
 		}
-		if (template.includes(TemplateVars.source)) {
+		if (template.includes(TemplateVars.Source)) {
 			if (diagnostic.source) {
-				result = result.replace(TemplateVars.source, String(diagnostic.source));
+				result = result.replace(TemplateVars.Source, String(diagnostic.source));
 			} else {
-				result = result.replace(/(\s*?)?(\S*?)?(\$source)(\S*?)?(\s*?)?/, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 || '') + (g5 || ''));
+				result = result.replace(/(\s*?)?(\S*?)?(\$source)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
 			}
 		}
 
-		if (template.includes(TemplateVars.code)) {
+		if (template.includes(TemplateVars.Code)) {
 			const code = typeof diagnostic.code === 'object' ? String(diagnostic.code.value) : String(diagnostic.code);
 			if (diagnostic.code) {
-				result = result.replace(TemplateVars.code, code);
+				result = result.replace(TemplateVars.Code, code);
 			} else {
-				result = result.replace(/(\s*?)?(\S*?)?(\$code)(\S*?)?(\s*?)?/, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 || '') + (g5 || ''));
+				result = result.replace(/(\s*?)?(\S*?)?(\$code)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
 			}
 		}
+		/* eslint-disable prefer-named-capture-group */
 
 		return result;
 	}
@@ -528,9 +548,9 @@ export function diagnosticToInlineMessage(template: string, diagnostic: Diagnost
  * Variables to replace inside the `messageTemplate` & `statusBarMessageTemplate` settings.
  */
 const enum TemplateVars {
-	message = '$message',
-	source = '$source',
-	code = '$code',
-	count = '$count',
-	severity = '$severity',
+	Message = '$message',
+	Source = '$source',
+	Code = '$code',
+	Count = '$count',
+	Severity = '$severity',
 }

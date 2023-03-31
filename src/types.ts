@@ -225,19 +225,6 @@ export type ExtensionConfig = Readonly<ExtensionConfigType>;
 
 export type AggregatedByLineDiagnostics = Record<string, Diagnostic[]>;
 
-export interface Gutter {
-	iconSet: ExtensionConfig['gutterIconSet'];
-
-	errorIconPath: Uri | string;
-	errorIconPathLight: Uri | string;
-
-	warningIconPath: Uri | string;
-	warningIconPathLight: Uri | string;
-
-	infoIconPath: Uri | string;
-	infoIconPathLight: Uri | string;
-}
-
 export const enum Constants {
 	/**
 	 * Prefix used for all settings of this extension.

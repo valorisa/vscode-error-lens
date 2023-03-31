@@ -1,7 +1,7 @@
 import { CommandId } from 'src/commands';
 import { Constants, type ExtensionConfig } from 'src/types';
-import { basename } from 'src/utils';
-import { languages, MarkdownString, StatusBarAlignment, ThemeColor, Uri, window, type Diagnostic, type StatusBarItem } from 'vscode';
+import { utils } from 'src/utils/utils';
+import { MarkdownString, StatusBarAlignment, ThemeColor, Uri, languages, window, type Diagnostic, type StatusBarItem } from 'vscode';
 
 type StatusBarProblemType = 'error' | 'warning';
 
@@ -144,7 +144,7 @@ export class StatusBarIcons {
 			const uri = diagWithUri[0];
 			const diagnostics = diagWithUri[1];
 			if (diagnostics.length) {
-				markdown.appendMarkdown(`**${basename(uri.path)}**\n\n`);
+				markdown.appendMarkdown(`**${utils.basename(uri.path)}**\n\n`);
 			}
 			for (const diag of diagnostics) {
 				const revealLineUri = Uri.parse(

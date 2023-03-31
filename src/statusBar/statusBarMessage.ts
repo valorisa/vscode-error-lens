@@ -2,7 +2,7 @@ import { CommandId } from 'src/commands';
 import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
 import { $config } from 'src/extension';
 import { type AggregatedByLineDiagnostics, type ExtensionConfig } from 'src/types';
-import { replaceLinebreaks } from 'src/utils';
+import { utils } from 'src/utils/utils';
 import { MarkdownString, Position, StatusBarAlignment, window, type Diagnostic, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
 
 interface StatusBarMessageInit {
@@ -133,7 +133,7 @@ export class StatusBarMessage {
 		);
 
 		if ($config.removeLinebreaks) {
-			message = replaceLinebreaks(message, $config.replaceLinebreaksSymbol);
+			message = utils.replaceLinebreaks(message, $config.replaceLinebreaksSymbol);
 		}
 
 		this.activeMessageText = message;

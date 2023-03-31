@@ -1,9 +1,9 @@
 import { registerAllCommands } from 'src/commands';
 import { type CustomDelay } from 'src/CustomDelay';
 import { setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
-import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/eventListeners';
-import { StatusBarIcons } from 'src/statusBarIcons';
-import { StatusBarMessage } from 'src/statusBarMessage';
+import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
+import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
+import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { workspace, type Disposable, type ExtensionContext, type TextEditorDecorationType } from 'vscode';
 
@@ -13,21 +13,13 @@ import { workspace, type Disposable, type ExtensionContext, type TextEditorDecor
 export let $config: ExtensionConfig;
 
 /**
- * Global variables.
+ * Global state.
  */
-export abstract class Global {
+export abstract class $state {
 	public static configErrorEnabled = true;
 	public static configWarningEnabled = true;
 	public static configInfoEnabled = true;
 	public static configHintEnabled = true;
-
-	public static decorationTypeError: TextEditorDecorationType;
-	public static decorationTypeWarning: TextEditorDecorationType;
-	public static decorationTypeInfo: TextEditorDecorationType;
-	public static decorationTypeHint: TextEditorDecorationType;
-	public static decorationTypeGutterError: TextEditorDecorationType;
-	public static decorationTypeGutterWarning: TextEditorDecorationType;
-	public static decorationTypeGutterInfo: TextEditorDecorationType;
 
 	public static onDidChangeDiagnosticsDisposable: Disposable | undefined;
 	public static onDidChangeActiveTextEditor: Disposable | undefined;
@@ -110,19 +102,19 @@ export function activate(context: ExtensionContext): void {
  */
 export function updateEverything(context: ExtensionContext): void {
 	updateExclude();
-	Global.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled &&
+	$state.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled &&
 		$config.gutterIconsFollowCursorOverride &&
 		$config.followCursor !== 'allLines';
-	Global.statusBarMessage?.dispose();
-	Global.statusBarIcons?.dispose();
-	Global.statusBarMessage = new StatusBarMessage({
+	$state.statusBarMessage?.dispose();
+	$state.statusBarIcons?.dispose();
+	$state.statusBarMessage = new StatusBarMessage({
 		isEnabled: $config.statusBarMessageEnabled,
 		colorsEnabled: $config.statusBarColorsEnabled,
 		messageType: $config.statusBarMessageType,
 		priority: $config.statusBarMessagePriority,
 		alignment: $config.statusBarMessageAlignment,
 	});
-	Global.statusBarIcons = new StatusBarIcons({
+	$state.statusBarIcons = new StatusBarIcons({
 		isEnabled: $config.statusBarIconsEnabled,
 		atZero: $config.statusBarIconsAtZero,
 		useBackground: $config.statusBarIconsUseBackground,
@@ -134,7 +126,7 @@ export function updateEverything(context: ExtensionContext): void {
 
 	updateDecorationsForAllVisibleEditors();
 
-	Global.statusBarIcons.updateText();
+	$state.statusBarIcons.updateText();
 
 	updateChangeDiagnosticListener();
 	updateChangeVisibleTextEditorsListener();
@@ -148,8 +140,8 @@ export function updateEverything(context: ExtensionContext): void {
  * - Create `source/code` exclusion object.
  */
 function updateExclude(): void {
-	Global.excludeRegexp = [];
-	Global.excludeSources = [];
+	$state.excludeRegexp = [];
+	$state.excludeSources = [];
 
 	for (const excludeSourceCode of $config.excludeBySource) {
 		// Match source/code like:  eslint(padded-blocks)
@@ -159,7 +151,7 @@ function updateExclude(): void {
 		if (!source) {
 			continue;
 		}
-		Global.excludeSources.push({
+		$state.excludeSources.push({
 			source,
 			code,
 		});
@@ -167,44 +159,37 @@ function updateExclude(): void {
 
 	for (const excludeMessage of $config.exclude) {
 		if (typeof excludeMessage === 'string') {
-			Global.excludeRegexp.push(new RegExp(excludeMessage, 'iu'));
+			$state.excludeRegexp.push(new RegExp(excludeMessage, 'iu'));
 		}
 	}
 	if (Array.isArray($config.excludePatterns) && $config.excludePatterns.length !== 0) {
-		Global.excludePatterns = $config.excludePatterns.map(item => ({
+		$state.excludePatterns = $config.excludePatterns.map(item => ({
 			pattern: item,
 		}));
 	} else {
-		Global.excludePatterns = undefined;
+		$state.excludePatterns = undefined;
 	}
 }
 /**
  * Update global varialbes for enabled severity levels of diagnostics based on user setting `enabledDiagnosticLevels`.
  */
 function updateConfigEnabledLevels(): void {
-	Global.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
-	Global.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
-	Global.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
-	Global.configHintEnabled = $config.enabledDiagnosticLevels.includes('hint');
+	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
+	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
+	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
+	$state.configHintEnabled = $config.enabledDiagnosticLevels.includes('hint');
 }
 /**
- * Dispose all known disposables (except `onDidChangeConfiguration`).
+ * Dispose all disposables (except `onDidChangeConfiguration`).
  */
 export function disposeEverything(): void {
-	Global.decorationTypeError?.dispose();
-	Global.decorationTypeWarning?.dispose();
-	Global.decorationTypeInfo?.dispose();
-	Global.decorationTypeHint?.dispose();
-	Global.decorationTypeGutterError?.dispose();
-	Global.decorationTypeGutterWarning?.dispose();
-	Global.decorationTypeGutterInfo?.dispose();
-	Global.onDidChangeVisibleTextEditors?.dispose();
-	Global.onDidChangeDiagnosticsDisposable?.dispose();
-	Global.onDidChangeActiveTextEditor?.dispose();
-	Global.onDidSaveTextDocumentDisposable?.dispose();
-	Global.onDidCursorChangeDisposable?.dispose();
-	Global.statusBarMessage?.dispose();
-	Global.statusBarIcons?.dispose();
+	$state.onDidChangeVisibleTextEditors?.dispose();
+	$state.onDidChangeDiagnosticsDisposable?.dispose();
+	$state.onDidChangeActiveTextEditor?.dispose();
+	$state.onDidSaveTextDocumentDisposable?.dispose();
+	$state.onDidCursorChangeDisposable?.dispose();
+	$state.statusBarMessage?.dispose();
+	$state.statusBarIcons?.dispose();
 }
 
 export function deactivate(): void { }

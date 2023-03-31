@@ -1,28 +1,25 @@
 /* eslint-disable no-param-reassign */
-import { $config, Global } from 'src/extension';
-import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
-import { Constants, type AggregatedByLineDiagnostics, type Gutter } from 'src/types';
-import { replaceLinebreaks, truncateString } from 'src/utils';
-import { languages, Range, ThemeColor, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type Diagnostic, type ExtensionContext, type TextEditor, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { $config, $state } from 'src/extension';
+import { doUpdateGutterDecorations, getGutterStyles, type Gutter } from 'src/gutter';
+import { Constants, type AggregatedByLineDiagnostics } from 'src/types';
+import { utils } from 'src/utils/utils';
+import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type Diagnostic, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+
+type DecorationKeys = 'decorationTypeError' | 'decorationTypeGutterError' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeInfo' | 'decorationTypeWarning';
+export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
 
 /**
  * Update all decoration styles: editor, gutter, status bar
  */
 export function setDecorationStyle(context: ExtensionContext): void {
-	Global.decorationTypeError?.dispose();
-	Global.decorationTypeWarning?.dispose();
-	Global.decorationTypeInfo?.dispose();
-	Global.decorationTypeHint?.dispose();
-	Global.decorationTypeGutterError?.dispose();
-	Global.decorationTypeGutterWarning?.dispose();
-	Global.decorationTypeGutterInfo?.dispose();
+	disposeAllDecorations();
 
 	let gutter: Gutter | undefined;
 	if ($config.gutterIconsEnabled) {
 		gutter = getGutterStyles(context);
 
-		if (Global.renderGutterIconsAsSeparateDecoration) {
-			Global.decorationTypeGutterError = window.createTextEditorDecorationType({
+		if ($state.renderGutterIconsAsSeparateDecoration) {
+			decorationTypes.decorationTypeGutterError = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.errorIconPath,
 				gutterIconSize: $config.gutterIconSize,
 				light: {
@@ -30,7 +27,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});
-			Global.decorationTypeGutterWarning = window.createTextEditorDecorationType({
+			decorationTypes.decorationTypeGutterWarning = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.warningIconPath,
 				gutterIconSize: $config.gutterIconSize,
 				light: {
@@ -38,7 +35,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});
-			Global.decorationTypeGutterInfo = window.createTextEditorDecorationType({
+			decorationTypes.decorationTypeGutterInfo = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.infoIconPath,
 				gutterIconSize: $config.gutterIconSize,
 				light: {
@@ -220,12 +217,12 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		decorationRenderOptionsHint.light!.after = undefined;
 	}
 
-	Global.decorationTypeError = window.createTextEditorDecorationType(decorationRenderOptionsError);
-	Global.decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptionsWarning);
-	Global.decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
-	Global.decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
+	decorationTypes.decorationTypeError = window.createTextEditorDecorationType(decorationRenderOptionsError);
+	decorationTypes.decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptionsWarning);
+	decorationTypes.decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
+	decorationTypes.decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 
-	Global.statusBarMessage.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
+	$state.statusBarMessage.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 }
 /**
  * Actually apply decorations for editor.
@@ -265,7 +262,7 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 		} else {
 			// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
 			// If the message has linebreaks - it will cut off the message in that place.
-			message = truncateString($config.removeLinebreaks ? replaceLinebreaks(message, $config.replaceLinebreaksSymbol) : message, $config.messageMaxChars);
+			message = utils.truncateString($config.removeLinebreaks ? utils.replaceLinebreaks(message, $config.replaceLinebreaksSymbol) : message, $config.messageMaxChars);
 		}
 
 		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
@@ -344,15 +341,15 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 		}
 	}
 
-	editor.setDecorations(Global.decorationTypeError, decorationOptionsError);
-	editor.setDecorations(Global.decorationTypeWarning, decorationOptionsWarning);
-	editor.setDecorations(Global.decorationTypeInfo, decorationOptionsInfo);
-	editor.setDecorations(Global.decorationTypeHint, decorationOptionsHint);
+	editor.setDecorations(decorationTypes.decorationTypeError, decorationOptionsError);
+	editor.setDecorations(decorationTypes.decorationTypeWarning, decorationOptionsWarning);
+	editor.setDecorations(decorationTypes.decorationTypeInfo, decorationOptionsInfo);
+	editor.setDecorations(decorationTypes.decorationTypeHint, decorationOptionsHint);
 
-	if (Global.renderGutterIconsAsSeparateDecoration) {
+	if ($state.renderGutterIconsAsSeparateDecoration) {
 		doUpdateGutterDecorations(editor, aggregatedDiagnostics);
 	}
-	Global.statusBarMessage.updateText(editor, aggregatedDiagnostics);
+	$state.statusBarMessage.updateText(editor, aggregatedDiagnostics);
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {
@@ -395,8 +392,8 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		}
 	}
 
-	if (Global.excludePatterns) {
-		for (const pattern of Global.excludePatterns) {
+	if ($state.excludePatterns) {
+		for (const pattern of $state.excludePatterns) {
 			if (languages.match(pattern, editor.document) !== 0) {
 				return;
 			}
@@ -412,6 +409,12 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 	}
 
 	doUpdateDecorations(editor, groupedDiagnostics ?? groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);
+}
+
+function disposeAllDecorations(): void {
+	for (const decorationType of Object.values(decorationTypes)) {
+		decorationType?.dispose();
+	}
 }
 
 /**
@@ -454,7 +457,7 @@ export function groupDiagnosticsByLine(diagnostics: Diagnostic[]): AggregatedByL
  */
 export function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
 	if (diagnostic.source) {
-		for (const excludeSourceCode of Global.excludeSources) {
+		for (const excludeSourceCode of $state.excludeSources) {
 			if (excludeSourceCode.source === diagnostic.source) {
 				let diagnosticCode = '';
 				if (typeof diagnostic.code === 'number') {
@@ -476,7 +479,7 @@ export function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
 		}
 	}
 
-	for (const regex of Global.excludeRegexp) {
+	for (const regex of $state.excludeRegexp) {
 		if (regex.test(diagnostic.message)) {
 			return true;
 		}
@@ -489,10 +492,10 @@ export function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
  */
 export function isSeverityEnabled(severity: number): boolean {
 	return (
-		(severity === 0 && Global.configErrorEnabled) ||
-		(severity === 1 && Global.configWarningEnabled) ||
-		(severity === 2 && Global.configInfoEnabled) ||
-		(severity === 3 && Global.configHintEnabled)
+		(severity === 0 && $state.configErrorEnabled) ||
+		(severity === 1 && $state.configWarningEnabled) ||
+		(severity === 2 && $state.configInfoEnabled) ||
+		(severity === 3 && $state.configHintEnabled)
 	);
 }
 /**
@@ -538,7 +541,7 @@ export function diagnosticToInlineMessage(template: string, diagnostic: Diagnost
 				result = result.replace(/(\s*?)?(\S*?)?(\$code)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
 			}
 		}
-		/* eslint-disable prefer-named-capture-group */
+		/* eslint-enable prefer-named-capture-group, max-params */
 
 		return result;
 	}

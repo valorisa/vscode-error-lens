@@ -1,8 +1,21 @@
-import { isSeverityEnabled } from 'src/decorations';
-import { $config, Global } from 'src/extension';
-import { type AggregatedByLineDiagnostics, type Gutter } from 'src/types';
-import { svgToUri } from 'src/utils';
-import { type DecorationOptions, type ExtensionContext, type TextEditor } from 'vscode';
+import { decorationTypes, isSeverityEnabled } from 'src/decorations';
+import { $config } from 'src/extension';
+import { type AggregatedByLineDiagnostics, type ExtensionConfig } from 'src/types';
+import { vscodeUtils } from 'src/utils/vscodeUtils';
+import { type DecorationOptions, type ExtensionContext, type TextEditor, type Uri } from 'vscode';
+
+export interface Gutter {
+	iconSet: ExtensionConfig['gutterIconSet'];
+
+	errorIconPath: Uri | string;
+	errorIconPathLight: Uri | string;
+
+	warningIconPath: Uri | string;
+	warningIconPathLight: Uri | string;
+
+	infoIconPath: Uri | string;
+	infoIconPathLight: Uri | string;
+}
 
 /**
  * Set some defaults for gutter styles and return it.
@@ -13,12 +26,12 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 	gutter.iconSet = $config.gutterIconSet;
 
 	if ($config.gutterIconSet === 'circle') {
-		gutter.errorIconPath = svgToUri(createCircleIcon($config.errorGutterIconColor));
-		gutter.errorIconPathLight = svgToUri(createCircleIcon($config.light.errorGutterIconColor || $config.errorGutterIconColor));
-		gutter.warningIconPath = svgToUri(createCircleIcon($config.warningGutterIconColor));
-		gutter.warningIconPathLight = svgToUri(createCircleIcon($config.light.warningGutterIconColor || $config.warningGutterIconColor));
-		gutter.infoIconPath = svgToUri(createCircleIcon($config.infoGutterIconColor));
-		gutter.infoIconPathLight = svgToUri(createCircleIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
+		gutter.errorIconPath = vscodeUtils.svgToUri(createCircleIcon($config.errorGutterIconColor));
+		gutter.errorIconPathLight = vscodeUtils.svgToUri(createCircleIcon($config.light.errorGutterIconColor || $config.errorGutterIconColor));
+		gutter.warningIconPath = vscodeUtils.svgToUri(createCircleIcon($config.warningGutterIconColor));
+		gutter.warningIconPathLight = vscodeUtils.svgToUri(createCircleIcon($config.light.warningGutterIconColor || $config.warningGutterIconColor));
+		gutter.infoIconPath = vscodeUtils.svgToUri(createCircleIcon($config.infoGutterIconColor));
+		gutter.infoIconPathLight = vscodeUtils.svgToUri(createCircleIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
 		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
@@ -88,13 +101,13 @@ export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnost
 					decorationOptionsGutterInfo.push(diagnosticDecorationOptions);
 					break;
 				}
-				default: // gutter only shows error(0) warning(1) info(2) icons
+				default: {}// gutter only shows error(0) warning(1) info(2) icons
 			}
 		}
 	}
-	editor.setDecorations(Global.decorationTypeGutterError, decorationOptionsGutterError);
-	editor.setDecorations(Global.decorationTypeGutterWarning, decorationOptionsGutterWarning);
-	editor.setDecorations(Global.decorationTypeGutterInfo, decorationOptionsGutterInfo);
+	editor.setDecorations(decorationTypes.decorationTypeGutterError, decorationOptionsGutterError);
+	editor.setDecorations(decorationTypes.decorationTypeGutterWarning, decorationOptionsGutterWarning);
+	editor.setDecorations(decorationTypes.decorationTypeGutterInfo, decorationOptionsGutterInfo);
 }
 /**
  * Create circle gutter icons with different colors. `%23` is encoded `#` sign (need it to work).

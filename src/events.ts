@@ -1,22 +1,22 @@
 import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
-import { $config, Global } from 'src/extension';
-import { languages, TextDocumentSaveReason, window, workspace, type DiagnosticChangeEvent } from 'vscode';
+import { $config, $state } from 'src/extension';
+import { TextDocumentSaveReason, languages, window, workspace, type DiagnosticChangeEvent } from 'vscode';
 
 /**
  * Update listener for when active editor changes.
  */
 export function updateChangedActiveTextEditorListener(): void {
-	Global.onDidChangeActiveTextEditor?.dispose();
+	$state.onDidChangeActiveTextEditor?.dispose();
 
-	Global.onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(textEditor => {
+	$state.onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(textEditor => {
 		if ($config.onSave) {
-			Global.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
+			$state.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
 		}
 		if (textEditor) {
 			updateDecorationsForUri(textEditor.document.uri, textEditor);
 		} else {
-			Global.statusBarMessage.clear();
+			$state.statusBarMessage.clear();
 		}
 	});
 }
@@ -24,15 +24,15 @@ export function updateChangedActiveTextEditorListener(): void {
  * Update listener for when visible editors change.
  */
 export function updateChangeVisibleTextEditorsListener(): void {
-	Global.onDidChangeVisibleTextEditors?.dispose();
+	$state.onDidChangeVisibleTextEditors?.dispose();
 
-	Global.onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateDecorationsForAllVisibleEditors);
+	$state.onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateDecorationsForAllVisibleEditors);
 }
 /**
  * Update listener for when language server (or extension) sends diagnostic change events.
  */
 export function updateChangeDiagnosticListener(): void {
-	Global.onDidChangeDiagnosticsDisposable?.dispose();
+	$state.onDidChangeDiagnosticsDisposable?.dispose();
 
 	function onChangedDiagnostics(diagnosticChangeEvent: DiagnosticChangeEvent): void {
 		// Many URIs can change - we only need to decorate visible editors
@@ -43,28 +43,28 @@ export function updateChangeDiagnosticListener(): void {
 				}
 			}
 		}
-		Global.statusBarIcons.updateText();
+		$state.statusBarIcons.updateText();
 	}
 	if ($config.onSave) {
-		Global.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
-			if (Date.now() - Global.lastSavedTimestamp < $config.onSaveTimeout) {
+		$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
+			if (Date.now() - $state.lastSavedTimestamp < $config.onSaveTimeout) {
 				onChangedDiagnostics(e);
 			}
 		});
 		return;
 	}
 	if (typeof $config.delay === 'number' && $config.delay > 0) {
-		Global.customDelay = new CustomDelay($config.delay);
-		Global.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(Global.customDelay.onDiagnosticChange);
+		$state.customDelay = new CustomDelay($config.delay);
+		$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics($state.customDelay.onDiagnosticChange);
 	} else {
-		Global.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnostics);
+		$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnostics);
 	}
 }
 /**
  * Update listener for when active selection (cursor) moves.
  */
 export function updateCursorChangeListener(): void {
-	Global.onDidCursorChangeDisposable?.dispose();
+	$state.onDidCursorChangeDisposable?.dispose();
 
 	if (
 		$config.followCursor === 'activeLine' ||
@@ -73,7 +73,7 @@ export function updateCursorChangeListener(): void {
 		$config.statusBarMessageEnabled
 	) {
 		let lastPositionLine = -1;
-		Global.onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
+		$state.onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];
 			if (
 				e.selections.length === 1 &&
@@ -92,17 +92,17 @@ export function updateCursorChangeListener(): void {
  * Editor `files.autoSave` is ignored.
  */
 export function updateOnSaveListener(): void {
-	Global.onDidSaveTextDocumentDisposable?.dispose();
+	$state.onDidSaveTextDocumentDisposable?.dispose();
 
 	if (!$config.onSave) {
 		return;
 	}
-	Global.onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
+	$state.onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
 		if (e.reason === TextDocumentSaveReason.Manual) {
 			setTimeout(() => {
 				updateDecorationsForUri(e.document.uri);
 			}, 200);
-			Global.lastSavedTimestamp = Date.now();
+			$state.lastSavedTimestamp = Date.now();
 		}
 	});
 }

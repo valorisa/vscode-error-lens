@@ -5,7 +5,7 @@ import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, 
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
-import { workspace, type Disposable, type ExtensionContext, type TextEditorDecorationType } from 'vscode';
+import { workspace, type Disposable, type ExtensionContext } from 'vscode';
 
 /**
  * All user settings.

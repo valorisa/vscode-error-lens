@@ -6,7 +6,7 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.66.0",
+		"vscode": "^1.77.0",
 		"npm": ">=7.0.0"
 	},
 	"extensionKind": [
@@ -35,14 +35,7 @@
 		"url": "https://github.com/usernamehw/vscode-error-lens"
 	},
 	"activationEvents": [
-		"onStartupFinished",
-		"onCommand:errorLens.toggle",
-		"onCommand:errorLens.toggleError",
-		"onCommand:errorLens.toggleWarning",
-		"onCommand:errorLens.toggleInfo",
-		"onCommand:errorLens.toggleHint",
-		"onCommand:errorLens.copyProblemMessage",
-		"onCommand:errorLens.toggleWorkspace"
+		"onStartupFinished"
 	],
 	"main": "./dist/extension.js",
 	"browser": "./dist/extension.js",
@@ -785,7 +778,7 @@
 		"@soda/friendly-errors-webpack-plugin": "^1.8.1",
 		"@types/lodash": "^4.14.192",
 		"@types/node": "16.x",
-		"@types/vscode": "^1.66.0",
+		"@types/vscode": "^1.77.0",
 		"@typescript-eslint/eslint-plugin": "^5.57.0",
 		"@typescript-eslint/parser": "^5.57.0",
 		"eslint": "^8.37.0",

@@ -150,8 +150,7 @@ export class StatusBarIcons {
 				const revealLineUri = Uri.parse(
 					`command:${CommandId.RevealLine}?${encodeURIComponent(JSON.stringify([uri.fsPath, [diag.range.start.line, diag.range.start.character]]))}`,
 				);
-				// TODO: use variables --vscode-editorWarning-foreground && --vscode-editorError-foreground for **1.77.0**
-				markdown.appendMarkdown(`<span style="color:${type === 'error' ? '#e45454' : '#ff942f'};">$(${type})</span> [${diag.message} \`${diag.source ?? '<No source>'}\`](${revealLineUri.toString()})\n\n`);
+				markdown.appendMarkdown(`<span style="color:${type === 'error' ? 'var(--vscode-editorError-foreground)' : 'var(--vscode-editorWarning-foreground)'};">$(${type})</span> [${diag.message} \`${diag.source ?? '<No source>'}\`](${revealLineUri.toString()})\n\n`);
 			}
 		}
 		return markdown;

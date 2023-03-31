@@ -227,6 +227,10 @@ export type AggregatedByLineDiagnostics = Record<string, Diagnostic[]>;
 
 export const enum Constants {
 	/**
+	 * Extension unique id (publisher.name).
+	 */
+	ExtensionId = 'usernamehw.errorlens',
+	/**
 	 * Prefix used for all settings of this extension.
 	 */
 	SettingsPrefix = 'errorLens',

@@ -80,7 +80,7 @@
 			{
 				"command": "errorlens.toggleWorkspace",
 				"title": "Toggle Workspace in Disabled List",
-				"description": "Exclude/Include current workspace by path.",
+				"description": "Exclude/Include current workspace by fs path.",
 				"category": "Error Lens"
 			}
 		],

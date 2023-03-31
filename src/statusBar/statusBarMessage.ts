@@ -170,12 +170,20 @@ export class StatusBarMessage {
 		markdown.isTrusted = true;
 		markdown.appendText(message);
 		markdown.appendMarkdown('\n\n---\n\n');
+
+		const diagnosticUri = typeof diagnostic.code !== 'number' && typeof diagnostic.code !== 'string' && diagnostic.code?.target;
+
 		const code = typeof diagnostic.code === 'string' ?
 			diagnostic.code :
 			typeof diagnostic.code === 'number' ?
 				String(diagnostic.code) :
 				`${diagnostic.code?.value ?? '<No code>'}`;
-		markdown.appendMarkdown(`[${diagnostic.source ?? '<No source>'} [${code}]`);
+		const sourceCode = `${diagnostic.source ?? '<No source>'} [${code}]`;
+		if (diagnosticUri) {
+			markdown.appendMarkdown(`[${sourceCode}](${diagnosticUri.toString()} "Open rule documentation.")`);
+		} else {
+			markdown.appendMarkdown(sourceCode);
+		}
 		return markdown;
 	}
 }

@@ -17,9 +17,16 @@ function replaceLinebreaks(str: string, replaceSymbol: string): string {
 function basename(filePath: string): string {
 	return filePath.split(/[\\/]/u).pop() ?? '';
 }
+/**
+ * Add text at the start and at the end.
+ */
+function surround(str: string, surroundStr: string): string {
+	return `${surroundStr}${str}${surroundStr}`;
+}
 
 export const utils = {
 	truncateString,
 	replaceLinebreaks,
 	basename,
+	surround,
 };

@@ -1,4 +1,4 @@
-import { type Diagnostic, type Uri } from 'vscode';
+import { type Diagnostic } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
@@ -41,6 +41,10 @@ interface ExtensionConfigType {
 	 * Controls whether inline message is shown or not (Including background highlight).
 	 */
 	messageEnabled: boolean;
+	/**
+	 * When checked - shows hover on diagnostic with buttons to (go to rule documentation, go to rule definition(linter file)...).
+	 */
+	editorHoverEnabled: boolean;
 	/**
 	 * Controls how inline message is highlighted in the editor (entire line / only message / none).
 	 */
@@ -219,6 +223,10 @@ interface ExtensionConfigType {
 	 * Disable highlighting for selected workspaces
 	 */
 	excludeWorkspaces: string[];
+	/**
+	 * Specify where to search for linter rule definitions.
+	 */
+	lintFilePaths: Record<string, string[]>;
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
@@ -247,7 +255,11 @@ export const enum Constants {
 	 */
 	NextProblemCommandId = 'editor.action.marker.next',
 
+	VscodeOpenCommandId = 'vscode.open',
+
 	MergeConflictSymbol1 = '<<<<<<<',
 	MergeConflictSymbol2 = '=======',
 	MergeConflictSymbol3 = '>>>>>>>',
+
+	NonBreakingSpaceSymbolHtml = '&nbsp;',
 }

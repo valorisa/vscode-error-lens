@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, type Gutter } from 'src/gutter';
+import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants, type AggregatedByLineDiagnostics } from 'src/types';
 import { utils } from 'src/utils/utils';
 import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type Diagnostic, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
@@ -317,6 +318,7 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 
 		const diagnosticDecorationOptions: DecorationOptions = {
 			range: new Range(messageRange.start.line, messageRange.start.character, messageRange.start.line, messageRange.start.character),
+			hoverMessage: $config.editorHoverEnabled ? createHoverForDiagnostic(message, diagnostic) : undefined,
 			renderOptions: decInstanceRenderOptions,
 		};
 

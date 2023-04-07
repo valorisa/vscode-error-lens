@@ -1,4 +1,6 @@
 import { copyProblemMessageCommand } from 'src/commands/copyProblemMessageCommand';
+import { excludeProblemCommand } from 'src/commands/excludeProblemCommand';
+import { findLinterRuleDefinitionCommand } from 'src/commands/findLinterRuleDefinitionCommand';
 import { revealLineCommand } from 'src/commands/revealLineCommand';
 import { statusBarCommand } from 'src/commands/statusBarCommand';
 import { toggleEnabledLevels } from 'src/commands/toggleEnabledLevels';
@@ -11,6 +13,7 @@ import { commands, type ExtensionContext } from 'vscode';
  * All command ids contributed by this extensions.
  */
 export const enum CommandId {
+	// ──── User facing ───────────────────────────────────────────
 	Toggle = 'errorLens.toggle',
 	ToggleError = 'errorLens.toggleError',
 	ToggleWarning = 'errorLens.toggleWarning',
@@ -18,8 +21,11 @@ export const enum CommandId {
 	ToggleHint = 'errorLens.toggleHint',
 	ToggleWorkspace = 'errorlens.toggleWorkspace',
 	CopyProblemMessage = 'errorLens.copyProblemMessage',
+	FindLinterRuleDefinition = 'errorLens.findLinterRuleDefinition',
+	// ──── Internal ──────────────────────────────────────────────
 	StatusBarCommand = 'errorLens.statusBarCommand',
 	RevealLine = 'errorLens.revealLine',
+	ExcludeProblem = 'errorLens.excludeProblem',
 }
 
 /**
@@ -46,6 +52,8 @@ export function registerAllCommands(context: ExtensionContext): void {
 	}));
 	context.subscriptions.push(commands.registerCommand(CommandId.ToggleWorkspace, toggleWorkspaceCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.RevealLine, revealLineCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.FindLinterRuleDefinition, findLinterRuleDefinitionCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	// ────────────────────────────────────────────────────────────
 	// ──── Text Editor commands ──────────────────────────────────
 	// ────────────────────────────────────────────────────────────

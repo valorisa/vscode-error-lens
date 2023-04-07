@@ -78,6 +78,12 @@
 				"category": "Error Lens"
 			},
 			{
+				"command": "errorLens.findLinterRuleDefinition",
+				"title": "Find Linter Rule Definition",
+				"description": "Search in local linter files (like `.eslintrc.json`) for the rule definition.",
+				"category": "Error Lens"
+			},
+			{
 				"command": "errorlens.toggleWorkspace",
 				"title": "Toggle Workspace in Disabled List",
 				"description": "Exclude/Include current workspace by fs path.",
@@ -244,6 +250,11 @@
 					],
 					"description": "Controls how inline message is highlighted in the editor (entire line / only message / none)."
 				},
+				"errorLens.editorHoverEnabled": {
+					"type": "boolean",
+					"markdownDescription": "When checked - shows tooltip when hovering over diagnostic with buttons to (exclude problem, go to rule documentation, go to rule definition(linter file)...).",
+					"default": true
+				},
 				"errorLens.statusBarIconsEnabled": {
 					"type": "boolean",
 					"markdownDescription": "When enabled - shows highlighted error/warning icons in status bar.",
@@ -345,7 +356,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Specify source or source(code) pair that should not be highlighted. Examples: `[\"eslint\"]`, `[\"eslint(padded-blocks)\"]`"
+					"markdownDescription": "Specify source or source(code) pair that should not be highlighted. Examples: `[\"eslint\"]` or `[\"eslint(padded-blocks)\"]`"
 				},
 				"errorLens.excludePatterns": {
 					"type": "array",
@@ -363,9 +374,33 @@
 					},
 					"markdownDescription": "Exclude workspaces by path."
 				},
+				"errorLens.lintFilePaths": {
+					"type": "object",
+					"default": {
+						"eslint": [
+							"**/*.eslintrc.{js,cjs,yaml,yml,json}",
+							"**/*package.json"
+						],
+						"Stylelint": [
+							"**/*.stylelintrc",
+							"**/*.stylelintrc.{cjs,js,json,yaml,yml}",
+							"**/*stylelint.config.{cjs,js}",
+							"**/*package.json"
+						]
+					},
+					"patternProperties": {
+						".*": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					"markdownDescription": "Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/api/references/vscode-api#GlobPattern) for local linter files). `node_modules` folder is excluded."
+				},
 				"errorLens.light": {
 					"type": "object",
-					"description": "Specify color of decorations for when the light color theme is active.",
+					"markdownDescription": "Specify color of decorations for when the light color theme is active.",
 					"properties": {
 						"errorGutterIconPath": {
 							"type": "string",

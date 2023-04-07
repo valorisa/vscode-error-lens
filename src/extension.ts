@@ -5,6 +5,7 @@ import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, 
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
+import { extensionUtils } from 'src/utils/extensionUtils';
 import { workspace, type Disposable, type ExtensionContext } from 'vscode';
 
 /**
@@ -144,16 +145,13 @@ function updateExclude(): void {
 	$state.excludeSources = [];
 
 	for (const excludeSourceCode of $config.excludeBySource) {
-		// Match source/code like:  eslint(padded-blocks)
-		const sourceCodeMatch = /(?<source>[^()]+)(?:\((?<code>.+)\))?/u.exec(excludeSourceCode);
-		const source = sourceCodeMatch?.groups?.source;
-		const code = sourceCodeMatch?.groups?.code;
-		if (!source) {
+		const sourceCode = extensionUtils.parseSourceCodeFromString(excludeSourceCode);
+		if (!sourceCode.source) {
 			continue;
 		}
 		$state.excludeSources.push({
-			source,
-			code,
+			source: sourceCode.source,
+			code: sourceCode.code,
 		});
 	}
 

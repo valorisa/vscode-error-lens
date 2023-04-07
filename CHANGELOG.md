@@ -1,3 +1,9 @@
+## 3.9.0 `07 Apr 2023`
+
+- ✨ New command `errorlens.toggleWorkspace` and setting `"excludeWorkspaces"` to exclude entire folder. [PR 154](https://github.com/usernamehw/vscode-error-lens/pull/154) by [onuryukselce](https://github.com/onuryukselce)
+- ✨ Add hover for editor decorations (`errorLens.editorHoverEnabled` to disable)
+- ✨ Editor hover has buttons to: "Exclude problem" or "Open linter rule definition". `"errorLens.lintFilePaths"` setting controls which files to search for linter rule.
+
 ## 3.8.0 `14 Mar 2023`
 
 - 🐛 Error range should use starting point #147

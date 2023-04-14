@@ -318,7 +318,12 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 
 		const diagnosticDecorationOptions: DecorationOptions = {
 			range: new Range(messageRange.start.line, messageRange.start.character, messageRange.start.line, messageRange.start.character),
-			hoverMessage: $config.editorHoverEnabled ? createHoverForDiagnostic(message, diagnostic) : undefined,
+			hoverMessage: createHoverForDiagnostic({
+				message,
+				diagnostic,
+				buttonsEnabled: $config.editorHoverPartsEnabled.buttonsEnabled,
+				messageEnabled: $config.editorHoverPartsEnabled.messageEnabled,
+			}),
 			renderOptions: decInstanceRenderOptions,
 		};
 

@@ -42,9 +42,12 @@ interface ExtensionConfigType {
 	 */
 	messageEnabled: boolean;
 	/**
-	 * When checked - shows hover on diagnostic with buttons to (go to rule documentation, go to rule definition(linter file)...).
+	 * Controls which parts of the editor hover tooltip to show.
 	 */
-	editorHoverEnabled: boolean;
+	editorHoverPartsEnabled: {
+		messageEnabled: boolean;
+		buttonsEnabled: boolean;
+	};
 	/**
 	 * Controls how inline message is highlighted in the editor (entire line / only message / none).
 	 */

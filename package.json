@@ -250,10 +250,24 @@
 					],
 					"description": "Controls how inline message is highlighted in the editor (entire line / only message / none)."
 				},
-				"errorLens.editorHoverEnabled": {
-					"type": "boolean",
-					"markdownDescription": "When checked - shows tooltip when hovering over diagnostic with buttons to (exclude problem, go to rule documentation, go to rule definition(linter file)...).",
-					"default": true
+				"errorLens.editorHoverPartsEnabled": {
+					"type": "object",
+					"properties": {
+						"messageEnabled": {
+							"type": "boolean",
+							"default": true
+						},
+						"buttonsEnabled": {
+							"type": "boolean",
+							"default": true
+						}
+					},
+					"additionalProperties": false,
+					"default": {
+						"messageEnabled": true,
+						"buttonsEnabled": true
+					},
+					"markdownDescription": "Controls which parts of the editor hover tooltip to show."
 				},
 				"errorLens.statusBarIconsEnabled": {
 					"type": "boolean",

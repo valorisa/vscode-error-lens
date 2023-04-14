@@ -8,7 +8,21 @@ import { MarkdownString, type Diagnostic } from 'vscode';
 /**
  *
  */
-export function createHoverForDiagnostic(message: string | undefined, diagnostic: Diagnostic): MarkdownString {
+export function createHoverForDiagnostic({
+	message,
+	diagnostic,
+	messageEnabled,
+	buttonsEnabled,
+}: {
+	message: string | undefined;
+	diagnostic: Diagnostic;
+	messageEnabled: boolean;
+	buttonsEnabled: boolean;
+}): MarkdownString | undefined {
+	if (!messageEnabled && !buttonsEnabled) {
+		return;
+	}
+
 	const markdown = new MarkdownString(undefined, true);
 	markdown.supportHtml = true;
 	markdown.isTrusted = true;
@@ -35,16 +49,22 @@ export function createHoverForDiagnostic(message: string | undefined, diagnostic
 		href: vscodeUtils.createCommandUri(CommandId.FindLinterRuleDefinition, { source: diagnostic.source, code: diagnosticCode } satisfies RuleDefinitionArgs).toString(),
 	});
 
-	markdown.appendMarkdown(`${vscodeUtils.createProblemIconMarkdown(diagnostic.severity === 0 ? 'error' : diagnostic.severity === 1 ? 'warning' : 'info')} `);
-	markdown.appendMarkdown(message ?? diagnostic.message);
-	markdown.appendMarkdown('\n\n');
-	markdown.appendMarkdown(exludeProblemButton);
-	if (openDocsButton) {
-		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
-		markdown.appendMarkdown(openDocsButton);
+	// ──── Message ───────────────────────────────────────────────
+	if (messageEnabled) {
+		markdown.appendMarkdown(`${vscodeUtils.createProblemIconMarkdown(diagnostic.severity === 0 ? 'error' : diagnostic.severity === 1 ? 'warning' : 'info')} `);
+		markdown.appendMarkdown(message ?? diagnostic.message);
 	}
-	markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
-	markdown.appendMarkdown(openRuleDefinitionButton);
+	// ──── Buttons ───────────────────────────────────────────────
+	if (buttonsEnabled) {
+		markdown.appendMarkdown('\n\n');
+		markdown.appendMarkdown(exludeProblemButton);
+		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
+		markdown.appendMarkdown(openRuleDefinitionButton);
+		if (openDocsButton) {
+			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
+			markdown.appendMarkdown(openDocsButton);
+		}
+	}
 
 	return markdown;
 }

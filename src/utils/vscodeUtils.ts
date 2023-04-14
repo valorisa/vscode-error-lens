@@ -82,7 +82,7 @@ function createButtonLinkMarkdown({
 		color: 'var(--vscode-button-foreground)',
 	});
 
-	return `<b><a title="${title}" href="${href}">${buttonText}</a></b>`;
+	return `<a title="${title}" href="${href}">${buttonText}</a>`;
 }
 
 function createProblemIconMarkdown(kind: 'error' | 'info' | 'warning'): string {

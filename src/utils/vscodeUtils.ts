@@ -95,22 +95,13 @@ function createProblemIconMarkdown(kind: 'error' | 'info' | 'warning'): string {
 	});
 }
 
-// function stringToUint8Array(text: string): Uint8Array {
-// 	// @ts-expect-error TextEncoder EXISTS
-// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-// 	return new TextEncoder().encode(text);
-// }
-function uint8ArrayToString(arr: Uint8Array): string {
-	// @ts-expect-error TextDecoder EXISTS
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-	return new TextDecoder().decode(arr);
-}
-
 async function readFileVscode(pathOrUri: Uri | string): Promise<string> {
 	try {
 		const uri = typeof pathOrUri === 'string' ? Uri.file(pathOrUri) : pathOrUri;
 		const file = await workspace.fs.readFile(uri);
-		return uint8ArrayToString(file);
+		// @ts-expect-error TextDecoder EXISTS
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+		return new TextDecoder().decode(file);
 	} catch (e) {
 		window.showErrorMessage((e as Error).message);
 		return '';

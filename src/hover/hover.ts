@@ -6,15 +6,13 @@ import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { MarkdownString, type Diagnostic } from 'vscode';
 
 /**
- *
+ * Create hover tooltip for text editor decoration.
  */
 export function createHoverForDiagnostic({
-	message,
 	diagnostic,
 	messageEnabled,
 	buttonsEnabled,
 }: {
-	message: string | undefined;
 	diagnostic: Diagnostic;
 	messageEnabled: boolean;
 	buttonsEnabled: boolean;
@@ -37,7 +35,7 @@ export function createHoverForDiagnostic({
 	const diagnosticTarget = extensionUtils.getDiagnosticTarget(diagnostic);
 	if (diagnosticTarget) {
 		openDocsButton = vscodeUtils.createButtonLinkMarkdown({
-			text: '$(book) Rule Docs',
+			text: '$(book) Docs',
 			href: vscodeUtils.createCommandUri(Constants.VscodeOpenCommandId, diagnosticTarget).toString(),
 			// title: 'Open diagnostic code or search it in default browser.',
 		});
@@ -45,14 +43,15 @@ export function createHoverForDiagnostic({
 
 	const diagnosticCode = extensionUtils.getDiagnosticCode(diagnostic);
 	const openRuleDefinitionButton = vscodeUtils.createButtonLinkMarkdown({
-		text: '$(file) Rule definition',
+		text: '$(file) Definition',
 		href: vscodeUtils.createCommandUri(CommandId.FindLinterRuleDefinition, { source: diagnostic.source, code: diagnosticCode } satisfies RuleDefinitionArgs).toString(),
+		// title: 'Open diagnostic definition (linter file).',
 	});
 
 	// ──── Message ───────────────────────────────────────────────
 	if (messageEnabled) {
-		markdown.appendMarkdown(`${vscodeUtils.createProblemIconMarkdown(diagnostic.severity === 0 ? 'error' : diagnostic.severity === 1 ? 'warning' : 'info')} `);
-		markdown.appendMarkdown(message ?? diagnostic.message);
+		// markdown.appendMarkdown(`${vscodeUtils.createProblemIconMarkdown(diagnostic.severity === 0 ? 'error' : diagnostic.severity === 1 ? 'warning' : 'info')} `);
+		markdown.appendCodeblock(diagnostic.message, 'plaintext');
 	}
 	// ──── Buttons ───────────────────────────────────────────────
 	if (buttonsEnabled) {

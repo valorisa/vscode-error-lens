@@ -9,12 +9,15 @@ import { TextDocumentSaveReason, languages, window, workspace, type DiagnosticCh
 export function updateChangedActiveTextEditorListener(): void {
 	$state.onDidChangeActiveTextEditor?.dispose();
 
-	$state.onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(textEditor => {
+	$state.onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(editor => {
 		if ($config.onSave) {
 			$state.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
 		}
-		if (textEditor) {
-			updateDecorationsForUri(textEditor.document.uri, textEditor);
+		if (editor) {
+			updateDecorationsForUri({
+				uri: editor.document.uri,
+				editor,
+			});
 		} else {
 			$state.statusBarMessage.clear();
 		}
@@ -39,7 +42,10 @@ export function updateChangeDiagnosticListener(): void {
 		for (const uri of diagnosticChangeEvent.uris) {
 			for (const editor of window.visibleTextEditors) {
 				if (uri.fsPath === editor.document.uri.fsPath) {
-					updateDecorationsForUri(uri, editor);
+					updateDecorationsForUri({
+						uri,
+						editor,
+					});
 				}
 			}
 		}
@@ -80,7 +86,11 @@ export function updateCursorChangeListener(): void {
 				selection.isEmpty &&
 				lastPositionLine !== selection.active.line
 			) {
-				updateDecorationsForUri(e.textEditor.document.uri, e.textEditor, undefined, selection);
+				updateDecorationsForUri({
+					uri: e.textEditor.document.uri,
+					editor: e.textEditor,
+					range: selection,
+				});
 				lastPositionLine = e.selections[0].active.line;
 			}
 		});
@@ -97,10 +107,13 @@ export function updateOnSaveListener(): void {
 	if (!$config.onSave) {
 		return;
 	}
+
 	$state.onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
 		if (e.reason === TextDocumentSaveReason.Manual) {
 			setTimeout(() => {
-				updateDecorationsForUri(e.document.uri);
+				updateDecorationsForUri({
+					uri: e.document.uri,
+				});
 			}, 200);
 			$state.lastSavedTimestamp = Date.now();
 		}

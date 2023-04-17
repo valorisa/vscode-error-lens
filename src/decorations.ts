@@ -5,7 +5,7 @@ import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
 import { utils } from 'src/utils/utils';
-import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type Diagnostic, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 type DecorationKeys = 'decorationTypeError' | 'decorationTypeGutterError' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeInfo' | 'decorationTypeWarning';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
@@ -361,13 +361,26 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 
 export function updateDecorationsForAllVisibleEditors(): void {
 	for (const editor of window.visibleTextEditors) {
-		updateDecorationsForUri(editor.document.uri, editor);
+		updateDecorationsForUri({
+			uri: editor.document.uri,
+			editor,
+		});
 	}
 }
 /**
  * Update decorations for one editor.
  */
-export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, groupedDiagnostics?: GroupedByLineDiagnostics, range?: Range): void {
+export function updateDecorationsForUri({
+	uri,
+	editor,
+	groupedDiagnostics,
+	range,
+}: {
+	uri: Uri;
+	editor?: TextEditor;
+	groupedDiagnostics?: GroupedByLineDiagnostics;
+	range?: Range;
+}): void {
 	if (editor === undefined) {
 		editor = window.activeTextEditor;
 	}
@@ -415,7 +428,7 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		return;
 	}
 
-	doUpdateDecorations(editor, groupedDiagnostics ?? extensionUtils.groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);
+	doUpdateDecorations(editor, groupedDiagnostics ?? extensionUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
 }
 
 function disposeAllDecorations(): void {

@@ -96,13 +96,16 @@ export function activate(context: ExtensionContext): void {
 	}));
 }
 /**
- * - Update all global variables
+ * Runs only on extension configuration change event.
+ *
+ * - Update all global state
  * - Update all decoration styles
  * - Update decorations for all visible editors
  * - Update all event listeners
  */
 export function updateEverything(context: ExtensionContext): void {
-	updateExclude();
+	updateExcludeState();
+
 	$state.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled &&
 		$config.gutterIconsFollowCursorOverride &&
 		$config.followCursor !== 'allLines';
@@ -122,8 +125,13 @@ export function updateEverything(context: ExtensionContext): void {
 		priority: $config.statusBarIconsPriority,
 		alignment: $config.statusBarIconsAlignment,
 	});
+
+	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
+	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
+	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
+	$state.configHintEnabled = $config.enabledDiagnosticLevels.includes('hint');
+
 	setDecorationStyle(context);
-	updateConfigEnabledLevels();
 
 	updateDecorationsForAllVisibleEditors();
 
@@ -140,10 +148,12 @@ export function updateEverything(context: ExtensionContext): void {
  * - Create `DocumentFilter[]` for document match.
  * - Create `source/code` exclusion object.
  */
-function updateExclude(): void {
+function updateExcludeState(): void {
 	$state.excludeRegexp = [];
 	$state.excludeSources = [];
+	$state.excludePatterns = undefined;
 
+	// ──── Exclude by source ─────────────────────────────────────
 	for (const excludeSourceCode of $config.excludeBySource) {
 		const sourceCode = extensionUtils.parseSourceCodeFromString(excludeSourceCode);
 		if (!sourceCode.source) {
@@ -155,27 +165,19 @@ function updateExclude(): void {
 		});
 	}
 
+	// ──── Exclude by message ────────────────────────────────────
 	for (const excludeMessage of $config.exclude) {
 		if (typeof excludeMessage === 'string') {
 			$state.excludeRegexp.push(new RegExp(excludeMessage, 'iu'));
 		}
 	}
+
+	// ──── Exlude by glob ────────────────────────────────────────
 	if (Array.isArray($config.excludePatterns) && $config.excludePatterns.length !== 0) {
 		$state.excludePatterns = $config.excludePatterns.map(item => ({
 			pattern: item,
 		}));
-	} else {
-		$state.excludePatterns = undefined;
 	}
-}
-/**
- * Update global varialbes for enabled severity levels of diagnostics based on user setting `enabledDiagnosticLevels`.
- */
-function updateConfigEnabledLevels(): void {
-	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
-	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
-	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
-	$state.configHintEnabled = $config.enabledDiagnosticLevels.includes('hint');
 }
 /**
  * Dispose all disposables (except `onDidChangeConfiguration`).

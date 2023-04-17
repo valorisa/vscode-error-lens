@@ -1,5 +1,4 @@
 /* eslint-disable no-await-in-loop */
-import { groupDiagnosticsByLine } from 'src/decorations';
 import { $config } from 'src/extension';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extensionUtils } from 'src/utils/extensionUtils';
@@ -161,7 +160,7 @@ function tryToFindDiagnosticFromActiveEditor(): Diagnostic | undefined {
 
 	const activeLineNumber = editor.selection.active.line;
 	const diagnosticsForUri = languages.getDiagnostics(editor.document.uri);
-	const aggregatedDiagnostics = groupDiagnosticsByLine(diagnosticsForUri);
-	const diagnosticsAtLine = aggregatedDiagnostics[activeLineNumber];
-	return diagnosticsAtLine[0];
+	const groupedDiagnostics = extensionUtils.groupDiagnosticsByLine(diagnosticsForUri);
+
+	return groupedDiagnostics[activeLineNumber]?.[0];
 }

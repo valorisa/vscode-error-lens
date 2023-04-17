@@ -234,8 +234,6 @@ interface ExtensionConfigType {
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
 
-export type AggregatedByLineDiagnostics = Record<string, Diagnostic[]>;
-
 export const enum Constants {
 	/**
 	 * Extension unique id (publisher.name).

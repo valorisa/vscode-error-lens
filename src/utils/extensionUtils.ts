@@ -1,3 +1,4 @@
+import { $config, $state } from 'src/extension';
 import { type Diagnostic, type Uri } from 'vscode';
 
 function getDiagnosticTarget(diagnostic: Diagnostic): Uri | false | undefined {
@@ -31,9 +32,139 @@ function diagnosticToSourceCodeString(source: string, code?: string): string {
 	return `${source}${code ? `(${code})` : ''}`;
 }
 
+export type GroupedByLineDiagnostics = Record<string, Diagnostic[]>;
+/**
+ * Return diagnostics grouped by line: `Record<string, Diagnostic[]>`
+ */
+function groupDiagnosticsByLine(diagnostics: Diagnostic[]): GroupedByLineDiagnostics {
+	const groupedDiagnostics: GroupedByLineDiagnostics = {};
+	for (const diagnostic of diagnostics) {
+		if (shouldExcludeDiagnostic(diagnostic)) {
+			continue;
+		}
+
+		const key = diagnostic.range.start.line;
+
+		if (groupedDiagnostics[key]) {
+			groupedDiagnostics[key].push(diagnostic);
+		} else {
+			groupedDiagnostics[key] = [diagnostic];
+		}
+	}
+	return groupedDiagnostics;
+}
+/**
+ * Check multiple exclude sources if the diagnostic should not be shown.
+ */
+function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
+	if (diagnostic.source) {
+		for (const excludeSourceCode of $state.excludeSources) {
+			if (excludeSourceCode.source === diagnostic.source) {
+				let diagnosticCode = '';
+				if (typeof diagnostic.code === 'number') {
+					diagnosticCode = String(diagnostic.code);
+				} else if (typeof diagnostic.code === 'string') {
+					diagnosticCode = diagnostic.code;
+				} else if (diagnostic.code?.value) {
+					diagnosticCode = String(diagnostic.code.value);
+				}
+				if (!excludeSourceCode.code) {
+					// only source exclusion
+					return true;
+				}
+				if (excludeSourceCode.code && diagnosticCode && excludeSourceCode.code === diagnosticCode) {
+					// source and code matches
+					return true;
+				}
+			}
+		}
+	}
+
+	for (const regex of $state.excludeRegexp) {
+		if (regex.test(diagnostic.message)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+/**
+ * `true` when diagnostic enabled in config & in temp variable
+ */
+function isSeverityEnabled(severity: number): boolean {
+	return (
+		(severity === 0 && $state.configErrorEnabled) ||
+		(severity === 1 && $state.configWarningEnabled) ||
+		(severity === 2 && $state.configInfoEnabled) ||
+		(severity === 3 && $state.configHintEnabled)
+	);
+}
+
+/**
+ * Generate inline message from template.
+ */
+function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, count: number): string {
+	/** Variables to replace inside the `messageTemplate` & `statusBarMessageTemplate` settings. */
+	const enum TemplateVars {
+		Message = '$message',
+		Source = '$source',
+		Code = '$code',
+		Count = '$count',
+		Severity = '$severity',
+	}
+
+	if (template === TemplateVars.Message) {
+		// When default template - no need to use RegExps or other stuff.
+		return diagnostic.message;
+	} else {
+		// Message & severity is always present.
+		let result = template
+			.replace(TemplateVars.Message, diagnostic.message)
+			.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '');
+		/**
+		 * Count, source & code can be absent.
+		 * If present - replace them as simple string.
+		 * If absent - replace by RegExp removing all adjacent non-whitespace symbols with them.
+		 */
+
+		/* eslint-disable prefer-named-capture-group, max-params */
+		if (template.includes(TemplateVars.Count)) {
+			if (count > 1) {
+				result = result.replace(TemplateVars.Count, String(count));
+			} else {
+				// no `$count` in the template - remove it
+				result = result.replace(/(\s*?)?(\S*?)?(\$count)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
+			}
+		}
+		if (template.includes(TemplateVars.Source)) {
+			if (diagnostic.source) {
+				result = result.replace(TemplateVars.Source, String(diagnostic.source));
+			} else {
+				result = result.replace(/(\s*?)?(\S*?)?(\$source)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
+			}
+		}
+
+		if (template.includes(TemplateVars.Code)) {
+			const code = typeof diagnostic.code === 'object' ? String(diagnostic.code.value) : String(diagnostic.code);
+			if (diagnostic.code) {
+				result = result.replace(TemplateVars.Code, code);
+			} else {
+				result = result.replace(/(\s*?)?(\S*?)?(\$code)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
+			}
+		}
+		/* eslint-enable prefer-named-capture-group, max-params */
+
+		return result;
+	}
+}
+
 export const extensionUtils = {
 	getDiagnosticTarget,
 	getDiagnosticCode,
 	parseSourceCodeFromString,
 	diagnosticToSourceCodeString,
+	groupDiagnosticsByLine,
+	shouldExcludeDiagnostic,
+	isSeverityEnabled,
+	diagnosticToInlineMessage,
 };

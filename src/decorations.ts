@@ -2,7 +2,8 @@
 import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
-import { Constants, type AggregatedByLineDiagnostics } from 'src/types';
+import { Constants } from 'src/types';
+import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
 import { utils } from 'src/utils/utils';
 import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type Diagnostic, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
@@ -229,7 +230,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
  * Actually apply decorations for editor.
  * @param range Only allow decorating lines in this range.
  */
-export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: Range): void {
+export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: GroupedByLineDiagnostics, range?: Range): void {
 	const decorationOptionsError: DecorationOptions[] = [];
 	const decorationOptionsWarning: DecorationOptions[] = [];
 	const decorationOptionsInfo: DecorationOptions[] = [];
@@ -242,21 +243,21 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 		}
 		const line = range.start.line;
 
-		const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
-		aggregatedDiagnosticsAsArray.length = $config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
-		allowedLineNumbersToRenderDiagnostics = aggregatedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
+		const groupedDiagnosticsAsArray = Object.entries(groupedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
+		groupedDiagnosticsAsArray.length = $config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
+		allowedLineNumbersToRenderDiagnostics = groupedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
 	}
 
-	for (const key in aggregatedDiagnostics) {
-		const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-		const diagnostic = aggregatedDiagnostic[0];
+	for (const key in groupedDiagnostics) {
+		const groupedDiagnostic = groupedDiagnostics[key].sort((a, b) => a.severity - b.severity);
+		const diagnostic = groupedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		if (!isSeverityEnabled(severity)) {
+		if (!extensionUtils.isSeverityEnabled(severity)) {
 			continue;
 		}
 
-		let message: string | undefined = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+		let message: string | undefined = extensionUtils.diagnosticToInlineMessage($config.messageTemplate, diagnostic, groupedDiagnostic.length);
 
 		if (!$config.messageEnabled || $config.messageMaxChars === 0) {
 			message = undefined;
@@ -353,9 +354,9 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 	editor.setDecorations(decorationTypes.decorationTypeHint, decorationOptionsHint);
 
 	if ($state.renderGutterIconsAsSeparateDecoration) {
-		doUpdateGutterDecorations(editor, aggregatedDiagnostics);
+		doUpdateGutterDecorations(editor, groupedDiagnostics);
 	}
-	$state.statusBarMessage.updateText(editor, aggregatedDiagnostics);
+	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {
@@ -366,7 +367,7 @@ export function updateDecorationsForAllVisibleEditors(): void {
 /**
  * Update decorations for one editor.
  */
-export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, groupedDiagnostics?: AggregatedByLineDiagnostics, range?: Range): void {
+export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, groupedDiagnostics?: GroupedByLineDiagnostics, range?: Range): void {
 	if (editor === undefined) {
 		editor = window.activeTextEditor;
 	}
@@ -414,7 +415,7 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		return;
 	}
 
-	doUpdateDecorations(editor, groupedDiagnostics ?? groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);
+	doUpdateDecorations(editor, groupedDiagnostics ?? extensionUtils.groupDiagnosticsByLine(languages.getDiagnostics(uriToDecorate)), range);
 }
 
 function disposeAllDecorations(): void {
@@ -423,143 +424,3 @@ function disposeAllDecorations(): void {
 	}
 }
 
-/**
- * The aggregatedDiagnostics object will contain one or more objects, each object being keyed by `N`, where `N` is the line number where one or more diagnostics are being reported.
- *
- * Each object which is keyed by `N` will contain one or more `arrayDiagnostics[]` array of objects.
- * This facilitates gathering info about lines which contain more than one diagnostic.
- *
- * ```json
- * {
- *   67: [
- *     <Diagnostic #1>,
- *     <Diagnostic #2>
- *   ],
- *   93: [
- *     <Diagnostic #1>
- *   ]
- * }
- * ```
- */
-export function groupDiagnosticsByLine(diagnostics: Diagnostic[]): AggregatedByLineDiagnostics {
-	const aggregatedDiagnostics: AggregatedByLineDiagnostics = {};
-	for (const diagnostic of diagnostics) {
-		if (shouldExcludeDiagnostic(diagnostic)) {
-			continue;
-		}
-
-		const key = diagnostic.range.start.line;
-
-		if (aggregatedDiagnostics[key]) {
-			aggregatedDiagnostics[key].push(diagnostic);
-		} else {
-			aggregatedDiagnostics[key] = [diagnostic];
-		}
-	}
-	return aggregatedDiagnostics;
-}
-/**
- * Check multiple exclude sources if the diagnostic should not be shown.
- */
-export function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
-	if (diagnostic.source) {
-		for (const excludeSourceCode of $state.excludeSources) {
-			if (excludeSourceCode.source === diagnostic.source) {
-				let diagnosticCode = '';
-				if (typeof diagnostic.code === 'number') {
-					diagnosticCode = String(diagnostic.code);
-				} else if (typeof diagnostic.code === 'string') {
-					diagnosticCode = diagnostic.code;
-				} else if (diagnostic.code?.value) {
-					diagnosticCode = String(diagnostic.code.value);
-				}
-				if (!excludeSourceCode.code) {
-					// only source exclusion
-					return true;
-				}
-				if (excludeSourceCode.code && diagnosticCode && excludeSourceCode.code === diagnosticCode) {
-					// source and code matches
-					return true;
-				}
-			}
-		}
-	}
-
-	for (const regex of $state.excludeRegexp) {
-		if (regex.test(diagnostic.message)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-/**
- * `true` when diagnostic enabled in config & in temp variable
- */
-export function isSeverityEnabled(severity: number): boolean {
-	return (
-		(severity === 0 && $state.configErrorEnabled) ||
-		(severity === 1 && $state.configWarningEnabled) ||
-		(severity === 2 && $state.configInfoEnabled) ||
-		(severity === 3 && $state.configHintEnabled)
-	);
-}
-/**
- * Generate inline message from template.
- */
-export function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, count: number): string {
-	if (template === TemplateVars.Message) {
-		// When default template - no need to use RegExps or other stuff.
-		return diagnostic.message;
-	} else {
-		// Message & severity is always present.
-		let result = template
-			.replace(TemplateVars.Message, diagnostic.message)
-			.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '');
-		/**
-		 * Count, source & code can be absent.
-		 * If present - replace them as simple string.
-		 * If absent - replace by RegExp removing all adjacent non-whitespace symbols with them.
-		 */
-
-		/* eslint-disable prefer-named-capture-group, max-params */
-		if (template.includes(TemplateVars.Count)) {
-			if (count > 1) {
-				result = result.replace(TemplateVars.Count, String(count));
-			} else {
-				// no `$count` in the template - remove it
-				result = result.replace(/(\s*?)?(\S*?)?(\$count)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
-			}
-		}
-		if (template.includes(TemplateVars.Source)) {
-			if (diagnostic.source) {
-				result = result.replace(TemplateVars.Source, String(diagnostic.source));
-			} else {
-				result = result.replace(/(\s*?)?(\S*?)?(\$source)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
-			}
-		}
-
-		if (template.includes(TemplateVars.Code)) {
-			const code = typeof diagnostic.code === 'object' ? String(diagnostic.code.value) : String(diagnostic.code);
-			if (diagnostic.code) {
-				result = result.replace(TemplateVars.Code, code);
-			} else {
-				result = result.replace(/(\s*?)?(\S*?)?(\$code)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
-			}
-		}
-		/* eslint-enable prefer-named-capture-group, max-params */
-
-		return result;
-	}
-}
-
-/**
- * Variables to replace inside the `messageTemplate` & `statusBarMessageTemplate` settings.
- */
-const enum TemplateVars {
-	Message = '$message',
-	Source = '$source',
-	Code = '$code',
-	Count = '$count',
-	Severity = '$severity',
-}

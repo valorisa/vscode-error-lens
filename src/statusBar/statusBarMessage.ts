@@ -1,7 +1,7 @@
 import { CommandId } from 'src/commands';
-import { diagnosticToInlineMessage, isSeverityEnabled } from 'src/decorations';
 import { $config } from 'src/extension';
-import { type AggregatedByLineDiagnostics, type ExtensionConfig } from 'src/types';
+import { type ExtensionConfig } from 'src/types';
+import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
 import { utils } from 'src/utils/utils';
 import { MarkdownString, Position, StatusBarAlignment, window, type Diagnostic, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
 
@@ -65,11 +65,11 @@ export class StatusBarMessage {
 		}
 	}
 
-	public updateText(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
+	public updateText(editor: TextEditor, groupedDiagnostics: GroupedByLineDiagnostics): void {
 		if (!this.isEnabled) {
 			return;
 		}
-		const keys = Object.keys(aggregatedDiagnostics);
+		const keys = Object.keys(groupedDiagnostics);
 		if (keys.length === 0) {
 			this.clear();
 			return;
@@ -80,11 +80,11 @@ export class StatusBarMessage {
 		let numberOfDiagnosticsOnThatLine = 0;
 
 		if (this.messageType === 'activeLine') {
-			if (aggregatedDiagnostics[ln]) {
-				for (const diag of aggregatedDiagnostics[ln]) {
-					if (isSeverityEnabled(diag.severity)) {
+			if (groupedDiagnostics[ln]) {
+				for (const diag of groupedDiagnostics[ln]) {
+					if (extensionUtils.isSeverityEnabled(diag.severity)) {
 						diagnostic = diag;
-						numberOfDiagnosticsOnThatLine = aggregatedDiagnostics[ln].length;
+						numberOfDiagnosticsOnThatLine = groupedDiagnostics[ln].length;
 					}
 				}
 			} else {
@@ -96,9 +96,9 @@ export class StatusBarMessage {
 			const sortedLineNumbers = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b));
 			outerLoop:
 			for (const lineNumber of sortedLineNumbers) {
-				const diagnosticsAtLine = aggregatedDiagnostics[lineNumber];
+				const diagnosticsAtLine = groupedDiagnostics[lineNumber];
 				for (const diag of diagnosticsAtLine) {
-					if (isSeverityEnabled(diag.severity)) {
+					if (extensionUtils.isSeverityEnabled(diag.severity)) {
 						diagnostic = diag;
 						numberOfDiagnosticsOnThatLine = diagnosticsAtLine.length;
 						break outerLoop;
@@ -106,14 +106,14 @@ export class StatusBarMessage {
 				}
 			}
 		} else if (this.messageType === 'closestSeverity') {
-			const allDiagnosticsSorted = keys.map(key => aggregatedDiagnostics[key]).flat().sort((d1, d2) => {
+			const allDiagnosticsSorted = keys.map(key => groupedDiagnostics[key]).flat().sort((d1, d2) => {
 				const severityScore = (d1.severity * 1e4) - (d2.severity * 1e4);
 				return severityScore + (Math.abs(ln - d1.range.start.line) - Math.abs(ln - d2.range.start.line));
 			});
 			for (const diag of allDiagnosticsSorted) {
-				if (isSeverityEnabled(diag.severity)) {
+				if (extensionUtils.isSeverityEnabled(diag.severity)) {
 					diagnostic = diag;
-					numberOfDiagnosticsOnThatLine = aggregatedDiagnostics[diag.range.start.line].length;
+					numberOfDiagnosticsOnThatLine = groupedDiagnostics[diag.range.start.line].length;
 					break;
 				}
 			}
@@ -126,7 +126,7 @@ export class StatusBarMessage {
 
 		this.activeMessagePosition = diagnostic.range.start;
 
-		let message = diagnosticToInlineMessage(
+		let message = extensionUtils.diagnosticToInlineMessage(
 			$config.statusBarMessageTemplate || $config.messageTemplate,
 			diagnostic,
 			numberOfDiagnosticsOnThatLine,

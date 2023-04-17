@@ -1,6 +1,7 @@
-import { decorationTypes, isSeverityEnabled } from 'src/decorations';
+import { decorationTypes } from 'src/decorations';
 import { $config } from 'src/extension';
-import { type AggregatedByLineDiagnostics, type ExtensionConfig } from 'src/types';
+import { type ExtensionConfig } from 'src/types';
+import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { type DecorationOptions, type ExtensionContext, type TextEditor, type Uri } from 'vscode';
 
@@ -74,35 +75,38 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 /**
  * Actually apply gutter decorations.
  */
-export function doUpdateGutterDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics): void {
+export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics: GroupedByLineDiagnostics): void {
 	const decorationOptionsGutterError: DecorationOptions[] = [];
 	const decorationOptionsGutterWarning: DecorationOptions[] = [];
 	const decorationOptionsGutterInfo: DecorationOptions[] = [];
 
-	for (const key in aggregatedDiagnostics) {
-		const aggregatedDiagnostic = aggregatedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-		const diagnostic = aggregatedDiagnostic[0];
+	for (const key in groupedDiagnostics) {
+		const groupedDiagnostic = groupedDiagnostics[key].sort((a, b) => a.severity - b.severity);
+		const diagnostic = groupedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		if (isSeverityEnabled(severity)) {
-			const diagnosticDecorationOptions: DecorationOptions = {
-				range: diagnostic.range,
-			};
-			switch (severity) {
-				case 0: {
-					decorationOptionsGutterError.push(diagnosticDecorationOptions);
-					break;
-				}
-				case 1: {
-					decorationOptionsGutterWarning.push(diagnosticDecorationOptions);
-					break;
-				}
-				case 2: {
-					decorationOptionsGutterInfo.push(diagnosticDecorationOptions);
-					break;
-				}
-				default: {}// gutter only shows error(0) warning(1) info(2) icons
+		if (!extensionUtils.isSeverityEnabled(severity)) {
+			continue;
+		}
+
+		const diagnosticDecorationOptions: DecorationOptions = {
+			range: diagnostic.range,
+		};
+
+		switch (severity) {
+			case 0: {
+				decorationOptionsGutterError.push(diagnosticDecorationOptions);
+				break;
 			}
+			case 1: {
+				decorationOptionsGutterWarning.push(diagnosticDecorationOptions);
+				break;
+			}
+			case 2: {
+				decorationOptionsGutterInfo.push(diagnosticDecorationOptions);
+				break;
+			}
+			default: {}// gutter only shows error(0) warning(1) info(2) icons
 		}
 	}
 	editor.setDecorations(decorationTypes.decorationTypeGutterError, decorationOptionsGutterError);

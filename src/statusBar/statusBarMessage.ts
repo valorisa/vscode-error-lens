@@ -1,9 +1,10 @@
 import { CommandId } from 'src/commands';
 import { $config } from 'src/extension';
+import { createHoverForDiagnostic } from 'src/hover/hover';
 import { type ExtensionConfig } from 'src/types';
 import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
 import { utils } from 'src/utils/utils';
-import { MarkdownString, Position, StatusBarAlignment, window, type Diagnostic, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
+import { Position, StatusBarAlignment, window, type Diagnostic, type MarkdownString, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
 
 interface StatusBarMessageInit {
 	isEnabled: boolean;
@@ -144,7 +145,7 @@ export class StatusBarMessage {
 		}
 
 		this.statusBarItem.text = message;
-		this.statusBarItem.tooltip = this.makeTooltip(message, diagnostic);
+		this.statusBarItem.tooltip = this.makeTooltip(diagnostic);
 	}
 
 	/**
@@ -165,25 +166,13 @@ export class StatusBarMessage {
 		this.statusBarItem.dispose();
 	}
 
-	private makeTooltip(message: string, diagnostic: Diagnostic): MarkdownString {
-		const markdown = new MarkdownString();
-		markdown.isTrusted = true;
-		markdown.appendText(message);
-		markdown.appendMarkdown('\n\n---\n\n');
+	private makeTooltip(diagnostic: Diagnostic): MarkdownString | undefined {
+		const markdownHover = createHoverForDiagnostic({
+			diagnostic,
+			buttonsEnabled: true,
+			messageEnabled: true,
+		});
 
-		const diagnosticUri = typeof diagnostic.code !== 'number' && typeof diagnostic.code !== 'string' && diagnostic.code?.target;
-
-		const code = typeof diagnostic.code === 'string' ?
-			diagnostic.code :
-			typeof diagnostic.code === 'number' ?
-				String(diagnostic.code) :
-				`${diagnostic.code?.value ?? '<No code>'}`;
-		const sourceCode = `${diagnostic.source ?? '<No source>'} [${code}]`;
-		if (diagnosticUri) {
-			markdown.appendMarkdown(`[${sourceCode}](${diagnosticUri.toString()} "Open rule documentation.")`);
-		} else {
-			markdown.appendMarkdown(sourceCode);
-		}
-		return markdown;
+		return markdownHover;
 	}
 }

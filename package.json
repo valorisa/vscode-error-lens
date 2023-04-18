@@ -255,7 +255,7 @@
 					"properties": {
 						"messageEnabled": {
 							"type": "boolean",
-							"default": true
+							"default": false
 						},
 						"buttonsEnabled": {
 							"type": "boolean",
@@ -264,7 +264,7 @@
 					},
 					"additionalProperties": false,
 					"default": {
-						"messageEnabled": true,
+						"messageEnabled": false,
 						"buttonsEnabled": true
 					},
 					"markdownDescription": "Controls which parts of the editor hover tooltip to show."

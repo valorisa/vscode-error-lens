@@ -1,3 +1,9 @@
+## 3.10.0 `18 Apr 2023`
+
+- 💥 Replace `"errorLens.editorHoverEnabled"` with `"errorLens.editorHoverPartsEnabled"`. Disable hover message by default (not buttons).
+- ✨ Hover message is monospace and doesn't replace linebreaks
+- ✨ Hover message is status bar has the same buttons as editor hover (when `"errorLens.statusBarMessageEnabled"` is enabled)
+
 ## 3.9.0 `07 Apr 2023`
 
 - ✨ New command `errorlens.toggleWorkspace` and setting `"excludeWorkspaces"` to exclude entire folder. [PR 154](https://github.com/usernamehw/vscode-error-lens/pull/154) by [onuryukselce](https://github.com/onuryukselce)

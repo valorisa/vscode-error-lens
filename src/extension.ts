@@ -1,6 +1,6 @@
 import { registerAllCommands } from 'src/commands';
 import { type CustomDelay } from 'src/CustomDelay';
-import { setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
+import { disposeAllDecorations, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
@@ -190,6 +190,7 @@ export function disposeEverything(): void {
 	$state.onDidCursorChangeDisposable?.dispose();
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
+	disposeAllDecorations();
 }
 
 export function deactivate(): void { }

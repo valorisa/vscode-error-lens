@@ -431,7 +431,7 @@ export function updateDecorationsForUri({
 	doUpdateDecorations(editor, groupedDiagnostics ?? extensionUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
 }
 
-function disposeAllDecorations(): void {
+export function disposeAllDecorations(): void {
 	for (const decorationType of Object.values(decorationTypes)) {
 		decorationType?.dispose();
 	}

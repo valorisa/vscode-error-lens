@@ -1,3 +1,7 @@
+## 3.10.1 `26 Apr 2023`
+
+- 🐛 Fix: Changing enabled/disabled status doesn't update visible editors #163
+
 ## 3.10.0 `18 Apr 2023`
 
 - 💥 Replace `"errorLens.editorHoverEnabled"` with `"errorLens.editorHoverPartsEnabled"`. Disable hover message by default (not buttons).

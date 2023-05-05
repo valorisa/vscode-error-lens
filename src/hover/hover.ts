@@ -32,8 +32,17 @@ export function createHoverForDiagnostic({
 
 	// ──── Message ───────────────────────────────────────────────
 	if (messageEnabled) {
-		// markdown.appendMarkdown(`${vscodeUtils.createProblemIconMarkdown(diagnostic.severity === 0 ? 'error' : diagnostic.severity === 1 ? 'warning' : 'info')} `);
+		const problemIcon = vscodeUtils.createProblemIconMarkdown(diagnostic.severity === 0 ? 'error' : diagnostic.severity === 1 ? 'warning' : 'info');
+		markdown.appendMarkdown(`<table>`);
+		markdown.appendMarkdown(`<tr>`);
+		markdown.appendMarkdown(`<td>${problemIcon}</td>`);
+		markdown.appendMarkdown(`<td>`);
+		markdown.appendMarkdown('\n\n');
 		markdown.appendCodeblock(diagnostic.message, 'plaintext');
+		markdown.appendMarkdown('\n\n');
+		markdown.appendMarkdown(`</td>`);
+		markdown.appendMarkdown(`</tr>`);
+		markdown.appendMarkdown(`</table>`);
 	}
 	// ──── Source Code ──────────────────────────────────────────
 	if (sourceCodeEnabled) {

@@ -49,10 +49,13 @@ export function createHoverForDiagnostic({
 		const copyCodeButton = vscodeUtils.createButtonLinkMarkdown({
 			text: '$(clippy) Copy',
 			href: vscodeUtils.createCommandUri(CommandId.CopyProblemCode, { code: diagnosticCode }).toString(),
+			title: 'Copy problem code into the clipboard.',
 		});
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(`${diagnostic.source ?? '<No source>'} \`${diagnosticCode ?? '<No code>'}\` `);
-		markdown.appendMarkdown(copyCodeButton);
+		if (diagnosticCode) {
+			markdown.appendMarkdown(copyCodeButton);
+		}
 	}
 	// ──── Buttons ───────────────────────────────────────────────
 	if (buttonsEnabled) {

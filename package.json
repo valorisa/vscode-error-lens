@@ -269,14 +269,14 @@
 						},
 						"buttonsEnabled": {
 							"type": "boolean",
-							"default": true
+							"default": false
 						}
 					},
 					"additionalProperties": false,
 					"default": {
 						"messageEnabled": false,
 						"sourceCodeEnabled": false,
-						"buttonsEnabled": true
+						"buttonsEnabled": false
 					},
 					"markdownDescription": "Controls which parts of the editor hover tooltip to show."
 				},

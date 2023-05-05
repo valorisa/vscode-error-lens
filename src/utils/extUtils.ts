@@ -163,7 +163,7 @@ function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, cou
 
 function getDiagnosticAtLine(uri: Uri, lineNumber: number): Diagnostic | undefined {
 	const diagnostics = languages.getDiagnostics(uri);
-	const groupedDiagnostics = extensionUtils.groupDiagnosticsByLine(diagnostics);
+	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(diagnostics);
 	const diagnosticsAtLineNumber = groupedDiagnostics[lineNumber];
 	if (!diagnosticsAtLineNumber) {
 		return;
@@ -172,7 +172,7 @@ function getDiagnosticAtLine(uri: Uri, lineNumber: number): Diagnostic | undefin
 	return diagnosticsAtLineNumber[0];
 }
 
-export const extensionUtils = {
+export const extUtils = {
 	getDiagnosticTarget,
 	getDiagnosticCode,
 	parseSourceCodeFromString,

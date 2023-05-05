@@ -2,7 +2,7 @@ import debounce from 'lodash/debounce';
 import throttle from 'lodash/throttle';
 import { updateDecorationsForUri } from 'src/decorations';
 import { $state } from 'src/extension';
-import { extensionUtils } from 'src/utils/extensionUtils';
+import { extUtils } from 'src/utils/extUtils';
 import { languages, window, type Diagnostic, type DiagnosticChangeEvent, type Uri } from 'vscode';
 
 type CachedDiagnostic = Record<string, Record<string, Diagnostic>>;
@@ -94,7 +94,7 @@ export class CustomDelay {
 	private readonly updateDecorations = (uri: Uri): void => {
 		const stringUri = uri.toString();
 		const diagnostics = languages.getDiagnostics(uri);
-		const groupedDiagnostics = extensionUtils.groupDiagnosticsByLine(diagnostics);
+		const groupedDiagnostics = extUtils.groupDiagnosticsByLine(diagnostics);
 
 		this.cachedDiagnostics[stringUri] = {};
 		for (const diag of diagnostics) {

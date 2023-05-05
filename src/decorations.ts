@@ -3,7 +3,7 @@ import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
-import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
+import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
 import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
@@ -253,11 +253,11 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		const diagnostic = groupedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		if (!extensionUtils.isSeverityEnabled(severity)) {
+		if (!extUtils.isSeverityEnabled(severity)) {
 			continue;
 		}
 
-		let message: string | undefined = extensionUtils.diagnosticToInlineMessage($config.messageTemplate, diagnostic, groupedDiagnostic.length);
+		let message: string | undefined = extUtils.diagnosticToInlineMessage($config.messageTemplate, diagnostic, groupedDiagnostic.length);
 
 		if (!$config.messageEnabled || $config.messageMaxChars === 0) {
 			message = undefined;
@@ -429,7 +429,7 @@ export function updateDecorationsForUri({
 		return;
 	}
 
-	doUpdateDecorations(editor, groupedDiagnostics ?? extensionUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
+	doUpdateDecorations(editor, groupedDiagnostics ?? extUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
 }
 
 export function disposeAllDecorations(): void {

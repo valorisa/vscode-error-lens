@@ -1,8 +1,8 @@
-import { extensionUtils } from 'src/utils/extensionUtils';
+import { extUtils } from 'src/utils/extUtils';
 import { env, languages, window, type TextEditor } from 'vscode';
 
 export function copyProblemMessageCommand(editor: TextEditor): void {
-	const groupedDiagnostics = extensionUtils.groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
+	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
 
 	const activeLineNumber = editor.selection.active.line;
 	const diagnosticAtActiveLineNumber = groupedDiagnostics[activeLineNumber];

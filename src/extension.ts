@@ -5,7 +5,7 @@ import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, 
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
-import { extensionUtils } from 'src/utils/extensionUtils';
+import { extUtils } from 'src/utils/extUtils';
 import { workspace, type Disposable, type ExtensionContext } from 'vscode';
 
 /**
@@ -155,7 +155,7 @@ function updateExcludeState(): void {
 
 	// ──── Exclude by source ─────────────────────────────────────
 	for (const excludeSourceCode of $config.excludeBySource) {
-		const sourceCode = extensionUtils.parseSourceCodeFromString(excludeSourceCode);
+		const sourceCode = extUtils.parseSourceCodeFromString(excludeSourceCode);
 		if (!sourceCode.source) {
 			continue;
 		}

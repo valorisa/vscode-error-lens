@@ -1,4 +1,4 @@
-import { extensionUtils } from 'src/utils/extensionUtils';
+import { extUtils } from 'src/utils/extUtils';
 import { env, window } from 'vscode';
 
 /**
@@ -17,13 +17,13 @@ export function copyProblemCodeCommand(arg: { code: string | undefined } | undef
 		return;
 	}
 
-	const diagnosticAtActiveLineNumber = extensionUtils.getDiagnosticAtLine(editor.document.uri, editor.selection.active.line);
+	const diagnosticAtActiveLineNumber = extUtils.getDiagnosticAtLine(editor.document.uri, editor.selection.active.line);
 
 	if (!diagnosticAtActiveLineNumber) {
 		return;
 	}
 
-	const codeAsString = extensionUtils.getDiagnosticCode(diagnosticAtActiveLineNumber);
+	const codeAsString = extUtils.getDiagnosticCode(diagnosticAtActiveLineNumber);
 	if (!codeAsString) {
 		return;
 	}

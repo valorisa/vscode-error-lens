@@ -2,7 +2,7 @@ import { CommandId } from 'src/commands';
 import { $config } from 'src/extension';
 import { createHoverForDiagnostic } from 'src/hover/hover';
 import { type ExtensionConfig } from 'src/types';
-import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
+import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
 import { Position, StatusBarAlignment, window, type Diagnostic, type MarkdownString, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
 
@@ -83,7 +83,7 @@ export class StatusBarMessage {
 		if (this.messageType === 'activeLine') {
 			if (groupedDiagnostics[ln]) {
 				for (const diag of groupedDiagnostics[ln]) {
-					if (extensionUtils.isSeverityEnabled(diag.severity)) {
+					if (extUtils.isSeverityEnabled(diag.severity)) {
 						diagnostic = diag;
 						numberOfDiagnosticsOnThatLine = groupedDiagnostics[ln].length;
 					}
@@ -99,7 +99,7 @@ export class StatusBarMessage {
 			for (const lineNumber of sortedLineNumbers) {
 				const diagnosticsAtLine = groupedDiagnostics[lineNumber];
 				for (const diag of diagnosticsAtLine) {
-					if (extensionUtils.isSeverityEnabled(diag.severity)) {
+					if (extUtils.isSeverityEnabled(diag.severity)) {
 						diagnostic = diag;
 						numberOfDiagnosticsOnThatLine = diagnosticsAtLine.length;
 						break outerLoop;
@@ -112,7 +112,7 @@ export class StatusBarMessage {
 				return severityScore + (Math.abs(ln - d1.range.start.line) - Math.abs(ln - d2.range.start.line));
 			});
 			for (const diag of allDiagnosticsSorted) {
-				if (extensionUtils.isSeverityEnabled(diag.severity)) {
+				if (extUtils.isSeverityEnabled(diag.severity)) {
 					diagnostic = diag;
 					numberOfDiagnosticsOnThatLine = groupedDiagnostics[diag.range.start.line].length;
 					break;
@@ -127,7 +127,7 @@ export class StatusBarMessage {
 
 		this.activeMessagePosition = diagnostic.range.start;
 
-		let message = extensionUtils.diagnosticToInlineMessage(
+		let message = extUtils.diagnosticToInlineMessage(
 			$config.statusBarMessageTemplate || $config.messageTemplate,
 			diagnostic,
 			numberOfDiagnosticsOnThatLine,

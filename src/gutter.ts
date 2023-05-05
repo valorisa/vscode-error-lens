@@ -1,7 +1,7 @@
 import { decorationTypes } from 'src/decorations';
 import { $config } from 'src/extension';
 import { type ExtensionConfig } from 'src/types';
-import { extensionUtils, type GroupedByLineDiagnostics } from 'src/utils/extensionUtils';
+import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { type DecorationOptions, type ExtensionContext, type TextEditor, type Uri } from 'vscode';
 
@@ -85,7 +85,7 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 		const diagnostic = groupedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		if (!extensionUtils.isSeverityEnabled(severity)) {
+		if (!extUtils.isSeverityEnabled(severity)) {
 			continue;
 		}
 

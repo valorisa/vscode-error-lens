@@ -1,12 +1,12 @@
 import escapeRegExp from 'lodash/escapeRegExp';
 import { $config } from 'src/extension';
 import { Constants, type ExtensionConfig } from 'src/types';
-import { extensionUtils } from 'src/utils/extensionUtils';
+import { extUtils } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { window, type Diagnostic } from 'vscode';
 
 export async function excludeProblemCommand(diagnostic: Diagnostic): Promise<void> {
-	const code = extensionUtils.getDiagnosticCode(diagnostic);
+	const code = extUtils.getDiagnosticCode(diagnostic);
 	const source = diagnostic.source;
 	if (!source) {
 		showExcludeByMessageNotification(`Diagnostic has no "source".`, diagnostic);
@@ -17,7 +17,7 @@ export async function excludeProblemCommand(diagnostic: Diagnostic): Promise<voi
 		return;
 	}
 
-	const sourceCodeString = extensionUtils.diagnosticToSourceCodeString(source, code);
+	const sourceCodeString = extUtils.diagnosticToSourceCodeString(source, code);
 
 	if ($config.excludeBySource.includes(sourceCodeString)) {
 		return;

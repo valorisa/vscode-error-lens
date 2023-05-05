@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { $config } from 'src/extension';
 import { Constants, type ExtensionConfig } from 'src/types';
-import { extensionUtils } from 'src/utils/extensionUtils';
+import { extUtils } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { commands, languages, window, workspace, type Diagnostic, type QuickPickItem, type Uri } from 'vscode';
 
@@ -21,7 +21,7 @@ export async function findLinterRuleDefinitionCommand(args?: RuleDefinitionArgs)
 	if (!args) {
 		const diagnostic = tryToFindDiagnosticFromActiveEditor();
 		if (diagnostic) {
-			code = extensionUtils.getDiagnosticCode(diagnostic);
+			code = extUtils.getDiagnosticCode(diagnostic);
 			source = diagnostic.source;
 		}
 	}
@@ -160,7 +160,7 @@ function tryToFindDiagnosticFromActiveEditor(): Diagnostic | undefined {
 
 	const activeLineNumber = editor.selection.active.line;
 	const diagnosticsForUri = languages.getDiagnostics(editor.document.uri);
-	const groupedDiagnostics = extensionUtils.groupDiagnosticsByLine(diagnosticsForUri);
+	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(diagnosticsForUri);
 
 	return groupedDiagnostics[activeLineNumber]?.[0];
 }

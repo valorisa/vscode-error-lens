@@ -1,7 +1,7 @@
 import { CommandId } from 'src/commands';
 import { type RuleDefinitionArgs } from 'src/commands/findLinterRuleDefinitionCommand';
 import { Constants } from 'src/types';
-import { extensionUtils } from 'src/utils/extensionUtils';
+import { extUtils } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { MarkdownString, type Diagnostic } from 'vscode';
 
@@ -27,8 +27,8 @@ export function createHoverForDiagnostic({
 	markdown.supportHtml = true;
 	markdown.isTrusted = true;
 
-	const diagnosticTarget = extensionUtils.getDiagnosticTarget(diagnostic);
-	const diagnosticCode = extensionUtils.getDiagnosticCode(diagnostic);
+	const diagnosticTarget = extUtils.getDiagnosticTarget(diagnostic);
+	const diagnosticCode = extUtils.getDiagnosticCode(diagnostic);
 
 	// ──── Message ───────────────────────────────────────────────
 	if (messageEnabled) {

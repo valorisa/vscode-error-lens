@@ -36,6 +36,10 @@ export async function findLinterRuleDefinitionCommand(args?: RuleDefinitionArgs)
 
 	const lintFilesGlobs = $config.lintFilePaths[source];
 
+	if (lintFilesGlobs === 'none') {
+		return;
+	}
+
 	if (!lintFilesGlobs) {
 		showNotificationWithOpenSettingsButton(`No linter files specified for source: "${source}".`);
 		return;

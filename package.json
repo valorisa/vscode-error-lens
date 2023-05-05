@@ -415,10 +415,20 @@
 					},
 					"patternProperties": {
 						".*": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
+							"oneOf": [
+								{
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								{
+									"type": "string",
+									"enum": [
+										"none"
+									]
+								}
+							]
 						}
 					},
 					"markdownDescription": "Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/api/references/vscode-api#GlobPattern) for local linter files). `node_modules` folder is excluded."

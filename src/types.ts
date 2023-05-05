@@ -1,4 +1,3 @@
-import { type Diagnostic } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
@@ -230,7 +229,7 @@ interface ExtensionConfigType {
 	/**
 	 * Specify where to search for linter rule definitions.
 	 */
-	lintFilePaths: Record<string, string[]>;
+	lintFilePaths: Record<string, string[] | 'none'>;
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;

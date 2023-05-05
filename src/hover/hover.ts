@@ -1,6 +1,6 @@
 import { CommandId } from 'src/commands';
 import { type RuleDefinitionArgs } from 'src/commands/findLinterRuleDefinitionCommand';
-import { Constants } from 'src/types';
+import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { MarkdownString, type Diagnostic } from 'vscode';
@@ -13,11 +13,13 @@ export function createHoverForDiagnostic({
 	messageEnabled,
 	buttonsEnabled,
 	sourceCodeEnabled,
+	lintFilePaths,
 }: {
 	diagnostic: Diagnostic;
 	messageEnabled: boolean;
 	buttonsEnabled: boolean;
 	sourceCodeEnabled: boolean;
+	lintFilePaths: ExtensionConfig['lintFilePaths'];
 }): MarkdownString | undefined {
 	if (!messageEnabled && !buttonsEnabled && !sourceCodeEnabled) {
 		return;
@@ -52,7 +54,7 @@ export function createHoverForDiagnostic({
 			title: 'Copy problem code into the clipboard.',
 		});
 		markdown.appendMarkdown('\n\n');
-		markdown.appendMarkdown(`${diagnostic.source ?? '<No source>'} \`${diagnosticCode ?? '<No code>'}\` `);
+		markdown.appendMarkdown(`${diagnostic.source ?? '<No source>'}(\`${diagnosticCode ?? '<No code>'}\`) `);
 		if (diagnosticCode) {
 			markdown.appendMarkdown(copyCodeButton);
 		}
@@ -72,8 +74,11 @@ export function createHoverForDiagnostic({
 
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(exludeProblemButton);
-		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
-		markdown.appendMarkdown(openRuleDefinitionButton);
+
+		if (lintFilePaths[String(diagnostic?.source)] !== 'none') {
+			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
+			markdown.appendMarkdown(openRuleDefinitionButton);
+		}
 
 		if (diagnosticTarget) {
 			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));

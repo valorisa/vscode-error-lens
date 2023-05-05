@@ -324,6 +324,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 				buttonsEnabled: $config.editorHoverPartsEnabled.buttonsEnabled,
 				messageEnabled: $config.editorHoverPartsEnabled.messageEnabled,
 				sourceCodeEnabled: $config.editorHoverPartsEnabled.sourceCodeEnabled,
+				lintFilePaths: $config.lintFilePaths,
 			}),
 			renderOptions: decInstanceRenderOptions,
 		};

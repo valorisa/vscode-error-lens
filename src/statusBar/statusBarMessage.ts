@@ -145,7 +145,7 @@ export class StatusBarMessage {
 		}
 
 		this.statusBarItem.text = message;
-		this.statusBarItem.tooltip = this.makeTooltip(diagnostic);
+		this.statusBarItem.tooltip = this.makeTooltip(diagnostic, $config.lintFilePaths);
 	}
 
 	/**
@@ -166,12 +166,13 @@ export class StatusBarMessage {
 		this.statusBarItem.dispose();
 	}
 
-	private makeTooltip(diagnostic: Diagnostic): MarkdownString | undefined {
+	private makeTooltip(diagnostic: Diagnostic, lintFilePaths: ExtensionConfig['lintFilePaths']): MarkdownString | undefined {
 		const markdownHover = createHoverForDiagnostic({
 			diagnostic,
 			buttonsEnabled: true,
 			messageEnabled: true,
 			sourceCodeEnabled: true,
+			lintFilePaths,
 		});
 
 		return markdownHover;

@@ -78,6 +78,12 @@
 				"category": "Error Lens"
 			},
 			{
+				"command": "errorLens.copyProblemCode",
+				"title": "Copy Problem Code",
+				"description": "Copy problem code to the clipboard (at the active cursor).",
+				"category": "Error Lens"
+			},
+			{
 				"command": "errorLens.findLinterRuleDefinition",
 				"title": "Find Linter Rule Definition",
 				"description": "Search in local linter files (like `.eslintrc.json`) for the rule definition.",
@@ -257,6 +263,10 @@
 							"type": "boolean",
 							"default": false
 						},
+						"sourceCodeEnabled": {
+							"type": "boolean",
+							"default": false
+						},
 						"buttonsEnabled": {
 							"type": "boolean",
 							"default": true
@@ -265,6 +275,7 @@
 					"additionalProperties": false,
 					"default": {
 						"messageEnabled": false,
+						"sourceCodeEnabled": false,
 						"buttonsEnabled": true
 					},
 					"markdownDescription": "Controls which parts of the editor hover tooltip to show."

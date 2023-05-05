@@ -12,12 +12,14 @@ export function createHoverForDiagnostic({
 	diagnostic,
 	messageEnabled,
 	buttonsEnabled,
+	sourceCodeEnabled,
 }: {
 	diagnostic: Diagnostic;
 	messageEnabled: boolean;
 	buttonsEnabled: boolean;
+	sourceCodeEnabled: boolean;
 }): MarkdownString | undefined {
-	if (!messageEnabled && !buttonsEnabled) {
+	if (!messageEnabled && !buttonsEnabled && !sourceCodeEnabled) {
 		return;
 	}
 
@@ -25,42 +27,49 @@ export function createHoverForDiagnostic({
 	markdown.supportHtml = true;
 	markdown.isTrusted = true;
 
-	let openDocsButton = '';
-	const exludeProblemButton = vscodeUtils.createButtonLinkMarkdown({
-		text: '$(exclude) Exclude',
-		href: vscodeUtils.createCommandUri(CommandId.ExcludeProblem, diagnostic).toString(),
-		// title: 'Exclude problem from Error Lens by source/code',
-	});
-
 	const diagnosticTarget = extensionUtils.getDiagnosticTarget(diagnostic);
-	if (diagnosticTarget) {
-		openDocsButton = vscodeUtils.createButtonLinkMarkdown({
-			text: '$(book) Docs',
-			href: vscodeUtils.createCommandUri(Constants.VscodeOpenCommandId, diagnosticTarget).toString(),
-			// title: 'Open diagnostic code or search it in default browser.',
-		});
-	}
-
 	const diagnosticCode = extensionUtils.getDiagnosticCode(diagnostic);
-	const openRuleDefinitionButton = vscodeUtils.createButtonLinkMarkdown({
-		text: '$(file) Definition',
-		href: vscodeUtils.createCommandUri(CommandId.FindLinterRuleDefinition, { source: diagnostic.source, code: diagnosticCode } satisfies RuleDefinitionArgs).toString(),
-		// title: 'Open diagnostic definition (linter file).',
-	});
 
 	// ──── Message ───────────────────────────────────────────────
 	if (messageEnabled) {
 		// markdown.appendMarkdown(`${vscodeUtils.createProblemIconMarkdown(diagnostic.severity === 0 ? 'error' : diagnostic.severity === 1 ? 'warning' : 'info')} `);
 		markdown.appendCodeblock(diagnostic.message, 'plaintext');
 	}
+	// ──── Source Code ──────────────────────────────────────────
+	if (sourceCodeEnabled) {
+		const copyCodeButton = vscodeUtils.createButtonLinkMarkdown({
+			text: '$(clippy) Copy',
+			href: vscodeUtils.createCommandUri(CommandId.CopyProblemCode, { code: diagnosticCode }).toString(),
+		});
+		markdown.appendMarkdown('\n\n');
+		markdown.appendMarkdown(`${diagnostic.source ?? '<No source>'} \`${diagnosticCode ?? '<No code>'}\` `);
+		markdown.appendMarkdown(copyCodeButton);
+	}
 	// ──── Buttons ───────────────────────────────────────────────
 	if (buttonsEnabled) {
+		const exludeProblemButton = vscodeUtils.createButtonLinkMarkdown({
+			text: '$(exclude) Exclude',
+			href: vscodeUtils.createCommandUri(CommandId.ExcludeProblem, diagnostic).toString(),
+			title: 'Exclude problem from Error Lens by source/code',
+		});
+		const openRuleDefinitionButton = vscodeUtils.createButtonLinkMarkdown({
+			text: '$(file) Definition',
+			href: vscodeUtils.createCommandUri(CommandId.FindLinterRuleDefinition, { source: diagnostic.source, code: diagnosticCode } satisfies RuleDefinitionArgs).toString(),
+			title: 'Open diagnostic definition (linter file).',
+		});
+
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(exludeProblemButton);
 		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
 		markdown.appendMarkdown(openRuleDefinitionButton);
-		if (openDocsButton) {
+
+		if (diagnosticTarget) {
 			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
+			const openDocsButton = vscodeUtils.createButtonLinkMarkdown({
+				text: '$(book) Docs',
+				href: vscodeUtils.createCommandUri(Constants.VscodeOpenCommandId, diagnosticTarget).toString(),
+				title: 'Open diagnostic code or search it in default browser.',
+			});
 			markdown.appendMarkdown(openDocsButton);
 		}
 	}

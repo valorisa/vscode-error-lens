@@ -171,6 +171,7 @@ export class StatusBarMessage {
 			diagnostic,
 			buttonsEnabled: true,
 			messageEnabled: true,
+			sourceCodeEnabled: true,
 		});
 
 		return markdownHover;

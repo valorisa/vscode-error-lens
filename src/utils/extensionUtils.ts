@@ -1,6 +1,9 @@
 import { $config, $state } from 'src/extension';
-import { type Diagnostic, type Uri } from 'vscode';
+import { languages, type Diagnostic, type Uri } from 'vscode';
 
+/**
+ * Usually documentation website Uri.
+ */
 function getDiagnosticTarget(diagnostic: Diagnostic): Uri | false | undefined {
 	return typeof diagnostic.code !== 'number' && typeof diagnostic.code !== 'string' && diagnostic.code?.target;
 }
@@ -158,6 +161,17 @@ function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, cou
 	}
 }
 
+function getDiagnosticAtLine(uri: Uri, lineNumber: number): Diagnostic | undefined {
+	const diagnostics = languages.getDiagnostics(uri);
+	const groupedDiagnostics = extensionUtils.groupDiagnosticsByLine(diagnostics);
+	const diagnosticsAtLineNumber = groupedDiagnostics[lineNumber];
+	if (!diagnosticsAtLineNumber) {
+		return;
+	}
+	diagnosticsAtLineNumber.sort((a, b) => a.severity - b.severity);
+	return diagnosticsAtLineNumber[0];
+}
+
 export const extensionUtils = {
 	getDiagnosticTarget,
 	getDiagnosticCode,
@@ -167,4 +181,5 @@ export const extensionUtils = {
 	shouldExcludeDiagnostic,
 	isSeverityEnabled,
 	diagnosticToInlineMessage,
+	getDiagnosticAtLine,
 };

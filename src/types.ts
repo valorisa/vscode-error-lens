@@ -47,6 +47,7 @@ interface ExtensionConfigType {
 	editorHoverPartsEnabled: {
 		messageEnabled: boolean;
 		buttonsEnabled: boolean;
+		sourceCodeEnabled: boolean;
 	};
 	/**
 	 * Controls how inline message is highlighted in the editor (entire line / only message / none).

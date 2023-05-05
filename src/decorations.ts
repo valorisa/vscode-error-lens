@@ -323,6 +323,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 				diagnostic,
 				buttonsEnabled: $config.editorHoverPartsEnabled.buttonsEnabled,
 				messageEnabled: $config.editorHoverPartsEnabled.messageEnabled,
+				sourceCodeEnabled: $config.editorHoverPartsEnabled.sourceCodeEnabled,
 			}),
 			renderOptions: decInstanceRenderOptions,
 		};

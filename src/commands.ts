@@ -3,6 +3,7 @@ import { copyProblemMessageCommand } from 'src/commands/copyProblemMessageComman
 import { excludeProblemCommand } from 'src/commands/excludeProblemCommand';
 import { findLinterRuleDefinitionCommand } from 'src/commands/findLinterRuleDefinitionCommand';
 import { revealLineCommand } from 'src/commands/revealLineCommand';
+import { searchForProblemCommand } from 'src/commands/searchForProblemCommand';
 import { statusBarCommand } from 'src/commands/statusBarCommand';
 import { toggleEnabledLevels } from 'src/commands/toggleEnabledLevels';
 import { toggleWorkspaceCommand } from 'src/commands/toggleWorkspaceCommand';
@@ -24,6 +25,7 @@ export const enum CommandId {
 	CopyProblemMessage = 'errorLens.copyProblemMessage',
 	CopyProblemCode = 'errorLens.copyProblemCode',
 	FindLinterRuleDefinition = 'errorLens.findLinterRuleDefinition',
+	SearchForProblem = 'errorLens.searchForProblem',
 	// ──── Internal ──────────────────────────────────────────────
 	StatusBarCommand = 'errorLens.statusBarCommand',
 	RevealLine = 'errorLens.revealLine',
@@ -57,6 +59,7 @@ export function registerAllCommands(context: ExtensionContext): void {
 	context.subscriptions.push(commands.registerCommand(CommandId.FindLinterRuleDefinition, findLinterRuleDefinitionCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemCode, copyProblemCodeCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.SearchForProblem, searchForProblemCommand));
 	// ────────────────────────────────────────────────────────────
 	// ──── Text Editor commands ──────────────────────────────────
 	// ────────────────────────────────────────────────────────────

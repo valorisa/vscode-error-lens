@@ -71,6 +71,11 @@ export function createHoverForDiagnostic({
 			href: vscodeUtils.createCommandUri(CommandId.FindLinterRuleDefinition, { source: diagnostic.source, code: diagnosticCode } satisfies RuleDefinitionArgs).toString(),
 			title: 'Open diagnostic definition (linter file).',
 		});
+		const searchForProblemButton = vscodeUtils.createButtonLinkMarkdown({
+			text: '$(search) Search',
+			href: vscodeUtils.createCommandUri(CommandId.SearchForProblem, diagnostic).toString(),
+			title: 'Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).',
+		});
 
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(exludeProblemButton);
@@ -89,6 +94,9 @@ export function createHoverForDiagnostic({
 			});
 			markdown.appendMarkdown(openDocsButton);
 		}
+
+		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
+		markdown.appendMarkdown(searchForProblemButton);
 	}
 
 	return markdown;

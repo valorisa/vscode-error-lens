@@ -94,6 +94,12 @@
 				"title": "Toggle Workspace in Disabled List",
 				"description": "Exclude/Include current workspace by fs path.",
 				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.searchForProblem",
+				"title": "Search for problem",
+				"description": "Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).",
+				"category": "Error Lens"
 			}
 		],
 		"configuration": {
@@ -432,6 +438,11 @@
 						}
 					},
 					"markdownDescription": "Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/api/references/vscode-api#GlobPattern) for local linter files). `node_modules` folder is excluded."
+				},
+				"errorLens.searchForProblemQuery": {
+					"type": "string",
+					"default": "https://duckduckgo.com/?q=$message",
+					"markdownDescription": "Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command."
 				},
 				"errorLens.light": {
 					"type": "object",

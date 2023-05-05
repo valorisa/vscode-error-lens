@@ -230,6 +230,10 @@ interface ExtensionConfigType {
 	 * Specify where to search for linter rule definitions.
 	 */
 	lintFilePaths: Record<string, string[] | 'none'>;
+	/**
+	 * Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command.
+	 */
+	searchForProblemQuery: string;
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;

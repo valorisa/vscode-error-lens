@@ -41,10 +41,9 @@ module.exports = (env, options) => {
 	};
 
 	if (options.mode === 'production') {
-		// Prod
 		config.devtool = false;
 	} else {
-		// Dev
+
 	}
 
 	return config;

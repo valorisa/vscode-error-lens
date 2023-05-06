@@ -1,5 +1,6 @@
 import { copyProblemCodeCommand } from 'src/commands/copyProblemCodeCommand';
 import { copyProblemMessageCommand } from 'src/commands/copyProblemMessageCommand';
+import { disableLineCommand } from 'src/commands/disableLineCommand';
 import { excludeProblemCommand } from 'src/commands/excludeProblemCommand';
 import { findLinterRuleDefinitionCommand } from 'src/commands/findLinterRuleDefinitionCommand';
 import { revealLineCommand } from 'src/commands/revealLineCommand';
@@ -21,14 +22,24 @@ export const enum CommandId {
 	ToggleWarning = 'errorLens.toggleWarning',
 	ToggleInfo = 'errorLens.toggleInfo',
 	ToggleHint = 'errorLens.toggleHint',
+	/** {@link toggleWorkspaceCommand} */
 	ToggleWorkspace = 'errorlens.toggleWorkspace',
+	/** {@link copyProblemMessageCommand} */
 	CopyProblemMessage = 'errorLens.copyProblemMessage',
+	/** {@link copyProblemCodeCommand} */
 	CopyProblemCode = 'errorLens.copyProblemCode',
+	/** {@link findLinterRuleDefinitionCommand} */
 	FindLinterRuleDefinition = 'errorLens.findLinterRuleDefinition',
+	/** {@link searchForProblemCommand} */
 	SearchForProblem = 'errorLens.searchForProblem',
+	/** {@link disableLineCommand} */
+	DisableLine = 'errorLens.disableLine',
 	// ──── Internal ──────────────────────────────────────────────
+	/** {@link statusBarCommand} */
 	StatusBarCommand = 'errorLens.statusBarCommand',
+	/** {@link revealLineCommand} */
 	RevealLine = 'errorLens.revealLine',
+	/** {@link excludeProblemCommand} */
 	ExcludeProblem = 'errorLens.excludeProblem',
 }
 
@@ -60,6 +71,7 @@ export function registerAllCommands(context: ExtensionContext): void {
 	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemCode, copyProblemCodeCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.SearchForProblem, searchForProblemCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.DisableLine, disableLineCommand));
 	// ────────────────────────────────────────────────────────────
 	// ──── Text Editor commands ──────────────────────────────────
 	// ────────────────────────────────────────────────────────────

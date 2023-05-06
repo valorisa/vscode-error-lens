@@ -100,6 +100,12 @@
 				"title": "Search for problem",
 				"description": "Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).",
 				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.disableLine",
+				"title": "Disable line",
+				"description": "Add a comment to disable line for linter rule.",
+				"category": "Error Lens"
 			}
 		],
 		"configuration": {
@@ -404,6 +410,19 @@
 						"type": "string"
 					},
 					"markdownDescription": "Exclude workspaces by path."
+				},
+				"errorLens.disableLineComments": {
+					"type": "object",
+					"markdownDescription": "Used for `errorLens.disableLine` command that adds a comment disabling linter rule for a line.",
+					"patternProperties": {
+						".*": {
+							"type": "string"
+						}
+					},
+					"default": {
+						"eslint": "// eslint-disable-next-line $code",
+						"Stylelint": "/* stylelint-disable-next-line $code */"
+					}
 				},
 				"errorLens.lintFilePaths": {
 					"type": "object",

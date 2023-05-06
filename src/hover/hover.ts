@@ -76,11 +76,18 @@ export function createHoverForDiagnostic({
 			href: vscodeUtils.createCommandUri(CommandId.SearchForProblem, diagnostic).toString(),
 			title: 'Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).',
 		});
+		const disableLineButton = vscodeUtils.createButtonLinkMarkdown({
+			text: '$(arrow-circle-up) Disable line',
+			href: vscodeUtils.createCommandUri(CommandId.DisableLine, diagnostic).toString(),
+			title: 'Add comment to disable linter rule for this line.',
+		});
 
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(exludeProblemButton);
 
-		if (lintFilePaths[String(diagnostic?.source)] !== 'none') {
+		const sourceIsLinter = lintFilePaths[String(diagnostic?.source)] !== 'none';
+
+		if (sourceIsLinter) {
 			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
 			markdown.appendMarkdown(openRuleDefinitionButton);
 		}
@@ -97,6 +104,11 @@ export function createHoverForDiagnostic({
 
 		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
 		markdown.appendMarkdown(searchForProblemButton);
+
+		if (sourceIsLinter) {
+			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
+			markdown.appendMarkdown(disableLineButton);
+		}
 	}
 
 	return markdown;

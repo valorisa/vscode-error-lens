@@ -116,6 +116,10 @@ async function openFileInVscode(pathOrUri: Uri | string): Promise<TextEditor> {
 	}
 	return window.showTextDocument(document);
 }
+function getIndentationAtLine(document: TextDocument, lineNumber: number): string {
+	const textLine = document.lineAt(lineNumber);
+	return textLine.text.slice(0, textLine.firstNonWhitespaceCharacterIndex);
+}
 
 export const vscodeUtils = {
 	updateGlobalSetting,
@@ -128,4 +132,5 @@ export const vscodeUtils = {
 	readFileVscode,
 	openFileInVscode,
 	revealLine,
+	getIndentationAtLine,
 };

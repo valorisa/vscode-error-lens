@@ -1,3 +1,10 @@
+## 3.11.0 `06 May 2023`
+
+- 💥 Disable all hovers by default `"errorLens.editorHoverPartsEnabled"`
+- ✨ Add option to show source/code in hover `"sourceCodeEnabled"` property for `"errorLens.editorHoverPartsEnabled"` setting
+- ✨ New command and button in hover: `errorLens.searchForProblem` - search in default browser for problem (query controlled by `"errorLens.searchForProblemQuery"` setting)
+- ✨ New command and button in hover: `errorLens.disableLine` - add comment to disable linter for this line
+
 ## 3.10.1 `26 Apr 2023`
 
 - 🐛 Fix: Changing enabled/disabled status doesn't update visible editors #163

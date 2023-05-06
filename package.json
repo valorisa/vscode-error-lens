@@ -2,7 +2,7 @@
 	"name": "errorlens",
 	"displayName": "Error Lens",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
-	"version": "3.10.1",
+	"version": "3.11.0",
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {

@@ -41,7 +41,7 @@ export function updateChangeDiagnosticListener(): void {
 		// Many URIs can change - we only need to decorate visible editors
 		for (const uri of diagnosticChangeEvent.uris) {
 			for (const editor of window.visibleTextEditors) {
-				if (uri.fsPath === editor.document.uri.fsPath) {
+				if (uri.toString(true) === editor.document.uri.toString(true)) {
 					updateDecorationsForUri({
 						uri,
 						editor,

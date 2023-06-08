@@ -6,7 +6,7 @@ import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
-import { workspace, type Disposable, type ExtensionContext } from 'vscode';
+import { workspace, type Disposable, type ExtensionContext, languages, DiagnosticSeverity, Range } from 'vscode';
 
 /**
  * All user settings.
@@ -74,6 +74,20 @@ export abstract class $state {
 export function activate(context: ExtensionContext): void {
 	updateConfigAndEverything();
 	registerAllCommands(context);
+
+	const s = languages.createDiagnosticCollection();
+	workspace.onDidOpenTextDocument((e) => {
+		if (e.languageId === "json") {
+			s.set(e.uri, [{message: "foo", range: new Range(0, 0, 1, 0), severity: DiagnosticSeverity.Error}]);
+		}
+	});
+	workspace.onDidChangeTextDocument((e) => {
+		if (e.document.languageId === "json") {
+			s.set(e.document.uri, [{message: "foo" + e.document.version.toString(), range: new Range(0, 0, 1, 0), severity: DiagnosticSeverity.Error}]);
+		}
+
+
+	});
 
 	/**
 	 * - Update config

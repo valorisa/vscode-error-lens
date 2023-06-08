@@ -1,3 +1,7 @@
+## 3.11.1 `08 Jun 2023`
+
+- 🐛 Fix: Notebooks show duplciated messages [PR 171](https://github.com/usernamehw/vscode-error-lens/pull/171) by [r3m0t](https://github.com/r3m0t)
+
 ## 3.11.0 `06 May 2023`
 
 - 💥 Disable all hovers by default `"errorLens.editorHoverPartsEnabled"`

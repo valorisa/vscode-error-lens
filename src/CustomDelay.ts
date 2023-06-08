@@ -102,7 +102,7 @@ export class CustomDelay {
 		}
 
 		for (const editor of window.visibleTextEditors) {
-			if (editor.document.uri.fsPath === uri.fsPath) {
+			if (editor.document.uri.toString(true) === uri.toString(true)) {
 				updateDecorationsForUri({
 					uri,
 					editor,

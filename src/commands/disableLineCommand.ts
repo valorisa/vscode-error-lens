@@ -30,24 +30,36 @@ export function disableLineCommand(diagnostic: Diagnostic | undefined): void {
 		return;
 	}
 
-	const template = $config.disableLineComments[diagnostic.source];
+	let template = $config.disableLineComments[diagnostic.source];
+	const isTheSameLine = template.includes('SAME_LINE');
+
+	if (isTheSameLine) {
+		template = template.replace(/\s?SAME_LINE\s?/u, '');
+	}
 
 	if (!template) {
 		showNoCommentSpecifiedForSource(diagnostic.source);
 		return;
 	}
 
-	const comment = extUtils.diagnosticToInlineMessage(template, diagnostic, 0);
+	let comment = extUtils.diagnosticToInlineMessage(template, diagnostic, 0);
 
 	let position: Position;
-	if (lineNumber <= 1) {
-		position = new Position(0, 0);
+
+	if (isTheSameLine) {
+		position = editor.document.validatePosition(new Position(lineNumber, Infinity));
 	} else {
-		position = new Position(lineNumber, 0);
+		// Line above
+		if (lineNumber <= 1) {
+			position = new Position(0, 0);
+		} else {
+			position = new Position(lineNumber, 0);
+		}
+		comment = `${vscodeUtils.getIndentationAtLine(editor.document, lineNumber)}${comment}\n`;
 	}
 
 	editor.edit(builder => {
-		builder.insert(position, `${vscodeUtils.getIndentationAtLine(editor.document, lineNumber)}${comment}\n`);
+		builder.insert(position, comment);
 	});
 }
 

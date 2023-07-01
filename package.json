@@ -413,7 +413,7 @@
 				},
 				"errorLens.disableLineComments": {
 					"type": "object",
-					"markdownDescription": "Used for `errorLens.disableLine` command that adds a comment disabling linter rule for a line.",
+					"markdownDescription": "Used for `errorLens.disableLine` command that adds a comment disabling linter rule for a line.\nTo force comment on the same line - add `SAME_LINE` to the message: `\"eslint\": \"// eslint-disable-line $code SAME_LINE\"`",
 					"patternProperties": {
 						".*": {
 							"type": "string"

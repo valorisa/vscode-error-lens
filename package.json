@@ -44,31 +44,37 @@
 			{
 				"command": "errorLens.toggle",
 				"title": "Toggle (Enable/Disable) Everything",
-				"description": "Toggle (Enable/Disable) Everything (toggle global setting `errorLens.enabled`)",
+				"description": "Toggle (Enable/Disable) Everything (toggle global setting `\"errorLens.enabled\"`)",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleError",
 				"title": "Toggle Errors",
-				"description": "Enable/Disable Errors in `errorLens.enabledDiagnosticLevels` setting.",
+				"description": "Enable/Disable Errors in `\"errorLens.enabledDiagnosticLevels\"` setting.",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleWarning",
 				"title": "Toggle Warnings",
-				"description": "Enable/Disable Warnings in `errorLens.enabledDiagnosticLevels` setting.",
+				"description": "Enable/Disable Warnings in `\"errorLens.enabledDiagnosticLevels\"` setting.",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleInfo",
 				"title": "Toggle Info",
-				"description": "Enable/Disable Info in `errorLens.enabledDiagnosticLevels` setting.",
+				"description": "Enable/Disable Info in `\"errorLens.enabledDiagnosticLevels\"` setting.",
 				"category": "Error Lens"
 			},
 			{
 				"command": "errorLens.toggleHint",
 				"title": "Toggle Hint",
-				"description": "Enable/Disable Hint in `errorLens.enabledDiagnosticLevels` setting.",
+				"description": "Enable/Disable Hint in `\"errorLens.enabledDiagnosticLevels\"` setting.",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.toggleInlineMessage",
+				"title": "Toggle Inline Message",
+				"description": "Toggle global setting `\"errorLens.messageEnabled\"`.",
 				"category": "Error Lens"
 			},
 			{
@@ -104,7 +110,7 @@
 			{
 				"command": "errorLens.disableLine",
 				"title": "Disable line",
-				"description": "Add a comment to disable line for linter rule.",
+				"description": "Add a comment to disable line for linter rule. Comment format is controlled by `\"errorLens.disableLineComments\"` setting.",
 				"category": "Error Lens"
 			}
 		],

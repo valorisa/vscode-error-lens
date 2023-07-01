@@ -1,13 +1,24 @@
-import { Constants } from 'src/types';
+import { Constants, type ErrorLensSettings } from 'src/types';
 import { utils } from 'src/utils/utils';
 import { ConfigurationTarget, Range, Selection, TextEditorRevealType, Uri, commands, window, workspace, type TextDocument, type TextEditor } from 'vscode';
 
 /**
  * Update global settings.json file with the new settign value.
  */
-async function updateGlobalSetting(settingId: string, newValue: unknown): Promise<void> {
+async function updateGlobalSetting(settingId: ErrorLensSettings, newValue: unknown): Promise<void> {
 	const vscodeConfig = workspace.getConfiguration();
 	await vscodeConfig.update(settingId, newValue, ConfigurationTarget.Global);
+}
+/**
+ * Update global settings.json file with the toggled boolean setting.
+ */
+async function toggleGlobalBooleanSetting(settingId: ErrorLensSettings): Promise<void> {
+	const vscodeConfig = workspace.getConfiguration();
+	const settingValue = vscodeConfig.get(settingId);
+	if (settingValue === undefined) {
+		return;
+	}
+	await updateGlobalSetting(settingId, !settingValue);
 }
 
 /**
@@ -123,6 +134,7 @@ function getIndentationAtLine(document: TextDocument, lineNumber: number): strin
 
 export const vscodeUtils = {
 	updateGlobalSetting,
+	toggleGlobalBooleanSetting,
 	svgToUri,
 	createCommandUri,
 	openSettingGuiAt,

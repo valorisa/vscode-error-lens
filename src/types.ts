@@ -272,3 +272,5 @@ export const enum Constants {
 
 	NonBreakingSpaceSymbolHtml = '&nbsp;',
 }
+
+export type ErrorLensSettings = `${Constants.SettingsPrefix}.${keyof ExtensionConfig}`;

@@ -22,6 +22,7 @@ export const enum CommandId {
 	ToggleWarning = 'errorLens.toggleWarning',
 	ToggleInfo = 'errorLens.toggleInfo',
 	ToggleHint = 'errorLens.toggleHint',
+	ToggleInlineMessage = 'errorLens.toggleInlineMessage',
 	/** {@link toggleWorkspaceCommand} */
 	ToggleWorkspace = 'errorlens.toggleWorkspace',
 	/** {@link copyProblemMessageCommand} */
@@ -64,6 +65,9 @@ export function registerAllCommands(context: ExtensionContext): void {
 	}));
 	context.subscriptions.push(commands.registerCommand(CommandId.ToggleHint, () => {
 		toggleEnabledLevels('hint', $config.enabledDiagnosticLevels);
+	}));
+	context.subscriptions.push(commands.registerCommand(CommandId.ToggleInlineMessage, () => {
+		vscodeUtils.toggleGlobalBooleanSetting('errorLens.messageEnabled');
 	}));
 	context.subscriptions.push(commands.registerCommand(CommandId.ToggleWorkspace, toggleWorkspaceCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.RevealLine, revealLineCommand));

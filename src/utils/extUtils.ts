@@ -115,14 +115,30 @@ function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, cou
 		Count = '$count',
 		Severity = '$severity',
 	}
-
+	let message = diagnostic.message;
+	if ($state.replaceRegexp) {
+		// Apply transformations sequentially, checking at each stage if the updated
+		// message matches the next checker. Usuaully there would only be one match,
+		// but this ensures individual matchers can transform parts in sequence.
+		for (const transformation of $state.replaceRegexp) {
+			const matchResult = transformation.matcher.exec(message);
+			if (matchResult) {
+				message = transformation.message;
+				// Replace groups like $0 and $1 with groups from the match
+				for (let groupIndex = 0; groupIndex < matchResult.length; groupIndex++) {
+					message = message.replace(new RegExp(`\\$${groupIndex}`, 'gu'), matchResult[Number(groupIndex)]);
+				}
+			}
+		}
+	}
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 	if (template === TemplateVars.Message) {
 		// When default template - no need to use RegExps or other stuff.
-		return diagnostic.message;
+		return message;
 	} else {
 		// Message & severity is always present.
 		let result = template
-			.replace(TemplateVars.Message, diagnostic.message)
+			.replace(TemplateVars.Message, message)
 			.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '');
 		/**
 		 * Count, source & code can be absent.

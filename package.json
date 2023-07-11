@@ -385,6 +385,24 @@
 					"default": "",
 					"markdownDescription": "Template for status bar message. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
 				},
+				"errorLens.replace": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "object",
+						"properties": {
+							"matcher": {
+								"type": "string",
+								"description": "The RegExp pattern against which to match diagnostic messages"
+							},
+							"message": {
+								"type": "string",
+								"description": "The entire replacement for messages matching matcher. Can reference match groups like $0 (entire expression), $1 (first capture group), etc."
+							} 
+						}
+					},
+					"markdownDescription": "Specify message to transform. E.g. if this is configured to [{ matcher: 'foo (.*)', message: 'just $1' }], the message 'foo bar' would be displayed as 'just bar'."
+				},
 				"errorLens.exclude": {
 					"type": "array",
 					"default": [],

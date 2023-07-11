@@ -42,6 +42,15 @@ export abstract class $state {
 	 */
 	public static renderGutterIconsAsSeparateDecoration: boolean;
 	/**
+	 * Array of RegExp matchers and their updated messages.
+	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
+	 */
+	public static replaceRegexp?: {
+		matcher: RegExp;
+		message: string;
+	}[] = undefined;
+
+	/**
 	 * Array of RegExp (that would match against diagnostic message)
 	 */
 	public static excludeRegexp: RegExp[] = [];
@@ -104,6 +113,7 @@ export function activate(context: ExtensionContext): void {
  * - Update all event listeners
  */
 export function updateEverything(context: ExtensionContext): void {
+	updateTransformState();
 	updateExcludeState();
 
 	$state.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled &&
@@ -145,6 +155,12 @@ export function updateEverything(context: ExtensionContext): void {
 }
 /**
  * - Create `RegExp` from string for messages.
+ */
+function updateTransformState(): void {
+	$state.replaceRegexp = $config.replace.map(config => ({ matcher: createMessageRegex(config.matcher), message: config.message }));
+}
+/**
+ * - Create `RegExp` from string for messages.
  * - Create `DocumentFilter[]` for document match.
  * - Create `source/code` exclusion object.
  */
@@ -168,7 +184,7 @@ function updateExcludeState(): void {
 	// ──── Exclude by message ────────────────────────────────────
 	for (const excludeMessage of $config.exclude) {
 		if (typeof excludeMessage === 'string') {
-			$state.excludeRegexp.push(new RegExp(excludeMessage, 'iu'));
+			$state.excludeRegexp.push(createMessageRegex(excludeMessage));
 		}
 	}
 
@@ -179,6 +195,14 @@ function updateExcludeState(): void {
 		}));
 	}
 }
+
+/**
+ * Create a RegExp for matching diagnostic messages from its string source
+ */
+function createMessageRegex(source: string): RegExp {
+	return new RegExp(source, 'iu');
+}
+
 /**
  * Dispose all disposables (except `onDidChangeConfiguration`).
  */

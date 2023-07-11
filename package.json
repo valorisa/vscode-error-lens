@@ -399,7 +399,8 @@
 								"type": "string",
 								"description": "The entire replacement for messages matching matcher. Can reference match groups like $0 (entire expression), $1 (first capture group), etc."
 							} 
-						}
+						},
+						"required": ["matcher", "message"]
 					},
 					"markdownDescription": "Specify message to transform. E.g. if this is configured to [{ matcher: 'foo (.*)', message: 'just $1' }], the message 'foo bar' would be displayed as 'just bar'."
 				},

@@ -128,10 +128,11 @@ function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, cou
 				for (let groupIndex = 0; groupIndex < matchResult.length; groupIndex++) {
 					message = message.replace(new RegExp(`\\$${groupIndex}`, 'gu'), matchResult[Number(groupIndex)]);
 				}
+				break;
 			}
 		}
 	}
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+
 	if (template === TemplateVars.Message) {
 		// When default template - no need to use RegExps or other stuff.
 		return message;

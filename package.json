@@ -507,22 +507,33 @@
 							"description": "Absolute path to info gutter icon for light themes.",
 							"default": ""
 						},
+						"hintGutterIconPath": {
+							"type": "string",
+							"description": "Absolute path to hint gutter icon for light themes.",
+							"default": ""
+						},
 						"errorGutterIconColor": {
 							"type": "string",
 							"default": "",
-							"markdownDescription": "Error color of `circle` gutter icon set for light themes.",
+							"markdownDescription": "Error color of `circle` & `square` gutter icons for light themes.",
 							"format": "color"
 						},
 						"warningGutterIconColor": {
 							"type": "string",
 							"default": "",
-							"markdownDescription": "Warning color of `circle` gutter icon set for light themes.",
+							"markdownDescription": "Warning color of `circle` & `square` gutter icons for light themes.",
 							"format": "color"
 						},
 						"infoGutterIconColor": {
 							"type": "string",
 							"default": "",
-							"markdownDescription": "Info color of `circle` gutter icon set for light themes.",
+							"markdownDescription": "Info color of `circle` & `square` gutter icons for light themes.",
+							"format": "color"
+						},
+						"hintGutterIconColor": {
+							"type": "string",
+							"default": "",
+							"markdownDescription": "Hint color of `circle` & `square` gutter icons for light themes.",
 							"format": "color"
 						}
 					}
@@ -641,6 +652,12 @@
 					"type": "string",
 					"default": "#00b7e4",
 					"markdownDescription": "Info color of `circle` & `square` gutter icons.",
+					"format": "color"
+				},
+				"errorLens.hintGutterIconColor": {
+					"type": "string",
+					"default": "#2faf64",
+					"markdownDescription": "Hint color of `circle` & `square` gutter icons.",
 					"format": "color"
 				},
 				"errorLens.removeLinebreaks": {

@@ -7,7 +7,7 @@ import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
 import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
-type DecorationKeys = 'decorationTypeError' | 'decorationTypeGutterError' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeInfo' | 'decorationTypeWarning';
+type DecorationKeys = 'decorationTypeError' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeInfo' | 'decorationTypeWarning';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
 
 /**
@@ -26,6 +26,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 				gutterIconSize: $config.gutterIconSize,
 				light: {
 					gutterIconPath: gutter.errorIconPathLight,
+					// TODO: is this line needed?
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});
@@ -42,6 +43,14 @@ export function setDecorationStyle(context: ExtensionContext): void {
 				gutterIconSize: $config.gutterIconSize,
 				light: {
 					gutterIconPath: gutter.infoIconPathLight,
+					gutterIconSize: $config.gutterIconSize,
+				},
+			});
+			decorationTypes.decorationTypeGutterHint = window.createTextEditorDecorationType({
+				gutterIconPath: gutter.hintIconPath,
+				gutterIconSize: $config.gutterIconSize,
+				light: {
+					gutterIconPath: gutter.hintIconPathLight,
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});
@@ -183,6 +192,8 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	};
 	const decorationRenderOptionsHint: DecorationRenderOptions = {
 		backgroundColor: hintBackground,
+		gutterIconSize: $config.gutterIconSize,
+		gutterIconPath: gutter?.hintIconPath,
 		after: {
 			...afterProps,
 			color: hintForeground,
@@ -190,6 +201,8 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		},
 		light: {
 			backgroundColor: hintBackgroundLight,
+			gutterIconSize: $config.gutterIconSize,
+			gutterIconPath: gutter?.hintIconPathLight,
 			after: {
 				color: hintForegroundLight,
 			},

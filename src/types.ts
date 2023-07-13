@@ -212,29 +212,35 @@ interface ExtensionConfigType {
 	 */
 	infoGutterIconPath: string;
 	/**
-	 * Error color of `circle` gutter icon set.
+	 * Error color of `circle` & `square` gutter icons.
 	 */
 	errorGutterIconColor: string;
 	/**
-	 * Warning color of `circle` gutter icon set.
+	 * Warning color of `circle` & `square` gutter icons.
 	 */
 	warningGutterIconColor: string;
 	/**
-	 * Info color of `circle` gutter icon set.
+	 * Info color of `circle` & `square` gutter icons.
 	 */
 	infoGutterIconColor: string;
+	/**
+	 * Info color of `circle` & `square` gutter icons.
+	 */
+	hintGutterIconColor: string;
 
 	/**
-	 * Overwrite gutter items for light theme
+	 * Overwrite gutter settings for light theme
 	 */
 	light: {
 		errorGutterIconPath: string;
 		warningGutterIconPath: string;
 		infoGutterIconPath: string;
+		hintGutterIconPath: string;
 
 		errorGutterIconColor: string;
 		warningGutterIconColor: string;
 		infoGutterIconColor: string;
+		hintGutterIconColor: string;
 	};
 
 	/**

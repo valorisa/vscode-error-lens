@@ -72,9 +72,9 @@ interface ExtensionConfigType {
 	 * Array of objects with a "pattern" that matches a `Diagnostic.message` and a "message" that transforms it.
 	 * Captured groups from the match are available in "message" as $0, $1 etc.
 	 * Applies before the message is added to the template.
-	 * 
+	 *
 	 * Example usage:
-	 * 
+	 *
 	 * Original message: "foo bar"
 	 * Config: [{ matcher: "foo (.*)", message: "just $1" }]
 	 * Transformed message: "just bar"
@@ -198,7 +198,7 @@ interface ExtensionConfigType {
 	/**
 	 * Change gutter icon style.
 	 */
-	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline';
+	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline' | 'square';
 	/**
 	 * Absolute path to error gutter icon.
 	 */

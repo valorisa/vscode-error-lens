@@ -33,6 +33,13 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.warningIconPathLight = vscodeUtils.svgToUri(createCircleIcon($config.light.warningGutterIconColor || $config.warningGutterIconColor));
 		gutter.infoIconPath = vscodeUtils.svgToUri(createCircleIcon($config.infoGutterIconColor));
 		gutter.infoIconPathLight = vscodeUtils.svgToUri(createCircleIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
+	} else if ($config.gutterIconSet === 'square') {
+		gutter.errorIconPath = vscodeUtils.svgToUri(createSquareIcon($config.errorGutterIconColor));
+		gutter.errorIconPathLight = vscodeUtils.svgToUri(createSquareIcon($config.light.errorGutterIconColor || $config.errorGutterIconColor));
+		gutter.warningIconPath = vscodeUtils.svgToUri(createSquareIcon($config.warningGutterIconColor));
+		gutter.warningIconPathLight = vscodeUtils.svgToUri(createSquareIcon($config.light.warningGutterIconColor || $config.warningGutterIconColor));
+		gutter.infoIconPath = vscodeUtils.svgToUri(createSquareIcon($config.infoGutterIconColor));
+		gutter.infoIconPathLight = vscodeUtils.svgToUri(createSquareIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
 		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
@@ -117,5 +124,11 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
  * Create circle gutter icons with different colors. `%23` is encoded `#` sign (need it to work).
  */
 function createCircleIcon(color: string): string {
-	return `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="9" fill="%23${color.slice(1)}"/></svg>`;
+	return `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="7" fill="%23${color.slice(1)}"/></svg>`;
+}
+/**
+ * Create circle gutter icons with different colors. `%23` is encoded `#` sign (need it to work).
+ */
+function createSquareIcon(color: string): string {
+	return `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" height="40" width="40"><g transform="translate(12, 12)"><rect width="16" height="16" fill="%23${color.slice(1)}"/></g></svg>`;
 }

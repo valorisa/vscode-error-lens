@@ -398,7 +398,7 @@
 							"message": {
 								"type": "string",
 								"description": "The entire replacement for messages matching matcher. Can reference match groups like $0 (entire expression), $1 (first capture group), etc."
-							} 
+							}
 						},
 						"required": ["matcher", "message"]
 					},
@@ -598,13 +598,15 @@
 						"default",
 						"defaultOutline",
 						"borderless",
-						"circle"
+						"circle",
+						"square"
 					],
 					"enumDescriptions": [
 						"Similar to vscode icons in Problems Panel (old).",
 						"Similar to vscode icons in Problems Panel (new).",
 						"Similar to vscode icons in Problems Panel, only without a border.",
-						"Simple filled circle."
+						"Simple filled circle.",
+						"Simple filled square."
 					],
 					"default": "default"
 				},
@@ -626,19 +628,19 @@
 				"errorLens.errorGutterIconColor": {
 					"type": "string",
 					"default": "#e45454",
-					"markdownDescription": "Error color of `circle` gutter icon set.",
+					"markdownDescription": "Error color of `circle` & `square` gutter icons.",
 					"format": "color"
 				},
 				"errorLens.warningGutterIconColor": {
 					"type": "string",
 					"default": "#ff942f",
-					"markdownDescription": "Warning color of `circle` gutter icon set.",
+					"markdownDescription": "Warning color of `circle` & `square` gutter icons.",
 					"format": "color"
 				},
 				"errorLens.infoGutterIconColor": {
 					"type": "string",
 					"default": "#00b7e4",
-					"markdownDescription": "Info color of `circle` gutter icon set.",
+					"markdownDescription": "Info color of `circle` & `square` gutter icons.",
 					"format": "color"
 				},
 				"errorLens.removeLinebreaks": {

@@ -592,7 +592,7 @@
 				},
 				"errorLens.gutterIconSize": {
 					"type": "string",
-					"markdownDescription": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%`.",
+					"markdownDescription": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%` ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size)).",
 					"examples": [
 						"auto",
 						"contain",

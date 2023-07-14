@@ -26,7 +26,6 @@ export function setDecorationStyle(context: ExtensionContext): void {
 				gutterIconSize: $config.gutterIconSize,
 				light: {
 					gutterIconPath: gutter.errorIconPathLight,
-					// TODO: is this line needed?
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});

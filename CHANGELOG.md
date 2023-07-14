@@ -1,3 +1,12 @@
+## 3.12.0 `14 Jul 2023`
+
+- ✨ New setting `"errorLens.replace"` - transform error message [PR 175](https://github.com/usernamehw/vscode-error-lens/pull/175) by [ssalbdivad](https://github.com/ssalbdivad)
+- ✨ New command `errorLens.toggleInlineMessage` => toggle `"errorLens.messageEnabled"` setting
+- ✨ Allow linter disabling comments on the same line (in `"errorLens.disableLineComments"` setting => append ` SAME_LINE` to the text)
+- ✨ Add "square" gutter icon set
+- ✨ "square" and "circle" gutter icons now show for `hint` diagnostic severity
+- 🐛 Make "defaultOutline" gutter icons the same size as other icons
+
 ## 3.11.1 `08 Jun 2023`
 
 - 🐛 Fix: Notebooks show duplciated messages [PR 171](https://github.com/usernamehw/vscode-error-lens/pull/171) by [r3m0t](https://github.com/r3m0t)

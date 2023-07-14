@@ -47,6 +47,15 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.infoIconPathLight = vscodeUtils.svgToUri(createSquareIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
 		gutter.hintIconPath = vscodeUtils.svgToUri(createSquareIcon($config.hintGutterIconColor));
 		gutter.hintIconPathLight = vscodeUtils.svgToUri(createSquareIcon($config.light.hintGutterIconPath || $config.hintGutterIconColor));
+	} else if ($config.gutterIconSet === 'squareRounded') {
+		gutter.errorIconPath = vscodeUtils.svgToUri(createSquareRoundedIcon($config.errorGutterIconColor));
+		gutter.errorIconPathLight = vscodeUtils.svgToUri(createSquareRoundedIcon($config.light.errorGutterIconColor || $config.errorGutterIconColor));
+		gutter.warningIconPath = vscodeUtils.svgToUri(createSquareRoundedIcon($config.warningGutterIconColor));
+		gutter.warningIconPathLight = vscodeUtils.svgToUri(createSquareRoundedIcon($config.light.warningGutterIconColor || $config.warningGutterIconColor));
+		gutter.infoIconPath = vscodeUtils.svgToUri(createSquareRoundedIcon($config.infoGutterIconColor));
+		gutter.infoIconPathLight = vscodeUtils.svgToUri(createSquareRoundedIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
+		gutter.hintIconPath = vscodeUtils.svgToUri(createSquareRoundedIcon($config.hintGutterIconColor));
+		gutter.hintIconPathLight = vscodeUtils.svgToUri(createSquareRoundedIcon($config.light.hintGutterIconPath || $config.hintGutterIconColor));
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
 		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
@@ -131,7 +140,8 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 			}
 			case 3: {
 				if ($config.gutterIconSet === 'circle' ||
-					$config.gutterIconSet === 'square') {
+					$config.gutterIconSet === 'square' ||
+					$config.gutterIconSet === 'squareRounded') {
 					decorationOptionsGutterHint.push(diagnosticDecorationOptions);
 				}
 				break;
@@ -146,14 +156,26 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 	editor.setDecorations(decorationTypes.decorationTypeGutterHint, decorationOptionsGutterHint);
 }
 /**
- * Create circle gutter icons with different colors. `%23` is encoded `#` sign (need it to work).
+ * Create circle gutter icons with different colors.
  */
 function createCircleIcon(color: string): string {
-	return `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="7" fill="%23${color.slice(1)}"/></svg>`;
+	return `<svg xmlns="http://www.w3.org/2000/svg" height="30" width="30"><circle cx="15" cy="15" r="7" fill="${escapeColor(color)}"/></svg>`;
 }
 /**
- * Create circle gutter icons with different colors. `%23` is encoded `#` sign (need it to work).
+ * Create square gutter icons with different colors.
  */
-function createSquareIcon(color: string): string {
-	return `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" height="40" width="40"><g transform="translate(12, 12)"><rect width="16" height="16" fill="%23${color.slice(1)}"/></g></svg>`;
+function createSquareIcon(color: string, rx = 0): string {
+	return `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" height="40" width="40"><g transform="translate(12, 12)"><rect width="16" height="16" rx="${rx}" fill="${escapeColor(color)}"/></g></svg>`;
+}
+/**
+ * Create square gutter icons with rounded corners.
+ */
+function createSquareRoundedIcon(color: string): string {
+	return createSquareIcon(color, 3);
+}
+/**
+ * `%23` is encoded `#` sign (need it to work).
+ */
+function escapeColor(color: string): string {
+	return `%23${color.slice(1)}`;
 }

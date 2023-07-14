@@ -198,7 +198,7 @@ interface ExtensionConfigType {
 	/**
 	 * Change gutter icon style.
 	 */
-	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline' | 'square';
+	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline' | 'square' | 'squareRounded';
 	/**
 	 * Absolute path to error gutter icon.
 	 */
@@ -216,19 +216,19 @@ interface ExtensionConfigType {
 	 */
 	hintGutterIconPath: string;
 	/**
-	 * Error color of `circle` & `square` gutter icons.
+	 * Error color of simple gutter icons (shapes and letters).
 	 */
 	errorGutterIconColor: string;
 	/**
-	 * Warning color of `circle` & `square` gutter icons.
+	 * Warning color of simple gutter icons (shapes and letters).
 	 */
 	warningGutterIconColor: string;
 	/**
-	 * Info color of `circle` & `square` gutter icons.
+	 * Info color of simple gutter icons (shapes and letters).
 	 */
 	infoGutterIconColor: string;
 	/**
-	 * Info color of `circle` & `square` gutter icons.
+	 * Info color of simple gutter icons (shapes and letters).
 	 */
 	hintGutterIconColor: string;
 

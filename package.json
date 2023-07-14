@@ -518,25 +518,25 @@
 						"errorGutterIconColor": {
 							"type": "string",
 							"default": "",
-							"markdownDescription": "Error color of `circle` & `square` gutter icons for light themes.",
+							"markdownDescription": "Error color of simple gutter icons (shapes and letters) for light themes.",
 							"format": "color"
 						},
 						"warningGutterIconColor": {
 							"type": "string",
 							"default": "",
-							"markdownDescription": "Warning color of `circle` & `square` gutter icons for light themes.",
+							"markdownDescription": "Warning color of simple gutter icons (shapes and letters) for light themes.",
 							"format": "color"
 						},
 						"infoGutterIconColor": {
 							"type": "string",
 							"default": "",
-							"markdownDescription": "Info color of `circle` & `square` gutter icons for light themes.",
+							"markdownDescription": "Info color of simple gutter icons (shapes and letters) for light themes.",
 							"format": "color"
 						},
 						"hintGutterIconColor": {
 							"type": "string",
 							"default": "",
-							"markdownDescription": "Hint color of `circle` & `square` gutter icons for light themes.",
+							"markdownDescription": "Hint color of simple gutter icons (shapes and letters) for light themes.",
 							"format": "color"
 						}
 					}
@@ -613,14 +613,16 @@
 						"defaultOutline",
 						"borderless",
 						"circle",
-						"square"
+						"square",
+						"squareRounded"
 					],
 					"enumDescriptions": [
 						"Similar to vscode icons in Problems Panel (old).",
 						"Similar to vscode icons in Problems Panel (new).",
 						"Similar to vscode icons in Problems Panel, only without a border.",
 						"Simple filled circle.",
-						"Simple filled square."
+						"Simple filled square.",
+						"Simple filled square with rounded corners."
 					],
 					"default": "default"
 				},
@@ -647,25 +649,25 @@
 				"errorLens.errorGutterIconColor": {
 					"type": "string",
 					"default": "#e45454",
-					"markdownDescription": "Error color of `circle` & `square` gutter icons.",
+					"markdownDescription": "Error color of simple gutter icons (shapes and letters).",
 					"format": "color"
 				},
 				"errorLens.warningGutterIconColor": {
 					"type": "string",
 					"default": "#ff942f",
-					"markdownDescription": "Warning color of `circle` & `square` gutter icons.",
+					"markdownDescription": "Warning color of simple gutter icons (shapes and letters).",
 					"format": "color"
 				},
 				"errorLens.infoGutterIconColor": {
 					"type": "string",
 					"default": "#00b7e4",
-					"markdownDescription": "Info color of `circle` & `square` gutter icons.",
+					"markdownDescription": "Info color of simple gutter icons (shapes and letters).",
 					"format": "color"
 				},
 				"errorLens.hintGutterIconColor": {
 					"type": "string",
 					"default": "#2faf64",
-					"markdownDescription": "Hint color of `circle` & `square` gutter icons.",
+					"markdownDescription": "Hint color of simple gutter icons (shapes and letters).",
 					"format": "color"
 				},
 				"errorLens.removeLinebreaks": {

@@ -212,6 +212,10 @@ interface ExtensionConfigType {
 	 */
 	infoGutterIconPath: string;
 	/**
+	 * Absolute path to hint gutter icon.
+	 */
+	hintGutterIconPath: string;
+	/**
 	 * Error color of `circle` & `square` gutter icons.
 	 */
 	errorGutterIconColor: string;

@@ -636,6 +636,11 @@
 					"description": "Absolute path to info gutter icon.",
 					"default": ""
 				},
+				"errorLens.hintGutterIconPath": {
+					"type": "string",
+					"description": "Absolute path to hint gutter icon.",
+					"default": ""
+				},
 				"errorLens.errorGutterIconColor": {
 					"type": "string",
 					"default": "#e45454",

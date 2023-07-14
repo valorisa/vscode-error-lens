@@ -74,6 +74,12 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 	if ($config.light.infoGutterIconPath || $config.infoGutterIconPath) {
 		gutter.infoIconPathLight = $config.light.infoGutterIconColor || $config.infoGutterIconPath;
 	}
+	if ($config.hintGutterIconPath) {
+		gutter.hintIconPath = $config.hintGutterIconPath;
+	}
+	if ($config.light.hintGutterIconPath || $config.hintGutterIconPath) {
+		gutter.hintIconPathLight = $config.light.hintGutterIconColor || $config.hintGutterIconPath;
+	}
 
 	return {
 		errorIconPath: gutter.errorIconPath,

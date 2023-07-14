@@ -198,7 +198,7 @@ interface ExtensionConfigType {
 	/**
 	 * Change gutter icon style.
 	 */
-	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline' | 'square' | 'squareRounded';
+	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline' | 'letter' | 'square' | 'squareRounded';
 	/**
 	 * Absolute path to error gutter icon.
 	 */

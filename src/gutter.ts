@@ -56,6 +56,15 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.infoIconPathLight = vscodeUtils.svgToUri(createSquareRoundedIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor));
 		gutter.hintIconPath = vscodeUtils.svgToUri(createSquareRoundedIcon($config.hintGutterIconColor));
 		gutter.hintIconPathLight = vscodeUtils.svgToUri(createSquareRoundedIcon($config.light.hintGutterIconPath || $config.hintGutterIconColor));
+	} else if ($config.gutterIconSet === 'letter') {
+		gutter.errorIconPath = vscodeUtils.svgToUri(createLetterIcon($config.errorGutterIconColor, 'E'));
+		gutter.errorIconPathLight = vscodeUtils.svgToUri(createLetterIcon($config.light.errorGutterIconColor || $config.errorGutterIconColor, 'E'));
+		gutter.warningIconPath = vscodeUtils.svgToUri(createLetterIcon($config.warningGutterIconColor, 'W'));
+		gutter.warningIconPathLight = vscodeUtils.svgToUri(createLetterIcon($config.light.warningGutterIconColor || $config.warningGutterIconColor, 'W'));
+		gutter.infoIconPath = vscodeUtils.svgToUri(createLetterIcon($config.infoGutterIconColor, 'I'));
+		gutter.infoIconPathLight = vscodeUtils.svgToUri(createLetterIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor, 'I'));
+		gutter.hintIconPath = vscodeUtils.svgToUri(createLetterIcon($config.hintGutterIconColor, 'H'));
+		gutter.hintIconPathLight = vscodeUtils.svgToUri(createLetterIcon($config.light.hintGutterIconPath || $config.hintGutterIconColor, 'H'));
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
 		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
@@ -172,6 +181,12 @@ function createSquareIcon(color: string, rx = 0): string {
  */
 function createSquareRoundedIcon(color: string): string {
 	return createSquareIcon(color, 3);
+}
+/**
+ * Crate centered single letter icon.
+ */
+function createLetterIcon(color: string, letter: 'E' | 'H' | 'I' | 'W'): string {
+	return `<svg viewBox="-10 -6 20 10" xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill="${escapeColor(color)}"><text text-anchor="middle" dominant-baseline="middle">${letter}</text></svg>`;
 }
 /**
  * `%23` is encoded `#` sign (need it to work).

@@ -614,7 +614,8 @@
 						"borderless",
 						"circle",
 						"square",
-						"squareRounded"
+						"squareRounded",
+						"letter"
 					],
 					"enumDescriptions": [
 						"Similar to vscode icons in Problems Panel (old).",
@@ -622,7 +623,8 @@
 						"Similar to vscode icons in Problems Panel, only without a border.",
 						"Simple filled circle.",
 						"Simple filled square.",
-						"Simple filled square with rounded corners."
+						"Simple filled square with rounded corners.",
+						"Simple one letter icon (E,W,I,H)."
 					],
 					"default": "default"
 				},

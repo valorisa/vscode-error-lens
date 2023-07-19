@@ -1,7 +1,7 @@
 import { CustomDelay } from 'src/CustomDelay';
-import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
+import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri, updateWorkaroundGutterIcon } from 'src/decorations';
 import { $config, $state } from 'src/extension';
-import { TextDocumentSaveReason, languages, window, workspace, type DiagnosticChangeEvent } from 'vscode';
+import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent } from 'vscode';
 
 /**
  * Update listener for when active editor changes.
@@ -118,4 +118,16 @@ export function updateOnSaveListener(): void {
 			$state.lastSavedTimestamp = Date.now();
 		}
 	});
+}
+
+export function updateChangeBreakpointsListener(): void {
+	$state.onDidChangeBreakpoints?.dispose();
+
+	if ($config.gutterIconsEnabled) {
+		$state.onDidChangeBreakpoints = debug.onDidChangeBreakpoints(() => {
+			for (const editor of window.visibleTextEditors) {
+				updateWorkaroundGutterIcon(editor);
+			}
+		});
+	}
 }

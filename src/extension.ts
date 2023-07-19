@@ -1,7 +1,7 @@
 import { registerAllCommands } from 'src/commands';
 import { type CustomDelay } from 'src/CustomDelay';
 import { disposeAllDecorations, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
-import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
+import { updateChangeBreakpointsListener, updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
@@ -27,6 +27,7 @@ export abstract class $state {
 	public static onDidChangeVisibleTextEditors: Disposable | undefined;
 	public static onDidSaveTextDocumentDisposable: Disposable | undefined;
 	public static onDidCursorChangeDisposable: Disposable | undefined;
+	public static onDidChangeBreakpoints: Disposable | undefined;
 	/**
 	 * Status bar object. Handles all status bar stuff (for text message)
 	 */
@@ -152,6 +153,7 @@ export function updateEverything(context: ExtensionContext): void {
 	updateOnSaveListener();
 	updateCursorChangeListener();
 	updateChangedActiveTextEditorListener();
+	updateChangeBreakpointsListener();
 }
 /**
  * - Create `RegExp` from string for messages.
@@ -212,6 +214,7 @@ export function disposeEverything(): void {
 	$state.onDidChangeActiveTextEditor?.dispose();
 	$state.onDidSaveTextDocumentDisposable?.dispose();
 	$state.onDidCursorChangeDisposable?.dispose();
+	$state.onDidChangeBreakpoints?.dispose();
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
 	disposeAllDecorations();

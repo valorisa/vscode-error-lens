@@ -3,7 +3,7 @@ import { $config } from 'src/extension';
 import { type ExtensionConfig } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
-import { type DecorationOptions, type ExtensionContext, type TextEditor, type Uri } from 'vscode';
+import { type DecorationOptions, type ExtensionContext, type TextEditor, Uri } from 'vscode';
 
 export interface Gutter {
 	iconSet: ExtensionConfig['gutterIconSet'];
@@ -19,6 +19,8 @@ export interface Gutter {
 
 	hintIconPath: Uri | string | undefined;
 	hintIconPathLight: Uri | string | undefined;
+
+	transparent1x1Icon: Uri | string;
 }
 
 /**
@@ -109,6 +111,8 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		hintIconPath: gutter.hintIconPath,
 		hintIconPathLight: gutter.hintIconPathLight,
 		iconSet: gutter.iconSet,
+
+		transparent1x1Icon: Uri.parse('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='),
 	};
 }
 

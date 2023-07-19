@@ -5,9 +5,9 @@ import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
-import { Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
-type DecorationKeys = 'decorationTypeError' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeInfo' | 'decorationTypeWarning';
+type DecorationKeys = 'decorationTypeError' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeInfo' | 'decorationTypeWarning' | 'transparent1x1Icon';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
 
 /**
@@ -236,6 +236,14 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	decorationTypes.decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
 	decorationTypes.decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 
+	const transparentGutterIcon: DecorationRenderOptions = {
+		gutterIconPath: gutter?.transparent1x1Icon,
+		light: {
+			gutterIconPath: gutter?.transparent1x1Icon,
+		},
+	};
+	decorationTypes.transparent1x1Icon = window.createTextEditorDecorationType(transparentGutterIcon);
+
 	$state.statusBarMessage.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 }
 /**
@@ -362,6 +370,10 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		}
 	}
 
+	if ($config.gutterIconsEnabled) {
+		updateWorkaroundGutterIcon(editor);
+	}
+
 	editor.setDecorations(decorationTypes.decorationTypeError, decorationOptionsError);
 	editor.setDecorations(decorationTypes.decorationTypeWarning, decorationOptionsWarning);
 	editor.setDecorations(decorationTypes.decorationTypeInfo, decorationOptionsInfo);
@@ -443,6 +455,21 @@ export function updateDecorationsForUri({
 	}
 
 	doUpdateDecorations(editor, groupedDiagnostics ?? extUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
+}
+/**
+ * Issue https://github.com/usernamehw/vscode-error-lens/issues/177
+ */
+export function updateWorkaroundGutterIcon(editor: TextEditor): void {
+	const ranges: Range[] = [];
+	for (const breakpoint of debug.breakpoints) {
+		// @ts-expect-error location is probably optional, but can be there
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		const location: Location = breakpoint?.location;
+		if (location && location.uri.toString(true) === editor?.document.uri.toString(true)) {
+			ranges.push(location.range);
+		}
+	}
+	editor.setDecorations(decorationTypes.transparent1x1Icon, ranges);
 }
 
 export function disposeAllDecorations(): void {

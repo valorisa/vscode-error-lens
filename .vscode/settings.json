@@ -8,4 +8,12 @@
 	],
 	"contributions.settings.moveOutPrefix": true,
 	"contributions.settings.includeTypes": false,
+	"contributions.settings.replaceDefaultValue": {
+		"errorLens.disableLineComments": "\\{...\\}",
+		"errorLens.lintFilePaths": "\\{...\\}",
+		// VSMarketplace renders tables with scrollbars, add spaces so the table has less width
+		"errorLens.severityText": "\\[\"ERROR\", \"WARNING\", \"INFO\", \"HINT\"\\]",
+		"errorLens.enabledDiagnosticLevels": "\\[\"error\", \"warning\", \"info\"\\]",
+		"errorLens.editorHoverPartsEnabled": "\\{\"messageEnabled\":false, \"sourceCodeEnabled\":false, \"buttonsEnabled\":false\\}"
+	}
 }

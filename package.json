@@ -543,8 +543,21 @@
 				},
 				"errorLens.delay": {
 					"type": "integer",
-					"markdownDescription": "Delay (ms) before showing problem decorations (**0** to disable). Minimum delay of **500** is enforced by the extension. New errors will be added with this delay; old errors that were fixed should disappear faster.",
+					"markdownDescription": "Delay (ms) before showing problem decorations (**0** to disable). Minimum delay of **500** is enforced by the extension. `#errorLens.delayMode#` controls how to handle the delay.",
 					"default": 0
+				},
+				"errorLens.delayMode": {
+					"type": "string",
+					"default": "old",
+					"enum": [
+						"old",
+						"debounce"
+					],
+					"markdownEnumDescriptions": [
+						"New problems appear according to `errorLens.delay` setting. Fixed problems disappear faster. A bit buggy.",
+						"Decorations for problems are debounced according to `errorLens.delay` setting."
+					],
+					"markdownDescription": "Pick which version of the delay to use."
 				},
 				"errorLens.onSave": {
 					"type": "boolean",

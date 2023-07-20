@@ -1,5 +1,4 @@
 import { registerAllCommands } from 'src/commands';
-import { type CustomDelay } from 'src/CustomDelay';
 import { disposeAllDecorations, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { updateChangeBreakpointsListener, updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
@@ -75,10 +74,6 @@ export abstract class $state {
 	 * Used to determine if the save was recently (1s?) to show decorations.
 	 */
 	public static lastSavedTimestamp = Date.now() + 2000;
-	/**
-	 * CustomDelay object. Handles updating decorations with a delay.
-	 */
-	public static customDelay: CustomDelay | undefined;
 }
 
 export function activate(context: ExtensionContext): void {

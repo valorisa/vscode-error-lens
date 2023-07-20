@@ -148,6 +148,10 @@ interface ExtensionConfigType {
 	 */
 	delay?: number;
 	/**
+	 * Pick which version of the delay to use.
+	 */
+	delayMode: 'debounce' | 'old';
+	/**
 	 * Highlight only portion of the problems.
 	 * For instance, only active line or the closest to the cursor diasnostic.
 	 */

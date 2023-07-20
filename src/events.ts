@@ -1,3 +1,4 @@
+import debounce from 'lodash/debounce';
 import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri, updateWorkaroundGutterIcon } from 'src/decorations';
 import { $config, $state } from 'src/extension';
@@ -60,9 +61,17 @@ export function updateChangeDiagnosticListener(): void {
 		return;
 	}
 	if (typeof $config.delay === 'number' && $config.delay > 0) {
-		$state.customDelay = new CustomDelay($config.delay);
-		$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics($state.customDelay.onDiagnosticChange);
+		// Delay
+		if ($config.delayMode === 'old') {
+			const customDelay = new CustomDelay($config.delay);
+			$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(customDelay.onDiagnosticChange);
+		} else if ($config.delayMode === 'debounce') {
+			languages.onDidChangeDiagnostics(debounce((e: DiagnosticChangeEvent) => {
+				onChangedDiagnostics(e);
+			}, $config.delay));
+		}
 	} else {
+		// No delay
 		$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnostics);
 	}
 }

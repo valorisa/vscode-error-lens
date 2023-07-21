@@ -2,15 +2,22 @@ import debounce from 'lodash/debounce';
 import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri, updateWorkaroundGutterIcon } from 'src/decorations';
 import { $config, $state } from 'src/extension';
-import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent } from 'vscode';
+import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable } from 'vscode';
+
+let onDidChangeDiagnosticsDisposable: Disposable | undefined;
+let onDidChangeActiveTextEditor: Disposable | undefined;
+let onDidChangeVisibleTextEditors: Disposable | undefined;
+let onDidSaveTextDocumentDisposable: Disposable | undefined;
+let onDidCursorChangeDisposable: Disposable | undefined;
+let onDidChangeBreakpoints: Disposable | undefined;
 
 /**
  * Update listener for when active editor changes.
  */
 export function updateChangedActiveTextEditorListener(): void {
-	$state.onDidChangeActiveTextEditor?.dispose();
+	onDidChangeActiveTextEditor?.dispose();
 
-	$state.onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(editor => {
+	onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(editor => {
 		if ($config.onSave) {
 			$state.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
 		}
@@ -28,15 +35,15 @@ export function updateChangedActiveTextEditorListener(): void {
  * Update listener for when visible editors change.
  */
 export function updateChangeVisibleTextEditorsListener(): void {
-	$state.onDidChangeVisibleTextEditors?.dispose();
+	onDidChangeVisibleTextEditors?.dispose();
 
-	$state.onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateDecorationsForAllVisibleEditors);
+	onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateDecorationsForAllVisibleEditors);
 }
 /**
  * Update listener for when language server (or extension) sends diagnostic change events.
  */
 export function updateChangeDiagnosticListener(): void {
-	$state.onDidChangeDiagnosticsDisposable?.dispose();
+	onDidChangeDiagnosticsDisposable?.dispose();
 
 	function onChangedDiagnostics(diagnosticChangeEvent: DiagnosticChangeEvent): void {
 		// Many URIs can change - we only need to decorate visible editors
@@ -53,7 +60,7 @@ export function updateChangeDiagnosticListener(): void {
 		$state.statusBarIcons.updateText();
 	}
 	if ($config.onSave) {
-		$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
+		onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
 			if (Date.now() - $state.lastSavedTimestamp < $config.onSaveTimeout) {
 				onChangedDiagnostics(e);
 			}
@@ -64,7 +71,7 @@ export function updateChangeDiagnosticListener(): void {
 		// Delay
 		if ($config.delayMode === 'old') {
 			const customDelay = new CustomDelay($config.delay);
-			$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(customDelay.onDiagnosticChange);
+			onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(customDelay.onDiagnosticChange);
 		} else if ($config.delayMode === 'debounce') {
 			languages.onDidChangeDiagnostics(debounce((e: DiagnosticChangeEvent) => {
 				onChangedDiagnostics(e);
@@ -72,14 +79,14 @@ export function updateChangeDiagnosticListener(): void {
 		}
 	} else {
 		// No delay
-		$state.onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnostics);
+		onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnostics);
 	}
 }
 /**
  * Update listener for when active selection (cursor) moves.
  */
 export function updateCursorChangeListener(): void {
-	$state.onDidCursorChangeDisposable?.dispose();
+	onDidCursorChangeDisposable?.dispose();
 
 	if (
 		$config.followCursor === 'activeLine' ||
@@ -88,7 +95,7 @@ export function updateCursorChangeListener(): void {
 		$config.statusBarMessageEnabled
 	) {
 		let lastPositionLine = -1;
-		$state.onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
+		onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];
 			if (
 				e.selections.length === 1 &&
@@ -111,13 +118,13 @@ export function updateCursorChangeListener(): void {
  * Editor `files.autoSave` is ignored.
  */
 export function updateOnSaveListener(): void {
-	$state.onDidSaveTextDocumentDisposable?.dispose();
+	onDidSaveTextDocumentDisposable?.dispose();
 
 	if (!$config.onSave) {
 		return;
 	}
 
-	$state.onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
+	onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
 		if (e.reason === TextDocumentSaveReason.Manual) {
 			setTimeout(() => {
 				updateDecorationsForUri({
@@ -130,13 +137,22 @@ export function updateOnSaveListener(): void {
 }
 
 export function updateChangeBreakpointsListener(): void {
-	$state.onDidChangeBreakpoints?.dispose();
+	onDidChangeBreakpoints?.dispose();
 
 	if ($config.gutterIconsEnabled) {
-		$state.onDidChangeBreakpoints = debug.onDidChangeBreakpoints(() => {
+		onDidChangeBreakpoints = debug.onDidChangeBreakpoints(() => {
 			for (const editor of window.visibleTextEditors) {
 				updateWorkaroundGutterIcon(editor);
 			}
 		});
 	}
+}
+
+export function disposeAllEventListeners(): void {
+	onDidChangeVisibleTextEditors?.dispose();
+	onDidChangeDiagnosticsDisposable?.dispose();
+	onDidChangeActiveTextEditor?.dispose();
+	onDidSaveTextDocumentDisposable?.dispose();
+	onDidCursorChangeDisposable?.dispose();
+	onDidChangeBreakpoints?.dispose();
 }

@@ -1,11 +1,11 @@
 import { registerAllCommands } from 'src/commands';
 import { disposeAllDecorations, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
-import { updateChangeBreakpointsListener, updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
+import { disposeAllEventListeners, updateChangeBreakpointsListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateChangedActiveTextEditorListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
-import { workspace, type Disposable, type ExtensionContext } from 'vscode';
+import { workspace, type ExtensionContext } from 'vscode';
 
 /**
  * All user settings.
@@ -20,13 +20,6 @@ export abstract class $state {
 	public static configWarningEnabled = true;
 	public static configInfoEnabled = true;
 	public static configHintEnabled = true;
-
-	public static onDidChangeDiagnosticsDisposable: Disposable | undefined;
-	public static onDidChangeActiveTextEditor: Disposable | undefined;
-	public static onDidChangeVisibleTextEditors: Disposable | undefined;
-	public static onDidSaveTextDocumentDisposable: Disposable | undefined;
-	public static onDidCursorChangeDisposable: Disposable | undefined;
-	public static onDidChangeBreakpoints: Disposable | undefined;
 	/**
 	 * Status bar object. Handles all status bar stuff (for text message)
 	 */
@@ -204,12 +197,7 @@ function createMessageRegex(source: string): RegExp {
  * Dispose all disposables (except `onDidChangeConfiguration`).
  */
 export function disposeEverything(): void {
-	$state.onDidChangeVisibleTextEditors?.dispose();
-	$state.onDidChangeDiagnosticsDisposable?.dispose();
-	$state.onDidChangeActiveTextEditor?.dispose();
-	$state.onDidSaveTextDocumentDisposable?.dispose();
-	$state.onDidCursorChangeDisposable?.dispose();
-	$state.onDidChangeBreakpoints?.dispose();
+	disposeAllEventListeners();
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
 	disposeAllDecorations();

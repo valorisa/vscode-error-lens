@@ -31,7 +31,7 @@ export const enum CommandId {
 	/** {@link copyProblemCodeCommand} */
 	CopyProblemCode = 'errorLens.copyProblemCode',
 	/** {@link selectProblem} */
-	SelectProblem = 'errorLens.selectProblem',
+	SelectProblem = 'SelectProblem',
 	/** {@link findLinterRuleDefinitionCommand} */
 	FindLinterRuleDefinition = 'errorLens.findLinterRuleDefinition',
 	/** {@link searchForProblemCommand} */
@@ -54,36 +54,24 @@ export function registerAllCommands(context: ExtensionContext): void {
 	// ────────────────────────────────────────────────────────────
 	// ──── Global commands ───────────────────────────────────────
 	// ────────────────────────────────────────────────────────────
-	context.subscriptions.push(
-		commands.registerCommand(CommandId.Toggle, () => {
-			vscodeUtils.updateGlobalSetting('errorLens.enabled', !$config.enabled);
-		}),
-	);
-	context.subscriptions.push(
-		commands.registerCommand(CommandId.ToggleError, () => {
-			toggleEnabledLevels('error', $config.enabledDiagnosticLevels);
-		}),
-	);
-	context.subscriptions.push(
-		commands.registerCommand(CommandId.ToggleWarning, () => {
-			toggleEnabledLevels('warning', $config.enabledDiagnosticLevels);
-		}),
-	);
-	context.subscriptions.push(
-		commands.registerCommand(CommandId.ToggleInfo, () => {
-			toggleEnabledLevels('info', $config.enabledDiagnosticLevels);
-		}),
-	);
-	context.subscriptions.push(
-		commands.registerCommand(CommandId.ToggleHint, () => {
-			toggleEnabledLevels('hint', $config.enabledDiagnosticLevels);
-		}),
-	);
-	context.subscriptions.push(
-		commands.registerCommand(CommandId.ToggleInlineMessage, () => {
-			vscodeUtils.toggleGlobalBooleanSetting('errorLens.messageEnabled');
-		}),
-	);
+	context.subscriptions.push(commands.registerCommand(CommandId.Toggle, () => {
+		vscodeUtils.updateGlobalSetting('errorLens.enabled', !$config.enabled);
+	}));
+	context.subscriptions.push(commands.registerCommand(CommandId.ToggleError, () => {
+		toggleEnabledLevels('error', $config.enabledDiagnosticLevels);
+	}));
+	context.subscriptions.push(commands.registerCommand(CommandId.ToggleWarning, () => {
+		toggleEnabledLevels('warning', $config.enabledDiagnosticLevels);
+	}));
+	context.subscriptions.push(commands.registerCommand(CommandId.ToggleInfo, () => {
+		toggleEnabledLevels('info', $config.enabledDiagnosticLevels);
+	}));
+	context.subscriptions.push(commands.registerCommand(CommandId.ToggleHint, () => {
+		toggleEnabledLevels('hint', $config.enabledDiagnosticLevels);
+	}));
+	context.subscriptions.push(commands.registerCommand(CommandId.ToggleInlineMessage, () => {
+		vscodeUtils.toggleGlobalBooleanSetting('errorLens.messageEnabled');
+	}));
 	context.subscriptions.push(commands.registerCommand(CommandId.ToggleWorkspace, toggleWorkspaceCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.RevealLine, revealLineCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.FindLinterRuleDefinition, findLinterRuleDefinitionCommand));
@@ -98,3 +86,4 @@ export function registerAllCommands(context: ExtensionContext): void {
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.StatusBarCommand, statusBarCommand));
 }
+

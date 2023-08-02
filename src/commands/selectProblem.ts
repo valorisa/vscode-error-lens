@@ -3,7 +3,7 @@ import { Selection, type TextEditor, languages, commands } from 'vscode';
 /**
  * Can be used from Command Palette (arg = undefined) or from hover (arg = {code: string | undefined})
  */
-export async function selectProblem(editor: TextEditor): Promise<void> {
+export function selectProblem(editor: TextEditor): void {
 	const diagnostics = languages.getDiagnostics(editor.document.uri);
 
 	if (!diagnostics.length) {

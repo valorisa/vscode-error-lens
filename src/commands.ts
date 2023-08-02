@@ -31,7 +31,7 @@ export const enum CommandId {
 	/** {@link copyProblemCodeCommand} */
 	CopyProblemCode = 'errorLens.copyProblemCode',
 	/** {@link selectProblem} */
-	SelectProblem = 'SelectProblem',
+	SelectProblem = 'errorLens.selectProblem',
 	/** {@link findLinterRuleDefinitionCommand} */
 	FindLinterRuleDefinition = 'errorLens.findLinterRuleDefinition',
 	/** {@link searchForProblemCommand} */
@@ -86,4 +86,3 @@ export function registerAllCommands(context: ExtensionContext): void {
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.StatusBarCommand, statusBarCommand));
 }
-

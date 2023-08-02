@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 import { Selection, type TextEditor, languages, commands } from 'vscode';
 
 /**
@@ -19,19 +17,9 @@ export async function selectProblem(editor: TextEditor): Promise<void> {
 
 	let diagnostic = getFocusedDiagnostic();
 	if (!diagnostic) {
-		// await new Promise<void>(async resolve => {
-		// 	const { dispose } = vscode.window.onDidChangeTextEditorSelection(({ textEditor }) => {
-		// 		if (textEditor !== editor) {
-		// 			return;
-		// 		}
-
-		// 		resolve();
-		// 		dispose();
-		// });
 		void commands.executeCommand('editor.action.marker.next');
 		// hide diagnostic message window
 		void commands.executeCommand('closeMarkersNavigation');
-		// });
 		diagnostic = getFocusedDiagnostic();
 	}
 	if (!diagnostic) {

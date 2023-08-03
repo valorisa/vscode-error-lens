@@ -5,7 +5,7 @@ import { excludeProblemCommand } from 'src/commands/excludeProblemCommand';
 import { findLinterRuleDefinitionCommand } from 'src/commands/findLinterRuleDefinitionCommand';
 import { revealLineCommand } from 'src/commands/revealLineCommand';
 import { searchForProblemCommand } from 'src/commands/searchForProblemCommand';
-import { selectProblem } from 'src/commands/selectProblem';
+import { selectProblem } from 'src/commands/selectProblemCommand';
 import { statusBarCommand } from 'src/commands/statusBarCommand';
 import { toggleEnabledLevels } from 'src/commands/toggleEnabledLevels';
 import { toggleWorkspaceCommand } from 'src/commands/toggleWorkspaceCommand';

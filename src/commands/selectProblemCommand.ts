@@ -1,31 +1,31 @@
-import { Selection, type TextEditor, languages, commands } from 'vscode';
+import { Selection, commands, languages, type Diagnostic, type TextEditor } from 'vscode';
 
 /**
  * Can be used from Command Palette (arg = undefined) or from hover (arg = {code: string | undefined})
  */
-export function selectProblem(editor: TextEditor): void {
+export function selectProblemCommand(editor: TextEditor): void {
 	const diagnostics = languages.getDiagnostics(editor.document.uri);
 
 	if (!diagnostics.length) {
 		return;
 	}
 
-	const getFocusedDiagnostic = () => {
-		const pos = editor.selection.active;
-		return diagnostics.find(diagnostic => diagnostic.range.contains(pos));
-	};
-
-	let diagnostic = getFocusedDiagnostic();
+	let diagnostic = getFocusedDiagnostic(editor, diagnostics);
 	if (!diagnostic) {
-		void commands.executeCommand('editor.action.marker.next');
+		commands.executeCommand('editor.action.marker.next');
 		// hide diagnostic message window
-		void commands.executeCommand('closeMarkersNavigation');
-		diagnostic = getFocusedDiagnostic();
+		commands.executeCommand('closeMarkersNavigation');
+		diagnostic = getFocusedDiagnostic(editor, diagnostics);
 	}
+
 	if (!diagnostic) {
 		return;
 	}
 
-	const { range } = diagnostic;
-	editor.selection = new Selection(range.start, range.end);
+	editor.selection = new Selection(diagnostic.range.start, diagnostic.range.end);
+}
+
+function getFocusedDiagnostic(editor: TextEditor, diagnostics: Diagnostic[]): Diagnostic | undefined {
+	const pos = editor.selection.active;
+	return diagnostics.find(diagnostic => diagnostic.range.contains(pos));
 }

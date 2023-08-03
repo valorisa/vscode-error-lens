@@ -1,5 +1,5 @@
 import { $config, $state } from 'src/extension';
-import { languages, type Diagnostic, type Uri } from 'vscode';
+import { languages, type Diagnostic, type TextEditor, type Uri } from 'vscode';
 
 /**
  * Usually documentation website Uri.
@@ -188,6 +188,28 @@ function getDiagnosticAtLine(uri: Uri, lineNumber: number): Diagnostic | undefin
 	diagnosticsAtLineNumber.sort((a, b) => a.severity - b.severity);
 	return diagnosticsAtLineNumber[0];
 }
+/**
+ * Get closest to the active cursor diagnostic.
+ *
+ * TODO: duplicates code in `statusBarMessage.ts`
+ */
+function getClosestDiagnostic(editor: TextEditor): Diagnostic | undefined {
+	const groupedDiagnostics = groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
+	const lineNumberKeys = Object.keys(groupedDiagnostics);
+	const activeLineNumber = editor.selection.active.line;
+
+	// Sort by how close it is to the cursor
+	const sortedLineNumbers = lineNumberKeys.map(Number).sort((ln1, ln2) => Math.abs(activeLineNumber - ln1) - Math.abs(activeLineNumber - ln2));
+
+	for (const lineNumber of sortedLineNumbers) {
+		const diagnosticsAtLine = groupedDiagnostics[lineNumber];
+		for (const diagnostic of diagnosticsAtLine) {
+			if (isSeverityEnabled(diagnostic.severity)) {
+				return diagnostic;
+			}
+		}
+	}
+}
 
 export const extUtils = {
 	getDiagnosticTarget,
@@ -199,4 +221,5 @@ export const extUtils = {
 	isSeverityEnabled,
 	diagnosticToInlineMessage,
 	getDiagnosticAtLine,
+	getClosestDiagnostic,
 };

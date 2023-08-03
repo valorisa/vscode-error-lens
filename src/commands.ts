@@ -5,6 +5,7 @@ import { excludeProblemCommand } from 'src/commands/excludeProblemCommand';
 import { findLinterRuleDefinitionCommand } from 'src/commands/findLinterRuleDefinitionCommand';
 import { revealLineCommand } from 'src/commands/revealLineCommand';
 import { searchForProblemCommand } from 'src/commands/searchForProblemCommand';
+import { selectProblem } from 'src/commands/selectProblem';
 import { statusBarCommand } from 'src/commands/statusBarCommand';
 import { toggleEnabledLevels } from 'src/commands/toggleEnabledLevels';
 import { toggleWorkspaceCommand } from 'src/commands/toggleWorkspaceCommand';
@@ -29,6 +30,8 @@ export const enum CommandId {
 	CopyProblemMessage = 'errorLens.copyProblemMessage',
 	/** {@link copyProblemCodeCommand} */
 	CopyProblemCode = 'errorLens.copyProblemCode',
+	/** {@link selectProblem} */
+	SelectProblem = 'errorLens.selectProblem',
 	/** {@link findLinterRuleDefinitionCommand} */
 	FindLinterRuleDefinition = 'errorLens.findLinterRuleDefinition',
 	/** {@link searchForProblemCommand} */
@@ -79,7 +82,7 @@ export function registerAllCommands(context: ExtensionContext): void {
 	// ────────────────────────────────────────────────────────────
 	// ──── Text Editor commands ──────────────────────────────────
 	// ────────────────────────────────────────────────────────────
+	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.SelectProblem, selectProblem));
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.StatusBarCommand, statusBarCommand));
 }
-

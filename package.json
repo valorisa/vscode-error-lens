@@ -90,6 +90,12 @@
 				"category": "Error Lens"
 			},
 			{
+				"command": "errorLens.selectProblem",
+				"title": "Select Problem",
+				"description": "Set editor selection to the problem range (at the active cursor).",
+				"category": "Error Lens"
+			},
+			{
 				"command": "errorLens.findLinterRuleDefinition",
 				"title": "Find Linter Rule Definition",
 				"description": "Search in local linter files (like `.eslintrc.json`) for the rule definition.",

@@ -78,15 +78,9 @@
 				"category": "Error Lens"
 			},
 			{
-				"command": "errorLens.copyProblemMessage",
-				"title": "Copy Problem Message",
-				"description": "Copy problem message to the clipboard (at the active cursor).",
-				"category": "Error Lens"
-			},
-			{
-				"command": "errorLens.copyProblemCode",
-				"title": "Copy Problem Code",
-				"description": "Copy problem code to the clipboard (at the active cursor).",
+				"command": "errorLens.searchForProblem",
+				"title": "Search for problem",
+				"description": "Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).",
 				"category": "Error Lens"
 			},
 			{
@@ -96,27 +90,33 @@
 				"category": "Error Lens"
 			},
 			{
-				"command": "errorLens.findLinterRuleDefinition",
-				"title": "Find Linter Rule Definition",
-				"description": "Search in local linter files (like `.eslintrc.json`) for the rule definition.",
-				"category": "Error Lens"
-			},
-			{
 				"command": "errorlens.toggleWorkspace",
 				"title": "Toggle Workspace in Disabled List",
 				"description": "Exclude/Include current workspace by fs path.",
 				"category": "Error Lens"
 			},
 			{
-				"command": "errorLens.searchForProblem",
-				"title": "Search for problem",
-				"description": "Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).",
-				"category": "Error Lens"
-			},
-			{
 				"command": "errorLens.disableLine",
 				"title": "Disable line",
 				"description": "Add a comment to disable line for linter rule. Comment format is controlled by `\"errorLens.disableLineComments\"` setting.",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.findLinterRuleDefinition",
+				"title": "Find Linter Rule Definition",
+				"description": "Search in local linter files (like `.eslintrc.json`) for the rule definition.",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.copyProblemMessage",
+				"title": "Copy Problem Message",
+				"description": "Copy problem message to the clipboard (at the active cursor).",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.copyProblemCode",
+				"title": "Copy Problem Code",
+				"description": "Copy problem code to the clipboard (at the active cursor).",
 				"category": "Error Lens"
 			}
 		],

@@ -210,6 +210,27 @@ function getClosestDiagnostic(editor: TextEditor): Diagnostic | undefined {
 		}
 	}
 }
+/**
+ * Get closest by severity diagnostic (error=>warning=>info=>hint)
+ *
+ * TODO: duplicates code in `statusBarMessage.ts`
+ */
+function getClosestBySeverityDiagnostic(editor: TextEditor): Diagnostic | undefined {
+	const groupedDiagnostics = groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
+	const lineNumberKeys = Object.keys(groupedDiagnostics);
+	const activeLineNumber = editor.selection.active.line;
+
+	const allDiagnosticsSorted = lineNumberKeys.map(key => groupedDiagnostics[key]).flat().sort((d1, d2) => {
+		const severityScore = (d1.severity * 1e4) - (d2.severity * 1e4);
+		return severityScore + (Math.abs(activeLineNumber - d1.range.start.line) - Math.abs(activeLineNumber - d2.range.start.line));
+	});
+
+	for (const diagnostic of allDiagnosticsSorted) {
+		if (isSeverityEnabled(diagnostic.severity)) {
+			return diagnostic;
+		}
+	}
+}
 
 export const extUtils = {
 	getDiagnosticTarget,
@@ -222,4 +243,5 @@ export const extUtils = {
 	diagnosticToInlineMessage,
 	getDiagnosticAtLine,
 	getClosestDiagnostic,
+	getClosestBySeverityDiagnostic,
 };

@@ -132,6 +132,10 @@ interface ExtensionConfigType {
 	 */
 	statusBarMessageType: 'activeLine' | 'closestProblem' | 'closestSeverity';
 	/**
+	 * Which problem to select when running `errorLens.selectProblem` command.
+	 */
+	selectProblemType: 'activeLine' | 'closestProblem' | 'closestSeverity';
+	/**
 	 * Whether to use color for status bar items or not.
 	 */
 	statusBarColorsEnabled: boolean;

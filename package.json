@@ -86,7 +86,7 @@
 			{
 				"command": "errorLens.selectProblem",
 				"title": "Select Problem",
-				"description": "Set editor selection to the problem range (at the active cursor).",
+				"description": "Set editor selection to the problem range (controlled by `errorLens.selectProblemType` setting).",
 				"category": "Error Lens"
 			},
 			{
@@ -496,6 +496,21 @@
 					"type": "string",
 					"default": "https://duckduckgo.com/?q=$message",
 					"markdownDescription": "Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command."
+				},
+				"errorLens.selectProblemType": {
+					"type": "string",
+					"default": "closestProblem",
+					"enum": [
+						"closestProblem",
+						"closestSeverity",
+						"activeLine"
+					],
+					"enumDescriptions": [
+						"Show closest to the cursor diagnostic.",
+						"Show closest to the cursor diagnostic (sorted by severity e.g. error will be shown before warning even if it's farther from the cursor).",
+						"Show only diagnostic that is on the same line as the cursor."
+					],
+					"markdownDescription": "Which problem to select (closest / active line) when executing `errorLens.selectProblem` command."
 				},
 				"errorLens.light": {
 					"type": "object",

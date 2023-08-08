@@ -1,3 +1,9 @@
+## 3.13.0 `08 Aug 2023`
+
+- ✨ New command `errorLens.selectProblem` - select range of the closest problem [PR 178](https://github.com/usernamehw/vscode-error-lens/pull/178) by [zardoy](https://github.com/zardoy)
+- ✨ New setting `"errorLens.delayMode"`
+- ✨ New options for gutter icons: `"squareRounded"` and `"letter"`
+
 ## 3.12.0 `14 Jul 2023`
 
 - ✨ New setting `"errorLens.replace"` - transform error message [PR 175](https://github.com/usernamehw/vscode-error-lens/pull/175) by [ssalbdivad](https://github.com/ssalbdivad)

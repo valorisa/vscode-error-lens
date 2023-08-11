@@ -7,7 +7,7 @@ import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
 import { Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
-type DecorationKeys = 'decorationTypeError' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeInfo' | 'decorationTypeWarning' | 'transparent1x1Icon';
+type DecorationKeys = 'decorationTypeError' | 'decorationTypeErrorRange' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeHintRange' | 'decorationTypeInfo' | 'decorationTypeInfoRange' | 'decorationTypeWarning' | 'decorationTypeWarningRange' | 'transparent1x1Icon';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
 
 /**
@@ -236,6 +236,21 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	decorationTypes.decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
 	decorationTypes.decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 
+	if ($config.problemRangeDecorationEnabled) {
+		decorationTypes.decorationTypeErrorRange = window.createTextEditorDecorationType({
+			backgroundColor: new ThemeColor('errorLens.errorRangeBackground'),
+		});
+		decorationTypes.decorationTypeWarningRange = window.createTextEditorDecorationType({
+			backgroundColor: new ThemeColor('errorLens.warningRangeBackground'),
+		});
+		decorationTypes.decorationTypeInfoRange = window.createTextEditorDecorationType({
+			backgroundColor: new ThemeColor('errorLens.infoRangeBackground'),
+		});
+		decorationTypes.decorationTypeHintRange = window.createTextEditorDecorationType({
+			backgroundColor: new ThemeColor('errorLens.hintRangeBackground'),
+		});
+	}
+
 	const transparentGutterIcon: DecorationRenderOptions = {
 		gutterIconPath: gutter?.transparent1x1Icon,
 		light: {
@@ -255,6 +270,11 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 	const decorationOptionsWarning: DecorationOptions[] = [];
 	const decorationOptionsInfo: DecorationOptions[] = [];
 	const decorationOptionsHint: DecorationOptions[] = [];
+
+	const decorationOptionsErrorRange: DecorationOptions[] = [];
+	const decorationOptionsWarningRange: DecorationOptions[] = [];
+	const decorationOptionsInfoRange: DecorationOptions[] = [];
+	const decorationOptionsHintRange: DecorationOptions[] = [];
 
 	let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
 	if ($config.followCursor === 'closestProblem') {
@@ -352,18 +372,38 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		switch (severity) {
 			case 0: {
 				decorationOptionsError.push(diagnosticDecorationOptions);
+				if ($config.problemRangeDecorationEnabled) {
+					decorationOptionsErrorRange.push({
+						range: messageRange,
+					});
+				}
 				break;
 			}
 			case 1: {
 				decorationOptionsWarning.push(diagnosticDecorationOptions);
+				if ($config.problemRangeDecorationEnabled) {
+					decorationOptionsWarningRange.push({
+						range: messageRange,
+					});
+				}
 				break;
 			}
 			case 2: {
 				decorationOptionsInfo.push(diagnosticDecorationOptions);
+				if ($config.problemRangeDecorationEnabled) {
+					decorationOptionsInfoRange.push({
+						range: messageRange,
+					});
+				}
 				break;
 			}
 			case 3: {
 				decorationOptionsHint.push(diagnosticDecorationOptions);
+				if ($config.problemRangeDecorationEnabled) {
+					decorationOptionsHintRange.push({
+						range: messageRange,
+					});
+				}
 				break;
 			}
 			default: {}
@@ -379,9 +419,17 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 	editor.setDecorations(decorationTypes.decorationTypeInfo, decorationOptionsInfo);
 	editor.setDecorations(decorationTypes.decorationTypeHint, decorationOptionsHint);
 
+	if ($config.problemRangeDecorationEnabled) {
+		editor.setDecorations(decorationTypes.decorationTypeErrorRange, decorationOptionsErrorRange);
+		editor.setDecorations(decorationTypes.decorationTypeWarningRange, decorationOptionsWarningRange);
+		editor.setDecorations(decorationTypes.decorationTypeInfoRange, decorationOptionsInfoRange);
+		editor.setDecorations(decorationTypes.decorationTypeHintRange, decorationOptionsHintRange);
+	}
+
 	if ($state.renderGutterIconsAsSeparateDecoration) {
 		doUpdateGutterDecorations(editor, groupedDiagnostics);
 	}
+
 	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
 }
 

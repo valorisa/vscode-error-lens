@@ -280,6 +280,11 @@
 					],
 					"description": "Controls how inline message is highlighted in the editor (entire line / only message / none)."
 				},
+				"errorLens.problemRangeDecorationEnabled": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "When checked - highlight the entire problem range."
+				},
 				"errorLens.editorHoverPartsEnabled": {
 					"type": "object",
 					"properties": {
@@ -743,6 +748,15 @@
 				"description": "Background color of the error message."
 			},
 			{
+				"id": "errorLens.errorRangeBackground",
+				"defaults": {
+					"dark": "#e4545419",
+					"light": "#e4545419",
+					"highContrast": "#e4545419"
+				},
+				"description": "Background color of the error range (when errorLens.problemRangeDecorationEnabled setting enabled)."
+			},
+			{
 				"id": "errorLens.errorBackgroundLight",
 				"defaults": {
 					"dark": "#e4545420",
@@ -786,6 +800,15 @@
 					"highContrast": "#ff942f19"
 				},
 				"description": "Background color of the warning message."
+			},
+			{
+				"id": "errorLens.warningRangeBackground",
+				"defaults": {
+					"dark": "#ff942f19",
+					"light": "#ff942f19",
+					"highContrast": "#ff942f19"
+				},
+				"description": "Background color of the warning range (when errorLens.problemRangeDecorationEnabled setting enabled)."
 			},
 			{
 				"id": "errorLens.warningBackgroundLight",
@@ -833,6 +856,15 @@
 				"description": "Background color of the info message."
 			},
 			{
+				"id": "errorLens.infoRangeBackground",
+				"defaults": {
+					"dark": "#00b7e419",
+					"light": "#00b7e419",
+					"highContrast": "#00b7e419"
+				},
+				"description": "Background color of the info range (when errorLens.problemRangeDecorationEnabled setting enabled)."
+			},
+			{
 				"id": "errorLens.infoBackgroundLight",
 				"defaults": {
 					"dark": "#00b7e420",
@@ -876,6 +908,15 @@
 					"highContrast": "#17a2a219"
 				},
 				"description": "Background color of the hint message."
+			},
+			{
+				"id": "errorLens.hintRangeBackground",
+				"defaults": {
+					"dark": "#17a2a219",
+					"light": "#17a2a219",
+					"highContrast": "#17a2a219"
+				},
+				"description": "Background color of the hint range (when errorLens.problemRangeDecorationEnabled setting enabled)."
 			},
 			{
 				"id": "errorLens.hintBackgroundLight",

@@ -41,6 +41,10 @@ interface ExtensionConfigType {
 	 */
 	messageEnabled: boolean;
 	/**
+	 * When checked - highlight the entire problem range.
+	 */
+	problemRangeDecorationEnabled: boolean;
+	/**
 	 * Controls which parts of the editor hover tooltip to show.
 	 */
 	editorHoverPartsEnabled: {

@@ -8,6 +8,9 @@
 	],
 	"contributions.settings.moveOutPrefix": true,
 	"contributions.settings.includeTypes": false,
+	"contributions.settings.excludeById": [
+		"errorLens.decorations"
+	],
 	"contributions.settings.replaceDefaultValue": {
 		"errorLens.disableLineComments": "\\{...\\}",
 		"errorLens.lintFilePaths": "\\{...\\}",

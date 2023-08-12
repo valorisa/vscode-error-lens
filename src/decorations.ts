@@ -5,7 +5,7 @@ import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
-import { Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri, DecorationRangeBehavior } from 'vscode';
 
 type DecorationKeys = 'decorationTypeError' | 'decorationTypeErrorRange' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeHintRange' | 'decorationTypeInfo' | 'decorationTypeInfoRange' | 'decorationTypeWarning' | 'decorationTypeWarningRange' | 'transparent1x1Icon';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
@@ -140,6 +140,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			...afterProps,
 			color: errorForeground,
 			backgroundColor: errorMessageBackground,
+			...$config.decorations?.errorMessage,
 		},
 		light: {
 			backgroundColor: errorBackgroundLight,
@@ -147,6 +148,8 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			gutterIconPath: gutter?.errorIconPathLight,
 			after: {
 				color: errorForegroundLight,
+				...$config.decorations?.errorMessage,
+				...$config.decorations?.errorMessage?.light,
 			},
 		},
 		isWholeLine: true,
@@ -159,6 +162,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			...afterProps,
 			color: warningForeground,
 			backgroundColor: warningMessageBackground,
+			...$config.decorations?.warningMessage,
 		},
 		light: {
 			backgroundColor: warningBackgroundLight,
@@ -166,6 +170,8 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			gutterIconPath: gutter?.warningIconPathLight,
 			after: {
 				color: warningForegroundLight,
+				...$config.decorations?.warningMessage,
+				...$config.decorations?.warningMessage?.light,
 			},
 		},
 		isWholeLine: true,
@@ -178,6 +184,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			...afterProps,
 			color: infoForeground,
 			backgroundColor: infoMessageBackground,
+			...$config.decorations?.infoMessage,
 		},
 		light: {
 			backgroundColor: infoBackgroundLight,
@@ -185,6 +192,8 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			gutterIconPath: gutter?.infoIconPathLight,
 			after: {
 				color: infoForegroundLight,
+				...$config.decorations?.infoMessage,
+				...$config.decorations?.infoMessage?.light,
 			},
 		},
 		isWholeLine: true,
@@ -197,6 +206,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			...afterProps,
 			color: hintForeground,
 			backgroundColor: hintMessageBackground,
+			...$config.decorations?.hintMessage,
 		},
 		light: {
 			backgroundColor: hintBackgroundLight,
@@ -204,6 +214,8 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			gutterIconPath: gutter?.hintIconPathLight,
 			after: {
 				color: hintForegroundLight,
+				...$config.decorations?.hintMessage,
+				...$config.decorations?.hintMessage?.light,
 			},
 		},
 		isWholeLine: true,
@@ -239,15 +251,23 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	if ($config.problemRangeDecorationEnabled) {
 		decorationTypes.decorationTypeErrorRange = window.createTextEditorDecorationType({
 			backgroundColor: new ThemeColor('errorLens.errorRangeBackground'),
+			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+			...$config.decorations.errorRange,
 		});
 		decorationTypes.decorationTypeWarningRange = window.createTextEditorDecorationType({
 			backgroundColor: new ThemeColor('errorLens.warningRangeBackground'),
+			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+			...$config.decorations.warningRange,
 		});
 		decorationTypes.decorationTypeInfoRange = window.createTextEditorDecorationType({
 			backgroundColor: new ThemeColor('errorLens.infoRangeBackground'),
+			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+			...$config.decorations.infoRange,
 		});
 		decorationTypes.decorationTypeHintRange = window.createTextEditorDecorationType({
 			backgroundColor: new ThemeColor('errorLens.hintRangeBackground'),
+			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+			...$config.decorations.hintRange,
 		});
 	}
 

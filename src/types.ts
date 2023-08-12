@@ -1,3 +1,4 @@
+import { type DecorationRenderOptions } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
@@ -275,6 +276,10 @@ interface ExtensionConfigType {
 	 * Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command.
 	 */
 	searchForProblemQuery: string;
+	/**
+	 * Advanced decoration tweaking.
+	 */
+	decorations: Record<'errorMessage' | 'errorRange' | 'hintMessage' | 'hintRange' | 'infoMessage' | 'infoRange' | 'warningMessage' | 'warningRange', DecorationRenderOptions>;
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;

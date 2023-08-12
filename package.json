@@ -725,6 +725,24 @@
 					"type": "boolean",
 					"default": false,
 					"markdownDescription": "When enabled - prevents showing horizontal scrollbar in editor (caused by inline decorations)."
+				},
+				"errorLens.decorations": {
+					"type": "object",
+					"markdownDescription": "Advanced decoration tweaking. Possible keys: `errorRange`, `warningRange`, `infoRange`, `hintRange`.\n\n Possible properties: `backgroundColor`, `color`, `outline`, `border`, ...,",
+					"default": {
+						"errorRange": {},
+						"warningRange": {},
+						"infoRange": {},
+						"hintRange": {}
+					},
+					"patternProperties": {
+						"^(errorRange|warningRange|infoRange|hintRange|errorMessage|warningMessage|infoMessage|hintMessage)$": {
+							"type": "object",
+							"markdownDescription": "☑️ Key exists.",
+							"properties": {}
+						}
+					},
+					"additionalProperties": false
 				}
 			}
 		},

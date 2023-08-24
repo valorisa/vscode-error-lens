@@ -3,7 +3,7 @@ import { $config } from 'src/extension';
 import { type ExtensionConfig } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
-import { type DecorationOptions, type ExtensionContext, type TextEditor, Uri } from 'vscode';
+import { Uri, workspace, type DecorationOptions, type ExtensionContext, type TextEditor } from 'vscode';
 
 export interface Gutter {
 	iconSet: ExtensionConfig['gutterIconSet'];
@@ -154,7 +154,8 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 			case 3: {
 				if ($config.gutterIconSet === 'circle' ||
 					$config.gutterIconSet === 'square' ||
-					$config.gutterIconSet === 'squareRounded') {
+					$config.gutterIconSet === 'squareRounded' ||
+					$config.gutterIconSet === 'letter') {
 					decorationOptionsGutterHint.push(diagnosticDecorationOptions);
 				}
 				break;
@@ -186,11 +187,14 @@ function createSquareIcon(color: string, rx = 0): string {
 function createSquareRoundedIcon(color: string): string {
 	return createSquareIcon(color, 3);
 }
+
+let fontFamily = '';
 /**
  * Crate centered single letter icon.
  */
 function createLetterIcon(color: string, letter: 'E' | 'H' | 'I' | 'W'): string {
-	return `<svg viewBox="-10 -6 20 10" xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill="${escapeColor(color)}"><text text-anchor="middle" dominant-baseline="middle">${letter}</text></svg>`;
+	fontFamily = fontFamily ? fontFamily : workspace.getConfiguration('editor').get('fontFamily') ?? '';
+	return `<svg viewBox="-10 -6 20 10" xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill="${escapeColor(color)}"><text font-family="${fontFamily}" text-anchor="middle" dominant-baseline="middle">${letter}</text></svg>`;
 }
 /**
  * `%23` is encoded `#` sign (need it to work).

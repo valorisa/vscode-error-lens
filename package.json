@@ -180,11 +180,16 @@
 						"end": {
 							"type": "integer",
 							"minimum": 0
+						},
+						"minimumMargin": {
+							"type": "integer",
+							"minimum": 0
 						}
 					},
 					"default": {
 						"start": 0,
-						"end": 0
+						"end": 0,
+						"minimumMargin": 0
 					},
 					"markdownDescription": "Align inline error message (either by starting position or ending position).",
 					"additionalProperties": false

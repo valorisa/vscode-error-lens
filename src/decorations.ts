@@ -557,19 +557,22 @@ interface GetMarginForAlignmentArgs {
 	indentSize: number;
 	indentStyle: 'spaces' | 'tab';
 	message: string;
+	minimumMargin: number;
 }
 
-function getMarginForAlignment({ textLine, indentSize, indentStyle, start, end, message }: GetMarginForAlignmentArgs): number {
+function getMarginForAlignment({ textLine, indentSize, indentStyle, start, end, message, minimumMargin }: GetMarginForAlignmentArgs): number {
 	const visualLineLength = extUtils.getVisualLineLength(textLine, indentSize, indentStyle);
 
+	let margin = 0;
+
 	if (start) {
-		return start <= visualLineLength ? 0 : start - visualLineLength;
+		margin = start <= visualLineLength ? 0 : start - visualLineLength;
 	} else if (end) {
 		const charDiff = end - message.length - visualLineLength;
-		return charDiff < 0 ? 0 : charDiff;
+		margin = charDiff < 0 ? 0 : charDiff;
 	}
 
-	return 0;
+	return margin < minimumMargin ? minimumMargin : margin;
 }
 
 export function disposeAllDecorations(): void {

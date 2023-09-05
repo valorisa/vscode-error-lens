@@ -35,6 +35,7 @@ interface ExtensionConfigType {
 	alignMessage: {
 		start: number;
 		end: number;
+		minimumMargin: number;
 	};
 	/**
 	 * Inner margin of the inline message.

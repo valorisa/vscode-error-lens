@@ -30,6 +30,13 @@ interface ExtensionConfigType {
 	 */
 	margin: string;
 	/**
+	 * Align inline error message (either by starting position or ending position).
+	 */
+	alignMessage: {
+		start: number;
+		end: number;
+	};
+	/**
 	 * Inner margin of the inline message.
 	 */
 	padding: string;

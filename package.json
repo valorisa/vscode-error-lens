@@ -170,6 +170,25 @@
 					"default": "4ch",
 					"markdownDescription": "Distance between the last word on the line and the start of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length))."
 				},
+				"errorLens.alignMessage": {
+					"type": "object",
+					"properties": {
+						"start": {
+							"type": "integer",
+							"minimum": 0
+						},
+						"end": {
+							"type": "integer",
+							"minimum": 0
+						}
+					},
+					"default": {
+						"start": 0,
+						"end": 0
+					},
+					"markdownDescription": "Align inline error message (either by starting position or ending position).",
+					"additionalProperties": false
+				},
 				"errorLens.padding": {
 					"type": "string",
 					"default": "",

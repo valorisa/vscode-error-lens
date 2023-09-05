@@ -5,7 +5,7 @@ import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
-import { Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri, DecorationRangeBehavior } from 'vscode';
+import { DecorationRangeBehavior, Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type TextLine, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 type DecorationKeys = 'decorationTypeError' | 'decorationTypeErrorRange' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeHintRange' | 'decorationTypeInfo' | 'decorationTypeInfoRange' | 'decorationTypeWarning' | 'decorationTypeWarningRange' | 'transparent1x1Icon';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
@@ -330,6 +330,16 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 			after: {
 				contentText: message,
+				margin: ($config.alignMessage.start || $config.alignMessage.end) ?
+					`0 0 0 ${getMarginForAlignment({
+						textLine: editor.document.lineAt(Number(key)),
+						indentSize: editor.options.tabSize as number,
+						indentStyle: editor.options.insertSpaces as boolean ? 'spaces' : 'tab',
+						start: $config.alignMessage.start,
+						end: $config.alignMessage.end,
+						message: message ?? '',
+					})}ch` :
+					undefined,
 			},
 		};
 
@@ -538,6 +548,28 @@ export function updateWorkaroundGutterIcon(editor: TextEditor): void {
 		}
 	}
 	editor.setDecorations(decorationTypes.transparent1x1Icon, ranges);
+}
+
+interface GetMarginForAlignmentArgs {
+	start: number;
+	end: number;
+	textLine: TextLine;
+	indentSize: number;
+	indentStyle: 'spaces' | 'tab';
+	message: string;
+}
+
+function getMarginForAlignment({ textLine, indentSize, indentStyle, start, end, message }: GetMarginForAlignmentArgs): number {
+	const visualLineLength = extUtils.getVisualLineLength(textLine, indentSize, indentStyle);
+
+	if (start) {
+		return start <= visualLineLength ? 0 : start - visualLineLength;
+	} else if (end) {
+		const charDiff = end - message.length - visualLineLength;
+		return charDiff < 0 ? 0 : charDiff;
+	}
+
+	return 0;
 }
 
 export function disposeAllDecorations(): void {

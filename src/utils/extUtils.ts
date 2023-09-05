@@ -1,5 +1,5 @@
 import { $config, $state } from 'src/extension';
-import { languages, type Diagnostic, type TextEditor, type Uri } from 'vscode';
+import { languages, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
 
 /**
  * Usually documentation website Uri.
@@ -232,6 +232,23 @@ function getClosestBySeverityDiagnostic(editor: TextEditor): Diagnostic | undefi
 	}
 }
 
+/**
+ * Tabs take 1 character in line but visually will be multiple characters (according to `editor.tabSize`).
+ *
+ * @returns How many characters the line visually looks (different from range.end when using tabs to indent).
+ */
+function getVisualLineLength(textLine: TextLine, indentSize: number, indentStyle: 'spaces' | 'tab'): number {
+	if (indentStyle === 'spaces') {
+		return textLine.range.end.character;
+	} else {
+		/** `firstNonWhitespaceCharacterIndex` can include whitespaces, only tabs are needed to correctly get visual indent here */
+		const onlyTabsIndent = textLine.text.slice(0, textLine.firstNonWhitespaceCharacterIndex).replace(/[^\t]/gu, '');
+		const thisLineIndentSize = onlyTabsIndent.length;
+		const textWithoutIndent = textLine.text.slice(thisLineIndentSize);
+		return (onlyTabsIndent.length * indentSize) + textWithoutIndent.length;
+	}
+}
+
 export const extUtils = {
 	getDiagnosticTarget,
 	getDiagnosticCode,
@@ -244,4 +261,5 @@ export const extUtils = {
 	getDiagnosticAtLine,
 	getClosestDiagnostic,
 	getClosestBySeverityDiagnostic,
+	getVisualLineLength,
 };

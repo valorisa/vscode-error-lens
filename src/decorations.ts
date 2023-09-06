@@ -129,6 +129,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		fontStyle: $config.fontStyleItalic ? 'italic' : 'normal',
 		fontWeight: $config.fontWeight,
 		margin: `0 0 0 ${marginLeft}`,
+		height: '100%',
 		textDecoration: `none;${fontFamily};${fontSize};${padding};${borderRadius};${scrollbarHack}`,
 	};
 
@@ -337,6 +338,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 						indentStyle: editor.options.insertSpaces as boolean ? 'spaces' : 'tab',
 						start: $config.alignMessage.start,
 						end: $config.alignMessage.end,
+						minimumMargin: $config.alignMessage.minimumMargin,
 						message: message ?? '',
 					})}ch` :
 					undefined,

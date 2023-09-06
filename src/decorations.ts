@@ -129,7 +129,6 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		fontStyle: $config.fontStyleItalic ? 'italic' : 'normal',
 		fontWeight: $config.fontWeight,
 		margin: `0 0 0 ${marginLeft}`,
-		height: '100%',
 		textDecoration: `none;${fontFamily};${fontSize};${padding};${borderRadius};${scrollbarHack}`,
 	};
 

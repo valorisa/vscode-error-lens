@@ -1,3 +1,9 @@
+## 3.14.0 `25 Sep 2023`
+
+- ✨ Align message `"errorLens.alignMessage"` [Issue 136](https://github.com/usernamehw/vscode-error-lens/issues/136)
+- ✨ Highlight problem range `"errorLens.problemRangeDecorationEnabled"`
+- 🐛 "letter" gutter icon set should use editor font family
+
 ## 3.13.0 `08 Aug 2023`
 
 - ✨ New command `errorLens.selectProblem` - select range of the closest problem [PR 178](https://github.com/usernamehw/vscode-error-lens/pull/178) by [zardoy](https://github.com/zardoy)

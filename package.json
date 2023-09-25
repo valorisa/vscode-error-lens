@@ -191,7 +191,7 @@
 						"end": 0,
 						"minimumMargin": 0
 					},
-					"markdownDescription": "Align inline error message (either by starting position or ending position).",
+					"markdownDescription": "Align inline error message (either by starting position or ending position). Use it with `#errorLens.delay#` to reduce decoration stuttering.",
 					"additionalProperties": false
 				},
 				"errorLens.padding": {

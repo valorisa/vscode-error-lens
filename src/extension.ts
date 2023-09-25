@@ -1,6 +1,6 @@
 import { registerAllCommands } from 'src/commands';
 import { disposeAllDecorations, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
-import { disposeAllEventListeners, updateChangeBreakpointsListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateChangedActiveTextEditorListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
+import { disposeAllEventListeners, updateChangeBreakpointsListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateChangedActiveTextEditorListener, updateCursorChangeListener, updateOnSaveListener, updateOnVisibleRangesListener } from 'src/events';
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
@@ -28,12 +28,6 @@ export abstract class $state {
 	 * Status bar object. Handles all status bar stuff (for icons)
 	 */
 	public static statusBarIcons: StatusBarIcons;
-	/**
-	 * Editor icons can be rendered only for active line (to reduce the visual noise).
-	 * But it might be useful to show gutter icons for all lines. With `gutterIconsFollowCursorOverride`
-	 * setting then gutter icons will be rendered as a separate set of decorations.
-	 */
-	public static renderGutterIconsAsSeparateDecoration: boolean;
 	/**
 	 * Array of RegExp matchers and their updated messages.
 	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
@@ -67,6 +61,16 @@ export abstract class $state {
 	 * Used to determine if the save was recently (1s?) to show decorations.
 	 */
 	public static lastSavedTimestamp = Date.now() + 2000;
+	/**
+	 * Editor icons can be rendered only for active line (to reduce the visual noise).
+	 * But it might be useful to show gutter icons for all lines. With `gutterIconsFollowCursorOverride`
+	 * setting then gutter icons will be rendered as a separate set of decorations.
+	 */
+	public static renderGutterIconsAsSeparateDecoration: boolean;
+	/**
+	 * Set event listener for when editor visibleRanges change (vertical scroll), only when necessary.
+	 */
+	public static shouldUpdateOnEditorScrollEvent: boolean;
 }
 
 export function activate(context: ExtensionContext): void {
@@ -108,6 +112,9 @@ export function updateEverything(context: ExtensionContext): void {
 	$state.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled &&
 		$config.gutterIconsFollowCursorOverride &&
 		$config.followCursor !== 'allLines';
+
+	$state.shouldUpdateOnEditorScrollEvent = $config.followCursor === 'closestProblemInViewportMultiline';
+
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
 	$state.statusBarMessage = new StatusBarMessage({
@@ -142,6 +149,7 @@ export function updateEverything(context: ExtensionContext): void {
 	updateCursorChangeListener();
 	updateChangedActiveTextEditorListener();
 	updateChangeBreakpointsListener();
+	updateOnVisibleRangesListener();
 }
 /**
  * - Create `RegExp` from string for messages.

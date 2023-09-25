@@ -1,3 +1,4 @@
+import throttle from 'lodash/throttle';
 import debounce from 'lodash/debounce';
 import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri, updateWorkaroundGutterIcon } from 'src/decorations';
@@ -10,6 +11,7 @@ let onDidChangeVisibleTextEditors: Disposable | undefined;
 let onDidSaveTextDocumentDisposable: Disposable | undefined;
 let onDidCursorChangeDisposable: Disposable | undefined;
 let onDidChangeBreakpoints: Disposable | undefined;
+let onDidChangeTextEditorVisibleRangesDisposable: Disposable | undefined;
 
 /**
  * Update listener for when active editor changes.
@@ -92,6 +94,7 @@ export function updateCursorChangeListener(): void {
 		$config.followCursor === 'activeLine' ||
 		$config.followCursor === 'closestProblem' ||
 		$config.followCursor === 'allLinesExceptActive' ||
+		$config.followCursor === 'closestProblemMultiline' ||
 		$config.statusBarMessageEnabled
 	) {
 		let lastPositionLine = -1;
@@ -111,6 +114,22 @@ export function updateCursorChangeListener(): void {
 			}
 		});
 	}
+}
+
+export function updateOnVisibleRangesListener(): void {
+	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
+
+	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
+		updateDecorationsForUri({
+			uri: e.textEditor.document.uri,
+			editor: e.textEditor,
+		});
+		// throttle(() => {
+
+		// }, 300, {
+		// 	leading: false,
+		// });
+	});
 }
 /**
  * Update listener for when user performs manual save.
@@ -155,4 +174,5 @@ export function disposeAllEventListeners(): void {
 	onDidSaveTextDocumentDisposable?.dispose();
 	onDidCursorChangeDisposable?.dispose();
 	onDidChangeBreakpoints?.dispose();
+	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
 }

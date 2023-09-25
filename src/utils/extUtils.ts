@@ -1,4 +1,5 @@
 import { $config, $state } from 'src/extension';
+import { utils } from 'src/utils/utils';
 import { languages, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
 
 /**
@@ -38,6 +39,8 @@ function diagnosticToSourceCodeString(source: string, code?: string): string {
 export type GroupedByLineDiagnostics = Record<string, Diagnostic[]>;
 /**
  * Return diagnostics grouped by line: `Record<string, Diagnostic[]>`
+ *
+ * Also, excludes diagnostics according to `errorLens.excludeSources` & `errorLens.exclude` settings.
  */
 function groupDiagnosticsByLine(diagnostics: Diagnostic[]): GroupedByLineDiagnostics {
 	const groupedDiagnostics: GroupedByLineDiagnostics = {};
@@ -178,6 +181,24 @@ function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, cou
 	}
 }
 
+interface PrepareMessageArg {
+	template: string;
+	diagnostic: Diagnostic;
+	lineProblemCount: number;
+	removeLinebreaks: boolean;
+	replaceLinebreaksSymbol: string;
+}
+/**
+ * Apply extension settings (`errorLens.messageTemplate`, `errorLens.messageMaxChars`, `errorLens.removeLinebreaks`) to diagnostic message.
+ *
+ * If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
+ * If the message has linebreaks - it will cut off the message in that place.
+ */
+function prepareMessage({ template, diagnostic, lineProblemCount, removeLinebreaks, replaceLinebreaksSymbol }: PrepareMessageArg): string {
+	const templated = diagnosticToInlineMessage(template, diagnostic, lineProblemCount);
+	return utils.truncateString(removeLinebreaks ? utils.replaceLinebreaks(templated, replaceLinebreaksSymbol) : templated, $config.messageMaxChars);
+}
+
 function getDiagnosticAtLine(uri: Uri, lineNumber: number): Diagnostic | undefined {
 	const diagnostics = languages.getDiagnostics(uri);
 	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(diagnostics);
@@ -233,6 +254,43 @@ function getClosestBySeverityDiagnostic(editor: TextEditor): Diagnostic | undefi
 }
 
 /**
+ * Is error visible to the user or scrolled out of the editor view?
+ */
+function isDiagnosticInViewport(editor: TextEditor, diagnostic: Diagnostic): boolean {
+	for (const visibleRange of editor.visibleRanges) {
+		if (visibleRange.intersection(diagnostic.range)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function getClosestDiagnosticInViewport(editor: TextEditor): Diagnostic | undefined {
+	const groupedDiagnostics = groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
+	const activeLineNumber = editor.selection.active.line;
+
+	for (const key in groupedDiagnostics) {
+		const diagnostic = groupedDiagnostics[key][0];
+		if (!isDiagnosticInViewport(editor, diagnostic)) {
+			delete groupedDiagnostics[key];
+		}
+	}
+
+	const diagnosticsInViewport = groupedDiagnostics;
+
+	const sortedLineNumbers = Object.keys(diagnosticsInViewport).sort((ln1, ln2) => Math.abs(activeLineNumber - Number(ln1)) - Math.abs(activeLineNumber - Number(ln2)));
+
+	for (const lineNumber of sortedLineNumbers) {
+		const diagnosticsAtLine = groupedDiagnostics[lineNumber];
+		for (const diagnostic of diagnosticsAtLine) {
+			if (isSeverityEnabled(diagnostic.severity)) {
+				return diagnostic;
+			}
+		}
+	}
+}
+
+/**
  * Tabs take 1 character in line but visually will be multiple characters (according to `editor.tabSize`).
  *
  * @returns How many characters the line visually looks (different from range.end when using tabs to indent).
@@ -250,6 +308,7 @@ function getVisualLineLength(textLine: TextLine, indentSize: number, indentStyle
 }
 
 export const extUtils = {
+	prepareMessage,
 	getDiagnosticTarget,
 	getDiagnosticCode,
 	parseSourceCodeFromString,
@@ -261,5 +320,7 @@ export const extUtils = {
 	getDiagnosticAtLine,
 	getClosestDiagnostic,
 	getClosestBySeverityDiagnostic,
+	getClosestDiagnosticInViewport,
+	isDiagnosticInViewport,
 	getVisualLineLength,
 };

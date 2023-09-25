@@ -204,7 +204,7 @@
 				},
 				"errorLens.borderRadius": {
 					"type": "string",
-					"default": "3px",
+					"default": "0.2em",
 					"markdownDescription": "Border radius of the inline message. Visible when `#errorLens.messageBackgroundMode#` is set to \"message\".",
 					"examples": [
 						"5px",
@@ -630,13 +630,15 @@
 						"allLines",
 						"allLinesExceptActive",
 						"activeLine",
-						"closestProblem"
+						"closestProblem",
+						"closestProblemMultiline"
 					],
 					"enumDescriptions": [
 						"Highlight all problems in file",
 						"Highlight all problems in file (except the line at the cursor)",
 						"Highlight only the problem at the cursor",
-						"Highlight only closest to the cursor problem"
+						"Highlight only closest to the cursor problem",
+						"Highlight only closest to the cursor problem (decoration spans multiple lines, NOT IMPLEMENTED)"
 					],
 					"description": "Highlight only portion of the problems.",
 					"default": "allLines"
@@ -645,6 +647,51 @@
 					"type": "number",
 					"markdownDescription": "Augments `#errorLens.followCursor#`.\nAdds number of lines to top and bottom when `#errorLens.followCursor#` is set to `activeLine`.\n Adds number of closest problems when `#errorLens.followCursor#` is `closestProblem`",
 					"default": 0
+				},
+				"errorLens.closestProblemMultiline": {
+					"type": "object",
+					"properties": {
+						"decorationMaxNumberOfLines": {
+							"type": "integer",
+							"default": 6,
+							"maximum": 20
+						},
+						"preferFittingMessageMultiplier": {
+							"type": "number",
+							"default": 1
+						},
+						"highlightProblemLine": {
+							"type": "boolean",
+							"default": true
+						},
+						"startColumn": {
+							"type": "integer",
+							"default": 0
+						},
+						"margin": {
+							"type": "integer",
+							"default": 4
+						},
+						"padding": {
+							"type": "integer",
+							"default": 1
+						},
+						"borderRadius": {
+							"type": "string",
+							"default": ""
+						}
+					},
+					"default": {
+						"decorationMaxNumberOfLines": 6,
+						"preferSameLineMultiplier": 1,
+						"highlightProblemLine": true,
+						"startColumn": 0,
+						"margin": 4,
+						"padding": 1,
+						"borderRadius": ""
+					},
+					"additionalProperties": false,
+					"markdownDescription": "EXPERIMENTAL. Not implemented."
 				},
 				"errorLens.gutterIconsEnabled": {
 					"type": "boolean",

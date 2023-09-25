@@ -4,10 +4,10 @@ import { doUpdateGutterDecorations, getGutterStyles, type Gutter } from 'src/gut
 import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
-import { utils } from 'src/utils/utils';
+import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
 import { DecorationRangeBehavior, Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type TextLine, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
-type DecorationKeys = 'decorationTypeError' | 'decorationTypeErrorRange' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeHintRange' | 'decorationTypeInfo' | 'decorationTypeInfoRange' | 'decorationTypeWarning' | 'decorationTypeWarningRange' | 'transparent1x1Icon';
+type DecorationKeys = 'decorationTypeError' | 'decorationTypeErrorRange' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeHintRange' | 'decorationTypeInfo' | 'decorationTypeInfoRange' | 'decorationTypeMultilineError' | 'decorationTypeMultilineErrorLineBackground' | 'decorationTypeMultilineHint' | 'decorationTypeMultilineHintLineBackground' | 'decorationTypeMultilineInfo' | 'decorationTypeMultilineInfoLineBackground' | 'decorationTypeMultilineWarning' | 'decorationTypeMultilineWarningLineBackground' | 'decorationTypeWarning' | 'decorationTypeWarningRange' | 'transparent1x1Icon';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
 
 /**
@@ -56,6 +56,12 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			// gutter will be rendered as a separate decoration, delete gutter from ordinary decorations
 			gutter = undefined;
 		}
+	}
+
+	if ($config.followCursor === 'closestProblemMultiline' ||
+		$config.followCursor === 'closestProblemInViewportMultiline' ||
+		$config.followCursor === 'closestProblemBySeverityMultiline') {
+		createMultilineDecorations();
 	}
 
 	let errorBackground: ThemeColor | undefined = new ThemeColor('errorLens.errorBackground');
@@ -297,7 +303,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 	const decorationOptionsHintRange: DecorationOptions[] = [];
 
 	let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
-	if ($config.followCursor === 'closestProblem') {
+	if ($config.followCursor === 'closestProblem' || $config.followCursor === 'closestProblemMultiline') {
 		if (range === undefined) {
 			range = editor.selection;
 		}
@@ -306,6 +312,12 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		const groupedDiagnosticsAsArray = Object.entries(groupedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
 		groupedDiagnosticsAsArray.length = $config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
 		allowedLineNumbersToRenderDiagnostics = groupedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
+	}
+
+	if ($config.followCursor === 'closestProblemMultiline' ||
+		$config.followCursor === 'closestProblemBySeverityMultiline' ||
+		$config.followCursor === 'closestProblemInViewportMultiline') {
+		showMultilineDecoration(editor);
 	}
 
 	for (const key in groupedDiagnostics) {
@@ -317,14 +329,18 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 			continue;
 		}
 
-		let message: string | undefined = extUtils.diagnosticToInlineMessage($config.messageTemplate, diagnostic, groupedDiagnostic.length);
+		let message: string | undefined;
 
-		if (!$config.messageEnabled || $config.messageMaxChars === 0) {
-			message = undefined;
+		if ($config.messageEnabled) {
+			message = extUtils.prepareMessage({
+				diagnostic,
+				template: $config.messageTemplate,
+				lineProblemCount: groupedDiagnostic.length,
+				removeLinebreaks: $config.removeLinebreaks,
+				replaceLinebreaksSymbol: $config.replaceLinebreaksSymbol,
+			});
 		} else {
-			// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-			// If the message has linebreaks - it will cut off the message in that place.
-			message = utils.truncateString($config.removeLinebreaks ? utils.replaceLinebreaks(message, $config.replaceLinebreaksSymbol) : message, $config.messageMaxChars);
+			message = undefined;
 		}
 
 		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {

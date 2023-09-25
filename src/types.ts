@@ -172,13 +172,27 @@ interface ExtensionConfigType {
 	 * Highlight only portion of the problems.
 	 * For instance, only active line or the closest to the cursor diasnostic.
 	 */
-	followCursor: 'activeLine' | 'allLines' | 'allLinesExceptActive' | 'closestProblem';
+	followCursor: 'activeLine' | 'allLines' | 'allLinesExceptActive' | 'closestProblem' | 'closestProblemBySeverityMultiline' | 'closestProblemInViewportMultiline' | 'closestProblemMultiline';
 	/**
 	 * Augments `followCursor`.
 	 * Adds number of lines to top and bottom when `followCursor` is `activeLine`.
 	 * Adds number of closest problems when `followCursor` is `closestProblem`
 	 */
 	followCursorMore: number;
+	/**
+	 *
+	 */
+	closestProblemMultiline: {
+		decorationMaxNumberOfLines: number;
+		// whenCursorOutsideOfViewport: 'none' | 'showClosestProblemInViewport' | 'showClosestToCursorProblem';
+		preferFittingMessageMultiplier: number;
+		/** TODO: 'range' | 'line' | 'none' */
+		highlightProblemLine: boolean;
+		startColumn: number;
+		margin: number;
+		padding: number;
+		borderRadius: string;
+	};
 	/**
 	 * Update decorations only on save.
 	 */

@@ -9,7 +9,8 @@
 	"contributions.settings.moveOutPrefix": true,
 	"contributions.settings.includeTypes": false,
 	"contributions.settings.excludeById": [
-		"errorLens.decorations"
+		"errorLens.decorations",
+		"errorLens.closestProblemMultiline"
 	],
 	"contributions.settings.replaceDefaultValue": {
 		"errorLens.disableLineComments": "\\{...\\}",

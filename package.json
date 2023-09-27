@@ -175,14 +175,17 @@
 					"properties": {
 						"start": {
 							"type": "integer",
-							"minimum": 0
+							"minimum": 0,
+							"description": "Starting column where to align decorations."
 						},
 						"end": {
 							"type": "integer",
-							"minimum": 0
+							"minimum": 0,
+							"description": "Ending column where to align decorations."
 						},
 						"minimumMargin": {
 							"type": "integer",
+							"description": "Minimal space between line end and decoration. Very similar to the global setting `errorLens.margin`, but can only be a number of characters.",
 							"minimum": 0
 						}
 					},

@@ -67,6 +67,15 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.infoIconPathLight = vscodeUtils.svgToUri(createLetterIcon($config.light.infoGutterIconColor || $config.infoGutterIconColor, 'I'));
 		gutter.hintIconPath = vscodeUtils.svgToUri(createLetterIcon($config.hintGutterIconColor, 'H'));
 		gutter.hintIconPathLight = vscodeUtils.svgToUri(createLetterIcon($config.light.hintGutterIconPath || $config.hintGutterIconColor, 'H'));
+	} else if ($config.gutterIconSet === 'emoji') {
+		gutter.errorIconPath = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.error));
+		gutter.errorIconPathLight = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.error));
+		gutter.warningIconPath = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.warning));
+		gutter.warningIconPathLight = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.warning));
+		gutter.infoIconPath = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.info));
+		gutter.infoIconPathLight = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.info));
+		gutter.hintIconPath = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.hint));
+		gutter.hintIconPathLight = vscodeUtils.svgToUri(createEmojiIcon($config.gutterEmoji.hint));
 	} else {
 		gutter.errorIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-dark.svg`);
 		gutter.errorIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/error-light.svg`);
@@ -155,7 +164,8 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 				if ($config.gutterIconSet === 'circle' ||
 					$config.gutterIconSet === 'square' ||
 					$config.gutterIconSet === 'squareRounded' ||
-					$config.gutterIconSet === 'letter') {
+					$config.gutterIconSet === 'letter' ||
+					$config.gutterIconSet === 'emoji') {
 					decorationOptionsGutterHint.push(diagnosticDecorationOptions);
 				}
 				break;
@@ -195,6 +205,10 @@ let fontFamily = '';
 function createLetterIcon(color: string, letter: 'E' | 'H' | 'I' | 'W'): string {
 	fontFamily = fontFamily ? fontFamily : workspace.getConfiguration('editor').get('fontFamily') ?? '';
 	return `<svg viewBox="-10 -6 20 10" xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill="${escapeColor(color)}"><text font-family="${fontFamily}" text-anchor="middle" dominant-baseline="middle">${letter}</text></svg>`;
+}
+function createEmojiIcon(emojiSymbol: string): string {
+	fontFamily = fontFamily ? fontFamily : workspace.getConfiguration('editor').get('fontFamily') ?? '';
+	return `<svg viewBox="-10 -6 20 10" xmlns='http://www.w3.org/2000/svg' width='16' height='16'><text font-family="${fontFamily}" text-anchor="middle" dominant-baseline="middle">${emojiSymbol}</text></svg>`;
 }
 /**
  * `%23` is encoded `#` sign (need it to work).

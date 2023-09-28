@@ -238,7 +238,16 @@ interface ExtensionConfigType {
 	/**
 	 * Change gutter icon style.
 	 */
-	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline' | 'letter' | 'square' | 'squareRounded';
+	gutterIconSet: 'borderless' | 'circle' | 'default' | 'defaultOutline' | 'emoji' | 'letter' | 'square' | 'squareRounded';
+	/**
+	 * Pick emoji symbol for gutter icon when `#errorLens.gutterIconSet#` is `emoji`.
+	 */
+	gutterEmoji: {
+		error: string;
+		warning: string;
+		info: string;
+		hint: string;
+	};
 	/**
 	 * Absolute path to error gutter icon.
 	 */

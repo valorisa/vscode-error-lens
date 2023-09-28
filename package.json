@@ -743,7 +743,8 @@
 						"circle",
 						"square",
 						"squareRounded",
-						"letter"
+						"letter",
+						"emoji"
 					],
 					"enumDescriptions": [
 						"Similar to vscode icons in Problems Panel (old).",
@@ -752,9 +753,47 @@
 						"Simple filled circle.",
 						"Simple filled square.",
 						"Simple filled square with rounded corners.",
-						"Simple one letter icon (E,W,I,H)."
+						"Simple one letter icon (E,W,I,H).",
+						"Emoji. (`errorLens.gutterEmoji` to pick)"
 					],
 					"default": "default"
+				},
+				"errorLens.gutterEmoji": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 2,
+							"default": "💀"
+						},
+						"warning": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 2,
+							"default": "😞"
+						},
+						"info": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 2,
+							"default": "ℹ️"
+						},
+						"hint": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 2,
+							"default": "🔔"
+						}
+					},
+					"default": {
+						"error": "💀",
+						"warning": "☹️",
+						"info": "ℹ️",
+						"hint": "🔔"
+					},
+					"additionalProperties": false,
+					"markdownDescription": "Pick emoji symbol for gutter icon when `#errorLens.gutterIconSet#` is `emoji`."
 				},
 				"errorLens.errorGutterIconPath": {
 					"type": "string",

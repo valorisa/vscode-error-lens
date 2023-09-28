@@ -164,10 +164,10 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 		}
 	}
 
-	editor.setDecorations(decorationTypes.decorationTypeGutterError, decorationOptionsGutterError);
-	editor.setDecorations(decorationTypes.decorationTypeGutterWarning, decorationOptionsGutterWarning);
-	editor.setDecorations(decorationTypes.decorationTypeGutterInfo, decorationOptionsGutterInfo);
-	editor.setDecorations(decorationTypes.decorationTypeGutterHint, decorationOptionsGutterHint);
+	editor.setDecorations(decorationTypes.gutterError, decorationOptionsGutterError);
+	editor.setDecorations(decorationTypes.gutterWarning, decorationOptionsGutterWarning);
+	editor.setDecorations(decorationTypes.gutterInfo, decorationOptionsGutterInfo);
+	editor.setDecorations(decorationTypes.gutterHint, decorationOptionsGutterHint);
 }
 /**
  * Create circle gutter icons with different colors.

@@ -113,7 +113,9 @@ export function updateEverything(context: ExtensionContext): void {
 		$config.gutterIconsFollowCursorOverride &&
 		$config.followCursor !== 'allLines';
 
-	$state.shouldUpdateOnEditorScrollEvent = $config.followCursor === 'closestProblemInViewportMultiline';
+	$state.shouldUpdateOnEditorScrollEvent = $config.followCursor === 'closestProblemMultiline' ||
+		$config.followCursor === 'closestProblemMultilineInViewport' ||
+		$config.followCursor === 'closestProblemMultilineBySeverity';
 
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();

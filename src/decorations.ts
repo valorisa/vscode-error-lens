@@ -7,8 +7,36 @@ import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
 import { DecorationRangeBehavior, Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type TextLine, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
-type DecorationKeys = 'decorationTypeError' | 'decorationTypeErrorRange' | 'decorationTypeGutterError' | 'decorationTypeGutterHint' | 'decorationTypeGutterInfo' | 'decorationTypeGutterWarning' | 'decorationTypeHint' | 'decorationTypeHintRange' | 'decorationTypeInfo' | 'decorationTypeInfoRange' | 'decorationTypeMultilineError' | 'decorationTypeMultilineErrorLineBackground' | 'decorationTypeMultilineHint' | 'decorationTypeMultilineHintLineBackground' | 'decorationTypeMultilineInfo' | 'decorationTypeMultilineInfoLineBackground' | 'decorationTypeMultilineWarning' | 'decorationTypeMultilineWarningLineBackground' | 'decorationTypeWarning' | 'decorationTypeWarningRange' | 'transparent1x1Icon';
+/* eslint-disable @typescript-eslint/sort-type-constituents */
+type DecorationKeys =
+	'error' |
+	'warning' |
+	'info' |
+	'hint' |
+
+	'gutterError' |
+	'gutterWarning' |
+	'gutterInfo' |
+	'gutterHint' |
+
+	'errorRange' |
+	'warningRange' |
+	'infoRange' |
+	'hintRange' |
+
+	'multilineError' |
+	'multilineWarning' |
+	'multilineInfo' |
+	'multilineHint' |
+
+	'multilineErrorLineBackground' |
+	'multilineHintLineBackground' |
+	'multilineInfoLineBackground' |
+	'multilineWarningLineBackground' |
+
+	'transparent1x1Icon';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
+/* eslint-enable @typescript-eslint/sort-type-constituents */
 
 /**
  * Update all decoration styles: editor, gutter, status bar
@@ -21,7 +49,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		gutter = getGutterStyles(context);
 
 		if ($state.renderGutterIconsAsSeparateDecoration) {
-			decorationTypes.decorationTypeGutterError = window.createTextEditorDecorationType({
+			decorationTypes.gutterError = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.errorIconPath,
 				gutterIconSize: $config.gutterIconSize,
 				light: {
@@ -29,7 +57,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});
-			decorationTypes.decorationTypeGutterWarning = window.createTextEditorDecorationType({
+			decorationTypes.gutterWarning = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.warningIconPath,
 				gutterIconSize: $config.gutterIconSize,
 				light: {
@@ -37,7 +65,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});
-			decorationTypes.decorationTypeGutterInfo = window.createTextEditorDecorationType({
+			decorationTypes.gutterInfo = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.infoIconPath,
 				gutterIconSize: $config.gutterIconSize,
 				light: {
@@ -45,7 +73,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 					gutterIconSize: $config.gutterIconSize,
 				},
 			});
-			decorationTypes.decorationTypeGutterHint = window.createTextEditorDecorationType({
+			decorationTypes.gutterHint = window.createTextEditorDecorationType({
 				gutterIconPath: gutter.hintIconPath,
 				gutterIconSize: $config.gutterIconSize,
 				light: {
@@ -59,8 +87,8 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	}
 
 	if ($config.followCursor === 'closestProblemMultiline' ||
-		$config.followCursor === 'closestProblemInViewportMultiline' ||
-		$config.followCursor === 'closestProblemBySeverityMultiline') {
+		$config.followCursor === 'closestProblemMultilineInViewport' ||
+		$config.followCursor === 'closestProblemMultilineBySeverity') {
 		createMultilineDecorations();
 	}
 
@@ -249,33 +277,32 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		decorationRenderOptionsHint.light!.after = undefined;
 	}
 
-	decorationTypes.decorationTypeError = window.createTextEditorDecorationType(decorationRenderOptionsError);
-	decorationTypes.decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptionsWarning);
-	decorationTypes.decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
-	decorationTypes.decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
+	decorationTypes.error = window.createTextEditorDecorationType(decorationRenderOptionsError);
+	decorationTypes.warning = window.createTextEditorDecorationType(decorationRenderOptionsWarning);
+	decorationTypes.info = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
+	decorationTypes.hint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 
-	if ($config.problemRangeDecorationEnabled) {
-		decorationTypes.decorationTypeErrorRange = window.createTextEditorDecorationType({
-			backgroundColor: new ThemeColor('errorLens.errorRangeBackground'),
-			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
-			...$config.decorations.errorRange,
-		});
-		decorationTypes.decorationTypeWarningRange = window.createTextEditorDecorationType({
-			backgroundColor: new ThemeColor('errorLens.warningRangeBackground'),
-			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
-			...$config.decorations.warningRange,
-		});
-		decorationTypes.decorationTypeInfoRange = window.createTextEditorDecorationType({
-			backgroundColor: new ThemeColor('errorLens.infoRangeBackground'),
-			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
-			...$config.decorations.infoRange,
-		});
-		decorationTypes.decorationTypeHintRange = window.createTextEditorDecorationType({
-			backgroundColor: new ThemeColor('errorLens.hintRangeBackground'),
-			rangeBehavior: DecorationRangeBehavior.ClosedClosed,
-			...$config.decorations.hintRange,
-		});
-	}
+	// ──── Range ─────────────────────────────────────────────────
+	decorationTypes.errorRange = window.createTextEditorDecorationType({
+		backgroundColor: new ThemeColor('errorLens.errorRangeBackground'),
+		rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+		...$config.decorations.errorRange,
+	});
+	decorationTypes.warningRange = window.createTextEditorDecorationType({
+		backgroundColor: new ThemeColor('errorLens.warningRangeBackground'),
+		rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+		...$config.decorations.warningRange,
+	});
+	decorationTypes.infoRange = window.createTextEditorDecorationType({
+		backgroundColor: new ThemeColor('errorLens.infoRangeBackground'),
+		rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+		...$config.decorations.infoRange,
+	});
+	decorationTypes.hintRange = window.createTextEditorDecorationType({
+		backgroundColor: new ThemeColor('errorLens.hintRangeBackground'),
+		rangeBehavior: DecorationRangeBehavior.ClosedClosed,
+		...$config.decorations.hintRange,
+	});
 
 	const transparentGutterIcon: DecorationRenderOptions = {
 		gutterIconPath: gutter?.transparent1x1Icon,
@@ -315,8 +342,8 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 	}
 
 	if ($config.followCursor === 'closestProblemMultiline' ||
-		$config.followCursor === 'closestProblemBySeverityMultiline' ||
-		$config.followCursor === 'closestProblemInViewportMultiline') {
+		$config.followCursor === 'closestProblemMultilineInViewport' ||
+		$config.followCursor === 'closestProblemMultilineBySeverity') {
 		showMultilineDecoration(editor);
 	}
 
@@ -461,16 +488,16 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		updateWorkaroundGutterIcon(editor);
 	}
 
-	editor.setDecorations(decorationTypes.decorationTypeError, decorationOptionsError);
-	editor.setDecorations(decorationTypes.decorationTypeWarning, decorationOptionsWarning);
-	editor.setDecorations(decorationTypes.decorationTypeInfo, decorationOptionsInfo);
-	editor.setDecorations(decorationTypes.decorationTypeHint, decorationOptionsHint);
+	editor.setDecorations(decorationTypes.error, decorationOptionsError);
+	editor.setDecorations(decorationTypes.warning, decorationOptionsWarning);
+	editor.setDecorations(decorationTypes.info, decorationOptionsInfo);
+	editor.setDecorations(decorationTypes.hint, decorationOptionsHint);
 
 	if ($config.problemRangeDecorationEnabled) {
-		editor.setDecorations(decorationTypes.decorationTypeErrorRange, decorationOptionsErrorRange);
-		editor.setDecorations(decorationTypes.decorationTypeWarningRange, decorationOptionsWarningRange);
-		editor.setDecorations(decorationTypes.decorationTypeInfoRange, decorationOptionsInfoRange);
-		editor.setDecorations(decorationTypes.decorationTypeHintRange, decorationOptionsHintRange);
+		editor.setDecorations(decorationTypes.errorRange, decorationOptionsErrorRange);
+		editor.setDecorations(decorationTypes.warningRange, decorationOptionsWarningRange);
+		editor.setDecorations(decorationTypes.infoRange, decorationOptionsInfoRange);
+		editor.setDecorations(decorationTypes.hintRange, decorationOptionsHintRange);
 	}
 
 	if ($state.renderGutterIconsAsSeparateDecoration) {

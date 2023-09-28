@@ -5,45 +5,47 @@ import { Range, ThemeColor, languages, window, type DecorationOptions, type Diag
 
 export function createMultilineDecorations(): void {
 	// ──── Multiline message ─────────────────────────────────────
-	decorationTypes.decorationTypeMultilineError = window.createTextEditorDecorationType({
+	decorationTypes.multilineError = window.createTextEditorDecorationType({
 		after: {
 			backgroundColor: new ThemeColor('errorLens.errorMessageBackground'),
 			color: new ThemeColor('errorLens.errorForeground'),
 		},
 	});
-	decorationTypes.decorationTypeMultilineWarning = window.createTextEditorDecorationType({
+	decorationTypes.multilineWarning = window.createTextEditorDecorationType({
 		after: {
 			backgroundColor: new ThemeColor('errorLens.warningMessageBackground'),
 			color: new ThemeColor('errorLens.warningForeground'),
 		},
 	});
-	decorationTypes.decorationTypeMultilineInfo = window.createTextEditorDecorationType({
+	decorationTypes.multilineInfo = window.createTextEditorDecorationType({
 		after: {
 			backgroundColor: new ThemeColor('errorLens.infoMessageBackground'),
 			color: new ThemeColor('errorLens.infoForeground'),
 		},
 	});
-	decorationTypes.decorationTypeMultilineHint = window.createTextEditorDecorationType({
+	decorationTypes.multilineHint = window.createTextEditorDecorationType({
 		after: {
 			backgroundColor: new ThemeColor('errorLens.hintMessageBackground'),
 			color: new ThemeColor('errorLens.hintForeground'),
 		},
 	});
 
-	// ──── Single problem line ───────────────────────────────────
-	decorationTypes.decorationTypeMultilineErrorLineBackground = window.createTextEditorDecorationType({
+	// Since message decoration is located in a different random place in the editor => highlight line/range where the problem is.
+
+	// ──── Highlight line where problem is located ───────────────
+	decorationTypes.multilineErrorLineBackground = window.createTextEditorDecorationType({
 		backgroundColor: new ThemeColor('errorLens.errorBackground'),
 		isWholeLine: true,
 	});
-	decorationTypes.decorationTypeMultilineWarningLineBackground = window.createTextEditorDecorationType({
+	decorationTypes.multilineWarningLineBackground = window.createTextEditorDecorationType({
 		backgroundColor: new ThemeColor('errorLens.warningBackground'),
 		isWholeLine: true,
 	});
-	decorationTypes.decorationTypeMultilineInfoLineBackground = window.createTextEditorDecorationType({
+	decorationTypes.multilineInfoLineBackground = window.createTextEditorDecorationType({
 		backgroundColor: new ThemeColor('errorLens.infoBackground'),
 		isWholeLine: true,
 	});
-	decorationTypes.decorationTypeMultilineHintLineBackground = window.createTextEditorDecorationType({
+	decorationTypes.multilineHintLineBackground = window.createTextEditorDecorationType({
 		backgroundColor: new ThemeColor('errorLens.hintBackground'),
 		isWholeLine: true,
 	});
@@ -75,9 +77,9 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	let diagnostic: Diagnostic | undefined;
 	if ($config.followCursor === 'closestProblemMultiline') {
 		diagnostic = extUtils.getClosestDiagnostic(editor);
-	} else if ($config.followCursor === 'closestProblemInViewportMultiline') {
+	} else if ($config.followCursor === 'closestProblemMultilineInViewport') {
 		diagnostic = extUtils.getClosestDiagnosticInViewport(editor);
-	} else if ($config.followCursor === 'closestProblemBySeverityMultiline') {
+	} else if ($config.followCursor === 'closestProblemMultilineBySeverity') {
 		diagnostic = extUtils.getClosestBySeverityDiagnostic(editor);
 	}
 
@@ -92,9 +94,8 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	let messageLines = diagnostic.message.split(/[\n\r]/u);
 	const maxMessageLineLength = messageLines.slice(0).sort((ln1, ln2) => ln2.length - ln1.length)[0].length;
 	messageLines = messageLines.map(line => line.padEnd(maxMessageLineLength, ' '));
-	// const isMessageSingleline = messageLines.length === 1;
 	const isProblemInViewport = extUtils.isDiagnosticInViewport(editor, diagnostic);
-	const visibleLineCount = getVisibleLineCount(editor);
+	const visibleLineCount = getVisibleLineCount(editor);//
 
 	const howManyLinesInDecoration = Math.min(messageLines.length, $config.closestProblemMultiline.decorationMaxNumberOfLines, editor.document.lineCount);
 
@@ -149,24 +150,44 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	const decorationsToDraw: DecorationOptions[] = [];
 	let i = 0;
 	for (const textLine of whereToShowDecoration.textLines) {
-		const margin = $config.closestProblemMultiline.margin + whereToShowDecoration.minVisualLineLength - extUtils.getVisualLineLength(textLine, indentSize, indentStyle);
+		const visualLineLength = extUtils.getVisualLineLength(textLine, indentSize, indentStyle);
+		const margin = $config.closestProblemMultiline.margin + whereToShowDecoration.minVisualLineLength - visualLineLength;
 		const borderRadius = makeRoundCornersForDecoration({ isFirstLineOfDecoration: i === 0, isLastLineOfDecoration: i === whereToShowDecoration.textLines.length - 1 });
-		const skipBackground = $config.closestProblemMultiline.highlightProblemLine && textLine.range.start.line === diagnostic.range.start.line;
+		/** Both line & message decorations have transparency so when they overlap it looks bad */
+		const skipBackground = $config.closestProblemMultiline.highlightProblemLine === 'line' && textLine.range.start.line === diagnostic.range.start.line;
+
+		let positionStyle = '';
+		let range: Range;
+		let marginStyle = '';
+		let heightStyle: string | undefined;
+		if ($config.closestProblemMultiline.reduceStuttering) {
+			// Draw decoration as fixed positioned element
+			range = new Range(
+				textLine.range.start,
+				textLine.range.start,
+			);
+			const left = margin + visualLineLength;
+			positionStyle = `position:fixed;left:${left}ch`;
+		} else {
+			range = new Range(
+				textLine.range.start.line,
+				textLine.range.end.character,
+				textLine.range.start.line,
+				textLine.range.end.character,
+			);
+			marginStyle = `0 0 0 ${margin >= 0 ? margin : 0}ch`;
+			heightStyle = '100%';
+		}
 
 		decorationsToDraw.push({
-			range: new Range(
-				textLine.range.start.line,
-				textLine.range.end.character,
-				textLine.range.start.line,
-				textLine.range.end.character,
-			),
+			range,
 			renderOptions: {
 				after: {
+					margin: marginStyle,
+					height: heightStyle,
 					backgroundColor: skipBackground ? '#fff0' : undefined,
-					margin: `0 0 0 ${margin >= 0 ? margin : 0}ch`,
 					contentText: messageLines[i],
-					height: '100%',
-					textDecoration: `;white-space:pre;padding:0 ${$config.closestProblemMultiline.padding}ch;${borderRadius};`, // Keep leading whitespace in ::after content
+					textDecoration: `;white-space:pre;padding:0 ${$config.closestProblemMultiline.padding}ch;${borderRadius};${positionStyle};`, // Keep leading whitespace in ::after content
 				},
 			},
 		});
@@ -197,29 +218,44 @@ export function showMultilineDecoration(editor: TextEditor): void {
 		hintLineDecorations = [new Range(diagnostic.range.start, diagnostic.range.start)];
 	}
 
-	editor.setDecorations(decorationTypes.decorationTypeMultilineError, errorDecorations);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineWarning, warningDecorations);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineInfo, infoDecorations);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineHint, hintDecorations);
+	editor.setDecorations(decorationTypes.multilineError, errorDecorations);
+	editor.setDecorations(decorationTypes.multilineWarning, warningDecorations);
+	editor.setDecorations(decorationTypes.multilineInfo, infoDecorations);
+	editor.setDecorations(decorationTypes.multilineHint, hintDecorations);
 
-	if ($config.closestProblemMultiline.highlightProblemLine) {
-		editor.setDecorations(decorationTypes.decorationTypeMultilineErrorLineBackground, errorLineDecorations);
-		editor.setDecorations(decorationTypes.decorationTypeMultilineWarningLineBackground, warningLineDecorations);
-		editor.setDecorations(decorationTypes.decorationTypeMultilineInfoLineBackground, infoLineDecorations);
-		editor.setDecorations(decorationTypes.decorationTypeMultilineHintLineBackground, hintLineDecorations);
+	if ($config.closestProblemMultiline.highlightProblemLine === 'line') {
+		editor.setDecorations(decorationTypes.multilineErrorLineBackground, errorLineDecorations);
+		editor.setDecorations(decorationTypes.multilineWarningLineBackground, warningLineDecorations);
+		editor.setDecorations(decorationTypes.multilineInfoLineBackground, infoLineDecorations);
+		editor.setDecorations(decorationTypes.multilineHintLineBackground, hintLineDecorations);
+	} else if ($config.closestProblemMultiline.highlightProblemLine === 'range') {
+		if (diagnostic.severity === 0) {
+			editor.setDecorations(decorationTypes.errorRange, [diagnostic.range]);
+		} else if (diagnostic.severity === 1) {
+			editor.setDecorations(decorationTypes.warningRange, [diagnostic.range]);
+		} else if (diagnostic.severity === 2) {
+			editor.setDecorations(decorationTypes.infoRange, [diagnostic.range]);
+		} else if (diagnostic.severity === 3) {
+			editor.setDecorations(decorationTypes.hintRange, [diagnostic.range]);
+		}
 	}
 }
 
 function clearAllMultilineDecorations(editor: TextEditor): void {
-	editor.setDecorations(decorationTypes.decorationTypeMultilineError, []);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineWarning, []);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineInfo, []);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineHint, []);
+	editor.setDecorations(decorationTypes.multilineError, []);
+	editor.setDecorations(decorationTypes.multilineWarning, []);
+	editor.setDecorations(decorationTypes.multilineInfo, []);
+	editor.setDecorations(decorationTypes.multilineHint, []);
 
-	editor.setDecorations(decorationTypes.decorationTypeMultilineErrorLineBackground, []);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineWarningLineBackground, []);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineInfoLineBackground, []);
-	editor.setDecorations(decorationTypes.decorationTypeMultilineHintLineBackground, []);
+	editor.setDecorations(decorationTypes.errorRange, []);
+	editor.setDecorations(decorationTypes.warningRange, []);
+	editor.setDecorations(decorationTypes.infoRange, []);
+	editor.setDecorations(decorationTypes.hintRange, []);
+
+	editor.setDecorations(decorationTypes.multilineErrorLineBackground, []);
+	editor.setDecorations(decorationTypes.multilineWarningLineBackground, []);
+	editor.setDecorations(decorationTypes.multilineInfoLineBackground, []);
+	editor.setDecorations(decorationTypes.multilineHintLineBackground, []);
 }
 
 /**

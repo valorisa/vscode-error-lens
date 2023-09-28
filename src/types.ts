@@ -172,7 +172,7 @@ interface ExtensionConfigType {
 	 * Highlight only portion of the problems.
 	 * For instance, only active line or the closest to the cursor diasnostic.
 	 */
-	followCursor: 'activeLine' | 'allLines' | 'allLinesExceptActive' | 'closestProblem' | 'closestProblemBySeverityMultiline' | 'closestProblemInViewportMultiline' | 'closestProblemMultiline';
+	followCursor: 'activeLine' | 'allLines' | 'allLinesExceptActive' | 'closestProblem' | 'closestProblemMultiline' | 'closestProblemMultilineBySeverity' | 'closestProblemMultilineInViewport';
 	/**
 	 * Augments `followCursor`.
 	 * Adds number of lines to top and bottom when `followCursor` is `activeLine`.
@@ -186,12 +186,17 @@ interface ExtensionConfigType {
 		decorationMaxNumberOfLines: number;
 		// whenCursorOutsideOfViewport: 'none' | 'showClosestProblemInViewport' | 'showClosestToCursorProblem';
 		preferFittingMessageMultiplier: number;
-		/** TODO: 'range' | 'line' | 'none' */
-		highlightProblemLine: boolean;
+		// TODO: implement
+		preferSameLineMultiplier: number;
+		highlightProblemLine: 'line' | 'none' | 'range';
 		startColumn: number;
 		margin: number;
 		padding: number;
 		borderRadius: string;
+		/**
+		 * Use fixed position for decoration that has stuttering/twitching when typing... BUT!!! decoration can overlap text in editor for a short period of time on the active line.
+		 */
+		reduceStuttering: boolean;
 	};
 	/**
 	 * Update decorations only on save.

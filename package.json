@@ -754,7 +754,7 @@
 						"Simple filled square.",
 						"Simple filled square with rounded corners.",
 						"Simple one letter icon (E,W,I,H).",
-						"Emoji. (`errorLens.gutterEmoji` to pick)"
+						"Emoji. (`errorLens.gutterEmoji` to control which emoji to show.)"
 					],
 					"default": "default"
 				},
@@ -777,13 +777,13 @@
 							"type": "string",
 							"minLength": 0,
 							"maxLength": 2,
-							"default": "ℹ️"
+							"default": "🆗"
 						},
 						"hint": {
 							"type": "string",
 							"minLength": 0,
 							"maxLength": 2,
-							"default": "🔔"
+							"default": "🍏"
 						}
 					},
 					"default": {

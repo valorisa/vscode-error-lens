@@ -306,6 +306,12 @@ function getVisualLineLength(textLine: TextLine, indentSize: number, indentStyle
 		return (onlyTabsIndent.length * indentSize) + textWithoutIndent.length;
 	}
 }
+/**
+ * Whether or not to align editor message text based on values of `errorLens.alignMessage` setting.
+ */
+function shouldAlign(): boolean {
+	return Boolean($config.alignMessage.start || $config.alignMessage.end);
+}
 
 export const extUtils = {
 	prepareMessage,
@@ -323,4 +329,5 @@ export const extUtils = {
 	getClosestDiagnosticInViewport,
 	isDiagnosticInViewport,
 	getVisualLineLength,
+	shouldAlign,
 };

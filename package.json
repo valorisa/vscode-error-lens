@@ -187,6 +187,11 @@
 							"type": "integer",
 							"description": "Minimal space between line end and decoration. Very similar to the global setting `errorLens.margin`, but can only be a number of characters.",
 							"minimum": 0
+						},
+						"useFixedPosition": {
+							"type": "boolean",
+							"default": false,
+							"description": "Use fixed position for decoration that has stuttering/twitching when typing... BUT!!! decoration can overlap text in editor for a short period of time on the active line."
 						}
 					},
 					"default": {
@@ -654,7 +659,7 @@
 					"markdownDescription": "Augments `#errorLens.followCursor#`.\nAdds number of lines to top and bottom when `#errorLens.followCursor#` is set to `activeLine`.\n Adds number of closest problems when `#errorLens.followCursor#` is `closestProblem`",
 					"default": 0
 				},
-				"errorLens.closestProblemMultiline": {
+				"errorLens.multilineMessage": {
 					"type": "object",
 					"properties": {
 						"decorationMaxNumberOfLines": {
@@ -675,9 +680,17 @@
 							],
 							"default": "line"
 						},
-						"startColumn": {
+						"alignStart": {
 							"type": "integer",
-							"default": 0
+							"minimum": 0,
+							"default": 0,
+							"description": "NOT IMPLEMENTED."
+						},
+						"alignEnd": {
+							"type": "integer",
+							"minimum": 0,
+							"default": 0,
+							"description": "NOT IMPLEMENTED."
 						},
 						"margin": {
 							"type": "integer",
@@ -691,7 +704,7 @@
 							"type": "string",
 							"default": ""
 						},
-						"reduceStuttering": {
+						"useFixedPosition": {
 							"type": "boolean",
 							"default": false,
 							"description": "Use fixed position for decoration that has stuttering/twitching when typing... BUT!!! decoration can overlap text in editor for a short period of time on the active line."
@@ -702,11 +715,12 @@
 						"preferFittingMessageMultiplier": 2,
 						"preferSameLineMultiplier": 1,
 						"highlightProblemLine": "line",
-						"startColumn": 0,
+						"alignStart": 0,
+						"alignEnd": 0,
 						"margin": 4,
 						"padding": 1,
 						"borderRadius": "",
-						"reduceStuttering": false
+						"useFixedPosition": false
 					},
 					"additionalProperties": false,
 					"markdownDescription": "EXPERIMENTAL. Not implemented."
@@ -788,9 +802,9 @@
 					},
 					"default": {
 						"error": "💀",
-						"warning": "☹️",
-						"info": "ℹ️",
-						"hint": "🔔"
+						"warning": "😞",
+						"info": "🆗",
+						"hint": "🍏"
 					},
 					"additionalProperties": false,
 					"markdownDescription": "Pick emoji symbol for gutter icon when `#errorLens.gutterIconSet#` is `emoji`."

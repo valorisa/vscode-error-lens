@@ -36,6 +36,7 @@ interface ExtensionConfigType {
 		start: number;
 		end: number;
 		minimumMargin: number;
+		useFixedPosition: boolean;
 	};
 	/**
 	 * Inner margin of the inline message.
@@ -182,21 +183,22 @@ interface ExtensionConfigType {
 	/**
 	 *
 	 */
-	closestProblemMultiline: {
+	multilineMessage: {
 		decorationMaxNumberOfLines: number;
 		// whenCursorOutsideOfViewport: 'none' | 'showClosestProblemInViewport' | 'showClosestToCursorProblem';
 		preferFittingMessageMultiplier: number;
-		// TODO: implement
+		/** TODO: **implement** */
 		preferSameLineMultiplier: number;
 		highlightProblemLine: 'line' | 'none' | 'range';
-		startColumn: number;
+		alignStart: number;
+		alignEnd: number;
 		margin: number;
 		padding: number;
 		borderRadius: string;
 		/**
 		 * Use fixed position for decoration that has stuttering/twitching when typing... BUT!!! decoration can overlap text in editor for a short period of time on the active line.
 		 */
-		reduceStuttering: boolean;
+		useFixedPosition: boolean;
 	};
 	/**
 	 * Update decorations only on save.

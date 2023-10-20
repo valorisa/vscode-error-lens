@@ -1,10 +1,12 @@
 import { decorationTypes } from 'src/decorations';
+import { getStyleForAlignment } from 'src/decorations/align';
 import { $config } from 'src/extension';
 import { extUtils } from 'src/utils/extUtils';
 import { Range, ThemeColor, languages, window, type DecorationOptions, type Diagnostic, type TextEditor, type TextLine } from 'vscode';
 
 export function createMultilineDecorations(): void {
 	// ──── Multiline message ─────────────────────────────────────
+	// TODO: after props with fontFamily config
 	decorationTypes.multilineError = window.createTextEditorDecorationType({
 		after: {
 			backgroundColor: new ThemeColor('errorLens.errorMessageBackground'),
@@ -97,7 +99,7 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	const isProblemInViewport = extUtils.isDiagnosticInViewport(editor, diagnostic);
 	const visibleLineCount = getVisibleLineCount(editor);//
 
-	const howManyLinesInDecoration = Math.min(messageLines.length, $config.closestProblemMultiline.decorationMaxNumberOfLines, editor.document.lineCount);
+	const howManyLinesInDecoration = Math.min(messageLines.length, $config.multilineMessage.decorationMaxNumberOfLines, editor.document.lineCount);
 
 	let result: GroupedTextLines[] = [];
 
@@ -122,7 +124,7 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	for (const textLines of groupedTextLines) {
 		const howManyLinesFromDiagnostic = howManyLinesAwayFromDiagnostic(textLines[0].range.start.line, textLines.at(-1)!.range.end.line, diagnostic);
 		const minLine = textLines.slice(0).sort((tl1, tl2) => extUtils.getVisualLineLength(tl2, indentSize, indentStyle) - extUtils.getVisualLineLength(tl1, indentSize, indentStyle))[0];
-		const minVisualLineLength = Math.max(extUtils.getVisualLineLength(minLine, indentSize, indentStyle), $config.closestProblemMultiline.startColumn);
+		const minVisualLineLength = Math.max(extUtils.getVisualLineLength(minLine, indentSize, indentStyle), $config.multilineMessage.alignStart);
 
 		result.push({
 			startLineIndex: textLines[0].range.start.line,
@@ -136,7 +138,7 @@ export function showMultilineDecoration(editor: TextEditor): void {
 				howManyLinesFromDiagnostic,
 				minVisualLineLength,
 				visibleLineCount,
-				preferFittingMessageMultiplier: $config.closestProblemMultiline.preferFittingMessageMultiplier,
+				preferFittingMessageMultiplier: $config.multilineMessage.preferFittingMessageMultiplier,
 			}),
 			textLines,
 			startLineStartsWith: textLines[0].text.slice(0, 10),
@@ -150,32 +152,49 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	const decorationsToDraw: DecorationOptions[] = [];
 	let i = 0;
 	for (const textLine of whereToShowDecoration.textLines) {
-		const visualLineLength = extUtils.getVisualLineLength(textLine, indentSize, indentStyle);
-		const margin = $config.closestProblemMultiline.margin + whereToShowDecoration.minVisualLineLength - visualLineLength;
-		const borderRadius = makeRoundCornersForDecoration({ isFirstLineOfDecoration: i === 0, isLastLineOfDecoration: i === whereToShowDecoration.textLines.length - 1 });
+		// const visualLineLength = extUtils.getVisualLineLength(textLine, indentSize, indentStyle);
+		// const margin = $config.multilineMessage.margin + whereToShowDecoration.minVisualLineLength - visualLineLength;
+		const borderRadius = makeRoundCornersForDecoration({
+			isFirstLineOfDecoration: i === 0,
+			isLastLineOfDecoration: i === whereToShowDecoration.textLines.length - 1,
+		});
 		/** Both line & message decorations have transparency so when they overlap it looks bad */
-		const skipBackground = $config.closestProblemMultiline.highlightProblemLine === 'line' && textLine.range.start.line === diagnostic.range.start.line;
+		const skipBackground = $config.multilineMessage.highlightProblemLine === 'line' && textLine.range.start.line === diagnostic.range.start.line;
 
-		let positionStyle = '';
+		let styleStr = '';
 		let range: Range;
-		let marginStyle = '';
 		let heightStyle: string | undefined;
-		if ($config.closestProblemMultiline.reduceStuttering) {
+		if ($config.multilineMessage.useFixedPosition) {
 			// Draw decoration as fixed positioned element
-			range = new Range(
-				textLine.range.start,
-				textLine.range.start,
-			);
-			const left = margin + visualLineLength;
-			positionStyle = `position:fixed;left:${left}ch`;
+			const fixedMarginStyle = getStyleForAlignment({
+				isMultilineDecoration: true,
+				alignmentKind: 'fixed',
+				indentSize,
+				indentStyle,
+				minVisualLineLength: whereToShowDecoration.minVisualLineLength,
+				minimumMargin: $config.multilineMessage.margin,
+				textLine,
+				start: $config.multilineMessage.alignStart,
+				end: $config.multilineMessage.alignEnd,
+				problemMessage: messageLines[i],
+			});
+			range = fixedMarginStyle.range;
+			styleStr = fixedMarginStyle.styleStr;
 		} else {
-			range = new Range(
-				textLine.range.start.line,
-				textLine.range.end.character,
-				textLine.range.start.line,
-				textLine.range.end.character,
-			);
-			marginStyle = `0 0 0 ${margin >= 0 ? margin : 0}ch`;
+			const normalMarginStyle = getStyleForAlignment({
+				isMultilineDecoration: true,
+				alignmentKind: 'normal',
+				indentSize,
+				indentStyle,
+				minVisualLineLength: whereToShowDecoration.minVisualLineLength,
+				minimumMargin: $config.multilineMessage.margin,
+				textLine,
+				start: $config.multilineMessage.alignStart,
+				end: $config.multilineMessage.alignEnd,
+				problemMessage: messageLines[i],
+			});
+			range = normalMarginStyle.range;
+			styleStr = normalMarginStyle.styleStr;
 			heightStyle = '100%';
 		}
 
@@ -183,11 +202,10 @@ export function showMultilineDecoration(editor: TextEditor): void {
 			range,
 			renderOptions: {
 				after: {
-					margin: marginStyle,
 					height: heightStyle,
 					backgroundColor: skipBackground ? '#fff0' : undefined,
 					contentText: messageLines[i],
-					textDecoration: `;white-space:pre;padding:0 ${$config.closestProblemMultiline.padding}ch;${borderRadius};${positionStyle};`, // Keep leading whitespace in ::after content
+					textDecoration: `;white-space:pre;padding:0 ${$config.multilineMessage.padding}ch;${borderRadius};${styleStr};`, // Keep leading whitespace in ::after content
 				},
 			},
 		});
@@ -223,12 +241,12 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	editor.setDecorations(decorationTypes.multilineInfo, infoDecorations);
 	editor.setDecorations(decorationTypes.multilineHint, hintDecorations);
 
-	if ($config.closestProblemMultiline.highlightProblemLine === 'line') {
+	if ($config.multilineMessage.highlightProblemLine === 'line') {
 		editor.setDecorations(decorationTypes.multilineErrorLineBackground, errorLineDecorations);
 		editor.setDecorations(decorationTypes.multilineWarningLineBackground, warningLineDecorations);
 		editor.setDecorations(decorationTypes.multilineInfoLineBackground, infoLineDecorations);
 		editor.setDecorations(decorationTypes.multilineHintLineBackground, hintLineDecorations);
-	} else if ($config.closestProblemMultiline.highlightProblemLine === 'range') {
+	} else if ($config.multilineMessage.highlightProblemLine === 'range') {
 		if (diagnostic.severity === 0) {
 			editor.setDecorations(decorationTypes.errorRange, [diagnostic.range]);
 		} else if (diagnostic.severity === 1) {
@@ -263,7 +281,7 @@ function clearAllMultilineDecorations(editor: TextEditor): void {
  */
 function makeRoundCornersForDecoration({ isFirstLineOfDecoration, isLastLineOfDecoration }: { isFirstLineOfDecoration: boolean; isLastLineOfDecoration: boolean }): string {
 	let borderRadiusValue = '';
-	const configBorderRadius = $config.closestProblemMultiline.borderRadius || $config.borderRadius;
+	const configBorderRadius = $config.multilineMessage.borderRadius || $config.borderRadius;
 
 	if (isFirstLineOfDecoration) {
 		borderRadiusValue = `${configBorderRadius} ${configBorderRadius} 0 0`;

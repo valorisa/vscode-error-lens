@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
+import { getStyleForAlignment } from 'src/decorations/align';
 import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
-import { DecorationRangeBehavior, Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type TextLine, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { DecorationRangeBehavior, Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 /* eslint-disable @typescript-eslint/sort-type-constituents */
 type DecorationKeys =
@@ -37,6 +38,8 @@ type DecorationKeys =
 	'transparent1x1Icon';
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
 /* eslint-enable @typescript-eslint/sort-type-constituents */
+
+let textDecorationStyleString = '';
 
 /**
  * Update all decoration styles: editor, gutter, status bar
@@ -159,11 +162,13 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	const borderRadius = `border-radius: ${$config.borderRadius || '0'}`;
 	const scrollbarHack = $config.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
 
+	textDecorationStyleString = `none;${fontFamily};${fontSize};${borderRadius}`;
+
 	const afterProps: ThemableDecorationAttachmentRenderOptions = {
 		fontStyle: $config.fontStyleItalic ? 'italic' : 'normal',
 		fontWeight: $config.fontWeight,
 		margin: `0 0 0 ${marginLeft}`,
-		textDecoration: `none;${fontFamily};${fontSize};${padding};${borderRadius};${scrollbarHack}`,
+		textDecoration: `${textDecorationStyleString};${padding};${scrollbarHack}`,
 	};
 
 	const decorationRenderOptionsError: DecorationRenderOptions = {
@@ -370,20 +375,30 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 			message = undefined;
 		}
 
+		let alignMarginStyle = '';
+		let alignRange: Range | undefined;
+		if (extUtils.shouldAlign()) {
+			const styleForAlignment = getStyleForAlignment({
+				isMultilineDecoration: false,
+				alignmentKind: $config.alignMessage.useFixedPosition ? 'fixed' : 'normal',
+				textLine: editor.document.lineAt(Number(key)),
+				indentSize: editor.options.tabSize as number,
+				indentStyle: editor.options.insertSpaces as boolean ? 'spaces' : 'tab',
+				minimumMargin: $config.alignMessage.minimumMargin,
+				minVisualLineLength: $config.alignMessage.start,
+				start: $config.alignMessage.start,
+				end: $config.alignMessage.end,
+				problemMessage: message ?? '',
+			});
+			alignMarginStyle = styleForAlignment.styleStr;
+			alignRange = styleForAlignment.range;
+		}
+
 		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 			after: {
 				contentText: message,
-				margin: ($config.alignMessage.start || $config.alignMessage.end) ?
-					`0 0 0 ${getMarginForAlignment({
-						textLine: editor.document.lineAt(Number(key)),
-						indentSize: editor.options.tabSize as number,
-						indentStyle: editor.options.insertSpaces as boolean ? 'spaces' : 'tab',
-						start: $config.alignMessage.start,
-						end: $config.alignMessage.end,
-						minimumMargin: $config.alignMessage.minimumMargin,
-						message: message ?? '',
-					})}ch` :
-					undefined,
+				// height: extUtils.shouldAlign() && $config.alignMessage.useFixedPosition ? '100%' : undefined,
+				textDecoration: extUtils.shouldAlign() ? `${textDecorationStyleString};${alignMarginStyle}` : undefined,
 			},
 		};
 
@@ -432,7 +447,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		}
 
 		const diagnosticDecorationOptions: DecorationOptions = {
-			range: new Range(messageRange.start.line, messageRange.start.character, messageRange.start.line, messageRange.start.character),
+			range: alignRange ?? new Range(messageRange.start.line, messageRange.start.character, messageRange.start.line, messageRange.start.character),
 			hoverMessage: createHoverForDiagnostic({
 				diagnostic,
 				buttonsEnabled: $config.editorHoverPartsEnabled.buttonsEnabled,
@@ -592,31 +607,6 @@ export function updateWorkaroundGutterIcon(editor: TextEditor): void {
 		}
 	}
 	editor.setDecorations(decorationTypes.transparent1x1Icon, ranges);
-}
-
-interface GetMarginForAlignmentArgs {
-	start: number;
-	end: number;
-	textLine: TextLine;
-	indentSize: number;
-	indentStyle: 'spaces' | 'tab';
-	message: string;
-	minimumMargin: number;
-}
-
-function getMarginForAlignment({ textLine, indentSize, indentStyle, start, end, message, minimumMargin }: GetMarginForAlignmentArgs): number {
-	const visualLineLength = extUtils.getVisualLineLength(textLine, indentSize, indentStyle);
-
-	let margin = 0;
-
-	if (start) {
-		margin = start <= visualLineLength ? 0 : start - visualLineLength;
-	} else if (end) {
-		const charDiff = end - message.length - visualLineLength;
-		margin = charDiff < 0 ? 0 : charDiff;
-	}
-
-	return margin < minimumMargin ? minimumMargin : margin;
 }
 
 export function disposeAllDecorations(): void {

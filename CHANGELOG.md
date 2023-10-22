@@ -1,3 +1,9 @@
+## 3.15.0 `22 Oct 2023`
+
+- ✨ New gutter icons `"errorLens.gutterIconSet": "emoji"` & setting to control: `"errorLens.gutterEmoji": { "error": "💀", "warning": "😞", "info": "🆗", "hint": "🍏" }`
+- ✨ New property `"useFixedPosition"` to `"errorLens.alignMessage"` setting (to reduce stuttering)
+- ✨ New setting `"errorLens.statusBarIconsTargetProblems": "all" | "activeEditor" | "visibleEditors"` to choose which problems to use for counting problems (icons status bar item)
+
 ## 3.14.0 `25 Sep 2023`
 
 - ✨ Align message `"errorLens.alignMessage"` [Issue 136](https://github.com/usernamehw/vscode-error-lens/issues/136)

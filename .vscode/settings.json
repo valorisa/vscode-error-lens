@@ -20,5 +20,8 @@
 		"errorLens.enabledDiagnosticLevels": "\\[\"error\", \"warning\", \"info\"\\]",
 		"errorLens.editorHoverPartsEnabled": "\\{\"messageEnabled\":false, \"sourceCodeEnabled\":false, \"buttonsEnabled\":false\\}",
 		"errorLens.gutterEmoji": "\\{\"error\":\"💀\", \"warning\":\"😞\", \"info\":\"🆗\", \"hint\":\"🍏\"\\}"
+	},
+	"contributions.settings.replaceDescription": {
+		"errorLens.excludeBySource": "Specify `source` or `source(code)` pair to exclude. Examples:<br>- `eslint` disable all ESLint problems<br>- `eslint(padded-blocks)` disable `padded-blocks` rule of ESLint<br>- `Pylance` disable all Pylance linter problems<br>- `Pylance(reportUndefinedVariable)` disable `reportUndefinedVariable` rule of Pylance"
 	}
 }

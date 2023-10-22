@@ -881,7 +881,7 @@
 				"errorLens.scrollbarHackEnabled": {
 					"type": "boolean",
 					"default": false,
-					"markdownDescription": "When enabled - prevents showing horizontal scrollbar in editor (caused by inline decorations)."
+					"markdownDescription": "When enabled - prevents showing horizontal scrollbar in editor (caused by inline decorations). Also prevents mouse hover at inline message."
 				},
 				"errorLens.decorations": {
 					"type": "object",

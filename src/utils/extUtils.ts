@@ -1,6 +1,7 @@
 import { $config, $state } from 'src/extension';
+import { type DiagnosticTarget } from 'src/types';
 import { utils } from 'src/utils/utils';
-import { languages, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
+import { languages, type Diagnostic, type TextEditor, type TextLine, type Uri, window } from 'vscode';
 
 /**
  * Usually documentation website Uri.
@@ -198,6 +199,32 @@ function prepareMessage({ template, diagnostic, lineProblemCount, removeLinebrea
 	const templated = diagnosticToInlineMessage(template, diagnostic, lineProblemCount);
 	return utils.truncateString(removeLinebreaks ? utils.replaceLinebreaks(templated, replaceLinebreaksSymbol) : templated, $config.messageMaxChars);
 }
+/**
+ * Get all diagnostics from (all/visibleEditors/activeEditor).
+ */
+function getDiagnostics(arg?: { target: DiagnosticTarget }): [Uri, Diagnostic[]][] {
+	const allDiagnostics = languages.getDiagnostics();
+
+	if (arg === undefined || arg.target === 'all') {
+		return allDiagnostics;
+	}
+
+	if (arg.target === 'activeEditor') {
+		return allDiagnostics.filter(diag => diag[0].toString(true) === window.activeTextEditor?.document.uri.toString(true));
+	} else if (arg.target === 'visibleEditors') {
+		const visibleUriWithDiagnostics = [];
+		for (const diag of allDiagnostics) {
+			for (const visibleEditor of window.visibleTextEditors) {
+				if (visibleEditor.document.uri.toString(true) === diag[0].toString(true)) {
+					visibleUriWithDiagnostics.push(diag);
+				}
+			}
+		}
+		return visibleUriWithDiagnostics;
+	}
+
+	return [];
+}
 
 function getDiagnosticAtLine(uri: Uri, lineNumber: number): Diagnostic | undefined {
 	const diagnostics = languages.getDiagnostics(uri);
@@ -315,6 +342,7 @@ function shouldAlign(): boolean {
 
 export const extUtils = {
 	prepareMessage,
+	getDiagnostics,
 	getDiagnosticTarget,
 	getDiagnosticCode,
 	parseSourceCodeFromString,

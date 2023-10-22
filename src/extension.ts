@@ -132,6 +132,7 @@ export function updateEverything(context: ExtensionContext): void {
 		useBackground: $config.statusBarIconsUseBackground,
 		priority: $config.statusBarIconsPriority,
 		alignment: $config.statusBarIconsAlignment,
+		targetProblems: $config.statusBarIconsTargetProblems,
 	});
 
 	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');

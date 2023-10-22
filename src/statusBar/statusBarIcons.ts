@@ -1,7 +1,8 @@
 import { CommandId } from 'src/commands';
 import { Constants, type ExtensionConfig } from 'src/types';
+import { extUtils } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
-import { MarkdownString, StatusBarAlignment, ThemeColor, Uri, languages, window, type Diagnostic, type StatusBarItem } from 'vscode';
+import { MarkdownString, StatusBarAlignment, ThemeColor, Uri, window, type Diagnostic, type StatusBarItem } from 'vscode';
 
 type StatusBarProblemType = 'error' | 'warning';
 
@@ -11,6 +12,7 @@ interface StatusBarIconsInit {
 	useBackground: ExtensionConfig['statusBarIconsUseBackground'];
 	priority: ExtensionConfig['statusBarMessagePriority'];
 	alignment: ExtensionConfig['statusBarMessageAlignment'];
+	targetProblems: ExtensionConfig['statusBarIconsTargetProblems'];
 }
 
 /**
@@ -28,6 +30,7 @@ export class StatusBarIcons {
 	private readonly isEnabled: boolean;
 	private readonly atZero: ExtensionConfig['statusBarIconsAtZero'];
 	private readonly useBackground: ExtensionConfig['statusBarIconsUseBackground'];
+	private readonly targetProblems: ExtensionConfig['statusBarIconsTargetProblems'];
 
 	constructor({
 		isEnabled,
@@ -35,10 +38,13 @@ export class StatusBarIcons {
 		useBackground,
 		priority,
 		alignment,
+		targetProblems,
 	}: StatusBarIconsInit) {
 		this.isEnabled = isEnabled;
 		this.atZero = atZero;
 		this.useBackground = useBackground;
+		this.targetProblems = targetProblems;
+
 		const statusBarAlignment = alignment === 'right' ? StatusBarAlignment.Right : StatusBarAlignment.Left;
 		this.errorStatusBarItem = window.createStatusBarItem('errorLensError', statusBarAlignment, priority);
 		this.errorStatusBarItem.name = 'Error Lens: Error icon';
@@ -64,11 +70,14 @@ export class StatusBarIcons {
 			return;
 		}
 
-		const allDiagnostics = languages.getDiagnostics();
 		const errorsWithUri: [Uri, Diagnostic[]][] = [];
 		const warningsWithUri: [Uri, Diagnostic[]][] = [];
 		let errorCount = 0;
 		let warningCount = 0;
+
+		const allDiagnostics = extUtils.getDiagnostics({
+			target: this.targetProblems,
+		});
 
 		for (const diagnosticWithUri of allDiagnostics) {
 			const uri = diagnosticWithUri[0];

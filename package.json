@@ -199,7 +199,7 @@
 						"end": 0,
 						"minimumMargin": 0
 					},
-					"markdownDescription": "Align inline error message (either by starting position or ending position). Use it with `#errorLens.delay#` to reduce decoration stuttering.",
+					"markdownDescription": "Align inline error message (either by starting position or ending position).",
 					"additionalProperties": false
 				},
 				"errorLens.padding": {
@@ -248,7 +248,7 @@
 					"type": "integer",
 					"default": 500,
 					"minimum": 0,
-					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long). Set to **0** to disable inline message."
+					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long)."
 				},
 				"errorLens.severityText": {
 					"type": "array",
@@ -359,6 +359,21 @@
 						"right"
 					],
 					"default": "left"
+				},
+				"errorLens.statusBarIconsTargetProblems": {
+					"type": "string",
+					"enum": [
+						"all",
+						"activeEditor",
+						"visibleEditors"
+					],
+					"enumDescriptions": [
+						"Should be the same as native status bar icons - counts all known problems from all files.",
+						"Count only problems from the active text editor.",
+						"Count only problems from the visible text editors."
+					],
+					"default": "all",
+					"markdownDescription": "Which problems to use for counting problems at icons status bar."
 				},
 				"errorLens.statusBarIconsUseBackground": {
 					"type": "boolean",

@@ -122,6 +122,10 @@ interface ExtensionConfigType {
 	 */
 	statusBarIconsAlignment: 'left' | 'right';
 	/**
+	 * Which problems to use for counting problems at icons status bar.
+	 */
+	statusBarIconsTargetProblems: DiagnosticTarget;
+	/**
 	 * When enabled - highlights status bar icons with background, when disabled - with foreground.
 	 */
 	statusBarIconsUseBackground: boolean;
@@ -352,5 +356,11 @@ export const enum Constants {
 
 	NonBreakingSpaceSymbolHtml = '&nbsp;',
 }
-
+/**
+ * Common groups of diagnostics to target.
+ */
+export type DiagnosticTarget = 'activeEditor' | 'all' | 'visibleEditors';
+/**
+ * Valid strings of this extension setting ids.
+ */
 export type ErrorLensSettings = `${Constants.SettingsPrefix}.${keyof ExtensionConfig}`;

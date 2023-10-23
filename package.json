@@ -900,6 +900,11 @@
 						}
 					},
 					"additionalProperties": false
+				},
+				"errorLens.ignoreUntitled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Controls whether to run on untitled (unsaved) files."
 				}
 			}
 		},

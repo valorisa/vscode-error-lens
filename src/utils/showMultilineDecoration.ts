@@ -328,7 +328,6 @@ interface ScoreGroupedLinesArg {
 /**
  * Assuming this about a user's viewport (not a split/grid):
  * - Calculate visible line count from `editor.visibleRanges`
- * - Average column count would be ~130-200 characters (take lowest 130, minimap/sidebar/split/grid will mess up calculations)
  *
  * Try to balance the empty space size (fit more of the message content) and
  * the distance of that empty space from where the diagnostic is located (the closer - the better).
@@ -338,10 +337,9 @@ interface ScoreGroupedLinesArg {
  */
 function scoreGroupedLines({ textLines, messageLines, howManyLinesFromDiagnostic, minVisualLineLength, visibleLineCount, preferFittingMessageMultiplier, diagnostic }: ScoreGroupedLinesArg): number {
 	const messageTotalCharacters = messageLines.join('').length;
-	const avgCharCount = 130;
 	const distanceScore = howManyLinesFromDiagnostic >= visibleLineCount ? 0 : Math.floor(100 - (howManyLinesFromDiagnostic / visibleLineCount * 100));
 
-	const oneLineCharactersFit = avgCharCount - minVisualLineLength;
+	const oneLineCharactersFit = $config.multilineMessage.maxColumnForCalculation - minVisualLineLength;
 	const totalCharactersThatDontFit = messageLines.reduce((acc, lineText) => acc + (
 		(lineText.length <= oneLineCharactersFit) ? 0 : lineText.length - oneLineCharactersFit
 	), 0);

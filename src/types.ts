@@ -114,7 +114,7 @@ interface ExtensionConfigType {
 	 */
 	statusBarIconsEnabled: boolean;
 	/**
-	 * Move status bar icons left or right by adjasting the number priority.
+	 * Move status bar icons left or right by adjusting the number priority.
 	 */
 	statusBarIconsPriority: number;
 	/**
@@ -138,7 +138,7 @@ interface ExtensionConfigType {
 	 */
 	statusBarMessageEnabled: boolean;
 	/**
-	 * Move status bar message left or right by adjasting the number priority.
+	 * Move status bar message left or right by adjusting the number priority.
 	 */
 	statusBarMessagePriority: number;
 	/**
@@ -189,6 +189,7 @@ interface ExtensionConfigType {
 	 */
 	multilineMessage: {
 		decorationMaxNumberOfLines: number;
+		maxColumnForCalculation: number;
 		// whenCursorOutsideOfViewport: 'none' | 'showClosestProblemInViewport' | 'showClosestToCursorProblem';
 		preferFittingMessageMultiplier: number;
 		/** TODO: **implement** */

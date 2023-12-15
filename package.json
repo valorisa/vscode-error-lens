@@ -348,7 +348,7 @@
 				},
 				"errorLens.statusBarIconsPriority": {
 					"type": "integer",
-					"markdownDescription": "Move status bar icons left or right by adjasting the number priority.",
+					"markdownDescription": "Move status bar icons left or right by adjusting the number priority.",
 					"default": -9000
 				},
 				"errorLens.statusBarIconsAlignment": {
@@ -396,7 +396,7 @@
 				},
 				"errorLens.statusBarMessagePriority": {
 					"type": "integer",
-					"markdownDescription": "Move status bar message left or right by adjasting the number priority.",
+					"markdownDescription": "Move status bar message left or right by adjusting the number priority.",
 					"default": -10000
 				},
 				"errorLens.statusBarMessageAlignment": {
@@ -487,7 +487,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Exclude files by using glob pattern. Example `[\"**/*.{ts,js}\"]`"
+					"markdownDescription": "Exclude files by using [glob](https://code.visualstudio.com/docs/editor/glob-patterns) pattern. Example `[\"**/*.{ts,js}\"]`"
 				},
 				"errorLens.excludeWorkspaces": {
 					"type": "array",
@@ -542,7 +542,7 @@
 							]
 						}
 					},
-					"markdownDescription": "Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/api/references/vscode-api#GlobPattern) for local linter files). `node_modules` folder is excluded."
+					"markdownDescription": "Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/docs/editor/glob-patterns) for local linter files). `node_modules` folder is excluded."
 				},
 				"errorLens.searchForProblemQuery": {
 					"type": "string",
@@ -682,6 +682,10 @@
 							"default": 6,
 							"maximum": 20
 						},
+						"maxColumnForCalculation": {
+							"type": "integer",
+							"default": 130
+						},
 						"preferFittingMessageMultiplier": {
 							"type": "number",
 							"default": 2
@@ -728,6 +732,7 @@
 					"default": {
 						"decorationMaxNumberOfLines": 6,
 						"preferFittingMessageMultiplier": 2,
+						"maxColumnForCalculation": 130,
 						"preferSameLineMultiplier": 1,
 						"highlightProblemLine": "line",
 						"alignStart": 0,

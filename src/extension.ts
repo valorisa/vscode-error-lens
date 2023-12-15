@@ -16,23 +16,23 @@ export let $config: ExtensionConfig;
  * Global state.
  */
 export abstract class $state {
-	public static configErrorEnabled = true;
-	public static configWarningEnabled = true;
-	public static configInfoEnabled = true;
-	public static configHintEnabled = true;
+	static configErrorEnabled = true;
+	static configWarningEnabled = true;
+	static configInfoEnabled = true;
+	static configHintEnabled = true;
 	/**
 	 * Status bar object. Handles all status bar stuff (for text message)
 	 */
-	public static statusBarMessage: StatusBarMessage;
+	static statusBarMessage: StatusBarMessage;
 	/**
 	 * Status bar object. Handles all status bar stuff (for icons)
 	 */
-	public static statusBarIcons: StatusBarIcons;
+	static statusBarIcons: StatusBarIcons;
 	/**
 	 * Array of RegExp matchers and their updated messages.
 	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
 	 */
-	public static replaceRegexp?: {
+	static replaceRegexp?: {
 		matcher: RegExp;
 		message: string;
 	}[] = undefined;
@@ -40,11 +40,11 @@ export abstract class $state {
 	/**
 	 * Array of RegExp (that would match against diagnostic message)
 	 */
-	public static excludeRegexp: RegExp[] = [];
+	static excludeRegexp: RegExp[] = [];
 	/**
 	 * Array of source/code to ignore (that would match against diagnostic object)
 	 */
-	public static excludeSources: {
+	static excludeSources: {
 		source: string;
 		code?: string;
 	}[] = [];
@@ -52,7 +52,7 @@ export abstract class $state {
 	/**
 	 * Array of document selectors (that would match against document)
 	 */
-	public static excludePatterns?: {
+	static excludePatterns?: {
 		pattern: string;
 	}[] = undefined;
 
@@ -60,17 +60,17 @@ export abstract class $state {
 	 * Timestamp when last time user manually saved the document.
 	 * Used to determine if the save was recently (1s?) to show decorations.
 	 */
-	public static lastSavedTimestamp = Date.now() + 2000;
+	static lastSavedTimestamp = Date.now() + 2000;
 	/**
 	 * Editor icons can be rendered only for active line (to reduce the visual noise).
 	 * But it might be useful to show gutter icons for all lines. With `gutterIconsFollowCursorOverride`
 	 * setting then gutter icons will be rendered as a separate set of decorations.
 	 */
-	public static renderGutterIconsAsSeparateDecoration: boolean;
+	static renderGutterIconsAsSeparateDecoration: boolean;
 	/**
 	 * Set event listener for when editor visibleRanges change (vertical scroll), only when necessary.
 	 */
-	public static shouldUpdateOnEditorScrollEvent: boolean;
+	static shouldUpdateOnEditorScrollEvent: boolean;
 }
 
 export function activate(context: ExtensionContext): void {

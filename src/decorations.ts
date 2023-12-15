@@ -48,7 +48,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	disposeAllDecorations();
 
 	let gutter: Gutter | undefined;
-	if ($config.gutterIconsEnabled) {
+	if (extUtils.shouldShowGutterIcons()) {
 		gutter = getGutterStyles(context);
 
 		if ($state.renderGutterIconsAsSeparateDecoration) {
@@ -260,7 +260,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		isWholeLine: true,
 	};
 
-	if (!$config.messageEnabled) {
+	if (!extUtils.shouldShowInlineMessage()) {
 		decorationRenderOptionsError.backgroundColor = undefined;
 		decorationRenderOptionsError.after = undefined;
 		decorationRenderOptionsError.light!.backgroundColor = undefined;
@@ -363,7 +363,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 
 		let message: string | undefined;
 
-		if ($config.messageEnabled) {
+		if (extUtils.shouldShowInlineMessage()) {
 			message = extUtils.prepareMessage({
 				diagnostic,
 				template: $config.messageTemplate,
@@ -499,7 +499,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		}
 	}
 
-	if ($config.gutterIconsEnabled) {
+	if (extUtils.shouldShowGutterIcons()) {
 		updateWorkaroundGutterIcon(editor);
 	}
 

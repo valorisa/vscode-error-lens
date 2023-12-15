@@ -4,6 +4,7 @@ import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri, updateWorkaroundGutterIcon } from 'src/decorations';
 import { $config, $state } from 'src/extension';
 import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable } from 'vscode';
+import { extUtils } from 'src/utils/extUtils';
 
 let onDidChangeDiagnosticsDisposable: Disposable | undefined;
 let onDidChangeActiveTextEditor: Disposable | undefined;
@@ -95,7 +96,7 @@ export function updateCursorChangeListener(): void {
 		$config.followCursor === 'closestProblem' ||
 		$config.followCursor === 'allLinesExceptActive' ||
 		$config.followCursor === 'closestProblemMultiline' ||
-		$config.statusBarMessageEnabled
+		extUtils.shouldShowStatusBarMessage()
 	) {
 		let lastPositionLine = -1;
 		onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
@@ -158,7 +159,7 @@ export function updateOnSaveListener(): void {
 export function updateChangeBreakpointsListener(): void {
 	onDidChangeBreakpoints?.dispose();
 
-	if ($config.gutterIconsEnabled) {
+	if (extUtils.shouldShowGutterIcons()) {
 		onDidChangeBreakpoints = debug.onDidChangeBreakpoints(() => {
 			for (const editor of window.visibleTextEditors) {
 				updateWorkaroundGutterIcon(editor);

@@ -1,7 +1,7 @@
 import { $config, $state } from 'src/extension';
 import { type DiagnosticTarget } from 'src/types';
 import { utils } from 'src/utils/utils';
-import { languages, type Diagnostic, type TextEditor, type TextLine, type Uri, window } from 'vscode';
+import { languages, window, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
 
 /**
  * Usually documentation website Uri.
@@ -339,6 +339,46 @@ function getVisualLineLength(textLine: TextLine, indentSize: number, indentStyle
 function shouldAlign(): boolean {
 	return Boolean($config.alignMessage.start || $config.alignMessage.end);
 }
+function shouldShowInlineMessage(): boolean {
+	const extensionEnabled = $config.messageEnabled;
+	const respectGlobalSetting = $config.respectGlobalSetting;
+
+	if (!respectGlobalSetting.enabled || !respectGlobalSetting.inlineMessage) {
+		return extensionEnabled;
+	}
+
+	return extensionEnabled && $state.vscodeGlobalProblemsEnabled;
+}
+function shouldShowGutterIcons(): boolean {
+	const extensionEnabled = $config.gutterIconsEnabled;
+	const respectGlobalSetting = $config.respectGlobalSetting;
+
+	if (!respectGlobalSetting.enabled || !respectGlobalSetting.gutter) {
+		return extensionEnabled;
+	}
+
+	return extensionEnabled && $state.vscodeGlobalProblemsEnabled;
+}
+function shouldShowStatusBarIcons(): boolean {
+	const extensionEnabled = $config.statusBarIconsEnabled;
+	const respectGlobalSetting = $config.respectGlobalSetting;
+
+	if (!respectGlobalSetting.enabled || !respectGlobalSetting.statusBar) {
+		return extensionEnabled;
+	}
+
+	return extensionEnabled && $state.vscodeGlobalProblemsEnabled;
+}
+function shouldShowStatusBarMessage(): boolean {
+	const extensionEnabled = $config.statusBarMessageEnabled;
+	const respectGlobalSetting = $config.respectGlobalSetting;
+
+	if (!respectGlobalSetting.enabled || !respectGlobalSetting.statusBar) {
+		return extensionEnabled;
+	}
+
+	return extensionEnabled && $state.vscodeGlobalProblemsEnabled;
+}
 
 export const extUtils = {
 	prepareMessage,
@@ -358,4 +398,8 @@ export const extUtils = {
 	isDiagnosticInViewport,
 	getVisualLineLength,
 	shouldAlign,
+	shouldShowInlineMessage,
+	shouldShowGutterIcons,
+	shouldShowStatusBarIcons,
+	shouldShowStatusBarMessage,
 };

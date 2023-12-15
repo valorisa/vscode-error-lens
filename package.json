@@ -127,6 +127,35 @@
 					"default": true,
 					"description": "Controls all decorations and features (except commands)."
 				},
+				"errorLens.respectGlobalSetting": {
+					"type": "object",
+					"properties": {
+						"enabled": {
+							"type": "boolean",
+							"default": true
+						},
+						"inlineMessage": {
+							"type": "boolean",
+							"default": true
+						},
+						"gutter": {
+							"type": "boolean",
+							"default": true
+						},
+						"statusBar": {
+							"type": "boolean",
+							"default": false
+						}
+					},
+					"default": {
+						"enabled": true,
+						"inlineMessage": true,
+						"gutter": true,
+						"statusBar": false
+					},
+					"markdownDescription": "When enabled - extension will take into account global VSCode setting `#problems.visibility#`. ([1.85.0 changelog](https://code.visualstudio.com/updates/v1_85#_hide-problem-decorations)).",
+					"additionalProperties": false
+				},
 				"errorLens.enabledInMergeConflict": {
 					"type": "boolean",
 					"default": true,

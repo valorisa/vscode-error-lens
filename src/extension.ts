@@ -21,6 +21,10 @@ export abstract class $state {
 	static configInfoEnabled = true;
 	static configHintEnabled = true;
 	/**
+	 * VSCode `problems.visibility` setting value.
+	 */
+	static vscodeGlobalProblemsEnabled = true;
+	/**
 	 * Status bar object. Handles all status bar stuff (for text message)
 	 */
 	static statusBarMessage: StatusBarMessage;
@@ -84,6 +88,7 @@ export function activate(context: ExtensionContext): void {
 	 */
 	function updateConfigAndEverything(): void {
 		$config = workspace.getConfiguration().get(Constants.SettingsPrefix)!;
+		$state.vscodeGlobalProblemsEnabled = workspace.getConfiguration('problems').get<boolean>('visibility') ?? true;
 		disposeEverything();
 		if ($config.enabled) {
 			updateEverything(context);
@@ -91,7 +96,10 @@ export function activate(context: ExtensionContext): void {
 	}
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(e => {
-		if (!e.affectsConfiguration(Constants.SettingsPrefix)) {
+		if (
+			!e.affectsConfiguration(Constants.SettingsPrefix) &&
+			!e.affectsConfiguration('problems.visibility')
+		) {
 			return;
 		}
 		updateConfigAndEverything();
@@ -120,14 +128,14 @@ export function updateEverything(context: ExtensionContext): void {
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
 	$state.statusBarMessage = new StatusBarMessage({
-		isEnabled: $config.statusBarMessageEnabled,
+		isEnabled: extUtils.shouldShowStatusBarMessage(),
 		colorsEnabled: $config.statusBarColorsEnabled,
 		messageType: $config.statusBarMessageType,
 		priority: $config.statusBarMessagePriority,
 		alignment: $config.statusBarMessageAlignment,
 	});
 	$state.statusBarIcons = new StatusBarIcons({
-		isEnabled: $config.statusBarIconsEnabled,
+		isEnabled: extUtils.shouldShowStatusBarIcons(),
 		atZero: $config.statusBarIconsAtZero,
 		useBackground: $config.statusBarIconsUseBackground,
 		priority: $config.statusBarIconsPriority,

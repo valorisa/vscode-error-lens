@@ -6,6 +6,15 @@ interface ExtensionConfigType {
 	 */
 	enabled: boolean;
 	/**
+	 * When enabled - extension will take into account global VSCode setting `#problems.visibility#`.
+	 */
+	respectGlobalSetting: {
+		enabled: boolean;
+		inlineMessage: boolean;
+		gutter: boolean;
+		statusBar: boolean;
+	};
+	/**
 	 * Controls if decorations are shown if the editor has git merge conflict indicators `<<<<<<<` or `=======` or `>>>>>>>`.
 	 */
 	enabledInMergeConflict: boolean;

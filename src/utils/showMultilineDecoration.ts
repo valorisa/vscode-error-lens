@@ -67,7 +67,7 @@ interface GroupedTextLines {
  */
 export function showMultilineDecoration(editor: TextEditor): void {
 	const diagnosticsForUri = languages.getDiagnostics(editor.document.uri);
-	if (diagnosticsForUri.length === 0 || !$config.messageEnabled) {
+	if (diagnosticsForUri.length === 0 || !extUtils.shouldShowInlineMessage()) {
 		// There are no problems in this file
 		clearAllMultilineDecorations(editor);
 		return;

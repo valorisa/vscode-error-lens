@@ -1,3 +1,8 @@
+## 3.16.0 `16 Dec 2023`
+
+- ✨ Honor vscode `problems.visibility` setting when showing decorations (new setting `"errorLens.respectUpstreamEnabled"`)
+- ✨ Ignore running on untitled files (new setting `"errorLens.ignoreUntitled"`) [PR 190](https://github.com/usernamehw/vscode-error-lens/pull/190) by [smcenlly](https://github.com/smcenlly)
+
 ## 3.15.0 `22 Oct 2023`
 
 - ✨ New gutter icons `"errorLens.gutterIconSet": "emoji"` & setting to control: `"errorLens.gutterEmoji": { "error": "💀", "warning": "😞", "info": "🆗", "hint": "🍏" }`

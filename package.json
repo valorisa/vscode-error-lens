@@ -127,7 +127,7 @@
 					"default": true,
 					"description": "Controls all decorations and features (except commands)."
 				},
-				"errorLens.respectGlobalSetting": {
+				"errorLens.respectUpstreamEnabled": {
 					"type": "object",
 					"properties": {
 						"enabled": {

@@ -341,9 +341,9 @@ function shouldAlign(): boolean {
 }
 function shouldShowInlineMessage(): boolean {
 	const extensionEnabled = $config.messageEnabled;
-	const respectGlobalSetting = $config.respectGlobalSetting;
+	const respectUpstreamEnabled = $config.respectUpstreamEnabled;
 
-	if (!respectGlobalSetting.enabled || !respectGlobalSetting.inlineMessage) {
+	if (!respectUpstreamEnabled.enabled || !respectUpstreamEnabled.inlineMessage) {
 		return extensionEnabled;
 	}
 
@@ -351,9 +351,9 @@ function shouldShowInlineMessage(): boolean {
 }
 function shouldShowGutterIcons(): boolean {
 	const extensionEnabled = $config.gutterIconsEnabled;
-	const respectGlobalSetting = $config.respectGlobalSetting;
+	const respectUpstreamEnabled = $config.respectUpstreamEnabled;
 
-	if (!respectGlobalSetting.enabled || !respectGlobalSetting.gutter) {
+	if (!respectUpstreamEnabled.enabled || !respectUpstreamEnabled.gutter) {
 		return extensionEnabled;
 	}
 
@@ -361,9 +361,9 @@ function shouldShowGutterIcons(): boolean {
 }
 function shouldShowStatusBarIcons(): boolean {
 	const extensionEnabled = $config.statusBarIconsEnabled;
-	const respectGlobalSetting = $config.respectGlobalSetting;
+	const respectUpstreamEnabled = $config.respectUpstreamEnabled;
 
-	if (!respectGlobalSetting.enabled || !respectGlobalSetting.statusBar) {
+	if (!respectUpstreamEnabled.enabled || !respectUpstreamEnabled.statusBar) {
 		return extensionEnabled;
 	}
 
@@ -371,9 +371,9 @@ function shouldShowStatusBarIcons(): boolean {
 }
 function shouldShowStatusBarMessage(): boolean {
 	const extensionEnabled = $config.statusBarMessageEnabled;
-	const respectGlobalSetting = $config.respectGlobalSetting;
+	const respectUpstreamEnabled = $config.respectUpstreamEnabled;
 
-	if (!respectGlobalSetting.enabled || !respectGlobalSetting.statusBar) {
+	if (!respectUpstreamEnabled.enabled || !respectUpstreamEnabled.statusBar) {
 		return extensionEnabled;
 	}
 

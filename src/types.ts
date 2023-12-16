@@ -8,7 +8,7 @@ interface ExtensionConfigType {
 	/**
 	 * When enabled - extension will take into account global VSCode setting `#problems.visibility#`.
 	 */
-	respectGlobalSetting: {
+	respectUpstreamEnabled: {
 		enabled: boolean;
 		inlineMessage: boolean;
 		gutter: boolean;

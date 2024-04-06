@@ -520,6 +520,8 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 	}
 
 	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
+
+	$state.errorCodeLensProvider.updateCodeLenses();
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {

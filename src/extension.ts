@@ -6,6 +6,7 @@ import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
 import { workspace, type ExtensionContext } from 'vscode';
+import { ErrorCodeLensProvider } from './ErrorCodeLensProvider';
 
 /**
  * All user settings.
@@ -32,6 +33,10 @@ export abstract class $state {
 	 * Status bar object. Handles all status bar stuff (for icons)
 	 */
 	static statusBarIcons: StatusBarIcons;
+	/**
+	 * Code Lens Provider. Handles all Code Lens stuff
+	 */
+	static errorCodeLensProvider: ErrorCodeLensProvider;
 	/**
 	 * Array of RegExp matchers and their updated messages.
 	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
@@ -142,6 +147,7 @@ export function updateEverything(context: ExtensionContext): void {
 		alignment: $config.statusBarIconsAlignment,
 		targetProblems: $config.statusBarIconsTargetProblems,
 	});
+	$state.errorCodeLensProvider = new ErrorCodeLensProvider(context);
 
 	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
 	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
@@ -219,6 +225,7 @@ export function disposeEverything(): void {
 	disposeAllEventListeners();
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
+	$state.errorCodeLensProvider?.dispose();
 	disposeAllDecorations();
 }
 

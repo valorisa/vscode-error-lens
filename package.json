@@ -939,7 +939,71 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Controls whether to run on untitled (unsaved) files."
-				}
+				},
+				"errorLens.codeLensEnabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls whether to show the Error Lens as a Code Lens above the code."
+				},
+				"errorLens.codeLensPrefix": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 50,
+							"default": "⛔"
+						},
+						"warning": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 50,
+							"default": "⚠️"
+						},
+						"info": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 50,
+							"default": "ⓘ"
+						},
+						"hint": {
+							"type": "string",
+							"minLength": 0,
+							"maxLength": 50,
+							"default": "↘ "
+						}
+					},
+					"default": {
+						"error": "⛔",
+						"warning": "⚠️",
+						"info": "ⓘ",
+						"hint": "↘"
+					},
+					"additionalProperties": false,
+					"markdownDescription": "Pick an emoji/prefix for `#errorLens.showCodeLens#` e.g. 🔥"
+				},
+				"errorLens.codeLensMessageTemplate": {
+					"type": "string",
+					"default": "$message",
+					"markdownDescription": "Template used for all messages appearing in Code Lens. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
+				},
+				"errorLens.codeLensOnClick": {
+					"type": "string",
+					"enum": [
+						"none",
+						"showProblemWindow",
+						"showQuickFix",
+						"searchForProblem"
+					],
+					"enumDescriptions": [
+						"Does nothing.",
+						"shows problem window.",
+						"Shows quick fix menu.",
+						"Search for the problem."
+					],
+					"default": "showQuickFix",
+					"markdownDescription": "Controls what happens when clicking on the code lens."
+				}				
 			}
 		},
 		"colors": [

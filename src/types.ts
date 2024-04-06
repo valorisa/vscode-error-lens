@@ -184,7 +184,7 @@ interface ExtensionConfigType {
 	delayMode: 'debounce' | 'old';
 	/**
 	 * Highlight only portion of the problems.
-	 * For instance, only active line or the closest to the cursor diasnostic.
+	 * For instance, only active line or the closest to the cursor diagnostic.
 	 */
 	followCursor: 'activeLine' | 'allLines' | 'allLinesExceptActive' | 'closestProblem' | 'closestProblemMultiline' | 'closestProblemMultilineBySeverity' | 'closestProblemMultilineInViewport';
 	/**
@@ -336,6 +336,27 @@ interface ExtensionConfigType {
 	 * Controls whether to run on untitled (unsaved) files.
 	 */
 	ignoreUntitled: boolean;
+	/**
+	 * "Controls whether to show the Error Lens as a Code Lens above the code."
+	 */
+	codeLensEnabled: boolean;
+	/**
+	 * Pick prefix for `#errorLens.showCodeLens#` e.g. 🔥
+	 */
+	codeLensPrefix: {
+		error: string;
+		warning: string;
+		info: string;
+		hint: string;
+	};
+	/**
+	 * See `#errorLens.messageTemplate#`.
+	 */
+	codeLensMessageTemplate: string;
+	/**
+	 * Controls what do on clicking the code lens
+	 */
+	codeLensOnClick: 'none' | 'searchForProblem' | 'showProblemWindow' | 'showQuickFix';
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;

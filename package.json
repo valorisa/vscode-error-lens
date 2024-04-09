@@ -1015,7 +1015,7 @@
 						"Shows full diagnostic in a web window.",
 						"Search for the problem."
 					],
-					"default": "showOutputWindow",
+					"default": "showQuickFix",
 					"markdownDescription": "Controls what do on clicking the `#errorLens.lensAboveCodeEnabled#`."
 				},
 				"errorLens.webWindowEnabled": {

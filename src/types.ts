@@ -356,7 +356,10 @@ interface ExtensionConfigType {
 	/**
 	 * Controls what do on clicking the code lens
 	 */
-	codeLensOnClick: 'none' | 'searchForProblem' | 'showProblemWindow' | 'showQuickFix';
+	/**
+	 * Controls whether to write debug messages for `#errorLens.enabled#` to a window called `Error Lens Debug`.
+	 */
+	debugLogEnabled: boolean;
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;

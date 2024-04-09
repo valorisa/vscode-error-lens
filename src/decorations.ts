@@ -526,6 +526,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 
 export function updateDecorationsForAllVisibleEditors(): void {
 	for (const editor of window.visibleTextEditors) {
+		$state.log('updateDecorationsForAllVisibleEditors');
 		updateDecorationsForUri({
 			uri: editor.document.uri,
 			editor,
@@ -557,6 +558,10 @@ export function updateDecorationsForUri({
 		return;
 	}
 
+	if (extUtils.shouldExcludeWindow(editor.document.uri)) {
+		return;
+	}
+
 	if ($config.ignoreUntitled && editor.document.uri.scheme === 'untitled') {
 		return;
 	}
@@ -576,6 +581,7 @@ export function updateDecorationsForUri({
 			editorText.includes(Constants.MergeConflictSymbol2) ||
 			editorText.includes(Constants.MergeConflictSymbol3)
 		) {
+			$state.log('updateDecorationsForUri: enabledInMergeConflict');
 			doUpdateDecorations(editor, {});
 			return;
 		}
@@ -596,7 +602,7 @@ export function updateDecorationsForUri({
 	) {
 		return;
 	}
-
+	$state.log('updateDecorationsForUri');
 	doUpdateDecorations(editor, groupedDiagnostics ?? extUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
 }
 /**

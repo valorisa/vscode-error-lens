@@ -380,6 +380,17 @@ function shouldShowStatusBarMessage(): boolean {
 	return extensionEnabled && $state.vscodeGlobalProblemsEnabled;
 }
 
+/**
+ * 
+ * If this extension causes the content to change in a window, it can create
+ * an infinite cascade/loop of events because it is triggered by onChange hooks.
+ * 
+ * This typically happens with vscode output windows that are used for viewing logs.
+ */
+function shouldExcludeWindow(uri: Uri): boolean {	
+	return (uri.scheme === 'output');
+}
+
 export const extUtils = {
 	prepareMessage,
 	getDiagnostics,
@@ -398,6 +409,7 @@ export const extUtils = {
 	isDiagnosticInViewport,
 	getVisualLineLength,
 	shouldAlign,
+	shouldExcludeWindow,
 	shouldShowInlineMessage,
 	shouldShowGutterIcons,
 	shouldShowStatusBarIcons,

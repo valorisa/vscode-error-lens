@@ -103,6 +103,7 @@ export class CustomDelay {
 
 		for (const editor of window.visibleTextEditors) {
 			if (editor.document.uri.toString(true) === uri.toString(true)) {
+				$state.log('updateDecorations');
 				updateDecorationsForUri({
 					uri,
 					editor,

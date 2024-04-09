@@ -25,6 +25,7 @@ export function updateChangedActiveTextEditorListener(): void {
 			$state.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
 		}
 		if (editor) {
+			$state.log('updateChangedActiveTextEditorListener');
 			updateDecorationsForUri({
 				uri: editor.document.uri,
 				editor,
@@ -53,6 +54,7 @@ export function updateChangeDiagnosticListener(): void {
 		for (const uri of diagnosticChangeEvent.uris) {
 			for (const editor of window.visibleTextEditors) {
 				if (uri.toString(true) === editor.document.uri.toString(true)) {
+					$state.log('onChangedDiagnostics');
 					updateDecorationsForUri({
 						uri,
 						editor,
@@ -106,6 +108,10 @@ export function updateCursorChangeListener(): void {
 				selection.isEmpty &&
 				lastPositionLine !== selection.active.line
 			) {
+				if (extUtils.shouldExcludeWindow(e.textEditor.document.uri)) {
+					return;
+				}
+				$state.log('updateCursorChangeListener');
 				updateDecorationsForUri({
 					uri: e.textEditor.document.uri,
 					editor: e.textEditor,
@@ -121,6 +127,11 @@ export function updateOnVisibleRangesListener(): void {
 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
 
 	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
+		if (extUtils.shouldExcludeWindow(e.textEditor.document.uri)) {
+			return;
+		}
+		$state.log('updateOnVisibleRangesListener');
+
 		updateDecorationsForUri({
 			uri: e.textEditor.document.uri,
 			editor: e.textEditor,
@@ -147,6 +158,7 @@ export function updateOnSaveListener(): void {
 	onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
 		if (e.reason === TextDocumentSaveReason.Manual) {
 			setTimeout(() => {
+				$state.log('updateOnSaveListener');
 				updateDecorationsForUri({
 					uri: e.document.uri,
 				});

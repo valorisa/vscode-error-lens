@@ -1001,9 +1001,12 @@
 						"Shows quick fix menu.",
 						"Search for the problem."
 					],
-					"default": "showQuickFix",
-					"markdownDescription": "Controls what happens when clicking on the code lens."
-				}				
+				},
+				"errorLens.debugLogEnabled": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Controls whether to write debug messages for `#errorLens.enabled#` to an window called `Error Lens Debug`."
+				}
 			}
 		},
 		"colors": [

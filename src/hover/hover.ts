@@ -61,7 +61,7 @@ export function createHoverForDiagnostic({
 	}
 	// ──── Buttons ───────────────────────────────────────────────
 	if (buttonsEnabled) {
-		const exludeProblemButton = vscodeUtils.createButtonLinkMarkdown({
+		const excludeProblemButton = vscodeUtils.createButtonLinkMarkdown({
 			text: '$(exclude) Exclude',
 			href: vscodeUtils.createCommandUri(CommandId.ExcludeProblem, diagnostic).toString(),
 			title: 'Exclude problem from Error Lens by source/code',
@@ -83,7 +83,7 @@ export function createHoverForDiagnostic({
 		});
 
 		markdown.appendMarkdown('\n\n');
-		markdown.appendMarkdown(exludeProblemButton);
+		markdown.appendMarkdown(excludeProblemButton);
 
 		const sourceIsLinter = lintFilePaths[String(diagnostic?.source)] !== 'none';
 

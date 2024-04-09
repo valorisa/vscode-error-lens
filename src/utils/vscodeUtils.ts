@@ -3,7 +3,7 @@ import { utils } from 'src/utils/utils';
 import { ConfigurationTarget, Range, Selection, TextEditorRevealType, Uri, commands, window, workspace, type TextDocument, type TextEditor } from 'vscode';
 
 /**
- * Update global settings.json file with the new settign value.
+ * Update global settings.json file with the new setting value.
  */
 async function updateGlobalSetting(settingId: ErrorLensSettings, newValue: unknown): Promise<void> {
 	const vscodeConfig = workspace.getConfiguration();

@@ -521,12 +521,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 
 	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
 
-	$state.lensAboveCode.requestUpdate();
-	
-	$state.webWindow.updateFromCursor(
-		editor.document.uri, 
-		editor.selection.active.line,
-	);
+	$state.lensAboveCode.requestUpdate();	
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {

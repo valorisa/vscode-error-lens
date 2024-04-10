@@ -33,11 +33,6 @@ export class LensAboveCode implements vscode.CodeLensProvider {
 						$state.log(`LensAboveCode.lensAboveCodeAction: showProblemWindow`);
 						vscode.commands.executeCommand('workbench.action.problems.focus');
 						break;
-					case 'showWebWindow':
-						$state.log(`LensAboveCode.lensAboveCodeAction: showWebWindow`);
-						$state.webWindow.updateFromDiagnostics(location.uri, diagnostics);
-						$state.webWindow.show();
-						break;
 					case 'showQuickFix':
 						$state.log(`LensAboveCode.lensAboveCodeAction: showQuickFix`);
 						LensAboveCode.setCaretInEditor(diagnostics[0].range);

@@ -7,7 +7,6 @@ import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
 import { workspace, type ExtensionContext } from 'vscode';
 import { LensAboveCode } from './lensAboveCode';
-import { WebWindow } from './webWindow';
 import { Logger } from './utils/logger';
 
 /**
@@ -39,10 +38,6 @@ export abstract class $state {
 	 * Code Lens Provider. Handles all Code Lens stuff
 	 */
 	static lensAboveCode: LensAboveCode;
-	/**
-	 * Code Lens Provider. Handles all Code Lens stuff
-	 */
-	static webWindow: WebWindow;
 	/**
 	 * Array of RegExp matchers and their updated messages.
 	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
@@ -166,10 +161,7 @@ export function updateEverything(context: ExtensionContext): void {
 		targetProblems: $config.statusBarIconsTargetProblems,
 	});
 	$state.lensAboveCode?.dispose();
-	$state.lensAboveCode = new LensAboveCode(context);
-	$state.webWindow?.dispose();
-	$state.webWindow = new WebWindow(context);
-
+	$state.lensAboveCode = new LensAboveCode(context);	
 	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
 	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
 	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
@@ -247,7 +239,6 @@ export function disposeEverything(): void {
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
 	$state.lensAboveCode?.dispose();
-	$state.webWindow?.dispose();
 	disposeAllDecorations();
 }
 

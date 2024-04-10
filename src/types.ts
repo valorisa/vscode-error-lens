@@ -364,11 +364,7 @@ interface ExtensionConfigType {
 	/**
 	 * Controls what do on clicking the `#errorLens.lensAboveCodeEnabled#`
 	 */
-	lensAboveCodeClick: 'none' | 'searchForProblem' | 'showProblemWindow' | 'showQuickFix' | 'showWebWindow';
-	/**
-	 * Controls whether to write the errors nearest to the cursor to an web window.
-	 */
-	webWindowEnabled: boolean;
+	lensAboveCodeClick: 'none' | 'searchForProblem' | 'showProblemWindow' | 'showQuickFix';
 	/**
 	 * Controls whether to write debug messages for `#errorLens.enabled#` to a window called `Error Lens Debug`.
 	 */

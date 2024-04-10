@@ -1005,23 +1005,16 @@
 						"none",
 						"showProblemWindow",
 						"showQuickFix",
-						"showWebWindow",
 						"searchForProblem"
 					],
 					"enumDescriptions": [
 						"Does nothing.",
 						"Shows problem window.",
 						"Shows quick fix menu.",
-						"Shows full diagnostic in a web window.",
 						"Search for the problem."
 					],
 					"default": "showQuickFix",
 					"markdownDescription": "Controls what do on clicking the `#errorLens.lensAboveCodeEnabled#`."
-				},
-				"errorLens.webWindowEnabled": {
-					"type": "boolean",
-					"default": false,
-					"markdownDescription": "Controls whether to show `#errorLens.enabled#` diagnostics nearest to the cursor to a web window."
 				},
 				"errorLens.debugLogEnabled": {
 					"type": "boolean",

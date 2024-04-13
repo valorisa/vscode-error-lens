@@ -73,7 +73,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	}
 
 	static formatDiagnostic(diagnostic: Diagnostic): string {
-		return `${ErrorLensCodeLens.getPrefix(diagnostic)}⠀${extUtils.prepareMessage({
+		return `${ErrorLensCodeLens.getPrefix(diagnostic)} ${extUtils.prepareMessage({
 			template: $config.codeLensTemplate,
 			diagnostic,
 			lineProblemCount: 1,
@@ -94,9 +94,6 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 
 	/**
 	 * Show multiple diagnostics by controlling the truncation favouring the first one.
-	 *
-	 * Code lens text rendering sometimes removes whitespace so choosing to use a braille
-	 * space to separate the messages to get something more reliable
 	 */
 	static createTitle(group: GroupedDiagnostic): string {
 		let result = ErrorLensCodeLens.formatDiagnostic(group.diagnostics[0]);
@@ -108,7 +105,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 		if (group.diagnostics.length > 1) {
 			for (const diagnostic of group.diagnostics.slice(1)) {
 				const message = ErrorLensCodeLens.formatDiagnostic(diagnostic);
-				result += `\u{2800}|\u{2800}${
+				result += ` | ${
 					((result.length + message.length > $config.codeLensMaxLength) ?
 						`${message.substring(0, $config.codeLensMinLength)}…` :
 						message)}`;

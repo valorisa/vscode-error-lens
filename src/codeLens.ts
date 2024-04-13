@@ -1,14 +1,14 @@
 import _ from 'lodash';
-import { $config, $state } from 'src/extension';
-import { CodeLens, EventEmitter, Location, Selection, commands, languages, window, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type ProviderResult, type Range, type TextDocument, type Uri } from 'vscode';
-import { extUtils } from './utils/extUtils';
 import { CommandId } from 'src/commands';
+import { $config } from 'src/extension';
+import { CodeLens, EventEmitter, Location, Selection, languages, window, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type ProviderResult, type Range, type TextDocument, type Uri } from 'vscode';
+import { extUtils } from './utils/extUtils';
 
 interface GroupedDiagnostic {
 	range: Range;
 	diagnostics: Diagnostic[];
 }
-// TODO: doesn't honour "enabledDiagnosticLevels"
+
 /**
  * Creates a `Code Lens` above the code. `provideCodeLenses` is called
  * by the application so we can't hook into the `doUpdateDecorations` like other decorators.
@@ -101,6 +101,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	 */
 	public static getGroupedDiagnostics(uri: Uri): GroupedDiagnostic[] {
 		return _(languages.getDiagnostics(uri))
+			.filter(diagnostic => !extUtils.shouldExcludeDiagnostic(diagnostic))
 			.groupBy(diagnostic => diagnostic.range.start.line)
 			.map((diagnostics, _key) => ({
 				range: diagnostics

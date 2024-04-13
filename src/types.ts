@@ -339,19 +339,19 @@ interface ExtensionConfigType {
 	/**
 	 * Controls whether to show the Error Lens as a Code Lens above the code.
 	 */
-	lensAboveCodeEnabled: boolean;
+	codeLensEnabled: boolean;
 	/**
-	 * Maximum length of the first diagnostic in the `#errorLens.lensAboveCodeEnabled#`
+	 * Maximum length of the first diagnostic in the `#errorLens.codeLensEnabled#`
 	 */
-	lensAboveCodeMaxLength: number;
+	codeLensMaxLength: number;
 	/**
-	 * Minimum length of subsequent diagnostics in the `#errorLens.lensAboveCodeEnabled#`
+	 * Minimum length of subsequent diagnostics in the `#errorLens.codeLensEnabled#`
 	 */
-	lensAboveCodeMinLength: number;	
+	codeLensMinLength: number;
 	/**
-	 * Pick prefix for `#errorLens.lensAboveCodeEnabled#` e.g. 🔥
+	 * Pick prefix for `#errorLens.codeLensEnabled#` e.g. 🔥
 	 */
-	lensAboveCodePrefix: {
+	codeLensPrefix: {
 		error: string;
 		warning: string;
 		info: string;
@@ -360,11 +360,11 @@ interface ExtensionConfigType {
 	/**
 	 * See `#errorLens.messageTemplate#`.
 	 */
-	lensAboveCodeTemplate: string;
+	codeLensTemplate: string;
 	/**
-	 * Controls what do on clicking the `#errorLens.lensAboveCodeEnabled#`
+	 * Controls what do on clicking the `#errorLens.codeLensEnabled#`
 	 */
-	lensAboveCodeClick: 'none' | 'searchForProblem' | 'showProblemWindow' | 'showQuickFix';
+	codeLensOnClick: 'none' | 'searchForProblem' | 'showProblemWindow' | 'showQuickFix';
 	/**
 	 * Controls whether to write debug messages for `#errorLens.enabled#` to a window called `Error Lens Debug`.
 	 */

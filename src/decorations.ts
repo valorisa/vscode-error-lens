@@ -521,7 +521,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 
 	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
 
-	$state.lensAboveCode.requestUpdate();	
+	$state.codeLens.update();
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {
@@ -558,7 +558,7 @@ export function updateDecorationsForUri({
 		return;
 	}
 
-	if (extUtils.shouldExcludeWindow(editor.document.uri)) {
+	if (extUtils.shouldExcludeOutput(editor.document.uri)) {
 		return;
 	}
 

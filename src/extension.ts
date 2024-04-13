@@ -6,7 +6,7 @@ import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
 import { workspace, type ExtensionContext } from 'vscode';
-import { LensAboveCode } from './lensAboveCode';
+import { ErrorLensCodeLens } from './codeLens';
 import { Logger } from './utils/logger';
 
 /**
@@ -35,9 +35,9 @@ export abstract class $state {
 	 */
 	static statusBarIcons: StatusBarIcons;
 	/**
-	 * Code Lens Provider. Handles all Code Lens stuff
+	 * Code Lens Provider. Handles all Code Lens stuff https://github.com/microsoft/vscode-extension-samples/tree/main/codelens-sample
 	 */
-	static lensAboveCode: LensAboveCode;
+	static codeLens: ErrorLensCodeLens;
 	/**
 	 * Array of RegExp matchers and their updated messages.
 	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
@@ -82,13 +82,13 @@ export abstract class $state {
 	 */
 	static shouldUpdateOnEditorScrollEvent: boolean;
 	/**
-	 * `Error Lens Debug` output channel for logging.	 
+	 * `Error Lens Debug` output channel for logging.
 	 */
 	static logger: Logger;
 	/**
 	 * Log a message to the `Error Lens Debug` output channel. Use a lambda for lazy evaluation.
 	 */
-	static log(message: string | (()=> string)): void {		
+	static log(message: string | (()=> string)): void {
 		$state.logger.info(message);
 	}
 }
@@ -104,7 +104,7 @@ export function activate(context: ExtensionContext): void {
 	 */
 	function updateConfigAndEverything(): void {
 		$state.logger?.dispose();
-		$state.logger = new Logger();		
+		$state.logger = new Logger();
 		$config = workspace.getConfiguration().get(Constants.SettingsPrefix)!;
 		$state.vscodeGlobalProblemsEnabled = workspace.getConfiguration('problems').get<boolean>('visibility') ?? true;
 		disposeEverything();
@@ -160,8 +160,8 @@ export function updateEverything(context: ExtensionContext): void {
 		alignment: $config.statusBarIconsAlignment,
 		targetProblems: $config.statusBarIconsTargetProblems,
 	});
-	$state.lensAboveCode?.dispose();
-	$state.lensAboveCode = new LensAboveCode(context);	
+	$state.codeLens?.dispose();
+	$state.codeLens = new ErrorLensCodeLens(context);
 	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
 	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
 	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
@@ -238,7 +238,7 @@ export function disposeEverything(): void {
 	disposeAllEventListeners();
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
-	$state.lensAboveCode?.dispose();
+	$state.codeLens?.dispose();
 	disposeAllDecorations();
 }
 

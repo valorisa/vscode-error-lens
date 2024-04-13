@@ -940,12 +940,12 @@
 					"default": false,
 					"description": "Controls whether to run on untitled (unsaved) files."
 				},
-				"errorLens.lensAboveCodeEnabled": {
+				"errorLens.codeLensEnabled": {
 					"type": "boolean",
-					"default": true,
+					"default": false,
 					"markdownDescription": "Controls whether to show the Error Lens as a Code Lens above the code. "
 				},
-				"errorLens.lensAboveCodePrefix": {
+				"errorLens.codeLensPrefix": {
 					"type": "object",
 					"properties": {
 						"error": {
@@ -980,26 +980,26 @@
 						"hint": "↘"
 					},
 					"additionalProperties": false,
-					"markdownDescription": "Pick an emoji/prefix for `#errorLens.lensAboveCodeEnabled#` e.g. 🔥"
+					"markdownDescription": "Pick an emoji/prefix for `#errorLens.codeLensEnabled#` e.g. 🔥"
 				},
-				"errorLens.lensAboveCodeMaxLength": {
+				"errorLens.codeLensMaxLength": {
 					"type": "integer",
 					"default": 100,
 					"minimum": 30,
-					"markdownDescription": "Maximum length of the first diagnostic in the `#errorLens.lensAboveCodeEnabled#`"
+					"markdownDescription": "Maximum length of the first diagnostic in the `#errorLens.codeLensEnabled#`"
 				},
-				"errorLens.lensAboveCodeMinLength": {
+				"errorLens.codeLensMinLength": {
 					"type": "integer",
 					"default": 30,
 					"minimum": 10,
-					"markdownDescription": "Minimum length of subsequent diagnostics in the `#errorLens.lensAboveCodeEnabled#`"
+					"markdownDescription": "Minimum length of subsequent diagnostics in the `#errorLens.codeLensEnabled#`"
 				},
-				"errorLens.lensAboveCodeTemplate": {
+				"errorLens.codeLensTemplate": {
 					"type": "string",
 					"default": "$message",
-					"markdownDescription": "Template used for all messages appearing in the `#errorLens.lensAboveCodeEnabled#`. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
+					"markdownDescription": "Template used for all messages appearing in the `#errorLens.codeLensEnabled#`. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
 				},
-				"errorLens.lensAboveCodeClick": {
+				"errorLens.codeLensOnClick": {
 					"type": "string",
 					"enum": [
 						"none",
@@ -1014,7 +1014,7 @@
 						"Search for the problem."
 					],
 					"default": "showQuickFix",
-					"markdownDescription": "Controls what do on clicking the `#errorLens.lensAboveCodeEnabled#`."
+					"markdownDescription": "Controls what do on clicking the `#errorLens.codeLensEnabled#`."
 				},
 				"errorLens.debugLogEnabled": {
 					"type": "boolean",

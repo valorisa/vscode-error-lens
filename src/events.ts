@@ -108,7 +108,7 @@ export function updateCursorChangeListener(): void {
 				selection.isEmpty &&
 				lastPositionLine !== selection.active.line
 			) {
-				if (extUtils.shouldExcludeWindow(e.textEditor.document.uri)) {
+				if (extUtils.shouldExcludeOutput(e.textEditor.document.uri)) {
 					return;
 				}
 				$state.log('updateCursorChangeListener');
@@ -127,7 +127,7 @@ export function updateOnVisibleRangesListener(): void {
 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
 
 	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
-		if (extUtils.shouldExcludeWindow(e.textEditor.document.uri)) {
+		if (extUtils.shouldExcludeOutput(e.textEditor.document.uri)) {
 			return;
 		}
 		$state.log('updateOnVisibleRangesListener');

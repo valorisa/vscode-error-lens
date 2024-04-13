@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { $config, $state } from 'src/extension';
 import { CodeLens, EventEmitter, Location, Selection, commands, languages, window, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type ProviderResult, type Range, type TextDocument, type Uri } from 'vscode';
 import { extUtils } from './utils/extUtils';
+import { CommandId } from 'src/commands';
 
 interface GroupedDiagnostic {
 	range: Range;
@@ -25,24 +26,6 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 		this.disposables = [
 			this.onDidChangeEventEmitter,
 			languages.registerCodeLensProvider('*', this),
-			commands.registerCommand('errorLens.lensAboveCodeAction', (location: Location, diagnostics: Diagnostic[]) => {
-				switch ($config.codeLensOnClick) {
-					case 'showProblemWindow':
-						commands.executeCommand('workbench.action.problems.focus');
-						break;
-					case 'showQuickFix':
-						ErrorLensCodeLens.setCaretInEditor(diagnostics[0].range);
-						commands.executeCommand('editor.action.quickFix', diagnostics[0]);
-						break;
-					case 'searchForProblem':
-						ErrorLensCodeLens.setCaretInEditor(diagnostics[0].range);
-						commands.executeCommand('errorLens.searchForProblem', diagnostics[0]);
-						break;
-					case 'none':
-					default:
-						break;
-				}
-			}),
 		];
 	}
 
@@ -147,7 +130,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 				group.range,
 				{
 					title: ErrorLensCodeLens.createTitle(group),
-					command: 'errorLens.lensAboveCodeAction',
+					command: CommandId.CodeLensOnClick,
 					tooltip: ErrorLensCodeLens.createTooltip(group),
 					arguments: [
 						new Location(document.uri, group.range),

@@ -92,7 +92,8 @@ export abstract class $state {
 
 export function activate(context: ExtensionContext): void {
 	$state.logger = new Logger({
-		isDev: context.extensionMode === ExtensionMode.Development,
+		// isDev: context.extensionMode === ExtensionMode.Development,
+		isDev: false,
 	});
 	updateConfigAndEverything();
 	registerAllCommands(context);

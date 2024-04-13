@@ -1,3 +1,4 @@
+import { codeLensOnClickCommand } from 'src/commands/codeLensOnClickCommand';
 import { copyProblemCodeCommand } from 'src/commands/copyProblemCodeCommand';
 import { copyProblemMessageCommand } from 'src/commands/copyProblemMessageCommand';
 import { disableLineCommand } from 'src/commands/disableLineCommand';
@@ -45,6 +46,8 @@ export const enum CommandId {
 	RevealLine = 'errorLens.revealLine',
 	/** {@link excludeProblemCommand} */
 	ExcludeProblem = 'errorLens.excludeProblem',
+	/** {@link codeLensOnClickCommand} */
+	CodeLensOnClick = 'errorLens.codeLensOnClick',
 }
 
 /**
@@ -73,9 +76,7 @@ export function registerAllCommands(context: ExtensionContext): void {
 		vscodeUtils.toggleGlobalBooleanSetting('errorLens.messageEnabled');
 	}));
 	context.subscriptions.push(commands.registerCommand(CommandId.ToggleWorkspace, toggleWorkspaceCommand));
-	context.subscriptions.push(commands.registerCommand(CommandId.RevealLine, revealLineCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.FindLinterRuleDefinition, findLinterRuleDefinitionCommand));
-	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemCode, copyProblemCodeCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.SearchForProblem, searchForProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.DisableLine, disableLineCommand));
@@ -84,5 +85,11 @@ export function registerAllCommands(context: ExtensionContext): void {
 	// ────────────────────────────────────────────────────────────
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.SelectProblem, selectProblemCommand));
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
+	// ────────────────────────────────────────────────────────────
+	// ──── Internal commands ─────────────────────────────────────
+	// ────────────────────────────────────────────────────────────
+	context.subscriptions.push(commands.registerCommand(CommandId.CodeLensOnClick, codeLensOnClickCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.RevealLine, revealLineCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.StatusBarCommand, statusBarCommand));
 }

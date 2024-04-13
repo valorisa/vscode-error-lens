@@ -7,7 +7,7 @@ interface GroupedDiagnostic {
 	range: Range;
 	diagnostics: Diagnostic[];
 }
-
+// TODO: doesn't honour "enabledDiagnosticLevels"
 /**
  * Creates a `Code Lens` above the code. `provideCodeLenses` is called
  * by the application so we can't hook into the `doUpdateDecorations` like other decorators.
@@ -28,16 +28,13 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 			commands.registerCommand('errorLens.lensAboveCodeAction', (location: Location, diagnostics: Diagnostic[]) => {
 				switch ($config.codeLensOnClick) {
 					case 'showProblemWindow':
-						$state.log(`LensAboveCode.lensAboveCodeAction: showProblemWindow`);
 						commands.executeCommand('workbench.action.problems.focus');
 						break;
 					case 'showQuickFix':
-						$state.log(`LensAboveCode.lensAboveCodeAction: showQuickFix`);
 						ErrorLensCodeLens.setCaretInEditor(diagnostics[0].range);
 						commands.executeCommand('editor.action.quickFix', diagnostics[0]);
 						break;
 					case 'searchForProblem':
-						$state.log(`LensAboveCode.lensAboveCodeAction: searchForProblem`);
 						ErrorLensCodeLens.setCaretInEditor(diagnostics[0].range);
 						commands.executeCommand('errorLens.searchForProblem', diagnostics[0]);
 						break;
@@ -140,7 +137,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	 * Called by Vscode to provide code lenses
 	 */
 	public provideCodeLenses(document: TextDocument, _cancellationToken: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {
-		if ($config.codeLensEnabled || extUtils.shouldExcludeOutput(document.uri)) {
+		if (!$config.codeLensEnabled) {
 			return [];
 		}
 
@@ -175,7 +172,6 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	}
 
 	public update(): void {
-		$state.log(`LensAboveCode.requestUpdate`);
 		this.onDidChangeEventEmitter.fire();
 	}
 }

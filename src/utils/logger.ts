@@ -1,66 +1,31 @@
-import { $config } from 'src/extension';
-import { LogLevel, type LogOutputChannel, window } from 'vscode';
 
 /**
- * Logger - Log a message to the `Error Lens Debug` output channel. Supports a lambda for lazy evaluation.
- * 
- * Note: if any decorators are listening to changes to output windows, this causes looping event cycles
+ * log. console.log (when developing).
  */
 export class Logger {
-	private logWindow: LogOutputChannel | undefined;
-	
-	constructor() {
-		this.logWindow = undefined;
+	private readonly isEnabled: boolean;
+
+	constructor({ isDev }: { isDev: boolean }) {
+		this.isEnabled = isDev;
 	}
 
-	public isLoggingEnabled(): boolean {
-		return $config.debugLogEnabled;
+	log(message: string, ...args: unknown[]): void {
+		this.innerLog('log', message, ...args);
 	}
 
-	public dispose(): void {
-		this.logWindow?.dispose();
-		this.logWindow = undefined;
+	warn(message: string, ...args: unknown[]): void {
+		this.innerLog('warn', message, ...args);
 	}
 
-	public trace(message: string | (()=> string)): void {
-		this.log(LogLevel.Trace, message);
-	}
-	    
-	public info(message: string | (()=> string)): void {
-		this.log(LogLevel.Info, message);
-	}	
+	private innerLog(severity: 'log' | 'warn', message: string, ...args: unknown[]): void {
+		if (!this.isEnabled) {
+			return;
+		}
 
-	public warn(message: string | (()=> string)): void {
-		this.log(LogLevel.Warning, message);
-	}
-
-	public error(message: string | (()=> string)): void {
-		this.log(LogLevel.Error, message);
-	}
-
-	private log(logLevel: LogLevel, message: string | (()=> string)): void {
-		if (this.isLoggingEnabled()) {
-			if (!this.logWindow) {				
-				this.logWindow = window.createOutputChannel('Error Lens Debug', { log: true });
-			}
-			const messageText = (typeof message === 'function') ? message() : message;
-			switch (logLevel) {
-				case LogLevel.Info:
-					this.logWindow.info(messageText);
-					break;
-				case LogLevel.Warning:
-					this.logWindow.warn(messageText);
-					break;
-				case LogLevel.Error:
-					this.logWindow.error(messageText);
-					break;
-				case LogLevel.Trace:
-					this.logWindow.error(messageText);
-					break;
-				default:
-					this.logWindow.info(messageText);
-					break;
-			}
+		if (args.length) {
+			console[severity](message, args);
+		} else {
+			console[severity](message);
 		}
 	}
 }

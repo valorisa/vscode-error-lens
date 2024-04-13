@@ -5,9 +5,9 @@ import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
-import { workspace, type ExtensionContext } from 'vscode';
+import { Logger } from 'src/utils/logger';
+import { ExtensionMode, workspace, type ExtensionContext } from 'vscode';
 import { ErrorLensCodeLens } from './codeLens';
-import { Logger } from './utils/logger';
 
 /**
  * All user settings.
@@ -82,18 +82,18 @@ export abstract class $state {
 	 */
 	static shouldUpdateOnEditorScrollEvent: boolean;
 	/**
-	 * `Error Lens Debug` output channel for logging.
+	 * Use console.log() when developing extension.
 	 */
 	static logger: Logger;
-	/**
-	 * Log a message to the `Error Lens Debug` output channel. Use a lambda for lazy evaluation.
-	 */
-	static log(message: string | (()=> string)): void {
-		$state.logger.info(message);
-	}
+	static log = (message: string, ...args: unknown[]): void => {
+		$state.logger.log(message, ...args);
+	};
 }
 
 export function activate(context: ExtensionContext): void {
+	$state.logger = new Logger({
+		isDev: context.extensionMode === ExtensionMode.Development,
+	});
 	updateConfigAndEverything();
 	registerAllCommands(context);
 
@@ -103,8 +103,6 @@ export function activate(context: ExtensionContext): void {
 	 * - Update everything
 	 */
 	function updateConfigAndEverything(): void {
-		$state.logger?.dispose();
-		$state.logger = new Logger();
 		$config = workspace.getConfiguration().get(Constants.SettingsPrefix)!;
 		$state.vscodeGlobalProblemsEnabled = workspace.getConfiguration('problems').get<boolean>('visibility') ?? true;
 		disposeEverything();

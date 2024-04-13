@@ -1015,11 +1015,6 @@
 					],
 					"default": "showQuickFix",
 					"markdownDescription": "Controls what do on clicking the `#errorLens.codeLensEnabled#`."
-				},
-				"errorLens.debugLogEnabled": {
-					"type": "boolean",
-					"default": false,
-					"markdownDescription": "Controls whether to write debug messages for `#errorLens.enabled#` to an window called `Error Lens Debug`."
 				}
 			}
 		},

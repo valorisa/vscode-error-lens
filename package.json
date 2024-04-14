@@ -286,40 +286,13 @@
 					},
 					"markdownDescription": "Replaces `$severity` variable in `#errorLens.messageTemplate#`.",
 					"default": [
-						"ERROR",
-						"WARNING",
-						"INFO",
-						"HINT"
+						"⛔",
+						"⚠",
+						"ℹ",
+						"🍏"
 					],
 					"minItems": 4,
 					"maxItems": 4
-				},
-				"errorLens.annotationPrefix": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
-					"markdownDescription": "Specify diagnostic message prefixes (when `#errorLens.addAnnotationTextPrefixes#` is enabled). For example, emoji: ❗ ⚠ ℹ.",
-					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.severityText#` & `#errorLens.messageTemplate#`. https://github.com/usernamehw/vscode-error-lens/issues/92",
-					"default": [
-						"ERROR: ",
-						"WARNING: ",
-						"INFO: ",
-						"HINT: "
-					],
-					"maxItems": 4
-				},
-				"errorLens.addAnnotationTextPrefixes": {
-					"type": "boolean",
-					"markdownDescription": "When enabled - prepends diagnostic severity ('ERROR:', 'WARNING:' etc) to the message. (Prefixes can be configured with `annotationPrefix` setting).",
-					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`. https://github.com/usernamehw/vscode-error-lens/issues/92",
-					"default": false
-				},
-				"errorLens.addNumberOfDiagnostics": {
-					"type": "boolean",
-					"markdownDescription": "When enabled - prepends number of diagnostics on the line. Like: `[1/2]`.",
-					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.messageTemplate#`. https://github.com/usernamehw/vscode-error-lens/issues/92",
-					"default": false
 				},
 				"errorLens.messageEnabled": {
 					"type": "boolean",
@@ -945,43 +918,6 @@
 					"default": false,
 					"markdownDescription": "Controls whether to show the Error Lens as a Code Lens above the code. "
 				},
-				"errorLens.codeLensPrefix": {
-					"type": "object",
-					"properties": {
-						"error": {
-							"type": "string",
-							"minLength": 0,
-							"maxLength": 50,
-							"default": "⛔"
-						},
-						"warning": {
-							"type": "string",
-							"minLength": 0,
-							"maxLength": 50,
-							"default": "⚠️"
-						},
-						"info": {
-							"type": "string",
-							"minLength": 0,
-							"maxLength": 50,
-							"default": "ℹ️"
-						},
-						"hint": {
-							"type": "string",
-							"minLength": 0,
-							"maxLength": 50,
-							"default": "↘"
-						}
-					},
-					"default": {
-						"error": "⛔",
-						"warning": "⚠️",
-						"info": "ℹ️",
-						"hint": "↘"
-					},
-					"additionalProperties": false,
-					"markdownDescription": "Pick an emoji/prefix for `#errorLens.codeLensEnabled#` e.g. 🔥"
-				},
 				"errorLens.codeLensLength": {
 					"type": "object",
 					"properties": {
@@ -1005,7 +941,7 @@
 				},
 				"errorLens.codeLensTemplate": {
 					"type": "string",
-					"default": "$message",
+					"default": "$severity $message",
 					"markdownDescription": "Template used for all messages appearing in the `#errorLens.codeLensEnabled#`. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic"
 				},
 				"errorLens.codeLensOnClick": {

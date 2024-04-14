@@ -348,15 +348,6 @@ interface ExtensionConfigType {
 		max: number;
 	};
 	/**
-	 * Pick prefix for `#errorLens.codeLensEnabled#` e.g. 🔥
-	 */
-	codeLensPrefix: {
-		error: string;
-		warning: string;
-		info: string;
-		hint: string;
-	};
-	/**
 	 * See `#errorLens.messageTemplate#`.
 	 */
 	codeLensTemplate: string;

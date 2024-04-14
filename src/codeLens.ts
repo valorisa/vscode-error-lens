@@ -37,29 +37,14 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 		}
 	}
 
-	static getPrefix(diagnostic: Diagnostic): string {
-		switch (diagnostic.severity) {
-			case 0:
-				return $config.codeLensPrefix.error;
-			case 1:
-				return $config.codeLensPrefix.warning;
-			case 2:
-				return $config.codeLensPrefix.info;
-			case 3:
-				return $config.codeLensPrefix.hint;
-			default:
-				return '';
-		}
-	}
-
 	static formatDiagnostic(diagnostic: Diagnostic): string {
-		return `${ErrorLensCodeLens.getPrefix(diagnostic)} ${extUtils.prepareMessage({
+		return extUtils.prepareMessage({
 			template: $config.codeLensTemplate,
 			diagnostic,
 			lineProblemCount: 1,
 			removeLinebreaks: true,
 			replaceLinebreaksSymbol: ' ',
-		})}`;
+		});
 	}
 
 	/**

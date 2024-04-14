@@ -948,13 +948,13 @@
 					"type": "string",
 					"enum": [
 						"none",
-						"showProblemWindow",
+						"showProblemsView",
 						"showQuickFix",
 						"searchForProblem"
 					],
 					"enumDescriptions": [
 						"Does nothing.",
-						"Shows problem window.",
+						"Shows problems view.",
 						"Shows quick fix menu.",
 						"Search for the problem."
 					],

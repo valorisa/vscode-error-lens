@@ -43,7 +43,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 			diagnostic,
 			lineProblemCount: 1,
 			removeLinebreaks: true,
-			replaceLinebreaksSymbol: ' ',
+			replaceLinebreaksSymbol: $config.replaceLinebreaksSymbol,
 		});
 	}
 

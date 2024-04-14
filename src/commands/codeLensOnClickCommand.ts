@@ -6,7 +6,7 @@ import { commands, type Diagnostic, type Location } from 'vscode';
 
 export function codeLensOnClickCommand(location: Location, diagnostics: Diagnostic[]): void {
 	switch ($config.codeLensOnClick) {
-		case 'showProblemWindow':
+		case 'showProblemsView':
 			commands.executeCommand(Constants.OpenProblemsViewCommandId);
 			break;
 		case 'showQuickFix':

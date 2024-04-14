@@ -1,3 +1,7 @@
+## 3.17.0 `14 Apr 2024`
+
+- ✨ Show problems using "Code Lens" api. New settings: `"errorLens.codeLensEnabled"`, `"errorLens.codeLensTemplate"`, `"errorLens.codeLensOnClick"`, `"errorLens.codeLensLength"` [PR 202](https://github.com/usernamehw/vscode-error-lens/pull/202) by [duncanawoods](https://github.com/duncanawoods)
+
 ## 3.16.0 `16 Dec 2023`
 
 - ✨ Honor vscode `problems.visibility` setting when showing decorations (new setting `"errorLens.respectUpstreamEnabled"`)

@@ -78,16 +78,16 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	static createTitle(group: GroupedDiagnostic): string {
 		let result = ErrorLensCodeLens.formatDiagnostic(group.diagnostics[0]);
 
-		if (result.length > $config.codeLensMaxLength) {
-			result = `${result.substring(0, $config.codeLensMaxLength)}…`;
+		if (result.length > $config.codeLensLength.max) {
+			result = `${result.substring(0, $config.codeLensLength.max)}…`;
 		}
 
 		if (group.diagnostics.length > 1) {
 			for (const diagnostic of group.diagnostics.slice(1)) {
 				const message = ErrorLensCodeLens.formatDiagnostic(diagnostic);
 				result += ` | ${
-					((result.length + message.length > $config.codeLensMaxLength) ?
-						`${message.substring(0, $config.codeLensMinLength)}…` :
+					((result.length + message.length > $config.codeLensLength.max) ?
+						`${message.substring(0, $config.codeLensLength.min)}…` :
 						message)}`;
 			}
 		}
@@ -96,6 +96,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	}
 
 	/**
+	 * TODO: duplicates extUtils.groupDiagnosticsByLine()
 	 * Group diagnostics by line number - similar to `doUpdateDecorations`
 	 * but the code lens is triggered by a different event
 	 */
@@ -156,6 +157,9 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	}
 
 	public update(): void {
+		if (!$config.codeLensEnabled) {
+			return;
+		}
 		this.onDidChangeEventEmitter.fire();
 	}
 }

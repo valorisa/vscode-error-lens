@@ -341,13 +341,12 @@ interface ExtensionConfigType {
 	 */
 	codeLensEnabled: boolean;
 	/**
-	 * Maximum length of the first diagnostic in the `#errorLens.codeLensEnabled#`
+	 * Enforce minimum length of first code lens item and max of subsequent items.
 	 */
-	codeLensMaxLength: number;
-	/**
-	 * Minimum length of subsequent diagnostics in the `#errorLens.codeLensEnabled#`
-	 */
-	codeLensMinLength: number;
+	codeLensLength: {
+		min: number;
+		max: number;
+	};
 	/**
 	 * Pick prefix for `#errorLens.codeLensEnabled#` e.g. 🔥
 	 */
@@ -386,6 +385,10 @@ export const enum Constants {
 	 * Command id of vscode command to show problems view.
 	 */
 	OpenProblemsViewCommandId = 'workbench.actions.view.problems',
+	/**
+	 * Command id of vscode show quick fix menu in editor.
+	 */
+	QuickFixCommandId = 'editor.action.quickFix',
 	/**
 	 * Command id of vscode command to focus active editor group.
 	 */

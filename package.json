@@ -970,7 +970,7 @@
 							"type": "string",
 							"minLength": 0,
 							"maxLength": 50,
-							"default": "↘ "
+							"default": "↘"
 						}
 					},
 					"default": {
@@ -982,17 +982,26 @@
 					"additionalProperties": false,
 					"markdownDescription": "Pick an emoji/prefix for `#errorLens.codeLensEnabled#` e.g. 🔥"
 				},
-				"errorLens.codeLensMaxLength": {
-					"type": "integer",
-					"default": 100,
-					"minimum": 30,
-					"markdownDescription": "Maximum length of the first diagnostic in the `#errorLens.codeLensEnabled#`"
-				},
-				"errorLens.codeLensMinLength": {
-					"type": "integer",
-					"default": 30,
-					"minimum": 10,
-					"markdownDescription": "Minimum length of subsequent diagnostics in the `#errorLens.codeLensEnabled#`"
+				"errorLens.codeLensLength": {
+					"type": "object",
+					"properties": {
+						"min": {
+							"type": "integer",
+							"minimum": 10,
+							"default": 30
+						},
+						"max": {
+							"type": "integer",
+							"minimum": 30,
+							"default": 100
+						}
+					},
+					"additionalProperties": false,
+					"default": {
+						"min": 30,
+						"max": 100
+					},
+					"markdownDescription": "Enforce minimum length of the first code lens item and max length of subsequent items."
 				},
 				"errorLens.codeLensTemplate": {
 					"type": "string",

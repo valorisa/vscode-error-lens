@@ -24,6 +24,7 @@ export function updateChangedActiveTextEditorListener(): void {
 		if ($config.onSave) {
 			$state.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
 		}
+		$state.log('onDidChangeActiveTextEditor()', editor?.document.uri.toString(true));
 		if (editor) {
 			updateDecorationsForUri({
 				uri: editor.document.uri,
@@ -53,6 +54,7 @@ export function updateChangeDiagnosticListener(): void {
 		for (const uri of diagnosticChangeEvent.uris) {
 			for (const editor of window.visibleTextEditors) {
 				if (uri.toString(true) === editor.document.uri.toString(true)) {
+					$state.log('onChangedDiagnostics()');
 					updateDecorationsForUri({
 						uri,
 						editor,
@@ -106,6 +108,7 @@ export function updateCursorChangeListener(): void {
 				selection.isEmpty &&
 				lastPositionLine !== selection.active.line
 			) {
+				$state.log('caret moved to another line');
 				updateDecorationsForUri({
 					uri: e.textEditor.document.uri,
 					editor: e.textEditor,
@@ -120,7 +123,13 @@ export function updateCursorChangeListener(): void {
 export function updateOnVisibleRangesListener(): void {
 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
 
+	if (!$state.shouldUpdateOnEditorScrollEvent) {
+		return;
+	}
+
 	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
+		$state.log('scrolling');
+
 		updateDecorationsForUri({
 			uri: e.textEditor.document.uri,
 			editor: e.textEditor,
@@ -147,6 +156,7 @@ export function updateOnSaveListener(): void {
 	onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
 		if (e.reason === TextDocumentSaveReason.Manual) {
 			setTimeout(() => {
+				$state.log('onWillSaveTextDocument()');
 				updateDecorationsForUri({
 					uri: e.document.uri,
 				});

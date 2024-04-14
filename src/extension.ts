@@ -5,7 +5,9 @@ import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
-import { workspace, type ExtensionContext } from 'vscode';
+import { Logger } from 'src/utils/logger';
+import { ExtensionMode, workspace, type ExtensionContext } from 'vscode';
+import { ErrorLensCodeLens } from './codeLens';
 
 /**
  * All user settings.
@@ -32,6 +34,10 @@ export abstract class $state {
 	 * Status bar object. Handles all status bar stuff (for icons)
 	 */
 	static statusBarIcons: StatusBarIcons;
+	/**
+	 * Code Lens Provider. Handles all Code Lens stuff https://github.com/microsoft/vscode-extension-samples/tree/main/codelens-sample
+	 */
+	static codeLens: ErrorLensCodeLens;
 	/**
 	 * Array of RegExp matchers and their updated messages.
 	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
@@ -75,9 +81,20 @@ export abstract class $state {
 	 * Set event listener for when editor visibleRanges change (vertical scroll), only when necessary.
 	 */
 	static shouldUpdateOnEditorScrollEvent: boolean;
+	/**
+	 * Use console.log() when developing extension.
+	 */
+	static logger: Logger;
+	static log = (message: string, ...args: unknown[]): void => {
+		$state.logger.log(message, ...args);
+	};
 }
 
 export function activate(context: ExtensionContext): void {
+	$state.logger = new Logger({
+		// isDev: context.extensionMode === ExtensionMode.Development,
+		isDev: false,
+	});
 	updateConfigAndEverything();
 	registerAllCommands(context);
 
@@ -142,7 +159,8 @@ export function updateEverything(context: ExtensionContext): void {
 		alignment: $config.statusBarIconsAlignment,
 		targetProblems: $config.statusBarIconsTargetProblems,
 	});
-
+	$state.codeLens?.dispose();
+	$state.codeLens = new ErrorLensCodeLens(context);
 	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
 	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
 	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
@@ -219,6 +237,7 @@ export function disposeEverything(): void {
 	disposeAllEventListeners();
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
+	$state.codeLens?.dispose();
 	disposeAllDecorations();
 }
 

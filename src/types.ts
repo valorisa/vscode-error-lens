@@ -184,7 +184,7 @@ interface ExtensionConfigType {
 	delayMode: 'debounce' | 'old';
 	/**
 	 * Highlight only portion of the problems.
-	 * For instance, only active line or the closest to the cursor diasnostic.
+	 * For instance, only active line or the closest to the cursor diagnostic.
 	 */
 	followCursor: 'activeLine' | 'allLines' | 'allLinesExceptActive' | 'closestProblem' | 'closestProblemMultiline' | 'closestProblemMultilineBySeverity' | 'closestProblemMultilineInViewport';
 	/**
@@ -336,6 +336,25 @@ interface ExtensionConfigType {
 	 * Controls whether to run on untitled (unsaved) files.
 	 */
 	ignoreUntitled: boolean;
+	/**
+	 * Controls whether to show the Error Lens as a Code Lens above the code.
+	 */
+	codeLensEnabled: boolean;
+	/**
+	 * Enforce minimum length of first code lens item and max of subsequent items.
+	 */
+	codeLensLength: {
+		min: number;
+		max: number;
+	};
+	/**
+	 * See `#errorLens.messageTemplate#`.
+	 */
+	codeLensTemplate: string;
+	/**
+	 * Controls what do on clicking the `#errorLens.codeLensEnabled#`
+	 */
+	codeLensOnClick: 'none' | 'searchForProblem' | 'showProblemsView' | 'showQuickFix';
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
@@ -353,6 +372,10 @@ export const enum Constants {
 	 * Command id of vscode command to show problems view.
 	 */
 	OpenProblemsViewCommandId = 'workbench.actions.view.problems',
+	/**
+	 * Command id of vscode show quick fix menu in editor.
+	 */
+	QuickFixCommandId = 'editor.action.quickFix',
 	/**
 	 * Command id of vscode command to focus active editor group.
 	 */

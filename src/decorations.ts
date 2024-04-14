@@ -520,10 +520,13 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 	}
 
 	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
+
+	$state.codeLens.update();
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {
 	for (const editor of window.visibleTextEditors) {
+		$state.log('updateDecorationsForAllVisibleEditors()');
 		updateDecorationsForUri({
 			uri: editor.document.uri,
 			editor,
@@ -594,7 +597,7 @@ export function updateDecorationsForUri({
 	) {
 		return;
 	}
-
+	$state.log('updateDecorationsForUri()', uri.toString(true));
 	doUpdateDecorations(editor, groupedDiagnostics ?? extUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
 }
 /**

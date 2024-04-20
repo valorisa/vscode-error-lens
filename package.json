@@ -928,14 +928,14 @@
 						},
 						"max": {
 							"type": "integer",
-							"minimum": 30,
-							"default": 100
+							"minimum": 10,
+							"default": 200
 						}
 					},
 					"additionalProperties": false,
 					"default": {
-						"min": 30,
-						"max": 100
+						"min": 10,
+						"max": 200
 					},
 					"markdownDescription": "Enforce minimum length of the first code lens item and max length of subsequent items."
 				},

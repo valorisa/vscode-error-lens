@@ -3,6 +3,8 @@ import { CommandId } from 'src/commands';
 import { $config } from 'src/extension';
 import { CodeLens, EventEmitter, Location, Selection, languages, window, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type ProviderResult, type Range, type TextDocument, type Uri } from 'vscode';
 import { extUtils } from './utils/extUtils';
+import { utils } from 'src/utils/utils';
+import { Constants } from 'src/types';
 
 interface GroupedDiagnostic {
 	range: Range;
@@ -58,26 +60,14 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	}
 
 	/**
-	 * Show multiple diagnostics by controlling the truncation favouring the first one.
+	 * Show multiple diagnostics and truncate/pad if needed depending on user settings.
 	 */
 	static createTitle(group: GroupedDiagnostic): string {
-		let result = ErrorLensCodeLens.formatDiagnostic(group.diagnostics[0]);
-
-		if (result.length > $config.codeLensLength.max) {
-			result = `${result.substring(0, $config.codeLensLength.max)}…`;
-		}
-
-		if (group.diagnostics.length > 1) {
-			for (const diagnostic of group.diagnostics.slice(1)) {
-				const message = ErrorLensCodeLens.formatDiagnostic(diagnostic);
-				result += ` | ${
-					((result.length + message.length > $config.codeLensLength.max) ?
-						`${message.substring(0, $config.codeLensLength.min)}…` :
-						message)}`;
-			}
-		}
-
-		return result;
+		return group.diagnostics.map(diagnostic => {
+			const formattedDiagnostic = ErrorLensCodeLens.formatDiagnostic(diagnostic);
+			return utils.truncateString(formattedDiagnostic, $config.codeLensLength.max)
+				.padEnd($config.codeLensLength.min, Constants.NonBreakingSpaceSymbol);
+		}).join(' | ');
 	}
 
 	/**

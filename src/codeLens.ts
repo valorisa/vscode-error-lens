@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import { CommandId } from 'src/commands';
 import { $config } from 'src/extension';
-import { CodeLens, EventEmitter, Location, Selection, languages, window, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type ProviderResult, type Range, type TextDocument, type Uri } from 'vscode';
-import { extUtils } from './utils/extUtils';
-import { utils } from 'src/utils/utils';
 import { Constants } from 'src/types';
+import { utils } from 'src/utils/utils';
+import { CodeLens, EventEmitter, Location, languages, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type ProviderResult, type Range, type TextDocument, type Uri } from 'vscode';
+import { extUtils } from './utils/extUtils';
 
 interface GroupedDiagnostic {
 	range: Range;
@@ -29,14 +29,6 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 			this.onDidChangeEventEmitter,
 			languages.registerCodeLensProvider('*', this),
 		];
-	}
-
-	static setCaretInEditor(range: Range): void {
-		const editor = window.activeTextEditor;
-		if (editor) {
-			editor.selection = new Selection(range.start, range.end);
-			editor.revealRange(range);
-		}
 	}
 
 	static formatDiagnostic(diagnostic: Diagnostic): string {
@@ -96,8 +88,8 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	/**
 	 * Called by Vscode to provide code lenses
 	 */
-	public provideCodeLenses(document: TextDocument, _cancellationToken: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {
-		if (!$config.codeLensEnabled) {
+	provideCodeLenses(document: TextDocument, _cancellationToken: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {
+		if (!this.isEnabled()) {
 			return [];
 		}
 
@@ -120,22 +112,30 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	/**
 	 * Called by Vscode - AFAIK there is nothing to resolve
 	 */
-	public resolveCodeLens(codeLens: CodeLens, _cancellationToken: CancellationToken): ProviderResult<CodeLens> {
+	resolveCodeLens(codeLens: CodeLens, _cancellationToken: CancellationToken): ProviderResult<CodeLens> {
 		return codeLens;
 	}
 
-	public dispose(): void {
-		for (const disposable of this.disposables) {
-			disposable?.dispose();
-		}
-		this.disposables = [];
+	isEnabled(): boolean {
+		return (
+			$config.enabled &&
+			$config.codeLensEnabled
+		);
 	}
 
-	public update(): void {
-		if (!$config.codeLensEnabled) {
-			return;
-		}
+	update(): void {
 		this.onDidChangeEventEmitter.fire();
+	}
+
+	dispose(): void {
+		this.update();
+
+		setInterval(() => {
+			for (const disposable of this.disposables) {
+				disposable?.dispose();
+			}
+			this.disposables = [];
+		}, 500);
 	}
 }
 

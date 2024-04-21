@@ -132,6 +132,16 @@ function getIndentationAtLine(document: TextDocument, lineNumber: number): strin
 	return textLine.text.slice(0, textLine.firstNonWhitespaceCharacterIndex);
 }
 
+function setCaretInEditor({ editor, range }: { editor?: TextEditor; range: Range }): void {
+	if (!editor) {
+		editor = window.activeTextEditor;
+	}
+	if (editor) {
+		editor.selection = new Selection(range.start, range.end);
+		editor.revealRange(range);
+	}
+}
+
 export const vscodeUtils = {
 	updateGlobalSetting,
 	toggleGlobalBooleanSetting,
@@ -145,4 +155,5 @@ export const vscodeUtils = {
 	openFileInVscode,
 	revealLine,
 	getIndentationAtLine,
+	setCaretInEditor,
 };

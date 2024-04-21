@@ -732,7 +732,7 @@
 		"no-octal": 1,
 		"no-octal-escape": 1,
 		"no-param-reassign": [
-			1,
+			0,
 			{
 				"props": true,
 				"ignorePropertyModificationsFor": [

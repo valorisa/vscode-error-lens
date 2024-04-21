@@ -923,8 +923,8 @@
 					"properties": {
 						"min": {
 							"type": "integer",
-							"minimum": 10,
-							"default": 30
+							"minimum": 0,
+							"default": 0
 						},
 						"max": {
 							"type": "integer",
@@ -934,7 +934,7 @@
 					},
 					"additionalProperties": false,
 					"default": {
-						"min": 10,
+						"min": 0,
 						"max": 200
 					},
 					"markdownDescription": "Enforce minimum length of the first code lens item and max length of subsequent items."

@@ -139,10 +139,6 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 		const diagnostic = groupedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		if (!extUtils.isSeverityEnabled(severity)) {
-			continue;
-		}
-
 		const diagnosticDecorationOptions: DecorationOptions = {
 			range: diagnostic.range,
 		};

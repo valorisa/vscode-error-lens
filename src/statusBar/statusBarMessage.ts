@@ -83,10 +83,8 @@ export class StatusBarMessage {
 		if (this.messageType === 'activeLine') {
 			if (groupedDiagnostics[ln]) {
 				for (const diag of groupedDiagnostics[ln]) {
-					if (extUtils.isSeverityEnabled(diag.severity)) {
-						diagnostic = diag;
-						numberOfDiagnosticsOnThatLine = groupedDiagnostics[ln].length;
-					}
+					diagnostic = diag;
+					numberOfDiagnosticsOnThatLine = groupedDiagnostics[ln].length;
 				}
 			} else {
 				this.clear();

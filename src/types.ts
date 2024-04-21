@@ -392,7 +392,8 @@ export const enum Constants {
 	MergeConflictSymbol3 = '>>>>>>>',
 
 	NonBreakingSpaceSymbolHtml = '&nbsp;',
-	NonBreakingSpaceSymbol = ' ',
+	NonBreakingSpaceSymbol = '⠀',
+
 }
 /**
  * Common groups of diagnostics to target.

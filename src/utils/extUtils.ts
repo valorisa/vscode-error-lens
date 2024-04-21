@@ -64,6 +64,10 @@ function groupDiagnosticsByLine(diagnostics: Diagnostic[]): GroupedByLineDiagnos
  * Check multiple exclude sources if the diagnostic should not be shown.
  */
 function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
+	if (!isSeverityEnabled(diagnostic.severity)) {
+		return true;
+	}
+
 	if (diagnostic.source) {
 		for (const excludeSourceCode of $state.excludeSources) {
 			if (excludeSourceCode.source === diagnostic.source) {

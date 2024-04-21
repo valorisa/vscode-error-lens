@@ -357,10 +357,6 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		const diagnostic = groupedDiagnostic[0];
 		const severity = diagnostic.severity;
 
-		if (!extUtils.isSeverityEnabled(severity)) {
-			continue;
-		}
-
 		let message: string | undefined;
 
 		if (extUtils.shouldShowInlineMessage()) {

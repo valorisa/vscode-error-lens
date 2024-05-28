@@ -1,5 +1,5 @@
 import { CommandId } from 'src/commands';
-import { $config } from 'src/extension';
+import { $config, $state } from 'src/extension';
 import { Constants } from 'src/types';
 import { utils } from 'src/utils/utils';
 import { CodeLens, EventEmitter, Range, languages, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type TextDocument } from 'vscode';
@@ -60,6 +60,15 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	provideCodeLenses(document: TextDocument, _cancellationToken: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {
 		if (!this.isEnabled()) {
 			return [];
+		}
+
+		// TODO: duplicate code in `decorations.ts`
+		if ($state.excludePatterns) {
+			for (const pattern of $state.excludePatterns) {
+				if (languages.match(pattern, document) !== 0) {
+					return [];
+				}
+			}
 		}
 
 		const groupedDiagnostic = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(document.uri));

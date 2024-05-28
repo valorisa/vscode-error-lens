@@ -1,3 +1,8 @@
+## 3.18.0 `28 May 2024`
+
+- 🐛 Code Lens fixes: doesn't respect : `errorLens.enabled` & `errorLens.enabledDiagnosticLevels` & `errorLens.excludePatterns`
+- ✨ Code Lens change default settings: "max": 100 -> 200
+
 ## 3.17.0 `14 Apr 2024`
 
 - ✨ Show problems using "Code Lens" api. New settings: `"errorLens.codeLensEnabled"`, `"errorLens.codeLensTemplate"`, `"errorLens.codeLensOnClick"`, `"errorLens.codeLensLength"` [PR 202](https://github.com/usernamehw/vscode-error-lens/pull/202) by [duncanawoods](https://github.com/duncanawoods)

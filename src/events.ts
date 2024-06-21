@@ -89,35 +89,45 @@ export function updateChangeDiagnosticListener(): void {
 }
 /**
  * Update listener for when active selection (cursor) moves.
+ * (only assign event listener when needed: either render decorations depending on caret OR status bar message depending on caret)
  */
 export function updateCursorChangeListener(): void {
 	onDidCursorChangeDisposable?.dispose();
 
-	if (
-		$config.followCursor === 'activeLine' ||
+	const shouldUpdateEditorDecorations = $config.followCursor === 'activeLine' ||
 		$config.followCursor === 'closestProblem' ||
 		$config.followCursor === 'allLinesExceptActive' ||
-		$config.followCursor === 'closestProblemMultiline' ||
+		$config.followCursor === 'closestProblemMultiline';
+
+	if (
+		shouldUpdateEditorDecorations ||
 		extUtils.shouldShowStatusBarMessage()
 	) {
 		let lastPositionLine = -1;
+
 		onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];
-			if (
-				e.selections.length === 1 &&
-				selection.isEmpty &&
-				lastPositionLine !== selection.active.line
-			) {
+			if (caretMovedToAnotherLine(e.selections, lastPositionLine)) {
 				$state.log('caret moved to another line');
-				updateDecorationsForUri({
-					uri: e.textEditor.document.uri,
-					editor: e.textEditor,
-					range: selection,
-				});
+				if (shouldUpdateEditorDecorations) {
+					updateDecorationsForUri({
+						uri: e.textEditor.document.uri,
+						editor: e.textEditor,
+						range: selection,
+					});
+				}
+				if (extUtils.shouldShowStatusBarMessage()) {
+					$state.statusBarMessage.updateText(e.textEditor, extUtils.groupDiagnosticsByLine(languages.getDiagnostics(e.textEditor.document.uri)));
+				}
 				lastPositionLine = e.selections[0].active.line;
 			}
 		});
 	}
+}
+function caretMovedToAnotherLine(selections: readonly Selection[], lastPositionLine: number): boolean {
+	return selections.length === 1 &&
+		selections[0].isEmpty &&
+		lastPositionLine !== selections[0].active.line;
 }
 
 export function updateOnVisibleRangesListener(): void {

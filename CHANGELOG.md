@@ -1,3 +1,8 @@
+## 3.19.0 `21 Jun 2024`
+
+- ✨ Add new delay mode. It's default now: `"errorLens.delayMode": "new",`
+- 🐛 Fix bug when enabling status bar message extension re-rendered editor decorations (interfered with delay)
+
 ## 3.18.0 `28 May 2024`
 
 - 🐛 Code Lens fixes: doesn't respect : `errorLens.enabled` & `errorLens.enabledDiagnosticLevels` & `errorLens.excludePatterns`

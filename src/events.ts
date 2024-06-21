@@ -1,10 +1,10 @@
-import throttle from 'lodash/throttle';
 import debounce from 'lodash/debounce';
-import { CustomDelay } from 'src/CustomDelay';
 import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri, updateWorkaroundGutterIcon } from 'src/decorations';
+import { CustomDelay } from 'src/delay/CustomDelay';
+import { NewDelay } from 'src/delay/NewDelay';
 import { $config, $state } from 'src/extension';
-import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable } from 'vscode';
 import { extUtils } from 'src/utils/extUtils';
+import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable, type Selection } from 'vscode';
 
 let onDidChangeDiagnosticsDisposable: Disposable | undefined;
 let onDidChangeActiveTextEditor: Disposable | undefined;
@@ -13,6 +13,7 @@ let onDidSaveTextDocumentDisposable: Disposable | undefined;
 let onDidCursorChangeDisposable: Disposable | undefined;
 let onDidChangeBreakpoints: Disposable | undefined;
 let onDidChangeTextEditorVisibleRangesDisposable: Disposable | undefined;
+let newDelay: NewDelay;
 
 /**
  * Update listener for when active editor changes.
@@ -74,13 +75,18 @@ export function updateChangeDiagnosticListener(): void {
 	}
 	if (typeof $config.delay === 'number' && $config.delay > 0) {
 		// Delay
+		const delayMs = Math.max($config.delay, 500) || 500;
 		if ($config.delayMode === 'old') {
-			const customDelay = new CustomDelay($config.delay);
+			const customDelay = new CustomDelay(delayMs);
 			onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(customDelay.onDiagnosticChange);
 		} else if ($config.delayMode === 'debounce') {
-			languages.onDidChangeDiagnostics(debounce((e: DiagnosticChangeEvent) => {
+			onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(debounce((e: DiagnosticChangeEvent) => {
 				onChangedDiagnostics(e);
-			}, $config.delay));
+			}, delayMs));
+		} else if ($config.delayMode === 'new') {
+			newDelay?.dispose();
+			newDelay = new NewDelay(delayMs);
+			onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(newDelay.onDiagnosticChange);
 		}
 	} else {
 		// No delay

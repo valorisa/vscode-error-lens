@@ -110,7 +110,6 @@ async function readFileVscode(pathOrUri: Uri | string): Promise<string> {
 	try {
 		const uri = typeof pathOrUri === 'string' ? Uri.file(pathOrUri) : pathOrUri;
 		const file = await workspace.fs.readFile(uri);
-		// @ts-expect-error TextDecoder EXISTS
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 		return new TextDecoder().decode(file);
 	} catch (e) {

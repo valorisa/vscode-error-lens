@@ -623,14 +623,16 @@
 				},
 				"errorLens.delayMode": {
 					"type": "string",
-					"default": "old",
+					"default": "new",
 					"enum": [
 						"old",
-						"debounce"
+						"debounce",
+						"new"
 					],
 					"markdownEnumDescriptions": [
 						"New problems appear according to `errorLens.delay` setting. Fixed problems disappear faster. A bit buggy.",
-						"Decorations for problems are debounced according to `errorLens.delay` setting."
+						"Decorations for problems are debounced according to `errorLens.delay` setting.",
+						"Decorations disappear when document changes (typing)."
 					],
 					"markdownDescription": "Pick which version of the delay to use."
 				},

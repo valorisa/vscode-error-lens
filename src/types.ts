@@ -181,7 +181,7 @@ interface ExtensionConfigType {
 	/**
 	 * Pick which version of the delay to use.
 	 */
-	delayMode: 'debounce' | 'old';
+	delayMode: 'debounce' | 'new' | 'old';
 	/**
 	 * Highlight only portion of the problems.
 	 * For instance, only active line or the closest to the cursor diagnostic.

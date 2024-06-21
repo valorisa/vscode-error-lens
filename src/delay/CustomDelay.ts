@@ -9,10 +9,6 @@ type CachedDiagnostic = Record<string, Record<string, Diagnostic>>;
 
 export class CustomDelay {
 	/**
-	 * Delay of adding a new decoration
-	 */
-	private readonly delay: number;
-	/**
 	 * Saved diagnostics for each Uri.
 	 */
 	private cachedDiagnostics: CachedDiagnostic = {};
@@ -29,14 +25,12 @@ export class CustomDelay {
 	 * Try to add delay to new decorations.
 	 * But old fixed errors should be removed immediately.
 	 */
-	constructor(delay: number) {
-		this.delay = Math.max(delay, 500) || 500;
-
+	constructor(delayMs: number) {
 		this.updateDecorationsThrottled = throttle(this.updateDecorations, 300, {
 			leading: true,
 			trailing: true,
 		});
-		this.updateDecorationsDebounced = debounce(this.updateDecorationsThrottled, this.delay, {
+		this.updateDecorationsDebounced = debounce(this.updateDecorationsThrottled, delayMs, {
 			leading: false,
 			trailing: true,
 		});

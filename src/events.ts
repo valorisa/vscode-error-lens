@@ -9,11 +9,14 @@ import { TextDocumentSaveReason, debug, languages, window, workspace, type Diagn
 let onDidChangeDiagnosticsDisposable: Disposable | undefined;
 let onDidChangeActiveTextEditor: Disposable | undefined;
 let onDidChangeVisibleTextEditors: Disposable | undefined;
-let onDidSaveTextDocumentDisposable: Disposable | undefined;
 let onDidCursorChangeDisposable: Disposable | undefined;
 let onDidChangeBreakpoints: Disposable | undefined;
 let onDidChangeTextEditorVisibleRangesDisposable: Disposable | undefined;
-let newDelay: NewDelay;
+
+let onDidChangeTextDocumentForOnSaveDisposable: Disposable | undefined;
+let onDidSaveTextDocumentDisposable: Disposable | undefined;
+
+let newDelay: NewDelay | undefined;
 
 /**
  * Update listener for when active editor changes.
@@ -164,6 +167,7 @@ export function updateOnVisibleRangesListener(): void {
  */
 export function updateOnSaveListener(): void {
 	onDidSaveTextDocumentDisposable?.dispose();
+	onDidChangeTextDocumentForOnSaveDisposable?.dispose();
 
 	if (!$config.onSave) {
 		return;
@@ -179,6 +183,13 @@ export function updateOnSaveListener(): void {
 			}, 200);
 			$state.lastSavedTimestamp = Date.now();
 		}
+	});
+
+	onDidChangeTextDocumentForOnSaveDisposable = workspace.onDidChangeTextDocument(e => {
+		updateDecorationsForUri({
+			uri: e.document.uri,
+			groupedDiagnostics: {},
+		});
 	});
 }
 
@@ -198,8 +209,9 @@ export function disposeAllEventListeners(): void {
 	onDidChangeVisibleTextEditors?.dispose();
 	onDidChangeDiagnosticsDisposable?.dispose();
 	onDidChangeActiveTextEditor?.dispose();
-	onDidSaveTextDocumentDisposable?.dispose();
 	onDidCursorChangeDisposable?.dispose();
 	onDidChangeBreakpoints?.dispose();
 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
+	onDidSaveTextDocumentDisposable?.dispose();
+	onDidChangeTextDocumentForOnSaveDisposable?.dispose();
 }

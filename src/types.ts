@@ -157,7 +157,7 @@ interface ExtensionConfigType {
 	/**
 	 * Pick what to show in Status Bar: closest message or only message for the active line.
 	 */
-	statusBarMessageType: 'activeLine' | 'closestProblem' | 'closestSeverity';
+	statusBarMessageType: 'activeCursor' | 'activeLine' | 'closestProblem' | 'closestSeverity';
 	/**
 	 * Which problem to select when running `errorLens.selectProblem` command.
 	 */

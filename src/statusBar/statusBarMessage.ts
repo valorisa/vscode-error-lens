@@ -88,6 +88,20 @@ export class StatusBarMessage {
 				this.clear();
 				return;
 			}
+		} else if (this.messageType === 'activeCursor') {
+			if (groupedDiagnostics[ln]) {
+				const sortedInlinDiagnostics = groupedDiagnostics[ln].sort((diag1, diag2) => {
+					const distanceCharToCursor1 = this.distanceInCharachtersToCursor(diag1);
+					const distanceCharToCursor2 = this.distanceInCharachtersToCursor(diag2);
+
+					if (distanceCharToCursor1 === distanceCharToCursor2) {
+						return diag1.severity - diag2.severity;
+					} else {
+						return distanceCharToCursor1 - distanceCharToCursor2;
+					}
+				});
+				diagnostic = sortedInlinDiagnostics[0];
+			}
 		} else if (this.messageType === 'closestProblem') {
 			// Sort by how close it is to the cursor
 			const sortedLineNumbers = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b));// TODO: duplicate code?
@@ -153,6 +167,20 @@ export class StatusBarMessage {
 		}
 		this.statusBarItem.text = '';
 		this.statusBarItem.tooltip = '';
+	}
+
+	distanceInCharachtersToCursor(diagnostic: Diagnostic): number {
+		const activeSelection = window.activeTextEditor?.selection.active;
+		if (!activeSelection) {
+			return 0;
+		}
+		if (diagnostic.range.contains(activeSelection)) {
+			return 0;
+		}
+		return Math.min(
+			Math.abs(diagnostic.range.start.character - activeSelection.character),
+			Math.abs(diagnostic.range.end.character - activeSelection.character),
+		);
 	}
 
 	/**

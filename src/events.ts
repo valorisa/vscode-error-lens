@@ -116,6 +116,8 @@ export function updateCursorChangeListener(): void {
 
 		onDidCursorChangeDisposable = window.onDidChangeTextEditorSelection(e => {
 			const selection = e.selections[0];
+
+			// Only update on active line change
 			if (caretMovedToAnotherLine(e.selections, lastPositionLine)) {
 				$state.log('caret moved to another line');
 				if (shouldUpdateEditorDecorations) {
@@ -126,9 +128,19 @@ export function updateCursorChangeListener(): void {
 					});
 				}
 				if (extUtils.shouldShowStatusBarMessage()) {
-					$state.statusBarMessage.updateText(e.textEditor, extUtils.groupDiagnosticsByLine(languages.getDiagnostics(e.textEditor.document.uri)));
+					$state.statusBarMessage.updateText(
+						e.textEditor,
+						extUtils.groupDiagnosticsByLine(languages.getDiagnostics(e.textEditor.document.uri)),
+					);
 				}
 				lastPositionLine = e.selections[0].active.line;
+			}
+			// Update on any cursor movements
+			if ($config.statusBarMessageType === 'activeCursor') {
+				$state.statusBarMessage.updateText(
+					e.textEditor,
+					extUtils.groupDiagnosticsByLine(languages.getDiagnostics(e.textEditor.document.uri)),
+				);
 			}
 		});
 	}

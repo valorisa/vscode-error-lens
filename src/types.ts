@@ -223,6 +223,10 @@ interface ExtensionConfigType {
 	 */
 	onSaveTimeout: number;
 	/**
+	 * When `#errorLens.onSave#` enabled - extension still draws decorations when active/visible editors change.
+	 */
+	onSaveUpdateOnActiveEditorChange: boolean;
+	/**
 	 * Enable decorations when viewing a diff view in the editor (e.g. Git diff).
 	 */
 	enableOnDiffView: boolean;

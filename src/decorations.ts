@@ -521,6 +521,13 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {
+	if (
+		$config.onSave &&
+		!$config.onSaveUpdateOnActiveEditorChange
+	) {
+		return;
+	}
+
 	for (const editor of window.visibleTextEditors) {
 		$state.log('updateDecorationsForAllVisibleEditors()');
 		updateDecorationsForUri({

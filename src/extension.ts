@@ -67,11 +67,6 @@ export abstract class $state {
 	}[] = undefined;
 
 	/**
-	 * Timestamp when last time user manually saved the document.
-	 * Used to determine if the save was recently (1s?) to show decorations.
-	 */
-	static lastSavedTimestamp = Date.now() + 2000;
-	/**
 	 * Editor icons can be rendered only for active line (to reduce the visual noise).
 	 * But it might be useful to show gutter icons for all lines. With `gutterIconsFollowCursorOverride`
 	 * setting then gutter icons will be rendered as a separate set of decorations.
@@ -97,6 +92,13 @@ export function activate(context: ExtensionContext): void {
 	});
 	updateConfigAndEverything();
 	registerAllCommands(context);
+
+	// Have some delay on startup to apply decorations when "onSave" enabled
+	if ($config.onSave && $config.onSaveUpdateOnActiveEditorChange) {
+		setTimeout(() => {
+			updateDecorationsForAllVisibleEditors();
+		}, $config.onSaveTimeout * 2);
+	}
 
 	/**
 	 * - Update config

@@ -25,10 +25,12 @@ export function updateChangedActiveTextEditorListener(): void {
 	onDidChangeActiveTextEditor?.dispose();
 
 	onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(editor => {
-		if ($config.onSave) {
-			$state.lastSavedTimestamp = Date.now();// Show decorations when opening/changing files
-		}
 		$state.log('onDidChangeActiveTextEditor()', editor?.document.uri.toString(true));
+
+		if ($config.onSave && !$config.onSaveUpdateOnActiveEditorChange) {
+			return;
+		}
+
 		if (editor) {
 			updateDecorationsForUri({
 				uri: editor.document.uri,
@@ -69,11 +71,11 @@ export function updateChangeDiagnosticListener(): void {
 		$state.statusBarIcons.updateText();
 	}
 	if ($config.onSave) {
-		onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
-			if (Date.now() - $state.lastSavedTimestamp < $config.onSaveTimeout) {
-				onChangedDiagnostics(e);
-			}
-		});
+		// onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
+		// 	// if (Date.now() - $state.lastSavedTimestamp < $config.onSaveTimeout) {
+		// 	// 	onChangedDiagnostics(e);
+		// 	// }
+		// });
 		return;
 	}
 	if (typeof $config.delay === 'number' && $config.delay > 0) {
@@ -186,14 +188,19 @@ export function updateOnSaveListener(): void {
 	}
 
 	onDidSaveTextDocumentDisposable = workspace.onWillSaveTextDocument(e => {
+		$state.log('onWillSaveTextDocument()');
+
 		if (e.reason === TextDocumentSaveReason.Manual) {
 			setTimeout(() => {
-				$state.log('onWillSaveTextDocument()');
 				updateDecorationsForUri({
 					uri: e.document.uri,
 				});
-			}, 200);
-			$state.lastSavedTimestamp = Date.now();
+			}, 250);
+			setTimeout(() => {
+				updateDecorationsForUri({
+					uri: e.document.uri,
+				});
+			}, $config.onSaveTimeout);
 		}
 	});
 

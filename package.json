@@ -645,8 +645,14 @@
 				},
 				"errorLens.onSaveTimeout": {
 					"type": "number",
-					"description": "Time period (ms) that used for showing decorations after the document save.",
-					"default": 1500
+					"description": "Time period (ms) that used for showing decorations after the document save (manual, not auto save).",
+					"default": 1000,
+					"minimum": 500
+				},
+				"errorLens.onSaveUpdateOnActiveEditorChange": {
+					"type": "boolean",
+					"description": "When `#errorLens.onSave#` enabled - extension still draws decorations when active/visible editors change.",
+					"default": true
 				},
 				"errorLens.enableOnDiffView": {
 					"type": "boolean",

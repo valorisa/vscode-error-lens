@@ -11,7 +11,7 @@ export function copyProblemMessageCommand(editor: TextEditor): void {
 		return;
 	}
 
-	const renderedDiagnostic = diagnosticAtActiveLineNumber.sort((a, b) => a.severity - b.severity)[0];
+	const renderedDiagnostic = diagnosticAtActiveLineNumber[0];
 	const source = renderedDiagnostic.source ? `[${renderedDiagnostic.source}] ` : '';
 
 	env.clipboard.writeText(source + renderedDiagnostic.message);

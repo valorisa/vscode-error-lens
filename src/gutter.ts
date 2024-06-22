@@ -135,7 +135,7 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 	const decorationOptionsGutterHint: DecorationOptions[] = [];
 
 	for (const key in groupedDiagnostics) {
-		const groupedDiagnostic = groupedDiagnostics[key].sort((a, b) => a.severity - b.severity);
+		const groupedDiagnostic = groupedDiagnostics[key];
 		const diagnostic = groupedDiagnostic[0];
 		const severity = diagnostic.severity;
 

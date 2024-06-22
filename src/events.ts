@@ -214,4 +214,5 @@ export function disposeAllEventListeners(): void {
 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
 	onDidSaveTextDocumentDisposable?.dispose();
 	onDidChangeTextDocumentForOnSaveDisposable?.dispose();
+	newDelay?.dispose();
 }

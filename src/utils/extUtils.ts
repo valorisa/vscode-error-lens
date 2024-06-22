@@ -42,6 +42,8 @@ export type GroupedByLineDiagnostics = Record<string, Diagnostic[]>;
  * Return diagnostics grouped by line: `Record<string, Diagnostic[]>`
  *
  * Also, excludes diagnostics according to `errorLens.excludeSources` & `errorLens.exclude` settings.
+ *
+ * Also, sorts the problems in every line by severity err>warn>info>hint.
  */
 function groupDiagnosticsByLine(diagnostics: Diagnostic[]): GroupedByLineDiagnostics {
 	const groupedDiagnostics: GroupedByLineDiagnostics = {};
@@ -58,6 +60,12 @@ function groupDiagnosticsByLine(diagnostics: Diagnostic[]): GroupedByLineDiagnos
 			groupedDiagnostics[key] = [diagnostic];
 		}
 	}
+
+	// Apply sorting err>warn>info>hint
+	for (const key in groupedDiagnostics) {
+		groupedDiagnostics[key] = groupedDiagnostics[key].sort((diag1, diag2) => diag1.severity - diag2.severity);
+	}
+
 	return groupedDiagnostics;
 }
 /**
@@ -237,7 +245,6 @@ function getDiagnosticAtLine(uri: Uri, lineNumber: number): Diagnostic | undefin
 	if (!diagnosticsAtLineNumber) {
 		return;
 	}
-	diagnosticsAtLineNumber.sort((a, b) => a.severity - b.severity);
 	return diagnosticsAtLineNumber[0];
 }
 /**

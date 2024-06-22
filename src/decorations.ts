@@ -353,8 +353,8 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 	}
 
 	for (const key in groupedDiagnostics) {
-		const groupedDiagnostic = groupedDiagnostics[key].sort((a, b) => a.severity - b.severity);
-		const diagnostic = groupedDiagnostic[0];
+		const allDiagnosticsInLine = groupedDiagnostics[key];
+		const diagnostic = allDiagnosticsInLine[0];
 		const severity = diagnostic.severity;
 
 		let message: string | undefined;
@@ -363,7 +363,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 			message = extUtils.prepareMessage({
 				diagnostic,
 				template: $config.messageTemplate,
-				lineProblemCount: groupedDiagnostic.length,
+				lineProblemCount: allDiagnosticsInLine.length,
 				removeLinebreaks: $config.removeLinebreaks,
 				replaceLinebreaksSymbol: $config.replaceLinebreaksSymbol,
 			});

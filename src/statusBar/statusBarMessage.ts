@@ -82,17 +82,15 @@ export class StatusBarMessage {
 
 		if (this.messageType === 'activeLine') {
 			if (groupedDiagnostics[ln]) {
-				for (const diag of groupedDiagnostics[ln]) {
-					diagnostic = diag;
-					numberOfDiagnosticsOnThatLine = groupedDiagnostics[ln].length;
-				}
+				diagnostic = groupedDiagnostics[ln][0];
+				numberOfDiagnosticsOnThatLine = groupedDiagnostics[ln].length;
 			} else {
 				this.clear();
 				return;
 			}
 		} else if (this.messageType === 'closestProblem') {
 			// Sort by how close it is to the cursor
-			const sortedLineNumbers = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b));
+			const sortedLineNumbers = keys.map(Number).sort((a, b) => Math.abs(ln - a) - Math.abs(ln - b));// TODO: duplicate code?
 			outerLoop:
 			for (const lineNumber of sortedLineNumbers) {
 				const diagnosticsAtLine = groupedDiagnostics[lineNumber];

@@ -1,7 +1,14 @@
+## 3.20.0 `22 Jun 2024`
+
+- ✨ Changed how `"errorLens.onSave"` works. Less erratic decoration updating
+- ✨ New setting `"errorLens.onSaveUpdateOnActiveEditorChange"` to control whether or not to draw decorations on editor focus change (when `"errorLens.onSave"` enabled)
+- ✨ New value for `"errorLens.statusBarMessageType"` setting: "activeCursor" => updates status bar for closest problem inside the active line
+- 🐛 Fix `"errorLens.statusBarMessageType": "activeLine"`  doesn't sort problems by severity
+
 ## 3.19.0 `21 Jun 2024`
 
-- ✨ Add new delay mode. It's default now: `"errorLens.delayMode": "new",`
-- 🐛 Fix bug when enabling status bar message extension re-rendered editor decorations (interfered with delay)
+- ✨ Add new delay mode. It is the default now: `"errorLens.delayMode": "new"`
+- 🐛 Fix bug when enabling status bar message extension re-rendered editor decorations (interfered with `"errorLens.delay"` AND `"errorLens.onSave"`)
 
 ## 3.18.0 `28 May 2024`
 

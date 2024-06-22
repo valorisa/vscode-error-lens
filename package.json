@@ -646,7 +646,7 @@
 				"errorLens.onSaveTimeout": {
 					"type": "number",
 					"description": "Time period (ms) that used for showing decorations after the document save.",
-					"default": 1000
+					"default": 1500
 				},
 				"errorLens.enableOnDiffView": {
 					"type": "boolean",

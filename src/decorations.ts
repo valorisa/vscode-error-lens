@@ -553,6 +553,7 @@ export function updateDecorationsForUri({
 	if (editor === undefined) {
 		editor = window.activeTextEditor;
 	}
+
 	if (!editor) {
 		return;
 	}
@@ -562,6 +563,12 @@ export function updateDecorationsForUri({
 	}
 
 	if ($config.ignoreUntitled && editor.document.uri.scheme === 'untitled') {
+		doUpdateDecorations(editor, {});
+		return;
+	}
+
+	if ($config.ignoreDirty && editor.document.isDirty) {
+		doUpdateDecorations(editor, {});
 		return;
 	}
 

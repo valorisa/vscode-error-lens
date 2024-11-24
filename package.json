@@ -923,6 +923,11 @@
 					"default": false,
 					"description": "Controls whether to run on untitled (unsaved) files."
 				},
+				"errorLens.ignoreDirty": {
+					"type": "boolean",
+					"default": false,
+					"description": "Controls whether to run on dirty (modified unsaved) files."
+				},
 				"errorLens.codeLensEnabled": {
 					"type": "boolean",
 					"default": false,

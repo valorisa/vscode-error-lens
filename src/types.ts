@@ -341,6 +341,10 @@ interface ExtensionConfigType {
 	 */
 	ignoreUntitled: boolean;
 	/**
+	 * Controls whether to run on dirty (modified unsaved) files.
+	 */
+	ignoreDirty: boolean;
+	/**
 	 * Controls whether to show the Error Lens as a Code Lens above the code.
 	 */
 	codeLensEnabled: boolean;

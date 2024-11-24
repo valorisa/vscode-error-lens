@@ -1,10 +1,15 @@
 import { extUtils } from 'src/utils/extUtils';
 import { env, languages, window, type TextEditor } from 'vscode';
 
-export function copyProblemMessageCommand(editor: TextEditor): void {
-	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
+export function copyProblemMessageCommand(editorOrErrorMessage: TextEditor | string): void {
+	if (typeof editorOrErrorMessage === 'string') {
+		env.clipboard.writeText(editorOrErrorMessage);
+		return;
+	}
 
-	const activeLineNumber = editor.selection.active.line;
+	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(editorOrErrorMessage.document.uri));
+
+	const activeLineNumber = editorOrErrorMessage.selection.active.line;
 	const diagnosticAtActiveLineNumber = groupedDiagnostics[activeLineNumber];
 	if (!diagnosticAtActiveLineNumber) {
 		window.showInformationMessage('There\'s no problem at the active line.');

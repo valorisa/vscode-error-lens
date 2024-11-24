@@ -21,7 +21,11 @@ export function createHoverForDiagnostic({
 	sourceCodeEnabled: boolean;
 	lintFilePaths: ExtensionConfig['lintFilePaths'];
 }): MarkdownString | undefined {
-	if (!messageEnabled && !buttonsEnabled && !sourceCodeEnabled) {
+	if (
+		!messageEnabled &&
+		!buttonsEnabled &&
+		!sourceCodeEnabled
+	) {
 		return;
 	}
 
@@ -46,15 +50,24 @@ export function createHoverForDiagnostic({
 		markdown.appendMarkdown(`</tr>`);
 		markdown.appendMarkdown(`</table>`);
 	}
-	// ──── Source Code ──────────────────────────────────────────
+	// ──── Source and Code ────────────────────────────────────────
 	if (sourceCodeEnabled) {
 		const copyCodeButton = vscodeUtils.createButtonLinkMarkdown({
-			text: '$(clippy) Copy',
+			text: '$(clippy) Copy code',
 			href: vscodeUtils.createCommandUri(CommandId.CopyProblemCode, { code: diagnosticCode }).toString(),
 			title: 'Copy problem code into the clipboard.',
 		});
+		const copyMessageButton = vscodeUtils.createButtonLinkMarkdown({
+			text: '$(clippy) Copy message',
+			href: vscodeUtils.createCommandUri(CommandId.CopyProblemMessage, diagnostic.message ?? '').toString(),
+			title: 'Copy problem mesage into the clipboard.',
+		});
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(`${diagnostic.source ?? '<No source>'}(\`${diagnosticCode ?? '<No code>'}\`) `);
+
+		markdown.appendMarkdown(copyMessageButton);
+		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
+
 		if (diagnosticCode) {
 			markdown.appendMarkdown(copyCodeButton);
 		}

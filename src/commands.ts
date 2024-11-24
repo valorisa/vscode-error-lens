@@ -80,11 +80,11 @@ export function registerAllCommands(context: ExtensionContext): void {
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemCode, copyProblemCodeCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.SearchForProblem, searchForProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.DisableLine, disableLineCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
 	// ────────────────────────────────────────────────────────────
 	// ──── Text Editor commands ──────────────────────────────────
 	// ────────────────────────────────────────────────────────────
 	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.SelectProblem, selectProblemCommand));
-	context.subscriptions.push(commands.registerTextEditorCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
 	// ────────────────────────────────────────────────────────────
 	// ──── Internal commands ─────────────────────────────────────
 	// ────────────────────────────────────────────────────────────

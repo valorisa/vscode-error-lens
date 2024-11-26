@@ -228,7 +228,7 @@
 						"end": 0,
 						"minimumMargin": 0
 					},
-					"markdownDescription": "Align inline error message (either by starting position or ending position). Set \"start\" and \"end\" to **0** to disable.",
+					"markdownDescription": "Align inline error message (either by starting position or ending position). Only works for monospace fonts. Set \"start\" and \"end\" to **0** to disable.",
 					"additionalProperties": false
 				},
 				"errorLens.padding": {

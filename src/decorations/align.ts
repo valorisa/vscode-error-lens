@@ -1,3 +1,4 @@
+import { $config } from 'src/extension';
 import { extUtils } from 'src/utils/extUtils';
 import { Range, type TextLine } from 'vscode';
 
@@ -40,7 +41,18 @@ interface AlignmentReturnArg {
 	range: Range;
 }
 
-export function getStyleForAlignment({ isMultilineDecoration, alignmentKind, textLine, indentSize, indentStyle, minVisualLineLength, minimumMargin, problemMessage, start, end }: AlignmentArgs): AlignmentReturnArg {
+export function getStyleForAlignment({
+	isMultilineDecoration,
+	alignmentKind,
+	textLine,
+	indentSize,
+	indentStyle,
+	minVisualLineLength,
+	minimumMargin,
+	problemMessage,
+	start,
+	end,
+}: AlignmentArgs): AlignmentReturnArg {
 	let range: Range;
 	let styleStr = '';
 
@@ -65,7 +77,7 @@ export function getStyleForAlignment({ isMultilineDecoration, alignmentKind, tex
 			textLine.range.start,
 			textLine.range.start,
 		);
-		styleStr = `position:fixed;left:${marginChar + visualLineLength}ch;padding:0;margin:0`;
+		styleStr = `position:fixed;left:${marginChar + visualLineLength}ch;padding:${$config.padding};margin:0`;
 	} else {
 		range = new Range(
 			textLine.range.start.line,
@@ -73,7 +85,7 @@ export function getStyleForAlignment({ isMultilineDecoration, alignmentKind, tex
 			textLine.range.start.line,
 			textLine.range.end.character,
 		);
-		styleStr = `margin:0 0 0 ${marginChar >= 0 ? marginChar : 0}ch`;
+		styleStr = `margin:0 0 0 ${marginChar >= 0 ? marginChar : 0}ch;padding:${$config.padding}`;
 	}
 
 	return {

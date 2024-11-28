@@ -13,6 +13,8 @@ export class NewDelay {
 			trailing: true,
 		});
 		this.documentChangeDisposable = workspace.onDidChangeTextDocument(e => {
+			// TODO: maybe clear decorations for all visible editors here?
+			// https://github.com/usernamehw/vscode-error-lens/issues/214
 			this.clearDecorationsForUri(e.document.uri);
 			this.updateDecorationsDebounced(e.document.uri);
 		});

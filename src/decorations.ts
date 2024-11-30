@@ -1,14 +1,13 @@
 /* eslint-disable no-param-reassign */
 import { getStyleForAlignment } from 'src/decorations/align';
 import { $config, $state } from 'src/extension';
-import { doUpdateGutterDecorations, getGutterStyles, type Gutter } from 'src/gutter';
+import { doUpdateGutterDecorations, getGutterStyles, updateWorkaroundGutterIcon, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
-import { DecorationRangeBehavior, Range, ThemeColor, debug, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type Location, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
-/* eslint-disable @typescript-eslint/sort-type-constituents */
 type DecorationKeys =
 	'error' |
 	'warning' |
@@ -36,9 +35,13 @@ type DecorationKeys =
 	'multilineWarningLineBackground' |
 
 	'transparent1x1Icon';
-export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
-/* eslint-enable @typescript-eslint/sort-type-constituents */
 
+export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
+
+/**
+ * VSCode doesn't support some options like changing font-size or font-family
+ * for decorations. Use `textDecoration` property to inject them.
+ */
 let textDecorationStyleString = '';
 
 /**
@@ -124,6 +127,9 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	const statusBarInfoForeground = new ThemeColor('errorLens.statusBarInfoForeground');
 	const statusBarHintForeground = new ThemeColor('errorLens.statusBarHintForeground');
 
+	// Both "line" & "message" have colors with transparency by default.
+	// This section honours `messageBackgroundMode` setting and removes colors
+	// so that message & line backgrounds woudn't mix(overlap).
 	if ($config.messageBackgroundMode === 'line') {
 		errorMessageBackground = undefined;
 		warningMessageBackground = undefined;
@@ -154,11 +160,10 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		hintMessageBackground = undefined;
 	}
 
-	const onlyDigitsRegExp = /^\d+$/u;
 	const fontFamily = $config.fontFamily ? `font-family:${$config.fontFamily}` : '';
-	const fontSize = $config.fontSize ? `font-size:${onlyDigitsRegExp.test($config.fontSize) ? `${$config.fontSize}px` : $config.fontSize}` : '';
-	const marginLeft = onlyDigitsRegExp.test($config.margin) ? `${$config.margin}px` : $config.margin;
-	const padding = $config.padding ? `padding:${onlyDigitsRegExp.test($config.padding) ? `${$config.padding}px` : $config.padding}` : '';
+	const fontSize = $config.fontSize ? extUtils.addPxUnitsIfNeeded($config.fontSize) : '';
+	const marginLeft = extUtils.addPxUnitsIfNeeded($config.margin);
+	const padding = $config.padding ? extUtils.addPxUnitsIfNeeded($config.padding) : '';
 	const borderRadius = `border-radius: ${$config.borderRadius || '0'}`;
 	const scrollbarHack = $config.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
 
@@ -315,15 +320,35 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			gutterIconPath: gutter?.transparent1x1Icon,
 		},
 	};
+
 	decorationTypes.transparent1x1Icon = window.createTextEditorDecorationType(transparentGutterIcon);
 
 	$state.statusBarMessage.statusBarColors = [statusBarErrorForeground, statusBarWarningForeground, statusBarInfoForeground, statusBarHintForeground];
 }
 /**
+ * Remove all decorations from an editor (gutter/highlighting/inlineMessage).
+ */
+function clearDecorations({ editor }: { editor: TextEditor }): void {
+	doUpdateDecorations({
+		editor,
+		groupedDiagnostics: {},
+	});
+}
+/**
  * Actually apply decorations for editor.
  * @param range Only allow decorating lines in this range.
  */
-export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: GroupedByLineDiagnostics, range?: Range): void {
+function doUpdateDecorations({
+	editor,
+	groupedDiagnostics,
+	range,
+}: {
+	editor: TextEditor;
+	groupedDiagnostics: GroupedByLineDiagnostics;
+	range?: Range;
+}): void {
+	$state.log('doUpdateDecorations()', editor.document.uri.toString(true));
+
 	const decorationOptionsError: DecorationOptions[] = [];
 	const decorationOptionsWarning: DecorationOptions[] = [];
 	const decorationOptionsInfo: DecorationOptions[] = [];
@@ -455,7 +480,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 		};
 
 		switch (severity) {
-			case 0: {
+			case DiagnosticSeverity.Error: {
 				decorationOptionsError.push(diagnosticDecorationOptions);
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsErrorRange.push({
@@ -464,7 +489,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 				}
 				break;
 			}
-			case 1: {
+			case DiagnosticSeverity.Warning: {
 				decorationOptionsWarning.push(diagnosticDecorationOptions);
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsWarningRange.push({
@@ -473,7 +498,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 				}
 				break;
 			}
-			case 2: {
+			case DiagnosticSeverity.Information: {
 				decorationOptionsInfo.push(diagnosticDecorationOptions);
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsInfoRange.push({
@@ -482,7 +507,7 @@ export function doUpdateDecorations(editor: TextEditor, groupedDiagnostics: Grou
 				}
 				break;
 			}
-			case 3: {
+			case DiagnosticSeverity.Hint: {
 				decorationOptionsHint.push(diagnosticDecorationOptions);
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsHintRange.push({
@@ -563,12 +588,12 @@ export function updateDecorationsForUri({
 	}
 
 	if ($config.ignoreUntitled && editor.document.uri.scheme === 'untitled') {
-		doUpdateDecorations(editor, {});
+		clearDecorations({ editor });
 		return;
 	}
 
 	if ($config.ignoreDirty && editor.document.isDirty) {
-		doUpdateDecorations(editor, {});
+		clearDecorations({ editor });
 		return;
 	}
 
@@ -576,7 +601,7 @@ export function updateDecorationsForUri({
 		(!$config.enableOnDiffView && editor.viewColumn === undefined) &&
 		editor.document.uri.scheme !== 'vscode-notebook-cell'
 	) {
-		doUpdateDecorations(editor, {});
+		clearDecorations({ editor });
 		return;
 	}
 
@@ -587,7 +612,7 @@ export function updateDecorationsForUri({
 			editorText.includes(Constants.MergeConflictSymbol2) ||
 			editorText.includes(Constants.MergeConflictSymbol3)
 		) {
-			doUpdateDecorations(editor, {});
+			clearDecorations({ editor });
 			return;
 		}
 	}
@@ -607,23 +632,12 @@ export function updateDecorationsForUri({
 	) {
 		return;
 	}
-	$state.log('updateDecorationsForUri()', uri.toString(true));
-	doUpdateDecorations(editor, groupedDiagnostics ?? extUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)), range);
-}
-/**
- * Issue https://github.com/usernamehw/vscode-error-lens/issues/177
- */
-export function updateWorkaroundGutterIcon(editor: TextEditor): void {
-	const ranges: Range[] = [];
-	for (const breakpoint of debug.breakpoints) {
-		// @ts-expect-error location is probably optional, but can be there
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		const location: Location = breakpoint?.location;
-		if (location && location.uri.toString(true) === editor?.document.uri.toString(true)) {
-			ranges.push(location.range);
-		}
-	}
-	editor.setDecorations(decorationTypes.transparent1x1Icon, ranges);
+
+	doUpdateDecorations({
+		editor,
+		groupedDiagnostics: groupedDiagnostics ?? extUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)),
+		range,
+	});
 }
 
 export function disposeAllDecorations(): void {

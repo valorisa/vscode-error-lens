@@ -390,6 +390,13 @@ function shouldShowStatusBarMessage(): boolean {
 
 	return extensionEnabled && $state.vscodeGlobalProblemsEnabled;
 }
+/**
+ * If units are not specified and the entire string is composed of digits - assume it's `px`.
+ */
+function addPxUnitsIfNeeded(css: string): string {
+	const onlyDigitsRegExp = /^\d+$/u;
+	return onlyDigitsRegExp.test(css) ? `${css}px` : css;
+}
 
 export const extUtils = {
 	prepareMessage,
@@ -413,4 +420,5 @@ export const extUtils = {
 	shouldShowGutterIcons,
 	shouldShowStatusBarIcons,
 	shouldShowStatusBarMessage,
+	addPxUnitsIfNeeded,
 };

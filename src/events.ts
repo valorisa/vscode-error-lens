@@ -1,8 +1,9 @@
 import debounce from 'lodash/debounce';
-import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri, updateWorkaroundGutterIcon } from 'src/decorations';
+import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
 import { CustomDelay } from 'src/delay/CustomDelay';
 import { NewDelay } from 'src/delay/NewDelay';
 import { $config, $state } from 'src/extension';
+import { updateWorkaroundGutterIcon } from 'src/gutter';
 import { extUtils } from 'src/utils/extUtils';
 import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable, type Selection } from 'vscode';
 

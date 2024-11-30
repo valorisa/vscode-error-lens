@@ -2,7 +2,7 @@ import { decorationTypes } from 'src/decorations';
 import { getStyleForAlignment } from 'src/decorations/align';
 import { $config } from 'src/extension';
 import { extUtils } from 'src/utils/extUtils';
-import { Range, ThemeColor, languages, window, type DecorationOptions, type Diagnostic, type TextEditor, type TextLine } from 'vscode';
+import { Diagnostic, DiagnosticSeverity, Range, ThemeColor, languages, window, type DecorationOptions, type TextEditor, type TextLine } from 'vscode';
 
 export function createMultilineDecorations(): void {
 	// ──── Multiline message ─────────────────────────────────────
@@ -222,16 +222,16 @@ export function showMultilineDecoration(editor: TextEditor): void {
 	let infoLineDecorations: Range[] = [];
 	let hintLineDecorations: Range[] = [];
 
-	if (diagnostic.severity === 0) {
+	if (diagnostic.severity === DiagnosticSeverity.Error) {
 		errorDecorations = decorationsToDraw;
 		errorLineDecorations = [new Range(diagnostic.range.start, diagnostic.range.start)];
-	} else if (diagnostic.severity === 1) {
+	} else if (diagnostic.severity === DiagnosticSeverity.Warning) {
 		warningDecorations = decorationsToDraw;
 		warningLineDecorations = [new Range(diagnostic.range.start, diagnostic.range.start)];
-	} else if (diagnostic.severity === 2) {
+	} else if (diagnostic.severity === DiagnosticSeverity.Information) {
 		infoDecorations = decorationsToDraw;
 		infoLineDecorations = [new Range(diagnostic.range.start, diagnostic.range.start)];
-	} else if (diagnostic.severity === 3) {
+	} else if (diagnostic.severity === DiagnosticSeverity.Hint) {
 		hintDecorations = decorationsToDraw;
 		hintLineDecorations = [new Range(diagnostic.range.start, diagnostic.range.start)];
 	}
@@ -247,13 +247,13 @@ export function showMultilineDecoration(editor: TextEditor): void {
 		editor.setDecorations(decorationTypes.multilineInfoLineBackground, infoLineDecorations);
 		editor.setDecorations(decorationTypes.multilineHintLineBackground, hintLineDecorations);
 	} else if ($config.multilineMessage.highlightProblemLine === 'range') {
-		if (diagnostic.severity === 0) {
+		if (diagnostic.severity === DiagnosticSeverity.Error) {
 			editor.setDecorations(decorationTypes.errorRange, [diagnostic.range]);
-		} else if (diagnostic.severity === 1) {
+		} else if (diagnostic.severity === DiagnosticSeverity.Warning) {
 			editor.setDecorations(decorationTypes.warningRange, [diagnostic.range]);
-		} else if (diagnostic.severity === 2) {
+		} else if (diagnostic.severity === DiagnosticSeverity.Information) {
 			editor.setDecorations(decorationTypes.infoRange, [diagnostic.range]);
-		} else if (diagnostic.severity === 3) {
+		} else if (diagnostic.severity === DiagnosticSeverity.Hint) {
 			editor.setDecorations(decorationTypes.hintRange, [diagnostic.range]);
 		}
 	}

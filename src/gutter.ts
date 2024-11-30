@@ -1,9 +1,9 @@
 import { decorationTypes } from 'src/decorations';
 import { $config } from 'src/extension';
 import { type ExtensionConfig } from 'src/types';
-import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
+import { type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
-import { Uri, workspace, type DecorationOptions, type ExtensionContext, type TextEditor } from 'vscode';
+import { debug, DiagnosticSeverity, Location, Range, SourceBreakpoint, Uri, workspace, type DecorationOptions, type ExtensionContext, type TextEditor } from 'vscode';
 
 export interface Gutter {
 	iconSet: ExtensionConfig['gutterIconSet'];
@@ -144,19 +144,19 @@ export function doUpdateGutterDecorations(editor: TextEditor, groupedDiagnostics
 		};
 
 		switch (severity) {
-			case 0: {
+			case DiagnosticSeverity.Error: {
 				decorationOptionsGutterError.push(diagnosticDecorationOptions);
 				break;
 			}
-			case 1: {
+			case DiagnosticSeverity.Warning: {
 				decorationOptionsGutterWarning.push(diagnosticDecorationOptions);
 				break;
 			}
-			case 2: {
+			case DiagnosticSeverity.Information: {
 				decorationOptionsGutterInfo.push(diagnosticDecorationOptions);
 				break;
 			}
-			case 3: {
+			case DiagnosticSeverity.Hint: {
 				if ($config.gutterIconSet === 'circle' ||
 					$config.gutterIconSet === 'square' ||
 					$config.gutterIconSet === 'squareRounded' ||
@@ -211,4 +211,18 @@ function createEmojiIcon(emojiSymbol: string): string {
  */
 function escapeColor(color: string): string {
 	return `%23${color.slice(1)}`;
+}
+
+/**
+ * Issue https://github.com/usernamehw/vscode-error-lens/issues/177
+ */
+export function updateWorkaroundGutterIcon(editor: TextEditor): void {
+	const ranges: Range[] = [];
+	for (const breakpoint of debug.breakpoints as readonly SourceBreakpoint[]) {
+		const location: Location = breakpoint?.location;
+		if (location && location.uri.toString(true) === editor?.document.uri.toString(true)) {
+			ranges.push(location.range);
+		}
+	}
+	editor.setDecorations(decorationTypes.transparent1x1Icon, ranges);
 }

@@ -263,7 +263,7 @@
 				"allowRegExp": false
 			}
 		],
-		"@typescript-eslint/sort-type-constituents": 1,
+		"@typescript-eslint/sort-type-constituents": 0,
 		// Enable in the future https://typescript-eslint.io/rules/strict-boolean-expressions
 		"@typescript-eslint/strict-boolean-expressions": 0,
 		"@typescript-eslint/switch-exhaustiveness-check": 1,

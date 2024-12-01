@@ -6,6 +6,7 @@ import { createHoverForDiagnostic } from 'src/hover/hover';
 import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
+import { utils } from 'src/utils/utils';
 import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 type DecorationKeys =
@@ -377,8 +378,8 @@ function doUpdateDecorations({
 		showMultilineDecoration(editor);
 	}
 
-	for (const key in groupedDiagnostics) {
-		const allDiagnosticsInLine = groupedDiagnostics[key];
+	for (const lineNumber in groupedDiagnostics) {
+		const allDiagnosticsInLine = groupedDiagnostics[lineNumber];
 		const diagnostic = allDiagnosticsInLine[0];
 		const severity = diagnostic.severity;
 
@@ -402,7 +403,7 @@ function doUpdateDecorations({
 			const styleForAlignment = getStyleForAlignment({
 				isMultilineDecoration: false,
 				alignmentKind: $config.alignMessage.useFixedPosition ? 'fixed' : 'normal',
-				textLine: editor.document.lineAt(Number(key)),
+				textLine: editor.document.lineAt(Number(lineNumber)),
 				indentSize: editor.options.tabSize as number,
 				indentStyle: editor.options.insertSpaces as boolean ? 'spaces' : 'tab',
 				minimumMargin: $config.alignMessage.minimumMargin,
@@ -413,6 +414,11 @@ function doUpdateDecorations({
 			});
 			alignMarginStyle = styleForAlignment.styleStr;
 			alignRange = styleForAlignment.range;
+
+			if ($config.alignMessage.start && $config.alignMessage.end) {
+				// truncate message between 2 points if both star & end defined by user
+				message = utils.truncateString(message ?? '', $config.alignMessage.end - $config.alignMessage.start - 1);
+			}
 		}
 
 		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {

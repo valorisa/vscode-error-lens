@@ -811,25 +811,21 @@
 						"error": {
 							"type": "string",
 							"minLength": 0,
-							"maxLength": 2,
 							"default": "💀"
 						},
 						"warning": {
 							"type": "string",
 							"minLength": 0,
-							"maxLength": 2,
 							"default": "😞"
 						},
 						"info": {
 							"type": "string",
 							"minLength": 0,
-							"maxLength": 2,
 							"default": "🆗"
 						},
 						"hint": {
 							"type": "string",
 							"minLength": 0,
-							"maxLength": 2,
 							"default": "🍏"
 						}
 					},

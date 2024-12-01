@@ -4,7 +4,7 @@ import { createHoverForDiagnostic } from 'src/hover/hover';
 import { type ExtensionConfig } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
-import { Position, StatusBarAlignment, window, type Diagnostic, type MarkdownString, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
+import { Location, StatusBarAlignment, window, type Diagnostic, type MarkdownString, type StatusBarItem, type TextEditor, type ThemeColor } from 'vscode';
 
 interface StatusBarMessageInit {
 	isEnabled: boolean;
@@ -25,7 +25,7 @@ export class StatusBarMessage {
 	/**
 	 * Position in editor of active message. Needed to jump to error on click.
 	 */
-	public activeMessagePosition: Position = new Position(0, 0);
+	public activeMessageLocation?: Location;
 	/**
 	 * Active message text. Needed to copy to clipboard on click.
 	 */
@@ -135,7 +135,7 @@ export class StatusBarMessage {
 			return;
 		}
 
-		this.activeMessagePosition = diagnostic.range.start;
+		this.activeMessageLocation = new Location(editor.document.uri, diagnostic.range.start);
 
 		let message = extUtils.diagnosticToInlineMessage(
 			$config.statusBarMessageTemplate || $config.messageTemplate,

@@ -140,6 +140,16 @@ function setCaretInEditor({ editor, range }: { editor?: TextEditor; range: Range
 		editor.revealRange(range);
 	}
 }
+/**
+ * Return TextEditor for the provided Uri.
+ */
+function getEditorByUri(uri: Uri): TextEditor | undefined {
+	for (const editor of window.visibleTextEditors) {
+		if (editor.document.uri.toString(true) === uri.toString(true)) {
+			return editor;
+		}
+	}
+}
 
 export const vscodeUtils = {
 	updateGlobalSetting,
@@ -155,4 +165,5 @@ export const vscodeUtils = {
 	revealLine,
 	getIndentationAtLine,
 	setCaretInEditor,
+	getEditorByUri,
 };

@@ -1,12 +1,22 @@
 import { $config, $state } from 'src/extension';
 import { Constants } from 'src/types';
-import { Range, Selection, TextEditorRevealType, commands, env, type TextEditor } from 'vscode';
+import { vscodeUtils } from 'src/utils/vscodeUtils';
+import { Selection, TextEditorRevealType, commands, env, window } from 'vscode';
 
-export async function statusBarCommand(editor: TextEditor): Promise<void> {
+export async function statusBarCommand(): Promise<void> {
 	if ($config.statusBarCommand === 'goToLine' || $config.statusBarCommand === 'goToProblem') {
-		const range = new Range($state.statusBarMessage.activeMessagePosition, $state.statusBarMessage.activeMessagePosition);
-		editor.selection = new Selection(range.start, range.end);
-		editor.revealRange(range, TextEditorRevealType.Default);
+		const targetLocation = $state.statusBarMessage.activeMessageLocation;
+		if (!targetLocation) {
+			return;
+		}
+		const editor = vscodeUtils.getEditorByUri(targetLocation.uri);
+		if (!editor) {
+			return;
+		}
+
+		await window.showTextDocument(editor.document);
+		editor.selection = new Selection(targetLocation.range.start, targetLocation.range.end);
+		editor.revealRange(targetLocation.range, TextEditorRevealType.Default);
 		await commands.executeCommand(Constants.FocusActiveEditorCommandId);
 
 		if ($config.statusBarCommand === 'goToProblem') {

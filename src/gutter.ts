@@ -200,11 +200,11 @@ let fontFamily = '';
  */
 function createLetterIcon(color: string, letter: 'E' | 'H' | 'I' | 'W'): string {
 	fontFamily = fontFamily ? fontFamily : workspace.getConfiguration('editor').get('fontFamily') ?? '';
-	return `<svg viewBox="-10 -6 20 10" xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill="${escapeColor(color)}"><text font-family="${fontFamily}" text-anchor="middle" dominant-baseline="middle">${letter}</text></svg>`;
+	return `<svg viewBox="-10 -6 20 10" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="${escapeColor(color)}"><text font-family="${fontFamily}" text-anchor="middle" dominant-baseline="middle">${letter}</text></svg>`;
 }
 function createEmojiIcon(emojiSymbol: string): string {
 	fontFamily = fontFamily ? fontFamily : workspace.getConfiguration('editor').get('fontFamily') ?? '';
-	return `<svg viewBox="-10 -6 20 10" xmlns='http://www.w3.org/2000/svg' width='16' height='16'><text font-family="${fontFamily}" text-anchor="middle" dominant-baseline="middle">${emojiSymbol}</text></svg>`;
+	return `<svg viewBox="-10 -6 20 10" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><text font-family="${fontFamily}" text-anchor="middle" dominant-baseline="middle">${emojiSymbol}</text></svg>`;
 }
 /**
  * `%23` is encoded `#` sign (need it to work).

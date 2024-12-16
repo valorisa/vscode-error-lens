@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce';
-import { updateDecorationsForUri } from 'src/decorations';
+import { clearDecorations, updateDecorationsForUri } from 'src/decorations';
 import { $state } from 'src/extension';
 import { DiagnosticChangeEvent, Disposable, Uri, window, workspace } from 'vscode';
 
@@ -13,9 +13,7 @@ export class NewDelay {
 			trailing: true,
 		});
 		this.documentChangeDisposable = workspace.onDidChangeTextDocument(e => {
-			// TODO: maybe clear decorations for all visible editors here?
-			// https://github.com/usernamehw/vscode-error-lens/issues/214
-			this.clearDecorationsForUri(e.document.uri);
+			this.clearDecorationsForAllVisibleEditors();
 			this.updateDecorationsDebounced(e.document.uri);
 		});
 	}
@@ -42,10 +40,11 @@ export class NewDelay {
 		$state.statusBarIcons.updateText();
 	};
 
-	private clearDecorationsForUri(uri: Uri): void {
-		updateDecorationsForUri({
-			uri,
-			groupedDiagnostics: {},
-		});
+	private clearDecorationsForAllVisibleEditors(): void {
+		for (const editor of window.visibleTextEditors) {
+			clearDecorations({
+				editor,
+			});
+		}
 	}
 }

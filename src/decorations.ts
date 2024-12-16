@@ -329,7 +329,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 /**
  * Remove all decorations from an editor (gutter/highlighting/inlineMessage).
  */
-function clearDecorations({ editor }: { editor: TextEditor }): void {
+export function clearDecorations({ editor }: { editor: TextEditor }): void {
 	doUpdateDecorations({
 		editor,
 		groupedDiagnostics: {},

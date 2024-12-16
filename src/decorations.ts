@@ -7,6 +7,7 @@ import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
 import { utils } from 'src/utils/utils';
+import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 type DecorationKeys =
@@ -581,7 +582,7 @@ export function updateDecorationsForUri({
 	range?: Range;
 }): void {
 	if (editor === undefined) {
-		editor = window.activeTextEditor;
+		editor = vscodeUtils.getEditorByUri(uri);
 	}
 
 	if (!editor) {

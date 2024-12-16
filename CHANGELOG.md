@@ -1,6 +1,6 @@
 ## 3.21.0 `16 Dec 2024`
 
-- ✨ New setting `"errorLens.ignoreDirty"` - don't show decorations in modified unsaved files
+- ✨ New setting `"errorLens.ignoreDirty"` - don't show decorations in modified unsaved files (when `"files.autoSave"` is disabled)
 - 🐛 Honour padding for `"errorLens.alignMessage"`, set `"useFixedPosition": true` by default
 - 🐛 Fix emoji & letter gutter icons not working in VSCode **1.96.0**
 

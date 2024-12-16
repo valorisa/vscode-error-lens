@@ -132,6 +132,7 @@
 					"properties": {
 						"enabled": {
 							"type": "boolean",
+							"description": "When true - extension will honour VSCode setting `#problems.visibility#` and not show errors if `#problems.visibility#` is false.",
 							"default": true
 						},
 						"inlineMessage": {
@@ -476,7 +477,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Specify messages that should not be highlighted (RegExp). Strings passed to the RegExp constructor: `new RegExp(EXCLUDE_ITEM, 'i');`"
+					"markdownDescription": "Specify messages that should not be highlighted (RegExp). Strings passed to the RegExp constructor: `new RegExp(EXCLUDE_ITEM, 'iu');`"
 				},
 				"errorLens.excludeBySource": {
 					"type": "array",
@@ -949,7 +950,7 @@
 						"min": 0,
 						"max": 200
 					},
-					"markdownDescription": "Enforce minimum length of the first code lens item and max length of subsequent items."
+					"markdownDescription": "Enforce minimum and maximum length of cole lens messages."
 				},
 				"errorLens.codeLensTemplate": {
 					"type": "string",

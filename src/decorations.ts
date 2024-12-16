@@ -416,7 +416,7 @@ function doUpdateDecorations({
 			alignRange = styleForAlignment.range;
 
 			if ($config.alignMessage.start && $config.alignMessage.end) {
-				// truncate message between 2 points if both star & end defined by user
+				// truncate message if both start & end defined by user
 				message = utils.truncateString(message ?? '', $config.alignMessage.end - $config.alignMessage.start - 1);
 			}
 		}

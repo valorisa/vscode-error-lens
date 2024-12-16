@@ -6,7 +6,7 @@ import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
 import { Logger } from 'src/utils/logger';
-import { ExtensionMode, workspace, type ExtensionContext } from 'vscode';
+import { workspace, type ExtensionContext } from 'vscode';
 import { ErrorLensCodeLens } from './codeLens';
 
 /**

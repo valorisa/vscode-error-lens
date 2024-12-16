@@ -161,10 +161,9 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		hintMessageBackground = undefined;
 	}
 
-	const fontFamily = $config.fontFamily ? `font-family:${$config.fontFamily}` : '';
-	const fontSize = $config.fontSize ? extUtils.addPxUnitsIfNeeded($config.fontSize) : '';
-	const marginLeft = extUtils.addPxUnitsIfNeeded($config.margin);
-	const padding = $config.padding ? extUtils.addPxUnitsIfNeeded($config.padding) : '';
+	const fontFamily = $config.fontFamily ? `font-family: ${$config.fontFamily}` : '';
+	const fontSize = $config.fontSize ? `font-size: ${extUtils.addPxUnitsIfNeeded($config.fontSize)}` : '';
+	const padding = $config.padding ? `padding: ${extUtils.addPxUnitsIfNeeded($config.padding)}` : '';
 	const borderRadius = `border-radius: ${$config.borderRadius || '0'}`;
 	const scrollbarHack = $config.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
 
@@ -173,7 +172,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	const afterProps: ThemableDecorationAttachmentRenderOptions = {
 		fontStyle: $config.fontStyleItalic ? 'italic' : 'normal',
 		fontWeight: $config.fontWeight,
-		margin: `0 0 0 ${marginLeft}`,
+		margin: $config.margin ? `0 0 0 ${extUtils.addPxUnitsIfNeeded($config.margin)}` : '',
 		textDecoration: `${textDecorationStyleString};${padding};${scrollbarHack}`,
 	};
 

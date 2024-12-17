@@ -218,6 +218,18 @@
 							"description": "Minimal space between line end and decoration. Very similar to the global setting `errorLens.margin`, but can only be a number of characters.",
 							"minimum": 0
 						},
+						"padding": {
+							"type": "array",
+							"items": {
+								"type": "number",
+								"default": 0,
+								"minimum": 0
+							},
+							"minItems": 2,
+							"maxItems": 2,
+							"default": [0, 0],
+							"description": "Very similar to the global setting `errorLens.padding`, but it can only be a number (not any CSS unit like pixels). First number is top+bottom padding; Second number - left+right padding."
+						},
 						"useFixedPosition": {
 							"type": "boolean",
 							"default": true,
@@ -228,6 +240,7 @@
 						"start": 0,
 						"end": 0,
 						"minimumMargin": 0,
+						"padding": [0, 0],
 						"useFixedPosition": true
 					},
 					"markdownDescription": "Align inline error message (either by starting position or ending position). Only works for monospace fonts. Set \"start\" and \"end\" to **0** to disable.",

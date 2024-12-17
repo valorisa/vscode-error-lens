@@ -45,6 +45,7 @@ interface ExtensionConfigType {
 		start: number;
 		end: number;
 		minimumMargin: number;
+		padding: [number, number];
 		useFixedPosition: boolean;
 	};
 	/**

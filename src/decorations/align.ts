@@ -1,4 +1,3 @@
-import { $config } from 'src/extension';
 import { extUtils } from 'src/utils/extUtils';
 import { Range, type TextLine } from 'vscode';
 
@@ -7,16 +6,17 @@ interface GetMarginForAlignmentArgs {
 	end: number;
 	message: string;
 	minimumMargin: number;
+	padding: [number, number];
 	visualLineLength: number;
 }
 
-function getMarginForAlignment({ start, end, message, minimumMargin, visualLineLength }: GetMarginForAlignmentArgs): number {
+function getMarginForAlignment({ start, end, message, minimumMargin, padding, visualLineLength }: GetMarginForAlignmentArgs): number {
 	let margin = 0;
 
 	if (start) {
 		margin = start <= visualLineLength ? 0 : start - visualLineLength;
 	} else if (end) {
-		const charDiff = end - message.length - visualLineLength;
+		const charDiff = end - message.length - visualLineLength - (padding[1] * 2);
 		margin = charDiff < 0 ? 0 : charDiff;
 	}
 
@@ -32,6 +32,7 @@ interface AlignmentArgs {
 	indentStyle: 'spaces' | 'tab';
 	minVisualLineLength: number;
 	minimumMargin: number;
+	padding: [number, number];
 	start: number;
 	end: number;
 }
@@ -49,6 +50,7 @@ export function getStyleForAlignment({
 	indentStyle,
 	minVisualLineLength,
 	minimumMargin,
+	padding,
 	problemMessage,
 	start,
 	end,
@@ -68,6 +70,7 @@ export function getStyleForAlignment({
 			visualLineLength,
 			message: problemMessage,
 			minimumMargin,
+			padding,
 		});
 		marginChar = marginCharAligned;
 	}
@@ -77,7 +80,7 @@ export function getStyleForAlignment({
 			textLine.range.start,
 			textLine.range.start,
 		);
-		styleStr = `position:fixed;left:${marginChar + visualLineLength}ch;padding:${$config.padding};margin:0`;
+		styleStr = `position:fixed;left:${marginChar + visualLineLength}ch;padding:${padding[0]}ch ${padding[1]}ch;margin:0`;
 	} else {
 		range = new Range(
 			textLine.range.start.line,
@@ -85,7 +88,7 @@ export function getStyleForAlignment({
 			textLine.range.start.line,
 			textLine.range.end.character,
 		);
-		styleStr = `margin:0 0 0 ${marginChar >= 0 ? marginChar : 0}ch;padding:${$config.padding}`;
+		styleStr = `margin:0 0 0 ${marginChar >= 0 ? marginChar : 0}ch;padding:${padding[0]}ch ${padding[1]}ch`;
 	}
 
 	return {

@@ -407,6 +407,7 @@ function doUpdateDecorations({
 				indentSize: editor.options.tabSize as number,
 				indentStyle: editor.options.insertSpaces as boolean ? 'spaces' : 'tab',
 				minimumMargin: $config.alignMessage.minimumMargin,
+				padding: $config.alignMessage.padding,
 				minVisualLineLength: $config.alignMessage.start,
 				start: $config.alignMessage.start,
 				end: $config.alignMessage.end,

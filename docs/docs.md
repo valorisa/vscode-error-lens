@@ -1,5 +1,5 @@
 <!--
-"window.zoomLevel": 0.9,
+"window.zoomLevel": 0.9,// & 1.9
 "workbench.colorTheme": "Prism",
 -->
 
@@ -103,13 +103,86 @@ Change font family of inline message. Not supported natively by VSCode. Non-mono
 
 Whether to use bold or not font weight for messages.
 
+<table>
+<tbody>
+<tr>
+<th align="center">"normal"</th>
+<th align="center">"bold"</th>
+</tr>
+<tr>
+<td>
+
+![font weight normal](./img/font_weight_normal.png)
+
+</td>
+
+<td>
+
+![font weight bold](./img/font_weight_bold.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
 ### `errorLens.fontStyleItalic`
 
 Whether to use italic font style or not for messages.
 
+<table>
+<thead>
+<tr>
+<th align="center">false</th>
+<th align="center">true</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+![font style normal](./img/font_style_normal.png)
+
+</td>
+
+<td>
+
+![font style italic](./img/font_style_italic.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
 ### `errorLens.fontSize`
 
-Change font size of inline message. Not supported natively by VSCode. Mostly useful to make font smaller, not bigger.
+Change font size of inline message. Not supported natively by VSCode. Mostly useful to make message smaller, not bigger.
+
+<table>
+<tbody>
+
+<tr>
+<td>""</td>
+<td>
+
+![font size default](./img/font_size_default.png)
+
+</td>
+</tr>
+
+<tr>
+<td>"12px"</td>
+<td>
+
+![font size 12px](./img/font_size_12px.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
 
 ### `errorLens.margin`
 
@@ -126,6 +199,45 @@ Add space around the inline message. Only visible when [errorLens.messageBackgro
 ### `errorLens.borderRadius`
 
 Round corners for inline message. Only visible when [errorLens.messageBackgroundMode](#errorlensmessagebackgroundmode) is set to `message`.
+
+<table>
+<thead>
+<tr>
+<th align="center">"0.3em"</th>
+<th align="center">"0"</th>
+<th align="center">"50%"</th>
+<th align="center">"10px 30px 10px 30px"</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+![](./img/border_radius_03em.png)
+
+</td>
+
+<td>
+
+![](./img/border_radius_0.png)
+
+</td>
+
+<td>
+
+![](./img/border_radius_50_percent.png)
+
+</td>
+
+<td>
+
+![](./img/border_radius_long.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.enabledDiagnosticLevels`
 
@@ -155,9 +267,9 @@ Controls visibility of inline message (including background highlighting). Doesn
 
 ### `errorLens.messageBackgroundMode`
 
-- "line" - Highlights the entire line.
-- "message" - Shows inline message without highlighting the entire line.
-- "none" - Shows inline message but without background highlighting
+- `"line"` - Highlights the entire line.
+- `"message"` - Shows inline message without highlighting the entire line.
+- `"none"` - Shows inline message but without background highlighting
 
 ### `errorLens.problemRangeDecorationEnabled`
 
@@ -213,7 +325,11 @@ Choose which diagnostic to use for status bar message:
 
 ### `errorLens.statusBarMessagePriority`
 
+Move status bar icons right/left.
+
 ### `errorLens.statusBarMessageAlignment`
+
+Choose alignment of the status bar message left/right side of the viewport.
 
 ### `errorLens.statusBarColorsEnabled`
 
@@ -280,13 +396,145 @@ EXPERIMENTAL. Very far away to being done. There's no api to implement this prop
 
 ### `errorLens.gutterIconsEnabled`
 
+Whether to show gutter icons or not.
+
+<table>
+<tbody>
+<tr>
+<th align="center">false</th>
+<th align="center">true</th>
+</tr>
+<tr>
+<td>
+
+![gutter icons disabled](./img/gutter_icons_disabled.png)
+
+</td>
+
+<td>
+
+![gutter icons enabled](./img/gutter_icons_enabled.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
 ### `errorLens.gutterIconsFollowCursorOverride`
 
+When enabled and [errorLens.followCursor](#errorlensfollowcursor) setting is not set to `allLines`, then gutter icons would be rendered for all problems. This setting can overcome that:
+
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.gutterIconsEnabled": true,
+"errorLens.followCursor": "activeLine",
+"errorLens.gutterIconsFollowCursorOverride": true,
+```
+
+</td>
+<td>
+
+```js
+"errorLens.gutterIconsEnabled": true,
+"errorLens.followCursor": "activeLine",
+"errorLens.gutterIconsFollowCursorOverride": false,
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/gutter_override_true.png)
+
+</td>
+
+<td>
+
+![](./img/gutter_override_false.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
 ### `errorLens.gutterIconSize`
+
+Change size of gutter icons:
+
+<table>
+<thead>
+<tr>
+<th align="center">"100%"</th>
+<th align="center">"70%"</th>
+<th align="center">"150%"</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+![](./img/gutter_size_100.png)
+
+</td>
+
+<td>
+
+![](./img/gutter_size_70.png)
+
+</td>
+
+<td>
+
+![](./img/gutter_size_150.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.gutterIconSet`
 
 ### `errorLens.gutterEmoji`
+
+Control image shown in gutter when [errorLens.gutterIconSet](#errorlensguttericonset) is `"emoji"`. Can use other utf-8 symbols like ♞/⚃/⛆/★/▣/◈/... Possible to fit 2 symbols that are not as wide as emoji.
+
+<table>
+<tbody>
+<tr>
+<td>
+
+```js
+"errorLens.gutterEmoji": {
+	"error": "🍎",
+	"warning": "🍊",
+	"info": "⟁",
+	"hint": ":(",
+},
+```
+
+</td>
+
+<td>
+
+<img width="300" src="./img/gutter_emoji.png">
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
+
 
 ### `errorLens.errorGutterIconPath`
 

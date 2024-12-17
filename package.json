@@ -642,9 +642,9 @@
 					"type": "string",
 					"default": "new",
 					"enum": [
+						"new",
 						"old",
-						"debounce",
-						"new"
+						"debounce"
 					],
 					"markdownEnumDescriptions": [
 						"New problems appear according to `errorLens.delay` setting. Fixed problems disappear faster. A bit buggy.",

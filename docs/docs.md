@@ -163,7 +163,7 @@ Change font size of inline message. Not supported natively by VSCode. Mostly use
 <tbody>
 
 <tr>
-<td>""</td>
+<th>""</th>
 <td>
 
 ![font size default](./img/font_size_default.png)
@@ -172,7 +172,7 @@ Change font size of inline message. Not supported natively by VSCode. Mostly use
 </tr>
 
 <tr>
-<td>"12px"</td>
+<th>"12px"</th>
 <td>
 
 ![font size 12px](./img/font_size_12px.png)
@@ -186,11 +186,93 @@ Change font size of inline message. Not supported natively by VSCode. Mostly use
 
 ### `errorLens.margin`
 
-Extra space between the end of the line (end of text) and the inline message. [errorLens.alignMessage](#errorlensalignmessage) will ignore it and use its own numeric `minimumMargin` property.
+Extra space between the end of the line (end of text) and the inline message.
+
+<table>
+<thead>
+<tr>
+<th align="center">"4ch"</th>
+<th align="center">"0"</th>
+<th align="center">"100px"</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+![](./img/margin_4ch.png)
+
+</td>
+
+<td>
+
+![](./img/margin_0.png)
+
+</td>
+
+<td>
+
+![](./img/margin_100px.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.alignMessage`
 
 Align message to be in the same column (if possible). Only works with monospace fonts.
+
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.alignMessage": {
+	"start": 40,
+	"end": 0,
+	"padding": [0, 0.5],
+},
+```
+
+</td>
+<td>
+
+![](./img/align_start_40.png)
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+```js
+"errorLens.alignMessage": {
+	"start": 0,
+	"end": 80,
+	"padding": [0, 0.5],
+},
+```
+
+</td>
+<td>
+
+![](./img/align_end_80.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
 
 ### `errorLens.padding`
 
@@ -242,6 +324,38 @@ Round corners for inline message. Only visible when [errorLens.messageBackground
 ### `errorLens.enabledDiagnosticLevels`
 
 Controls which diagnostics to include (error/warning/info/hint) for all features of this extension (decorations, gutter, status bar, code lens,...).
+
+<table>
+<thead>
+<tr>
+<th align="center">["error", "warning", "info", "hint"]</th>
+<th align="center">["error", "warning"]</th>
+<th align="center">["error", "info"]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+![](./img/diagnostic_levels_all.png)
+
+</td>
+
+<td>
+
+![](./img/diagnostic_levels_error_warn.png)
+
+</td>
+
+<td>
+
+![](./img/diagnostic_levels_error_info.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.messageTemplate`
 
@@ -374,9 +488,17 @@ To force comment on the same line - add `SAME_LINE` to the message: `"eslint": "
 
 ### `errorLens.light`
 
+Override colors when on of the "light" themes is used. Only for colors that are specified in "settings", not in "colors".
+
 ### `errorLens.delay`
 
+Wait this amount (in milliseconds) before showing decorations.
+
 ### `errorLens.delayMode`
+
+- `new` - Old/stale problems should disappear immediately while new problems should respect [errorLens.delay](#errorlensdelay)
+- `old` - Buggy/Overcomplicated old implementation
+- `debounce` - Simply use `debounce()` from `Lodash` library. Old/stale problems also wait [errorLens.delay](#errorlensdelay)
 
 ### `errorLens.onSave`
 
@@ -504,6 +626,67 @@ Change size of gutter icons:
 
 ### `errorLens.gutterIconSet`
 
+<table>
+<tbody>
+
+<tr>
+<th>"default"</th>
+<th>"circle"</th>
+</tr>
+
+<tr>
+<td>
+
+![](./img/gutter_icons_default.png)
+
+</td>
+
+<td>
+
+![](./img/gutter_icons_circle.png)
+
+</td>
+</tr>
+
+<tr>
+<th>"squareRounded"</th>
+<th>"letter"</th>
+</tr>
+
+<tr>
+<td>
+
+![](./img/gutter_icons_square.png)
+
+</td>
+
+<td>
+
+![](./img/gutter_icons_letter.png)
+
+</td>
+</tr>
+
+<tr>
+<th>"emoji"</th>
+<th></th>
+</tr>
+
+<tr>
+<td>
+
+![](./img/gutter_icons_emoji.png)
+
+</td>
+
+<td>
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
 ### `errorLens.gutterEmoji`
 
 Control image shown in gutter when [errorLens.gutterIconSet](#errorlensguttericonset) is `"emoji"`. Can use other utf-8 symbols like ♞/⚃/⛆/★/▣/◈/... Possible to fit 2 symbols that are not as wide as emoji.
@@ -533,8 +716,6 @@ Control image shown in gutter when [errorLens.gutterIconSet](#errorlensgutterico
 </tr>
 </tbody>
 </table>
-
-
 
 ### `errorLens.errorGutterIconPath`
 

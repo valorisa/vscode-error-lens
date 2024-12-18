@@ -461,7 +461,7 @@ function doUpdateDecorations({
 					messageRange = diagnosticRange;
 				}
 			} else if ($config.followCursor === 'closestProblem') {
-				if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line) || allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.end.line)) {
+				if (allowedLineNumbersToRenderDiagnostics!.includes(diagnosticRange.start.line)) {
 					messageRange = diagnosticRange;
 				}
 			}

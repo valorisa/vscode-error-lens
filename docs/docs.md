@@ -3,7 +3,7 @@
 "workbench.colorTheme": "Prism",
 -->
 
-#### Real talk: this is one of the most annoying extensions out there. Unless you are learning to code, I recommend keeping the inline message disabled by default and binding a hotkey to toggle it:
+### Real talk: this is one of the most annoying extensions out there. Unless you are learning to code, I recommend keeping the inline message disabled by default and binding a hotkey to toggle it:
 
 ```js
 // keybindings.json
@@ -14,13 +14,13 @@
 },
 ```
 
-#### If you don't want to go with the hotkey route - it's possible to:
+### If you don't want to go with the hotkey route - it's possible to:
 
 1) Exclude problems (in workspace, by source, by code, by message)
 1) Show fewer decorations (render decoration only on the active line)
 1) Delay showing decorations (delay ms / on document save)
 1) Transform problem message (make it shorter maybe)
-1) Other settings to make it less distracting
+1) Configure other settings or colors to make it less distracting
 
 ### 1. Exclude problems:
 
@@ -98,6 +98,95 @@ Disable decorations when file has merge conflict symbols `<<<<<<<` or `=======` 
 ### `errorLens.fontFamily`
 
 Change font family of inline message. Not supported natively by VSCode. Non-monospace fonts can usually fit more characters in the same space.
+
+<table>
+<tbody>
+
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>""</th>
+<td>
+
+![](./img/font_family_default.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Arial"</th>
+<td>
+
+![](./img/font_family_arial.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Times"</th>
+<td>
+
+![](./img/font_family_times.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Helvetica"</th>
+<td>
+
+![](./img/font_family_helvetica.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Gabriola"</th>
+<td>
+
+![](./img/font_family_gabriola.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Calibri"</th>
+<td>
+
+![](./img/font_family_calibri.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Comic Sans MS"</th>
+<td>
+
+![](./img/font_family_comic_sans_ms.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Cascadia Code"</th>
+<td>
+
+![](./img/font_family_cascadia_code.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<th>"Segoe Print"</th>
+<td>
+
+![](./img/font_family_segoe_print.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+
+</tbody>
+</table>
 
 ### `errorLens.fontWeight`
 
@@ -278,6 +367,29 @@ Align message to be in the same column (if possible). Only works with monospace 
 
 Add space around the inline message. Only visible when [errorLens.messageBackgroundMode](#errorlensmessagebackgroundmode) is set to `message`.
 
+<table>
+<tbody>
+<tr>
+<th align="center">"0"</th>
+<th align="center">"2px 0.5ch"</th>
+</tr>
+<tr>
+<td>
+
+![](./img/padding_0.png)
+
+</td>
+
+<td>
+
+![](./img/padding_2px_05ch.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
 ### `errorLens.borderRadius`
 
 Round corners for inline message. Only visible when [errorLens.messageBackgroundMode](#errorlensmessagebackgroundmode) is set to `message`.
@@ -369,7 +481,29 @@ Template used for all inline messages. Possible variables:
 
 ### `errorLens.messageMaxChars`
 
-Truncate inline message.
+<table>
+<tbody>
+
+<tr>
+<th align="center">500</th>
+<td>
+
+![](./img/truncate_500.png)
+
+</td>
+</tr>
+
+<tr>
+<th align="center">50</th>
+<td>
+
+![](./img/truncate_50.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.severityText`
 
@@ -387,10 +521,84 @@ Controls visibility of inline message (including background highlighting). Doesn
 
 ### `errorLens.problemRangeDecorationEnabled`
 
-Highlight problem locations.
-<!-- TODO: advanced examples combined with `errorLens.decorations` -->
-<!-- TODO: example of disabling native VSCode squigglies -->
-<!-- TODO: VSCode has its own highlighting like `editorError.background` -->
+VSCode now supports natively highlighting problem ranges even without this exntension (except `hint` severity):
+
+<table>
+<tbody>
+<tr>
+<td>
+
+```js
+"workbench.colorCustomizations": {
+    "editorError.background": "#ff000030",
+    "editorWarning.background": "#ee990030",
+    "editorInfo.background": "#0095d530",
+},
+```
+
+</td>
+<td>
+
+<img width="300" src="./img/vscode_problem_range.png">
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
+
+Still, it might be useful if you decide to disable native error highlighting and use the one from this extension (after delay or use different highlighting methods like borders):
+
+<table>
+<tbody>
+<tr>
+<td>
+
+```js
+"workbench.colorCustomizations": {
+    "editorError.foreground": "#fff0",
+    "editorWarning.foreground": "#fff0",
+    "editorInfo.foreground": "#fff0",
+    "editorHint.foreground": "#fff0",
+},
+
+"errorLens.problemRangeDecorationEnabled": true,
+
+"errorLens.decorations": {
+	"errorRange": {
+		"border": "1px dashed red",
+		"backgroundColor": "#ff000090",
+		"color": "#ffffff",
+	},
+	"warningRange": {
+		"border": "2px dotted #fa9121",
+	},
+	"infoRange": {
+		"textDecoration": ";background:linear-gradient(45deg,#ff8400,#00d9ff);background-clip:text;color:transparent;border-bottom:2px solid #00d9ff",
+		"backgroundColor": "#fff0",
+	},
+	"hintRange": {
+		"textDecoration": ";box-shadow:0 0 5px 3px #2faf6470;border-radius:0.25em",
+	},
+},
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+<img width="300" src="./img/problem_range.png">
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
+
 
 ### `errorLens.editorHoverPartsEnabled`
 
@@ -482,9 +690,19 @@ To force comment on the same line - add `SAME_LINE` to the message: `"eslint": "
 
 ### `errorLens.lintFilePaths`
 
+Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/docs/editor/glob-patterns) for local linter files). `node_modules` folder is excluded. Used when running `errorLens.findLinterRuleDefinition` command.
+
 ### `errorLens.searchForProblemQuery`
 
+Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command.
+
 ### `errorLens.selectProblemType`
+
+Which problem to select (closest / active line) when executing `errorLens.selectProblem` command.
+
+- `closestProblem`, - Show closest to the cursor diagnostic
+- `closestSeverity` - Show closest to the cursor diagnostic (sorted by severity e.g. error will be shown before warning even if it's farther from the cursor)
+- `activeLine` - Show only diagnostic that is on the same line as the cursor.
 
 ### `errorLens.light`
 
@@ -502,19 +720,108 @@ Wait this amount (in milliseconds) before showing decorations.
 
 ### `errorLens.onSave`
 
+When enabled - updates decorations only on document save (manual, not auto save).
+
 ### `errorLens.onSaveTimeout`
+
+Wait this much (ms) before showing decorations after the document save.
 
 ### `errorLens.onSaveUpdateOnActiveEditorChange`
 
+Update decorations immediately or not when switching focus from one Text Editor to another.
+
 ### `errorLens.enableOnDiffView`
+
+Whether or not to show decorations on `diff` editor.
+
+<table>
+<tbody>
+
+<tr>
+<th>false</th>
+<td>
+
+![disabled on diff view](./img/diff_disabled.png)
+
+</td>
+</tr>
+
+<tr>
+<th>true</th>
+<td>
+
+![enabled on diff view](./img/diff_enabled.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.followCursor`
 
+Highlight only closest to the cursor problem:
+
+<table>
+<tbody>
+
+<tr>
+<th align="center">"allLines"</th>
+<td>
+
+![](./img/follow_all.png)
+
+</td>
+</tr>
+
+<tr>
+<th align="center">"activeLine"</th>
+<td>
+
+![](./img/follow_active_line.png)
+
+</td>
+</tr>
+
+<tr>
+<th align="center">"closestProblem"</th>
+<td>
+
+![](./img/follow_closest_problem.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
 ### `errorLens.followCursorMore`
 
-### `errorLens.multilineMessage`
+Augments [errorLens.followCursor](#errorlensfollowcursor) Adds number of lines to top and bottom when `errorLens.followCursor` is set to `activeLine`. Adds number of closest problems when `errorLens.followCursor` is set to `closestProblem`.
 
-EXPERIMENTAL. Very far away to being done. There's no api to implement this properly.
+<table>
+<tbody>
+
+<tr>
+<th align="center">0</th>
+<td>
+
+![](./img/follow_more_0.png)
+
+</td>
+</tr>
+
+<tr>
+<th align="center">1</th>
+<td>
+
+![](./img/follow_more_1.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
 
 ### `errorLens.gutterIconsEnabled`
 
@@ -777,3 +1084,7 @@ Code Lens is clickable. This setting configures what happens when you click on C
 - `showProblemsView` => Open VSCode built-in `Problems` view (runs `workbench.actions.view.problems`)
 - `showQuickFix` => Open Quick Fix menu (runs `editor.action.quickFix`)
 - `searchForProblem` => Search for problem message in your default browser (runs `errorLens.searchForProblem`)
+
+### `errorLens.multilineMessage`
+
+EXPERIMENTAL. Very far away to being done. There's no api to implement this properly.

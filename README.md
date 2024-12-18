@@ -166,6 +166,6 @@ Please upvote the following VS Code issues:
 - [Inline text adornments break word wrapping](https://github.com/microsoft/vscode/issues/32856)
 - [Support hover decorations over the line numbers i.e. gutter](https://github.com/microsoft/vscode/issues/28080)
 
-<!-- ## More Documentation
+## [More Documentation / examples](https://github.com/usernamehw/vscode-error-lens/tree/master/docs/docs.md)
 
-https://github.com/usernamehw/vscode-error-lens/tree/master/docs/docs.md -->
+https://github.com/usernamehw/vscode-error-lens/tree/master/docs/docs.md

@@ -963,7 +963,7 @@
 						"min": 0,
 						"max": 200
 					},
-					"markdownDescription": "Enforce minimum and maximum length of cole lens messages."
+					"markdownDescription": "Enforce minimum and maximum length of code lens messages."
 				},
 				"errorLens.codeLensTemplate": {
 					"type": "string",

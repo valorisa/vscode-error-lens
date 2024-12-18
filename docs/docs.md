@@ -376,13 +376,13 @@ Add space around the inline message. Only visible when [errorLens.messageBackgro
 <tr>
 <td>
 
-![](./img/padding_0.png)
+<img width="300" src="./img/padding_0.png">
 
 </td>
 
 <td>
 
-![](./img/padding_2px_05ch.png)
+<img width="300" src="./img/padding_2px_05ch.png">
 
 </td>
 
@@ -509,15 +509,163 @@ Template used for all inline messages. Possible variables:
 
 Replaces `$severity` variable in [errorLens.messageTemplate](#errorlensmessagetemplate).
 
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.messageTemplate": "$severity $message",
+"errorLens.severityText": [
+	"❌",
+	"⚠",
+	"ℹ",
+	"📗",
+],
+```
+
+</td>
+<td>
+
+```js
+"errorLens.messageTemplate": "$severity $message",
+"errorLens.severityText": [
+	"■",
+	"■",
+	"■",
+	"■",
+],
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/severity_emoji.png)
+
+</td>
+
+<td>
+
+![](./img/severity_same_shape.png)
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+```js
+"errorLens.messageTemplate": "$severity $message",
+"errorLens.severityText": [
+    "▣",
+    "◈",
+    "◉",
+    "⛆",
+],
+```
+
+</td>
+<td>
+
+```js
+"errorLens.messageTemplate": "$severity$message",
+"errorLens.severityText": [
+    "ERROR: ",
+    "WARNING: ",
+    "",
+    "",
+],
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/severity_multiple_shapes.png)
+
+</td>
+
+<td>
+
+![](./img/severity_text.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
 ### `errorLens.messageEnabled`
 
 Controls visibility of inline message (including background highlighting). Doesn't include gutter icons.
 
+<table>
+<tbody>
+
+<tr>
+<th>true</th>
+<th>false</th>
+</tr>
+
+<tr>
+<td>
+
+<img src="./img/message_enabled.png">
+
+</td>
+<td>
+
+<img src="./img/message_disabled.png">
+
+</td>
+</tr>
+
+<tr>
+
+
+</tr>
+</tbody>
+</table>
+
 ### `errorLens.messageBackgroundMode`
 
-- `"line"` - Highlights the entire line.
-- `"message"` - Shows inline message without highlighting the entire line.
-- `"none"` - Shows inline message but without background highlighting
+<table>
+<thead>
+<tr>
+<th align="center">"line"</th>
+<th align="center">"message"</th>
+<th align="center">"none"</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+![](./img/bgmode_line.png)
+
+</td>
+
+<td>
+
+![](./img/bgmode_message.png)
+
+</td>
+
+<td>
+
+![](./img/bgmode_none.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.problemRangeDecorationEnabled`
 
@@ -598,8 +746,6 @@ Still, it might be useful if you decide to disable native error highlighting and
 </tbody>
 </table>
 
-
-
 ### `errorLens.editorHoverPartsEnabled`
 
 Controls which parts of hover are enabled (for the text editor; Doesn't affect status bar message hover).
@@ -611,6 +757,29 @@ Controls which parts of hover are enabled (for the text editor; Doesn't affect s
 ### `errorLens.statusBarIconsEnabled`
 
 Show icons for Errors & Warnings in status bar similar to native ones, but with the ability to change color / background color.
+
+<table>
+<tbody>
+
+<tr>
+<td>
+
+<img width="500" src="./img/status_bar_icons_enabled.png">
+
+</td>
+<td>
+
+<img width="450" src="./img/status_bar_icons_hover.png">
+
+</td>
+</tr>
+
+<tr>
+
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.statusBarIconsPriority`
 
@@ -1050,11 +1219,35 @@ When [errorLens.removeLinebreaks](#errorlensremovelinebreaks) is enabled => repl
 
 ### `errorLens.scrollbarHackEnabled`
 
-When showing inline message decorations - VSCode also shows horizontal scrollbar that stays even after message is removed. This is a hack that makes inline message to be absolutely positioned `position:absolute;` to not show any scrollbars. It can make the [errorLens.padding](#errorlenspadding) look differently.
+When showing inline message decorations - VSCode also shows horizontal scrollbar that stays even after message is removed. This is a hack that makes inline message to be absolutely positioned `position:absolute;` to not show any scrollbars. It can make the [errorLens.padding](#errorlenspadding) look differently though.
+
+<table>
+<tbody>
+
+<tr>
+<th>false</th>
+<td>
+
+![](./img/scrollbar_hack_disabled.png)
+
+</td>
+</tr>
+
+<tr>
+<th>true</th>
+<td>
+
+![](./img/scrollbar_hack_enabled.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.decorations`
 
-Advanced control over decorations.
+Advanced control over decorations (only problem message & problem range).
 
 ### `errorLens.ignoreUntitled`
 
@@ -1070,7 +1263,7 @@ Show messages as insets between the lines. ...
 
 ### `errorLens.codeLensLength`
 
-Enforce minimum and maximum length of cole lens messages.
+Enforce minimum and maximum length of code lens messages.
 
 ### `errorLens.codeLensTemplate`
 
@@ -1088,3 +1281,5 @@ Code Lens is clickable. This setting configures what happens when you click on C
 ### `errorLens.multilineMessage`
 
 EXPERIMENTAL. Very far away to being done. There's no api to implement this properly.
+
+<a href="vscode://settings/errorLens.enabled">errorLens.enabled</a>

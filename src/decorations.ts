@@ -442,13 +442,10 @@ function doUpdateDecorations({
 			const diagnosticRange = diagnostic.range;
 
 			if ($config.followCursor === 'activeLine') {
-				const lineStart = range.start.line - $config.followCursorMore;
-				const lineEnd = range.end.line + $config.followCursorMore;
+				const firstLineAllowed = range.start.line - $config.followCursorMore;
+				const lastLineAllowed = range.end.line + $config.followCursorMore;
 
-				if (
-					((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
-						((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))
-				) {
+				if ((diagnosticRange.start.line >= firstLineAllowed) && (diagnosticRange.start.line <= lastLineAllowed)) {
 					messageRange = diagnosticRange;
 				}
 			} else if ($config.followCursor === 'allLinesExceptActive') {

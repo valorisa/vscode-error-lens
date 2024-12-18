@@ -153,7 +153,7 @@ export class StatusBarIcons {
 			const uri = diagWithUri[0];
 			const diagnostics = diagWithUri[1];
 			if (diagnostics.length) {
-				markdown.appendMarkdown(`**${utils.basename(uri.path)}**\n\n`);
+				markdown.appendMarkdown(`**${utils.basename(uri.path)}** (${diagnostics.length})\n\n`);
 			}
 			for (const diag of diagnostics) {
 				const revealLineUri = Uri.parse(

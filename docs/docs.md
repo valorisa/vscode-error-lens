@@ -8,8 +8,8 @@
 ```js
 // keybindings.json
 {
-	"key": "ctrl+u",
-	"command": "errorLens.toggleInlineMessage",
+    "key": "ctrl+u",
+    "command": "errorLens.toggleInlineMessage",
     //          ^ Toggles global setting `errorLens.messageEnabled`
 },
 ```
@@ -26,9 +26,9 @@
 
 ```js
 "errorLens.exclude": [
-	"Missing semicolon",
-	"Newline required at end of file but not found",
-	"More than 1 blank line not allowed",
+    "Missing semicolon",
+    "Newline required at end of file but not found",
+    "More than 1 blank line not allowed",
 ],
 // OR
 "errorLens.excludeBySource": [
@@ -61,17 +61,17 @@
 
 ```js
 "errorLens.replace": [
-	{
-		"matcher": "is declared but its value is never read",
-		"message": "ಠ╭╮ಠ",
-	},
+    {
+        "matcher": "is declared but its value is never read",
+        "message": "ಠ╭╮ಠ",
+    },
 ],
 ```
 
 </td>
 <td>
 
-![replace_demo](./img/replace_kamoji.png)
+![replace_demo](./img/replace_kamoji_aligned.png)
 
 </td>
 </tr>
@@ -314,12 +314,6 @@ Extra space between the end of the line (end of text) and the inline message.
 Align message to be in the same column (if possible). Only works with monospace fonts.
 
 <table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center"></th>
-</tr>
-</thead>
 <tbody>
 
 <tr>
@@ -327,9 +321,9 @@ Align message to be in the same column (if possible). Only works with monospace 
 
 ```js
 "errorLens.alignMessage": {
-	"start": 40,
-	"end": 0,
-	"padding": [0, 0.5],
+    "start": 40,
+    "end": 0,
+    "padding": [0, 0.5],
 },
 ```
 
@@ -346,9 +340,9 @@ Align message to be in the same column (if possible). Only works with monospace 
 
 ```js
 "errorLens.alignMessage": {
-	"start": 0,
-	"end": 80,
-	"padding": [0, 0.5],
+    "start": 0,
+    "end": 80,
+    "padding": [0, 0.5],
 },
 ```
 
@@ -475,9 +469,33 @@ Template used for all inline messages. Possible variables:
 
 - `$message` - diagnostic message text
 - `$count` - Number of diagnostics on the line
-- `$severity` - Severity prefix taken from `#errorLens.severityText#`
+- `$severity` - Severity prefix taken from [errorLens.severityText](#errorlensseveritytext)
 - `$source` - Source of diagnostic e.g. \"eslint\"
 - `$code` - Code of the diagnostic
+
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.messageTemplate": "[$count] $severity $message $source($code)",
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/template.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
 
 ### `errorLens.messageMaxChars`
 
@@ -518,10 +536,10 @@ Replaces `$severity` variable in [errorLens.messageTemplate](#errorlensmessagete
 ```js
 "errorLens.messageTemplate": "$severity $message",
 "errorLens.severityText": [
-	"❌",
-	"⚠",
-	"ℹ",
-	"📗",
+    "❌",
+    "⚠",
+    "ℹ",
+    "📗",
 ],
 ```
 
@@ -531,10 +549,10 @@ Replaces `$severity` variable in [errorLens.messageTemplate](#errorlensmessagete
 ```js
 "errorLens.messageTemplate": "$severity $message",
 "errorLens.severityText": [
-	"■",
-	"■",
-	"■",
-	"■",
+    "■",
+    "■",
+    "■",
+    "■",
 ],
 ```
 
@@ -714,21 +732,21 @@ Still, it might be useful if you decide to disable native error highlighting and
 "errorLens.problemRangeDecorationEnabled": true,
 
 "errorLens.decorations": {
-	"errorRange": {
-		"border": "1px dashed red",
-		"backgroundColor": "#ff000090",
-		"color": "#ffffff",
-	},
-	"warningRange": {
-		"border": "2px dotted #fa9121",
-	},
-	"infoRange": {
-		"textDecoration": ";background:linear-gradient(45deg,#ff8400,#00d9ff);background-clip:text;color:transparent;border-bottom:2px solid #00d9ff",
-		"backgroundColor": "#fff0",
-	},
-	"hintRange": {
-		"textDecoration": ";box-shadow:0 0 5px 3px #2faf6470;border-radius:0.25em",
-	},
+    "errorRange": {
+        "border": "1px dashed red",
+        "backgroundColor": "#ff000090",
+        "color": "#ffffff",
+    },
+    "warningRange": {
+        "border": "2px dotted #fa9121",
+    },
+    "infoRange": {
+        "textDecoration": ";background:linear-gradient(45deg,#ff8400,#00d9ff);background-clip:text;color:transparent;border-bottom:2px solid #00d9ff",
+        "backgroundColor": "#fff0",
+    },
+    "hintRange": {
+        "textDecoration": ";box-shadow:0 0 5px 3px #2faf6470;border-radius:0.25em",
+    },
 },
 ```
 
@@ -805,14 +823,38 @@ Choose what happens to status bar icons when there are no errors - hide or remov
 
 Show problem message in Status Bar.
 
+<table>
+<tbody>
+
+<tr>
+<td>
+
+![](./img/status_bar_message_enabled.png)
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/status_bar_message_hover.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
+Show problem message in Status Bar.
+
 ### `errorLens.statusBarMessageType`
 
 Choose which diagnostic to use for status bar message:
 
-- `closestProblem`
-- `closestSeverity`
-- `activeLine`
-- `activeCursor`
+- `closestProblem` - Closest to the cursor diagnostic
+- `closestSeverity` - Closest to the cursor diagnostic sorted by severity (e.g. error will be shown before warning even if it's farther from the cursor)
+- `activeLine` - Show only diagnostic that is on the same line as the cursor
+- `activeCursor` - Similar to `activeLine` but follows the cursor movement inside the line
 
 ### `errorLens.statusBarMessagePriority`
 
@@ -824,8 +866,38 @@ Choose alignment of the status bar message left/right side of the viewport.
 
 ### `errorLens.statusBarColorsEnabled`
 
+Uses colors `errorLens.statusBarErrorForeground`, `errorLens.statusBarWarningForeground`, `errorLens.statusBarInfoForeground`, `errorLens.statusBarHintForeground`.
+
+<table>
+<tbody>
+
+<tr>
+<th>false</th>
+<td>
+
+![](./img/status_bar_colors_disabled.png)
+
+</td>
+</tr>
+
+<tr>
+<th>true</th>
+<td>
+
+![](./img/status_bar_colors_enabled.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
+
+────────────────────────────────────────────────────────────
+
 ### `errorLens.statusBarCommand`
-<!-- TODO: maybe this should be `errorLens.statusBarMessageCommand` -->
+
+Command that executes on click for Status Bar.
 
 ### `errorLens.statusBarMessageTemplate`
 
@@ -834,6 +906,123 @@ Almost the same as [errorLens.messageTemplate](#errorlensmessagetemplate) but in
 ### `errorLens.replace`
 
 Replace message with custom one. Uses strings to create RegExp with `iu` flags.
+
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.replace": [],
+```
+
+</td>
+<td>
+
+![](./img/replace_semi.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<td>
+
+```js
+"errorLens.replace": [
+    {
+        "matcher": "Missing semicolon",
+        "message": ";",
+    },
+],
+```
+
+</td>
+<td>
+
+![](./img/replace_semi_compressed.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<td>
+
+```js
+"errorLens.replace": [],
+```
+
+</td>
+<td>
+
+![](./img/replace_return_type_original.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<td>
+
+```js
+"errorLens.replace": [
+    {
+        "matcher": "Missing return type on (.+)",
+        "message": "Type $1"
+    }
+],
+```
+
+</td>
+<td>
+
+![](./img/replace_return_type_replaced.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<td>
+
+```js
+"errorLens.replace": [
+    {
+        "matcher": "Missing return type on",
+        "message": "<==",
+    },
+],
+```
+
+</td>
+<td>
+
+![](./img/replace_arrow.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+<tr>
+<td>
+
+```js
+"errorLens.replace": [
+    {
+        "matcher": "Missing return type on",
+        "message": "(。_。)",
+    },
+],
+```
+
+</td>
+<td>
+
+![](./img/replace_kamoji.png)
+
+</td>
+</tr>
+<!-- ──────────────────────────────────────────────────────────── -->
+
+</tbody>
+</table>
 
 ### `errorLens.exclude`
 
@@ -885,7 +1074,7 @@ Wait this amount (in milliseconds) before showing decorations.
 
 - `new` - Old/stale problems should disappear immediately while new problems should respect [errorLens.delay](#errorlensdelay)
 - `old` - Buggy/Overcomplicated old implementation
-- `debounce` - Simply use `debounce()` from `Lodash` library. Old/stale problems also wait [errorLens.delay](#errorlensdelay)
+- `debounce` - Simply use `debounce()` from `Lodash` library. Old/fixed problems also wait [errorLens.delay](#errorlensdelay) ms before being hidden.
 
 ### `errorLens.onSave`
 
@@ -1174,10 +1363,10 @@ Control image shown in gutter when [errorLens.gutterIconSet](#errorlensgutterico
 
 ```js
 "errorLens.gutterEmoji": {
-	"error": "🍎",
-	"warning": "🍊",
-	"info": "⟁",
-	"hint": ":(",
+    "error": "🍎",
+    "warning": "🍊",
+    "info": "⟁",
+    "hint": ":(",
 },
 ```
 
@@ -1195,19 +1384,106 @@ Control image shown in gutter when [errorLens.gutterIconSet](#errorlensgutterico
 
 ### `errorLens.errorGutterIconPath`
 
+Set custom icons for gutter.
+
+<table>
+<tbody>
+<tr>
+<td>
+
+```js
+"errorLens.errorGutterIconPath": "C:\\temp\\Stop.png",
+"errorLens.warningGutterIconPath": "C:\\temp\\Warning.png",
+"errorLens.infoGutterIconPath": "C:\\temp\\vscode.png",
+"errorLens.hintGutterIconPath": "C:\\temp\\folder.png",
+```
+
+</td>
+
+<td>
+
+<img width="400" src="./img/gutter_icon_path.png">
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
 ### `errorLens.warningGutterIconPath`
+
+Same as [errorLens.errorGutterIconPath](#errorlenserrorguttericonpath)
 
 ### `errorLens.infoGutterIconPath`
 
+Same as [errorLens.errorGutterIconPath](#errorlenserrorguttericonpath)
+
 ### `errorLens.hintGutterIconPath`
+
+Same as [errorLens.errorGutterIconPath](#errorlenserrorguttericonpath)
 
 ### `errorLens.errorGutterIconColor`
 
+Change color of gutter icons (for shapes and letters).
+
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.gutterIconSet": "squareRounded",
+"errorLens.errorGutterIconColor": "#6a54e4",
+"errorLens.warningGutterIconColor": "#29d8ff",
+"errorLens.infoGutterIconColor": "#21d439",
+"errorLens.hintGutterIconColor": "#b5a7b0",
+```
+
+</td>
+<td>
+
+```js
+"errorLens.gutterIconSet": "letter",
+"errorLens.errorGutterIconColor": "#6a54e4",
+"errorLens.warningGutterIconColor": "#29d8ff",
+"errorLens.infoGutterIconColor": "#21d439",
+"errorLens.hintGutterIconColor": "#b5a7b0",
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+<img width="300" src="./img/gutter_color_square.png">
+
+</td>
+
+<td>
+
+<img width="300" src="./img/gutter_color_letter.png">
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
+
+
 ### `errorLens.warningGutterIconColor`
+
+Same as [errorLens.errorGutterIconPath](#errorlenserrorguttericoncolor)
 
 ### `errorLens.infoGutterIconColor`
 
+Same as [errorLens.errorGutterIconPath](#errorlenserrorguttericoncolor)
+
 ### `errorLens.hintGutterIconColor`
+
+Same as [errorLens.errorGutterIconPath](#errorlenserrorguttericoncolor)
 
 ### `errorLens.removeLinebreaks`
 
@@ -1249,6 +1525,58 @@ When showing inline message decorations - VSCode also shows horizontal scrollbar
 
 Advanced control over decorations (only problem message & problem range).
 
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.decorations": {
+    "errorMessage": {
+        "textDecoration": ";background:linear-gradient(to right, #0088ff, #0a9c33);border-radius:0.3em;padding:0 0.5ch;",
+        "color": "#fff",
+        "fontWeight": "bold",
+    },
+},
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/decoration_linear_gradient_2colors.png)
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+```js
+"errorLens.decorations": {
+    "errorMessage": {
+        "textDecoration": ";border:1.2px dashed #e4545470;text-shadow:1px 1px 2px #e4545470;border-radius:0.3em;padding:0 0.5ch;",
+    },
+},
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/decoration_text_shadow.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
 ### `errorLens.ignoreUntitled`
 
 When enabled - will not show any decorations in files with the file scheme `untitled` (newly created unsaved files).
@@ -1259,7 +1587,9 @@ When enabled - will not show any decorations on Dirty (modified) files.
 
 ### `errorLens.codeLensEnabled`
 
-Show messages as insets between the lines. ...
+Show messages as insets between the lines.
+
+<img width="300" src="./img/code_lens_enabled.png">
 
 ### `errorLens.codeLensLength`
 
@@ -1281,5 +1611,3 @@ Code Lens is clickable. This setting configures what happens when you click on C
 ### `errorLens.multilineMessage`
 
 EXPERIMENTAL. Very far away to being done. There's no api to implement this properly.
-
-<a href="vscode://settings/errorLens.enabled">errorLens.enabled</a>

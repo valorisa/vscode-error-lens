@@ -427,7 +427,7 @@
 				},
 				"errorLens.statusBarColorsEnabled": {
 					"type": "boolean",
-					"markdownDescription": "When enabled - use message decoration foreground as color of Status Bar text.",
+					"markdownDescription": "When enabled - use message decoration foreground as color of Status Bar text. Uses colors `errorLens.statusBarErrorForeground`, `errorLens.statusBarWarningForeground`, `errorLens.statusBarInfoForeground`, `errorLens.statusBarHintForeground`.",
 					"default": false
 				},
 				"errorLens.statusBarMessageType": {
@@ -441,7 +441,7 @@
 					],
 					"enumDescriptions": [
 						"Show closest to the cursor diagnostic.",
-						"Show closest to the cursor diagnostic (sorted by severity e.g. error will be shown before warning even if it's farther from the cursor).",
+						"Show closest to the cursor diagnostic sorted by severity (e.g. error will be shown before warning even if it's farther from the cursor).",
 						"Show only diagnostic that is on the same line as the cursor.",
 						"Similar to \"activeLine\" but follows the cursor movement inside the line."
 					],
@@ -449,7 +449,7 @@
 				},
 				"errorLens.statusBarCommand": {
 					"type": "string",
-					"markdownDescription": "Pick command that activates on click for Status Bar.",
+					"markdownDescription": "Command that executes on click for Status Bar.",
 					"enum": [
 						"goToProblem",
 						"goToLine",
@@ -913,12 +913,16 @@
 				},
 				"errorLens.decorations": {
 					"type": "object",
-					"markdownDescription": "Advanced decoration tweaking. Possible keys: `errorRange`, `warningRange`, `infoRange`, `hintRange`.\n\n Possible properties: `backgroundColor`, `color`, `outline`, `border`, ...,",
+					"markdownDescription": "Advanced decoration tweaking. Possible keys: `errorRange`, `warningRange`, `infoRange`, `hintRange`, `errorMessage, `warningMessage`, `infoMessage`, `hintMessage`.\n\n Possible properties: `backgroundColor`, `color`, `outline`, `border`, ... [api](https://code.visualstudio.com/api/references/vscode-api#ThemableDecorationAttachmentRenderOptions). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensdecorations)",
 					"default": {
 						"errorRange": {},
 						"warningRange": {},
 						"infoRange": {},
-						"hintRange": {}
+						"hintRange": {},
+						"errorMessage": {},
+						"warningMessage": {},
+						"infoMessage": {},
+						"hintMessage": {}
 					},
 					"patternProperties": {
 						"^(errorRange|warningRange|infoRange|hintRange|errorMessage|warningMessage|infoMessage|hintMessage)$": {

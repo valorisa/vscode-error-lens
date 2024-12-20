@@ -550,6 +550,7 @@ function doUpdateDecorations({
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {
+	// TODO: maybe this condition should not be here
 	if (
 		$config.onSave &&
 		!$config.onSaveUpdateOnActiveEditorChange

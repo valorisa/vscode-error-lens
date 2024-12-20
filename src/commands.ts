@@ -10,6 +10,7 @@ import { selectProblemCommand } from 'src/commands/selectProblemCommand';
 import { statusBarCommand } from 'src/commands/statusBarCommand';
 import { toggleEnabledLevels } from 'src/commands/toggleEnabledLevels';
 import { toggleWorkspaceCommand } from 'src/commands/toggleWorkspaceCommand';
+import { updateEverythingCommand } from 'src/commands/updateEverythingCommand';
 import { $config } from 'src/extension';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { commands, type ExtensionContext } from 'vscode';
@@ -39,6 +40,8 @@ export const enum CommandId {
 	SearchForProblem = 'errorLens.searchForProblem',
 	/** {@link disableLineCommand} */
 	DisableLine = 'errorLens.disableLine',
+	/** {@link updateEverythingCommand} */
+	UpdateEverything = 'errorLens.updateEverything',
 	// ──── Internal ──────────────────────────────────────────────
 	/** {@link statusBarCommand} */
 	StatusBarCommand = 'errorLens.statusBarCommand',
@@ -81,6 +84,7 @@ export function registerAllCommands(context: ExtensionContext): void {
 	context.subscriptions.push(commands.registerCommand(CommandId.SearchForProblem, searchForProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.DisableLine, disableLineCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.UpdateEverything, updateEverythingCommand));
 	// ────────────────────────────────────────────────────────────
 	// ──── Text Editor commands ──────────────────────────────────
 	// ────────────────────────────────────────────────────────────

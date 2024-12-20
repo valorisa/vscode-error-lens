@@ -118,6 +118,12 @@
 				"title": "Copy Problem Code",
 				"description": "Copy problem code to the clipboard (at the active cursor).",
 				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.updateEverything",
+				"title": "Update Everything",
+				"description": "Update all decorations. Supports args {\"kind\": \"update\" | \"clear\"}",
+				"category": "Error Lens"
 			}
 		],
 		"configuration": {

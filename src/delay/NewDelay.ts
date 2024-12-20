@@ -1,20 +1,23 @@
 import debounce from 'lodash/debounce';
-import { clearDecorations, updateDecorationsForUri } from 'src/decorations';
+import { clearDecorations, updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { $state } from 'src/extension';
-import { DiagnosticChangeEvent, Disposable, Uri, window, workspace } from 'vscode';
+import { DiagnosticChangeEvent, Disposable, window, workspace } from 'vscode';
 
 export class NewDelay {
-	private readonly updateDecorationsDebounced: (uri: Uri)=> void;
+	private readonly updateDecorationsDebounced: ()=> void;
 	private readonly documentChangeDisposable: Disposable;
 
 	constructor(delayMs: number) {
-		this.updateDecorationsDebounced = debounce(this.updateDecorations, delayMs, {
+		this.updateDecorationsDebounced = debounce(() => {
+			updateDecorationsForAllVisibleEditors();
+			$state.statusBarIcons.updateText();
+		}, delayMs, {
 			leading: false,
 			trailing: true,
 		});
-		this.documentChangeDisposable = workspace.onDidChangeTextDocument(e => {
+		this.documentChangeDisposable = workspace.onDidChangeTextDocument(_ => {
 			this.clearDecorationsForAllVisibleEditors();
-			this.updateDecorationsDebounced(e.document.uri);
+			this.updateDecorationsDebounced();
 		});
 	}
 
@@ -22,22 +25,8 @@ export class NewDelay {
 		this.documentChangeDisposable?.dispose();
 	}
 
-	onDiagnosticChange = (event: DiagnosticChangeEvent): void => {
-		for (const uri of event.uris) {
-			for (const editor of window.visibleTextEditors) {
-				if (editor.document.uri.toString(true) === uri.toString(true)) {
-					this.updateDecorationsDebounced(uri);
-				}
-			}
-		}
-	};
-
-	private readonly updateDecorations = (uri: Uri): void => {
-		$state.log('NewDelay => updateDecorations()', uri.toString(true));
-		updateDecorationsForUri({
-			uri,
-		});
-		$state.statusBarIcons.updateText();
+	onDiagnosticChange = (_: DiagnosticChangeEvent): void => {
+		this.updateDecorationsDebounced();
 	};
 
 	private clearDecorationsForAllVisibleEditors(): void {

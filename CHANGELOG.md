@@ -1,3 +1,12 @@
+## 3.22.0 `20 Dec 2024`
+
+- 📚 Created docs/examples page: https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md
+- ✨ Added command to foce update/clear decorations `"command": "errorLens.updateEverything", "args": { "kind": "update"// "clear" }`
+- 🔨 `"errorLens.align"` to use its own numerical property value for padding
+- 🔨 Setting values `"followCursor": "activeLine" & "closestProblem"` should not use end range of diagnostics
+- 🐛 Maybe fixed [#223 Error decorations persist in jupyter notebooks (ipynb) after resolution](https://github.com/usernamehw/vscode-error-lens/issues/223)
+- 🐛 Maybe fixed [#214 Decorations not updated when using split editor](https://github.com/usernamehw/vscode-error-lens/issues/214)
+
 ## 3.21.0 `16 Dec 2024`
 
 - ✨ New setting `"errorLens.ignoreDirty"` - don't show decorations in modified unsaved files (when `"files.autoSave"` is disabled)

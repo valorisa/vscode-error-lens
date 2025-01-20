@@ -1,15 +1,21 @@
 import { extUtils } from 'src/utils/extUtils';
-import { env, languages, window, type TextEditor } from 'vscode';
+import { env, languages, window } from 'vscode';
 
-export function copyProblemMessageCommand(editorOrErrorMessage: TextEditor | string): void {
-	if (typeof editorOrErrorMessage === 'string') {
-		env.clipboard.writeText(editorOrErrorMessage);
+export function copyProblemMessageCommand(message: string | undefined): void {
+	if (typeof message === 'string') {
+		env.clipboard.writeText(message);
 		return;
 	}
 
-	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(editorOrErrorMessage.document.uri));
+	const editor = window.activeTextEditor;
+	if (!editor) {
+		window.showInformationMessage('No active Text Editor.');
+		return;
+	}
 
-	const activeLineNumber = editorOrErrorMessage.selection.active.line;
+	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
+
+	const activeLineNumber = editor.selection.active.line;
 	const diagnosticAtActiveLineNumber = groupedDiagnostics[activeLineNumber];
 	if (!diagnosticAtActiveLineNumber) {
 		window.showInformationMessage('There\'s no problem at the active line.');

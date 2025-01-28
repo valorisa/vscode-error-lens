@@ -50,6 +50,19 @@ export function updateChangeVisibleTextEditorsListener(): void {
 
 	onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateDecorationsForAllVisibleEditors);
 }
+function updateChangedUris(diagnosticChangeEvent: DiagnosticChangeEvent): void {
+	for (const uri of diagnosticChangeEvent.uris) {
+		for (const editor of window.visibleTextEditors) {
+			if (uri.toString(true) === editor.document.uri.toString(true)) {
+				$state.log('onChangedDiagnostics()');
+				updateDecorationsForUri({
+					uri,
+					editor,
+				});
+			}
+		}
+	}
+}
 /**
  * Update listener for when language server (or extension) sends diagnostic change events.
  */
@@ -57,18 +70,18 @@ export function updateChangeDiagnosticListener(): void {
 	onDidChangeDiagnosticsDisposable?.dispose();
 
 	function onChangedDiagnostics(diagnosticChangeEvent: DiagnosticChangeEvent): void {
-		// Many URIs can change - we only need to decorate visible editors
-		for (const uri of diagnosticChangeEvent.uris) {
-			for (const editor of window.visibleTextEditors) {
-				if (uri.toString(true) === editor.document.uri.toString(true)) {
-					$state.log('onChangedDiagnostics()');
-					updateDecorationsForUri({
-						uri,
-						editor,
-					});
-				}
+		if ($config.experimental.fixNotebookStaleProblems1) {
+			const notebookCellVisible = window.visibleTextEditors.filter(editor => editor.document.uri.scheme === 'vscode-notebook-cell').length !== 0;
+			if (notebookCellVisible) {
+				updateDecorationsForAllVisibleEditors();
+			} else {
+				updateChangedUris(diagnosticChangeEvent);
 			}
+			$state.statusBarIcons.updateText();
+			return;
 		}
+		// ────────────────────────────────────────────────────────────
+		updateChangedUris(diagnosticChangeEvent);
 		$state.statusBarIcons.updateText();
 	}
 	if ($config.onSave) {

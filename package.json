@@ -659,7 +659,7 @@
 						"debounce"
 					],
 					"markdownEnumDescriptions": [
-						"New problems appear according to `errorLens.delay` setting. Fixed problems disappear faster. A bit buggy.",
+						"New problems appear according to `errorLens.delay` setting. Fixed problems disappear faster.",
 						"Decorations for problems are debounced according to `errorLens.delay` setting.",
 						"Decorations disappear when document changes (typing)."
 					],
@@ -1002,6 +1002,20 @@
 					],
 					"default": "showQuickFix",
 					"markdownDescription": "Controls what do on clicking the `#errorLens.codeLensEnabled#`."
+				},
+				"errorLens.experimental": {
+					"type": "object",
+					"properties": {
+						"fixNotebookStaleProblems1": {
+							"type": "boolean",
+							"markdownDescription": "Try to fix https://github.com/usernamehw/vscode-error-lens/issues/223",
+							"default": false
+						}
+					},
+					"markdownDescription": "Experimental / temporary settings.",
+					"default": {
+						"fixNotebookStaleProblems1": false
+					}
 				}
 			}
 		},

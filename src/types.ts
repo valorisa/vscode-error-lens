@@ -364,6 +364,12 @@ interface ExtensionConfigType {
 	 * Controls what do on clicking the `#errorLens.codeLensEnabled#`
 	 */
 	codeLensOnClick: 'none' | 'searchForProblem' | 'showProblemsView' | 'showQuickFix';
+	/**
+	 * Experimental / temporary settings.
+	 */
+	experimental: {
+		fixNotebookStaleProblems1: boolean;
+	};
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;

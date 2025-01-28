@@ -1,6 +1,7 @@
 <!--
 "window.zoomLevel": 0.9,// & 1.9
 "workbench.colorTheme": "Prism",
+"editor.rulers": [40, 80, 120, 130],
 -->
 
 ### Real talk: this is one of the most annoying extensions out there. Unless you are learning to code, I recommend keeping the inline message disabled by default and binding a hotkey to toggle it:

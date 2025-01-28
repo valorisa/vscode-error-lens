@@ -1,3 +1,8 @@
+## 3.22.1 `28 Jan 2025`
+
+- 🐛 Fix "Copy Problem Message" command not working
+- 🐛 Maybe fixed [#223 Error decorations persist in jupyter notebooks (ipynb) after resolution](https://github.com/usernamehw/vscode-error-lens/issues/223)
+
 ## 3.22.0 `20 Dec 2024`
 
 - 📚 Created docs/examples page: https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md

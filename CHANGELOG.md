@@ -1,3 +1,8 @@
+## 3.23.0 `30 Jan 2025`
+
+- ✨ `Exclude Problem` command should be available to call from "Command Palette"
+- 🐛 Fix [#223 Error decorations persist in jupyter notebooks (ipynb) after resolution](https://github.com/usernamehw/vscode-error-lens/issues/223)
+
 ## 3.22.1 `28 Jan 2025`
 
 - 🐛 Fix "Copy Problem Message" command not working

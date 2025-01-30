@@ -6,6 +6,20 @@ import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { window, type Diagnostic } from 'vscode';
 
 export async function excludeProblemCommand(diagnostic: Diagnostic): Promise<void> {
+	if (!diagnostic) {
+		const editor = window.activeTextEditor;
+		if (!editor) {
+			window.showInformationMessage('No active Text Editor.');
+			return;
+		}
+		const diagnosticAtActiveLineNumber = extUtils.getDiagnosticAtLine(editor.document.uri, editor.selection.active.line);
+		if (!diagnosticAtActiveLineNumber) {
+			window.showInformationMessage('There\'s no problem at the active line.');
+			return;
+		}
+		diagnostic = diagnosticAtActiveLineNumber;
+	}
+
 	const code = extUtils.getDiagnosticCode(diagnostic);
 	const source = diagnostic.source;
 	if (!source) {

@@ -12,7 +12,7 @@ export function copyProblemMessageCommand(message: string | undefined): void {
 		window.showInformationMessage('No active Text Editor.');
 		return;
 	}
-
+	// TODO: use extUtils.getDiagnosticAtLine()
 	const groupedDiagnostics = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(editor.document.uri));
 
 	const activeLineNumber = editor.selection.active.line;

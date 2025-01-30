@@ -114,6 +114,12 @@
 				"category": "Error Lens"
 			},
 			{
+				"command": "errorLens.excludeProblem",
+				"title": "Exclude Problem",
+				"description": "Exclude problem (at the active cursor) (write into settings).",
+				"category": "Error Lens"
+			},
+			{
 				"command": "errorLens.copyProblemCode",
 				"title": "Copy Problem Code",
 				"description": "Copy problem code to the clipboard (at the active cursor).",

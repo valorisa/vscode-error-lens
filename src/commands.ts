@@ -79,12 +79,14 @@ export function registerAllCommands(context: ExtensionContext): void {
 		vscodeUtils.toggleGlobalBooleanSetting('errorLens.messageEnabled');
 	}));
 	context.subscriptions.push(commands.registerCommand(CommandId.ToggleWorkspace, toggleWorkspaceCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.UpdateEverything, updateEverythingCommand));
+
 	context.subscriptions.push(commands.registerCommand(CommandId.FindLinterRuleDefinition, findLinterRuleDefinitionCommand));
-	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemCode, copyProblemCodeCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.SearchForProblem, searchForProblemCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemCode, copyProblemCodeCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.DisableLine, disableLineCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
-	context.subscriptions.push(commands.registerCommand(CommandId.UpdateEverything, updateEverythingCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	// ────────────────────────────────────────────────────────────
 	// ──── Text Editor commands ──────────────────────────────────
 	// ────────────────────────────────────────────────────────────
@@ -94,6 +96,5 @@ export function registerAllCommands(context: ExtensionContext): void {
 	// ────────────────────────────────────────────────────────────
 	context.subscriptions.push(commands.registerCommand(CommandId.CodeLensOnClick, codeLensOnClickCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.RevealLine, revealLineCommand));
-	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.StatusBarCommand, statusBarCommand));
 }

@@ -1005,17 +1005,10 @@
 				},
 				"errorLens.experimental": {
 					"type": "object",
-					"properties": {
-						"fixNotebookStaleProblems1": {
-							"type": "boolean",
-							"markdownDescription": "Try to fix https://github.com/usernamehw/vscode-error-lens/issues/223",
-							"default": false
-						}
-					},
+					"properties": {},
+					"additionalProperties": false,
 					"markdownDescription": "Experimental / temporary settings.",
-					"default": {
-						"fixNotebookStaleProblems1": false
-					}
+					"default": {}
 				}
 			}
 		},

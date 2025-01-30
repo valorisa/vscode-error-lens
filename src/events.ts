@@ -50,40 +50,35 @@ export function updateChangeVisibleTextEditorsListener(): void {
 
 	onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateDecorationsForAllVisibleEditors);
 }
-function updateChangedUris(diagnosticChangeEvent: DiagnosticChangeEvent): void {
-	for (const uri of diagnosticChangeEvent.uris) {
-		for (const editor of window.visibleTextEditors) {
-			if (uri.toString(true) === editor.document.uri.toString(true)) {
-				$state.log('onChangedDiagnostics()');
-				updateDecorationsForUri({
-					uri,
-					editor,
-				});
+
+function onChangedDiagnostics(diagnosticChangeEvent: DiagnosticChangeEvent): void {
+	const notebookCellVisible = window.visibleTextEditors.filter(editor => editor.document.uri.scheme === 'vscode-notebook-cell').length !== 0;
+	if (notebookCellVisible) {
+		updateDecorationsForAllVisibleEditors();
+		return;
+	} else {
+		for (const uri of diagnosticChangeEvent.uris) {
+			for (const editor of window.visibleTextEditors) {
+				if (uri.toString(true) === editor.document.uri.toString(true)) {
+					$state.log('onChangedDiagnostics()');
+					updateDecorationsForUri({
+						uri,
+						editor,
+					});
+				}
 			}
 		}
 	}
+
+	$state.statusBarIcons.updateText();
 }
+
 /**
  * Update listener for when language server (or extension) sends diagnostic change events.
  */
 export function updateChangeDiagnosticListener(): void {
 	onDidChangeDiagnosticsDisposable?.dispose();
 
-	function onChangedDiagnostics(diagnosticChangeEvent: DiagnosticChangeEvent): void {
-		if ($config.experimental.fixNotebookStaleProblems1) {
-			const notebookCellVisible = window.visibleTextEditors.filter(editor => editor.document.uri.scheme === 'vscode-notebook-cell').length !== 0;
-			if (notebookCellVisible) {
-				updateDecorationsForAllVisibleEditors();
-			} else {
-				updateChangedUris(diagnosticChangeEvent);
-			}
-			$state.statusBarIcons.updateText();
-			return;
-		}
-		// ────────────────────────────────────────────────────────────
-		updateChangedUris(diagnosticChangeEvent);
-		$state.statusBarIcons.updateText();
-	}
 	if ($config.onSave) {
 		// onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
 		// 	// if (Date.now() - $state.lastSavedTimestamp < $config.onSaveTimeout) {
@@ -92,6 +87,7 @@ export function updateChangeDiagnosticListener(): void {
 		// });
 		return;
 	}
+
 	if (typeof $config.delay === 'number' && $config.delay > 0) {
 		// Delay
 		const delayMs = Math.max($config.delay, 500) || 500;

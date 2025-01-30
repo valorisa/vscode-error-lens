@@ -367,7 +367,7 @@ interface ExtensionConfigType {
 	/**
 	 * Experimental / temporary settings.
 	 */
-	experimental: {
+	experimental?: {
 		fixNotebookStaleProblems1: boolean;
 	};
 }

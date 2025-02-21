@@ -98,7 +98,7 @@ Disable decorations when file has merge conflict symbols `<<<<<<<` or `=======` 
 
 ### `errorLens.fontFamily`
 
-Change font family of inline message. Not supported natively by VSCode. Non-monospace fonts can usually fit more characters in the same space.
+Change font family of inline message. Not supported natively by VSCode. Non-monospace fonts can usually fit more characters in the same space. May break [errorLens.alignMessage](#errorlensalignmessage).
 
 <table>
 <tbody>
@@ -247,7 +247,7 @@ Whether to use italic font style or not for messages.
 
 ### `errorLens.fontSize`
 
-Change font size of inline message. Not supported natively by VSCode. Mostly useful to make message smaller, not bigger.
+Change font size of inline message. Not supported natively by VSCode. Mostly useful to make message smaller, not bigger. May break [errorLens.alignMessage](#errorlensalignmessage).
 
 <table>
 <tbody>
@@ -1147,6 +1147,15 @@ Highlight only closest to the cursor problem:
 <td>
 
 ![](./img/follow_closest_problem.png)
+
+</td>
+</tr>
+
+<tr>
+<th align="center">"allLinesExceptActive"</th>
+<td>
+
+![](./img/follow_all_lines_except_active.png)
 
 </td>
 </tr>

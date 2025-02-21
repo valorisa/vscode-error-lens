@@ -452,10 +452,7 @@ function doUpdateDecorations({
 				const lineStart = range.start.line;
 				const lineEnd = range.end.line;
 
-				if (
-					((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd)) ||
-						((diagnosticRange.end.line >= lineStart) && (diagnosticRange.end.line <= lineEnd))
-				) {
+				if (((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd))) {
 					messageRange = undefined;
 				} else {
 					messageRange = diagnosticRange;

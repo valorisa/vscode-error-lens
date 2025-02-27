@@ -329,7 +329,10 @@ export function setDecorationStyle(context: ExtensionContext): void {
 /**
  * Remove all decorations from an editor (gutter/highlighting/inlineMessage).
  */
-export function clearDecorations({ editor }: { editor: TextEditor }): void {
+export function clearDecorations({ editor }: { editor: TextEditor | undefined }): void {
+	if (!editor) {
+		return;
+	}
 	doUpdateDecorations({
 		editor,
 		groupedDiagnostics: {},
@@ -543,7 +546,7 @@ function doUpdateDecorations({
 
 	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
 
-	$state.codeLens.update();
+	$state.codeLens?.update();
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {

@@ -1,11 +1,12 @@
 import debounce from 'lodash/debounce';
-import { updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
+import { clearDecorations, updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
 import { CustomDelay } from 'src/delay/CustomDelay';
 import { NewDelay } from 'src/delay/NewDelay';
 import { $config, $state } from 'src/extension';
 import { updateWorkaroundGutterIcon } from 'src/gutter';
 import { extUtils } from 'src/utils/extUtils';
-import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable, type Selection } from 'vscode';
+import { vscodeUtils } from 'src/utils/vscodeUtils';
+import { TextDocumentSaveReason, Uri, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable, type Selection } from 'vscode';
 
 let onDidChangeDiagnosticsDisposable: Disposable | undefined;
 let onDidChangeActiveTextEditor: Disposable | undefined;
@@ -202,24 +203,25 @@ export function updateOnSaveListener(): void {
 
 		if (e.reason === TextDocumentSaveReason.Manual) {
 			setTimeout(() => {
-				updateDecorationsForUri({
-					uri: e.document.uri,
-				});
+				onSave(e.document.uri);
 			}, 250);
 			setTimeout(() => {
-				updateDecorationsForUri({
-					uri: e.document.uri,
-				});
+				onSave(e.document.uri);
 			}, $config.onSaveTimeout);
 		}
 	});
 
 	onDidChangeTextDocumentForOnSaveDisposable = workspace.onDidChangeTextDocument(e => {
-		updateDecorationsForUri({
-			uri: e.document.uri,
-			groupedDiagnostics: {},
-		});
+		clearDecorations({ editor: vscodeUtils.getEditorByUri(e.document.uri) });
+		$state.codeLens?.hide();
 	});
+}
+
+function onSave(uri: Uri): void {
+	updateDecorationsForUri({
+		uri,
+	});
+	$state.codeLens?.show();
 }
 
 export function updateChangeBreakpointsListener(): void {

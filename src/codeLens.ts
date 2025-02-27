@@ -2,7 +2,8 @@ import { CommandId } from 'src/commands';
 import { $config, $state } from 'src/extension';
 import { Constants } from 'src/types';
 import { utils } from 'src/utils/utils';
-import { CodeLens, EventEmitter, Range, languages, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type TextDocument } from 'vscode';
+import { vscodeUtils } from 'src/utils/vscodeUtils';
+import { CodeLens, EventEmitter, Range, TextEditor, languages, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type TextDocument } from 'vscode';
 import { extUtils } from './utils/extUtils';
 
 /**
@@ -12,8 +13,13 @@ import { extUtils } from './utils/extUtils';
  */
 export class ErrorLensCodeLens implements CodeLensProvider {
 	public onDidChangeCodeLenses: Event<void>;
+
 	private readonly onDidChangeEventEmitter: EventEmitter<void>;
 	private disposables: Disposable[];
+	/**
+	 * Hide when `delay` or `onSave` settings are enabled.
+	 */
+	private isHidden = false;
 
 	constructor(_extensionContext: ExtensionContext) {
 		this.onDidChangeEventEmitter = new EventEmitter<void>();
@@ -58,7 +64,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	 * Called by Vscode to provide code lenses
 	 */
 	provideCodeLenses(document: TextDocument, _cancellationToken: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {
-		if (!this.isEnabled()) {
+		if (!this.isEnabled(vscodeUtils.getEditorByUri(document.uri))) {
 			return [];
 		}
 
@@ -96,15 +102,35 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 		return codeLens;
 	}
 
-	isEnabled(): boolean {
-		return (
-			$config.enabled &&
-			$config.codeLensEnabled
-		);
+	isEnabled(editor: TextEditor | undefined): boolean {
+		if (!$config.enabled) {
+			return false;
+		}
+
+		if ($config.onSave && this.isHidden) {
+			return false;
+		}
+
+		if ($config.delay > 0 && this.isHidden) {
+			return false;
+		}
+
+		return true;
 	}
 
 	update(): void {
 		this.onDidChangeEventEmitter.fire();
+	}
+
+	hide(): void {
+		this.isHidden = true;
+		// This method is called when user is typing and that will trigger the code lens update anyway.
+		// this.update();
+	}
+
+	show(): void {
+		this.isHidden = false;
+		this.update();
 	}
 
 	dispose(): void {

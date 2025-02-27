@@ -11,13 +11,16 @@ export class NewDelay {
 		this.updateDecorationsDebounced = debounce(() => {
 			updateDecorationsForAllVisibleEditors();
 			$state.statusBarIcons.updateText();
+			$state.codeLens?.show();
 		}, delayMs, {
 			leading: false,
 			trailing: true,
 		});
+
 		this.documentChangeDisposable = workspace.onDidChangeTextDocument(_ => {
 			this.clearDecorationsForAllVisibleEditors();
 			this.updateDecorationsDebounced();
+			$state.codeLens?.hide();
 		});
 	}
 

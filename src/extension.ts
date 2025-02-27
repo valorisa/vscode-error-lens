@@ -37,7 +37,7 @@ export abstract class $state {
 	/**
 	 * Code Lens Provider. Handles all Code Lens stuff https://github.com/microsoft/vscode-extension-samples/tree/main/codelens-sample
 	 */
-	static codeLens: ErrorLensCodeLens;
+	static codeLens?: ErrorLensCodeLens;
 	/**
 	 * Array of RegExp matchers and their updated messages.
 	 * message may include groups references like $0 (entire expression), $1 (first group), etc.
@@ -161,8 +161,12 @@ export function updateEverything(context: ExtensionContext): void {
 		alignment: $config.statusBarIconsAlignment,
 		targetProblems: $config.statusBarIconsTargetProblems,
 	});
+
 	$state.codeLens?.dispose();
-	$state.codeLens = new ErrorLensCodeLens(context);
+	if ($config.codeLensEnabled) {
+		$state.codeLens = new ErrorLensCodeLens(context);
+	}
+
 	$state.configErrorEnabled = $config.enabledDiagnosticLevels.includes('error');
 	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
 	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');

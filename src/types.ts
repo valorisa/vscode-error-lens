@@ -178,7 +178,7 @@ interface ExtensionConfigType {
 	/**
 	 * Adds delay before showing diagnostic.
 	 */
-	delay?: number;
+	delay: number;
 	/**
 	 * Pick which version of the delay to use.
 	 */

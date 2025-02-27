@@ -1012,6 +1012,9 @@
 				"errorLens.experimental": {
 					"type": "object",
 					"properties": {},
+					"tags": [
+						"experimental"
+					],
 					"additionalProperties": false,
 					"markdownDescription": "Experimental / temporary settings.",
 					"default": {}

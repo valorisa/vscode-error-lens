@@ -1,7 +1,7 @@
 import { $config, $state } from 'src/extension';
-import { type DiagnosticTarget } from 'src/types';
+import { Constants, type DiagnosticTarget } from 'src/types';
 import { utils } from 'src/utils/utils';
-import { languages, window, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
+import { languages, window, workspace, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
 
 /**
  * Usually documentation website Uri.
@@ -106,6 +106,51 @@ function shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
 	}
 
 	return false;
+}
+function shouldExcludeEditor(editor: TextEditor): 'exclude' | 'excludeAndClearDecorations' | 'doNotExclude' {
+	if ($config.ignoreUntitled && editor.document.uri.scheme === 'untitled') {
+		return 'excludeAndClearDecorations';
+	}
+
+	if ($config.ignoreDirty && editor.document.isDirty) {
+		return 'excludeAndClearDecorations';
+	}
+
+	if (
+		(!$config.enableOnDiffView && editor.viewColumn === undefined) &&
+			editor.document.uri.scheme !== 'vscode-notebook-cell'
+	) {
+		return 'excludeAndClearDecorations';
+	}
+
+	if (!$config.enabledInMergeConflict) {
+		const editorText = editor.document.getText();
+		if (
+			editorText.includes(Constants.MergeConflictSymbol1) ||
+			editorText.includes(Constants.MergeConflictSymbol2) ||
+			editorText.includes(Constants.MergeConflictSymbol3)
+		) {
+			return 'excludeAndClearDecorations';
+		}
+	}
+
+	if ($state.excludePatterns) {
+		for (const pattern of $state.excludePatterns) {
+			if (languages.match(pattern, editor.document) !== 0) {
+				return 'exclude';
+			}
+		}
+	}
+
+	const currentWorkspacePath = workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath;
+	if (
+		currentWorkspacePath &&
+			$config.excludeWorkspaces.includes(currentWorkspacePath)
+	) {
+		return 'exclude';
+	}
+
+	return 'doNotExclude';
 }
 /**
  * `true` when diagnostic enabled in config & in temp variable
@@ -407,6 +452,7 @@ export const extUtils = {
 	diagnosticToSourceCodeString,
 	groupDiagnosticsByLine,
 	shouldExcludeDiagnostic,
+	shouldExcludeEditor,
 	isSeverityEnabled,
 	diagnosticToInlineMessage,
 	getDiagnosticAtLine,

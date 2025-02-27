@@ -592,49 +592,11 @@ export function updateDecorationsForUri({
 		return;
 	}
 
-	if ($config.ignoreUntitled && editor.document.uri.scheme === 'untitled') {
-		clearDecorations({ editor });
+	const excludeEditor = extUtils.shouldExcludeEditor(editor);
+	if (excludeEditor === 'exclude') {
 		return;
-	}
-
-	if ($config.ignoreDirty && editor.document.isDirty) {
+	} else if (excludeEditor === 'excludeAndClearDecorations') {
 		clearDecorations({ editor });
-		return;
-	}
-
-	if (
-		(!$config.enableOnDiffView && editor.viewColumn === undefined) &&
-		editor.document.uri.scheme !== 'vscode-notebook-cell'
-	) {
-		clearDecorations({ editor });
-		return;
-	}
-
-	if (!$config.enabledInMergeConflict) {
-		const editorText = editor.document.getText();
-		if (
-			editorText.includes(Constants.MergeConflictSymbol1) ||
-			editorText.includes(Constants.MergeConflictSymbol2) ||
-			editorText.includes(Constants.MergeConflictSymbol3)
-		) {
-			clearDecorations({ editor });
-			return;
-		}
-	}
-
-	if ($state.excludePatterns) {
-		for (const pattern of $state.excludePatterns) {
-			if (languages.match(pattern, editor.document) !== 0) {
-				return;
-			}
-		}
-	}
-
-	const currentWorkspacePath = workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath;
-	if (
-		currentWorkspacePath &&
-		$config.excludeWorkspaces.includes(currentWorkspacePath)
-	) {
 		return;
 	}
 

@@ -1,9 +1,9 @@
 import { CommandId } from 'src/commands';
-import { $config, $state } from 'src/extension';
+import { $config } from 'src/extension';
 import { Constants } from 'src/types';
 import { utils } from 'src/utils/utils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
-import { CodeLens, EventEmitter, Range, TextEditor, languages, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type TextDocument } from 'vscode';
+import { CodeLens, EventEmitter, Range, languages, type CancellationToken, type CodeLensProvider, type Diagnostic, type Disposable, type Event, type ExtensionContext, type TextDocument } from 'vscode';
 import { extUtils } from './utils/extUtils';
 
 /**
@@ -64,17 +64,22 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 	 * Called by Vscode to provide code lenses
 	 */
 	provideCodeLenses(document: TextDocument, _cancellationToken: CancellationToken): CodeLens[] | Thenable<CodeLens[]> {
-		if (!this.isEnabled(vscodeUtils.getEditorByUri(document.uri))) {
+		const editor = vscodeUtils.getEditorByUri(document.uri);
+		if (!editor) {
+			// This should literally never happen.
 			return [];
 		}
 
-		// TODO: duplicate code in `decorations.ts`
-		if ($state.excludePatterns) {
-			for (const pattern of $state.excludePatterns) {
-				if (languages.match(pattern, document) !== 0) {
-					return [];
-				}
-			}
+		if (!this.isEnabled()) {
+			return [];
+		}
+
+		const excludeEditor = extUtils.shouldExcludeEditor(editor);
+		if (
+			excludeEditor === 'exclude' ||
+			excludeEditor === 'excludeAndClearDecorations'
+		) {
+			return [];
 		}
 
 		const groupedDiagnostic = extUtils.groupDiagnosticsByLine(languages.getDiagnostics(document.uri));
@@ -102,7 +107,7 @@ export class ErrorLensCodeLens implements CodeLensProvider {
 		return codeLens;
 	}
 
-	isEnabled(editor: TextEditor | undefined): boolean {
+	isEnabled(): boolean {
 		if (!$config.enabled) {
 			return false;
 		}

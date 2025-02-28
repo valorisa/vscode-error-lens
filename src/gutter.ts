@@ -83,6 +83,8 @@ export function getGutterStyles(extensionContext: ExtensionContext): Gutter {
 		gutter.warningIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/warning-light.svg`);
 		gutter.infoIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-dark.svg`);
 		gutter.infoIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/info-light.svg`);
+		gutter.hintIconPath = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/hint-dark.svg`);
+		gutter.hintIconPathLight = extensionContext.asAbsolutePath(`./img/${gutter.iconSet}/hint-light.svg`);
 	}
 	// ──── User specified custom gutter path ─────────────────────
 	if ($config.errorGutterIconPath) {

@@ -3,12 +3,11 @@ import { getStyleForAlignment } from 'src/decorations/align';
 import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, updateWorkaroundGutterIcon, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
-import { Constants } from 'src/types';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
 import { utils } from 'src/utils/utils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
-import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 type DecorationKeys =
 	'error' |
@@ -452,10 +451,7 @@ function doUpdateDecorations({
 					messageRange = diagnosticRange;
 				}
 			} else if ($config.followCursor === 'allLinesExceptActive') {
-				const lineStart = range.start.line;
-				const lineEnd = range.end.line;
-
-				if (((diagnosticRange.start.line >= lineStart) && (diagnosticRange.start.line <= lineEnd))) {
+				if (diagnosticRange.start.line === range.start.line) {
 					messageRange = undefined;
 				} else {
 					messageRange = diagnosticRange;

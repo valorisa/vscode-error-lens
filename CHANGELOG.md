@@ -1,3 +1,10 @@
+## 3.24.0 `06 Mar 2025`
+
+- ✨ Add hint gutter icons
+- 🐛 Fix Code Lens not respecting delay settings (`"errorLens.onSave"`, `"errorLens.delay"` (only for `"errorLens.delayMode": "new"`))
+- 🐛 Fix Code Lens not respecting file exclusions (`"errorLens.ignoreDirty"`, `"errorLens.ignoreUntitled"`, ...)
+- 🔨 Remove experimental mutiline decorations
+
 ## 3.23.0 `30 Jan 2025`
 
 - ✨ `Exclude Problem` command should be available to call from "Command Palette" / hotkey

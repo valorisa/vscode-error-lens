@@ -112,7 +112,7 @@ function shouldExcludeEditor(editor: TextEditor): 'exclude' | 'excludeAndClearDe
 		return 'excludeAndClearDecorations';
 	}
 
-	if ($config.ignoreDirty && editor.document.isDirty) {
+	if ($config.ignoreDirty && !$state.vscodeAutosaveEnabled && editor.document.isDirty) {
 		return 'excludeAndClearDecorations';
 	}
 

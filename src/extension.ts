@@ -27,6 +27,10 @@ export abstract class $state {
 	 */
 	static vscodeGlobalProblemsEnabled = true;
 	/**
+	 * VSCode `files.autoSave` setting value.
+	 */
+	static vscodeAutosaveEnabled = false;
+	/**
 	 * Status bar object. Handles all status bar stuff (for text message)
 	 */
 	static statusBarMessage: StatusBarMessage;
@@ -108,6 +112,7 @@ export function activate(context: ExtensionContext): void {
 	function updateConfigAndEverything(): void {
 		$config = workspace.getConfiguration().get(Constants.SettingsPrefix)!;
 		$state.vscodeGlobalProblemsEnabled = workspace.getConfiguration('problems').get<boolean>('visibility') ?? true;
+		$state.vscodeAutosaveEnabled = workspace.getConfiguration('files').get<string>('autoSave') === 'afterDelay';
 		disposeEverything();
 		if ($config.enabled) {
 			updateEverything(context);
@@ -117,7 +122,8 @@ export function activate(context: ExtensionContext): void {
 	context.subscriptions.push(workspace.onDidChangeConfiguration(e => {
 		if (
 			!e.affectsConfiguration(Constants.SettingsPrefix) &&
-			!e.affectsConfiguration('problems.visibility')
+			!e.affectsConfiguration('problems.visibility') &&
+			!e.affectsConfiguration('files.autoSave')
 		) {
 			return;
 		}

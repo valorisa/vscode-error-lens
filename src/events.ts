@@ -118,8 +118,7 @@ export function updateCursorChangeListener(): void {
 
 	const shouldUpdateEditorDecorations = $config.followCursor === 'activeLine' ||
 		$config.followCursor === 'closestProblem' ||
-		$config.followCursor === 'allLinesExceptActive' ||
-		$config.followCursor === 'closestProblemMultiline';
+		$config.followCursor === 'allLinesExceptActive';
 
 	if (
 		shouldUpdateEditorDecorations ||
@@ -164,27 +163,27 @@ function caretMovedToAnotherLine(selections: readonly Selection[], lastPositionL
 		lastPositionLine !== selections[0].active.line;
 }
 
-export function updateOnVisibleRangesListener(): void {
-	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
+// export function updateOnVisibleRangesListener(): void {
+// 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
 
-	if (!$state.shouldUpdateOnEditorScrollEvent) {
-		return;
-	}
+// 	if (!$state.shouldUpdateOnEditorScrollEvent) {
+// 		return;
+// 	}
 
-	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
-		$state.log('scrolling');
+// 	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
+// 		$state.log('scrolling');
 
-		updateDecorationsForUri({
-			uri: e.textEditor.document.uri,
-			editor: e.textEditor,
-		});
-		// throttle(() => {
+// 		updateDecorationsForUri({
+// 			uri: e.textEditor.document.uri,
+// 			editor: e.textEditor,
+// 		});
+// 		// throttle(() => {
 
-		// }, 300, {
-		// 	leading: false,
-		// });
-	});
-}
+// 		// }, 300, {
+// 		// 	leading: false,
+// 		// });
+// 	});
+// }
 /**
  * Update listener for when user performs manual save.
  *

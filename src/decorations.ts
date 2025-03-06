@@ -4,7 +4,6 @@ import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, updateWorkaroundGutterIcon, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
-import { createMultilineDecorations, showMultilineDecoration } from 'src/utils/showMultilineDecoration';
 import { utils } from 'src/utils/utils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
@@ -91,12 +90,6 @@ export function setDecorationStyle(context: ExtensionContext): void {
 			// gutter will be rendered as a separate decoration, delete gutter from ordinary decorations
 			gutter = undefined;
 		}
-	}
-
-	if ($config.followCursor === 'closestProblemMultiline' ||
-		$config.followCursor === 'closestProblemMultilineInViewport' ||
-		$config.followCursor === 'closestProblemMultilineBySeverity') {
-		createMultilineDecorations();
 	}
 
 	let errorBackground: ThemeColor | undefined = new ThemeColor('errorLens.errorBackground');
@@ -363,7 +356,7 @@ function doUpdateDecorations({
 	const decorationOptionsHintRange: DecorationOptions[] = [];
 
 	let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
-	if ($config.followCursor === 'closestProblem' || $config.followCursor === 'closestProblemMultiline') {
+	if ($config.followCursor === 'closestProblem') {
 		if (range === undefined) {
 			range = editor.selection;
 		}
@@ -372,12 +365,6 @@ function doUpdateDecorations({
 		const groupedDiagnosticsAsArray = Object.entries(groupedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
 		groupedDiagnosticsAsArray.length = $config.followCursorMore + 1;// Reduce array length to the number of allowed rendered lines (decorations)
 		allowedLineNumbersToRenderDiagnostics = groupedDiagnosticsAsArray.map(d => d[1][0].range.start.line);
-	}
-
-	if ($config.followCursor === 'closestProblemMultiline' ||
-		$config.followCursor === 'closestProblemMultilineInViewport' ||
-		$config.followCursor === 'closestProblemMultilineBySeverity') {
-		showMultilineDecoration(editor);
 	}
 
 	for (const lineNumber in groupedDiagnostics) {

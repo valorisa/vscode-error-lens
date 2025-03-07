@@ -264,6 +264,23 @@
 					"markdownDescription": "Align inline error message (either by starting position or ending position). Only works for monospace fonts. Set \"start\" and \"end\" to **0** to disable. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensalignmessage)",
 					"additionalProperties": false
 				},
+				"errorLens.border": {
+					"type": "array",
+					"default": [
+						"",
+						"",
+						"",
+						""
+					],
+					"items": {
+						"type": "string",
+						"default": ""
+					},
+					"minItems": 4,
+					"maxItems": 4,
+					"additionalItems": false,
+					"markdownDescription": "Border of the inline message. Examples: `1px solid`, `1px dashed`, `2px dotted`, `1px solid #00000050`... Set to empty string to disable. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensborder)"
+				},
 				"errorLens.padding": {
 					"type": "string",
 					"default": "",

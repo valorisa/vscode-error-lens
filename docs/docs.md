@@ -358,6 +358,34 @@ Align message to be in the same column (if possible). Only works with monospace 
 </tbody>
 </table>
 
+### `errorLens.border`
+
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.border": [
+	"1px solid",
+	"1px dotted",
+	"1px dashed",
+	"1px solid #00000040",
+],
+```
+
+</td>
+<td>
+
+![](./img/border.png)
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
 ### `errorLens.padding`
 
 Add space around the inline message. Only visible when [errorLens.messageBackgroundMode](#errorlensmessagebackgroundmode) is set to `message`.

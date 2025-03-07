@@ -175,6 +175,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		gutterIconPath: gutter?.errorIconPath,
 		after: {
 			...afterProps,
+			border: $config.border?.[DiagnosticSeverity.Error] ? $config.border[DiagnosticSeverity.Error] : undefined,
 			color: errorForeground,
 			backgroundColor: errorMessageBackground,
 			...$config.decorations?.errorMessage,
@@ -197,6 +198,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		gutterIconPath: gutter?.warningIconPath,
 		after: {
 			...afterProps,
+			border: $config.border?.[DiagnosticSeverity.Warning] ? $config.border[DiagnosticSeverity.Warning] : undefined,
 			color: warningForeground,
 			backgroundColor: warningMessageBackground,
 			...$config.decorations?.warningMessage,
@@ -219,6 +221,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		gutterIconPath: gutter?.infoIconPath,
 		after: {
 			...afterProps,
+			border: $config.border?.[DiagnosticSeverity.Information] ? $config.border[DiagnosticSeverity.Information] : undefined,
 			color: infoForeground,
 			backgroundColor: infoMessageBackground,
 			...$config.decorations?.infoMessage,
@@ -241,6 +244,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 		gutterIconPath: gutter?.hintIconPath,
 		after: {
 			...afterProps,
+			border: $config.border?.[DiagnosticSeverity.Hint] ? $config.border[DiagnosticSeverity.Hint] : undefined,
 			color: hintForeground,
 			backgroundColor: hintMessageBackground,
 			...$config.decorations?.hintMessage,

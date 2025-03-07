@@ -49,6 +49,10 @@ interface ExtensionConfigType {
 		useFixedPosition: boolean;
 	};
 	/**
+	 * Border of the inline message. Examples: `1px solid`, `1px dashed`, `2px dotted`...
+	 */
+	border: [string, string, string, string];
+	/**
 	 * Inner margin of the inline message.
 	 */
 	padding: string;

@@ -374,6 +374,11 @@ function doUpdateDecorations({
 	for (const lineNumber in groupedDiagnostics) {
 		const allDiagnosticsInLine = groupedDiagnostics[lineNumber];
 		const diagnostic = allDiagnosticsInLine[0];
+
+		if (!diagnostic) {
+			continue;
+		}
+
 		const severity = diagnostic.severity;
 
 		let message: string | undefined;

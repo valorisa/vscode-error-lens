@@ -176,7 +176,12 @@ function diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, cou
 		Count = '$count',
 		Severity = '$severity',
 	}
-	let message = diagnostic.message;
+
+	let message = diagnostic?.message;
+	if (!message) {
+		return '';
+	}
+
 	if ($state.replaceRegexp) {
 		// Apply transformations sequentially, checking at each stage if the updated
 		// message matches the next checker. Usuaully there would only be one match,
@@ -253,6 +258,9 @@ interface PrepareMessageArg {
  * If the message has linebreaks - it will cut off the message in that place.
  */
 function prepareMessage({ template, diagnostic, lineProblemCount, removeLinebreaks, replaceLinebreaksSymbol }: PrepareMessageArg): string {
+	if (!template) {
+		template = '$message';
+	}
 	const templated = diagnosticToInlineMessage(template, diagnostic, lineProblemCount);
 	return utils.truncateString(removeLinebreaks ? utils.replaceLinebreaks(templated, replaceLinebreaksSymbol) : templated, $config.messageMaxChars);
 }

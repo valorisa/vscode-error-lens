@@ -30,16 +30,15 @@ export function disableLineCommand(diagnostic: Diagnostic | undefined): void {
 		return;
 	}
 
-	let template = $config.disableLineComments[diagnostic.source];
-	const isTheSameLine = template.includes('SAME_LINE');
-
-	if (isTheSameLine) {
-		template = template.replace(/\s?SAME_LINE\s?/u, '');
-	}
-
+	let template = $config.disableLineComments[diagnostic.source] || '';
 	if (!template) {
 		showNoCommentSpecifiedForSource(diagnostic.source);
 		return;
+	}
+
+	const isTheSameLine = template.includes('SAME_LINE');
+	if (isTheSameLine) {
+		template = template.replace(/\s?SAME_LINE\s?/u, '');
 	}
 
 	let comment = extUtils.diagnosticToInlineMessage(template, diagnostic, 0);

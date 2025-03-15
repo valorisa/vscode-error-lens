@@ -1646,6 +1646,60 @@ Code Lens is clickable. This setting configures what happens when you click on C
 - `showQuickFix` => Open Quick Fix menu (runs `editor.action.quickFix`)
 - `searchForProblem` => Search for problem message in your default browser (runs `errorLens.searchForProblem`)
 
-### `errorLens.multilineMessage`
+---
 
-EXPERIMENTAL. Very far away to being done. There's no api to implement this properly.
+## Custom CSS
+
+Status bar messages can be hard to read, so I'm using [Custom CSS](https://marketplace.visualstudio.com/items?itemName=be5invis.vscode-custom-css) to change the `font-size` of the status bar items:
+
+```css
+/* ──── StatusBar ───────────────────────────────────────────── */
+.statusbar {
+    /* Monospace font and emoji fallback */
+	font-family: Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji' !important;
+	font-size: 14px !important;/* 12px => 14px */
+}
+
+.monaco-workbench .part.statusbar > .items-container > .statusbar-item {
+	max-width: 70vw !important;/* 40% => 70% Viewport width */
+}
+
+.monaco-workbench .part.statusbar > .items-container > .statusbar-item > :first-child {
+	margin-left: 0 !important;/* Remove margin (fit more items) */
+	margin-right: 0 !important;
+}
+/* ──────────────────────────────────────────────────────────── */
+
+/* ──── Target only Error Lens status bar items ─────────────── */
+/* "errorLens.statusBarMessageEnabled": true, */
+#usernamehw\.errorlens\.errorLensMessage {
+    font-size: 14px !important;
+}
+
+/* "errorLens.statusBarIconsEnabled": true, */
+#usernamehw\.errorlens\.errorLensError {}
+#usernamehw\.errorlens\.errorLensWarning {}
+/* ──────────────────────────────────────────────────────────── */
+```
+
+<table>
+<tbody>
+
+<tr>
+<td>
+
+![](./img/customCSS_statusBar_before.png)
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/customCSS_statusBar_after.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>

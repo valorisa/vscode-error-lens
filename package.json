@@ -715,18 +715,13 @@
 						"allLines",
 						"allLinesExceptActive",
 						"activeLine",
-						"closestProblem",
-						"closestProblemMultiline",
-						"closestProblemMultilineInViewport",
-						"closestProblemMultilineBySeverity"
+						"closestProblem"
 					],
 					"enumDescriptions": [
 						"Highlight all problems in file",
 						"Highlight all problems in file (except the line at the cursor)",
 						"Highlight only the problem at the cursor",
-						"Highlight only closest to the cursor problem",
-						"Highlight only closest to the cursor problem (only in visible lines) (decoration spans multiple lines)",
-						"Highlight only closest to the cursor problem (error before warning, ...) (decoration spans multiple lines)"
+						"Highlight only closest to the cursor problem"
 					],
 					"markdownDescription": "Highlight only portion of the problems. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfollowcursor)",
 					"default": "allLines"

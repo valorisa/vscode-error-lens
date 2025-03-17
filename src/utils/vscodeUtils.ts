@@ -1,6 +1,6 @@
 import { Constants, type ErrorLensSettings } from 'src/types';
 import { utils } from 'src/utils/utils';
-import { ConfigurationTarget, Range, Selection, TextEditorRevealType, Uri, commands, window, workspace, type TextDocument, type TextEditor } from 'vscode';
+import { ConfigurationTarget, Range, Selection, StatusBarAlignment, StatusBarItem, TextEditorRevealType, Uri, commands, window, workspace, type TextDocument, type TextEditor } from 'vscode';
 
 /**
  * Update global settings.json file with the new setting value.
@@ -151,6 +151,19 @@ function getEditorByUri(uri: Uri): TextEditor | undefined {
 	}
 }
 
+let tempStatusBarItem: StatusBarItem | undefined;
+function showTempStatusBarNotification({ message, timeout }: { message: string; timeout: number }): void {
+	tempStatusBarItem?.dispose();
+	tempStatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left, -100000);
+	tempStatusBarItem.text = message;
+	tempStatusBarItem.show();
+
+	setTimeout(() => {
+		tempStatusBarItem?.hide();
+		tempStatusBarItem?.dispose();
+	}, timeout);
+}
+
 export const vscodeUtils = {
 	updateGlobalSetting,
 	toggleGlobalBooleanSetting,
@@ -166,4 +179,5 @@ export const vscodeUtils = {
 	getIndentationAtLine,
 	setCaretInEditor,
 	getEditorByUri,
+	showTempStatusBarNotification,
 };

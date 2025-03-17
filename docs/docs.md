@@ -17,10 +17,10 @@
 
 ### If you don't want to go with the hotkey route - it's possible to:
 
-1) Exclude problems (in workspace, by source, by code, by message)
-1) Show fewer decorations (render decoration only on the active line)
-1) Delay showing decorations (delay ms / on document save)
-1) Transform problem message (make it shorter maybe)
+1) Exclude problems (in workspace, by source, by code, by message) [**exclude**](#errorlensexclude), [**excludeBySource**](#errorlensexcludebysource), [**excludePatterns(Glob)**](#errorlensexcludepatterns), [excludeWorkspaces](#errorlensexcludeworkspaces)
+1) Show fewer decorations (render decoration only on the active line) [**followCursor**](#errorlensfollowcursor)
+1) Delay showing decorations (delay ms / on document save) [**delay**](#errorlensdelay), [**onSave**](#errorlensonsave), [**ignoreDirty**](#errorlensignoredirty)
+1) Transform problem message (make it shorter maybe) [**replace**](#errorlensreplace)
 1) Configure other settings or colors to make it less distracting
 
 ### 1. Exclude problems:
@@ -811,12 +811,12 @@ Show icons for Errors & Warnings in status bar similar to native ones, but with 
 <tr>
 <td>
 
-<img width="500" src="./img/status_bar_icons_enabled.png">
+<img width="400" src="./img/status_bar_icons_enabled.png">
 
 </td>
 <td>
 
-<img width="450" src="./img/status_bar_icons_hover.png">
+<img width="400" src="./img/status_bar_icons_hover.png">
 
 </td>
 </tr>
@@ -1333,8 +1333,8 @@ Change size of gutter icons:
 <tbody>
 
 <tr>
-<th>"default"</th>
-<th>"circle"</th>
+<th align="center">"default"</th>
+<th align="center">"defaultOutline"</th>
 </tr>
 
 <tr>
@@ -1346,14 +1346,15 @@ Change size of gutter icons:
 
 <td>
 
-![](./img/gutter_icons_circle.png)
+
+![](./img/gutter_icons_default_outline.png)
 
 </td>
 </tr>
 
 <tr>
-<th>"squareRounded"</th>
-<th>"letter"</th>
+<th align="center">"squareRounded"</th>
+<th align="center">"circle"</th>
 </tr>
 
 <tr>
@@ -1365,24 +1366,26 @@ Change size of gutter icons:
 
 <td>
 
+![](./img/gutter_icons_circle.png)
+
+</td>
+</tr>
+
+<tr>
+<th align="center">"letter"</th>
+<th align="center">"emoji"</th>
+</tr>
+
+<tr>
+<td>
+
 ![](./img/gutter_icons_letter.png)
 
 </td>
-</tr>
 
-<tr>
-<th>"emoji"</th>
-<th></th>
-</tr>
-
-<tr>
 <td>
 
 ![](./img/gutter_icons_emoji.png)
-
-</td>
-
-<td>
 
 </td>
 </tr>
@@ -1533,6 +1536,12 @@ When [errorLens.removeLinebreaks](#errorlensremovelinebreaks) is enabled => repl
 
 ### `errorLens.scrollbarHackEnabled`
 
+VSCode has a setting to completely disable horizontal scrollbar (better than this scrollbar hack and also will apply to any other extension that contributes inline messages):
+
+```js
+"editor.scrollbar.horizontal": "hidden",
+```
+
 When showing inline message decorations - VSCode also shows horizontal scrollbar that stays even after message is removed. This is a hack that makes inline message to be absolutely positioned `position:absolute;` to not show any scrollbars. It can make the [errorLens.padding](#errorlenspadding) look differently though.
 
 <table>
@@ -1590,28 +1599,6 @@ Advanced control over decorations (only problem message & problem range).
 </td>
 </tr>
 
-<tr>
-<td>
-
-```js
-"errorLens.decorations": {
-    "errorMessage": {
-        "textDecoration": ";border:1.2px dashed #e4545470;text-shadow:1px 1px 2px #e4545470;border-radius:0.3em;padding:0 0.5ch;",
-    },
-},
-```
-
-</td>
-</tr>
-
-<tr>
-<td>
-
-![](./img/decoration_text_shadow.png)
-
-</td>
-</tr>
-
 </tbody>
 </table>
 
@@ -1621,7 +1608,7 @@ When enabled - will not show any decorations in files with the file scheme `unti
 
 ### `errorLens.ignoreDirty`
 
-When enabled - will not show any decorations on Dirty (modified) files.
+When enabled - will not show any decorations on Dirty (modified) files. Only when `"files.autoSave"` is disabled (anything except `"afterDelay"`).
 
 ### `errorLens.codeLensEnabled`
 
@@ -1647,6 +1634,8 @@ Code Lens is clickable. This setting configures what happens when you click on C
 - `searchForProblem` => Search for problem message in your default browser (runs `errorLens.searchForProblem`)
 
 ---
+
+# Miscellaneous
 
 ## Custom CSS
 

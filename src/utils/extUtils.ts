@@ -28,8 +28,8 @@ export const extUtils = {
 		return utils.truncateString(removeLinebreaks ? utils.replaceLinebreaks(templated, replaceLinebreaksSymbol) : templated, $config.messageMaxChars);
 	},
 	/**
- * Get all diagnostics from (all/visibleEditors/activeEditor).
- */
+	 * Get all diagnostics from (all/visibleEditors/activeEditor).
+	 */
 	getDiagnostics(arg?: { target: DiagnosticTarget }): [Uri, Diagnostic[]][] {
 		const allDiagnostics = languages.getDiagnostics();
 
@@ -85,12 +85,12 @@ export const extUtils = {
 		return `${source}${code ? `(${code})` : ''}`;
 	},
 	/**
- * Return diagnostics grouped by line: `Record<string, Diagnostic[]>`
- *
- * Also, excludes diagnostics according to `errorLens.excludeSources` & `errorLens.exclude` settings.
- *
- * Also, sorts the problems in every line by severity err>warn>info>hint.
- */
+	 * Return diagnostics grouped by line: `Record<string, Diagnostic[]>`
+	 *
+	 * Also, excludes diagnostics according to `errorLens.excludeSources` & `errorLens.exclude` settings.
+	 *
+	 * Also, sorts the problems in every line by severity err>warn>info>hint.
+	 */
 	groupDiagnosticsByLine(diagnostics: Diagnostic[]): GroupedByLineDiagnostics {
 		const groupedDiagnostics: GroupedByLineDiagnostics = {};
 		for (const diagnostic of diagnostics) {
@@ -115,8 +115,8 @@ export const extUtils = {
 		return groupedDiagnostics;
 	},
 	/**
- * Check multiple exclude sources if the diagnostic should not be shown.
- */
+	 * Check multiple exclude sources if the diagnostic should not be shown.
+	 */
 	shouldExcludeDiagnostic(diagnostic: Diagnostic): boolean {
 		if (!extUtils.isSeverityEnabled(diagnostic.severity)) {
 			return true;
@@ -204,9 +204,9 @@ export const extUtils = {
 	isSeverityEnabled(severity: number): boolean {
 		return (
 			(severity === 0 && $state.configErrorEnabled) ||
-		(severity === 1 && $state.configWarningEnabled) ||
-		(severity === 2 && $state.configInfoEnabled) ||
-		(severity === 3 && $state.configHintEnabled)
+			(severity === 1 && $state.configWarningEnabled) ||
+			(severity === 2 && $state.configInfoEnabled) ||
+			(severity === 3 && $state.configHintEnabled)
 		);
 	},
 	/**
@@ -220,6 +220,8 @@ export const extUtils = {
 			Code = '$code',
 			Count = '$count',
 			Severity = '$severity',
+			LineStart = '$lineStart',
+			LineEnd = '$lineEnd',
 		}
 
 		let message = diagnostic?.message;
@@ -251,19 +253,21 @@ export const extUtils = {
 		// Message & severity is always present.
 			let result = template
 				.replace(TemplateVars.Message, message)
-				.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '');
+				.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '')
+				.replace(TemplateVars.LineStart, String(diagnostic.range.start.line + 1))
+				.replace(TemplateVars.LineEnd, String(diagnostic.range.end.line + 1));
 			/**
-		 * Count, source & code can be absent.
-		 * If present - replace them as simple string.
-		 * If absent - replace by RegExp removing all adjacent non-whitespace symbols with them.
-		 */
+			 * Count, source & code can be absent.
+			 * If present - replace them as simple string.
+			 * If absent - replace by RegExp removing all adjacent non-whitespace symbols with them.
+			 */
 
 			/* eslint-disable prefer-named-capture-group, max-params */
 			if (template.includes(TemplateVars.Count)) {
 				if (count > 1) {
 					result = result.replace(TemplateVars.Count, String(count));
 				} else {
-				// no `$count` in the template - remove it
+					// no `$count` in the template - remove it
 					result = result.replace(/(\s*?)?(\S*?)?(\$count)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
 				}
 			}

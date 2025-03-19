@@ -6,8 +6,8 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.85.0",
-		"npm": ">=7.0.0"
+		"vscode": "^1.95.0",
+		"npm": ">=10.0.0"
 	},
 	"extensionKind": [
 		"ui",
@@ -228,7 +228,7 @@
 						"minimumMargin": {
 							"type": "integer",
 							"description": "Minimal space between line end and decoration. Very similar to the global setting `errorLens.margin`, but can only be a number of characters.",
-							"minimum": 0
+							"minimum": 4
 						},
 						"padding": {
 							"type": "array",
@@ -254,7 +254,7 @@
 					"default": {
 						"start": 0,
 						"end": 0,
-						"minimumMargin": 0,
+						"minimumMargin": 4,
 						"padding": [
 							0,
 							0
@@ -1241,16 +1241,16 @@
 	},
 	"devDependencies": {
 		"@soda/friendly-errors-webpack-plugin": "^1.8.1",
-		"@types/lodash": "^4.17.5",
-		"@types/node": "^18.19.36",
-		"@types/vscode": "^1.85.0",
+		"@types/lodash": "^4.17.16",
+		"@types/node": "^18.19.80",
+		"@types/vscode": "^1.95.0",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
-		"eslint": "^8.57.0",
-		"ts-loader": "^9.5.1",
-		"typescript": "^5.4.5",
-		"webpack": "^5.92.0",
-		"webpack-cli": "^5.1.4"
+		"eslint": "^8.57.1",
+		"ts-loader": "^9.5.2",
+		"typescript": "^5.8.2",
+		"webpack": "^5.98.0",
+		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
 		"lodash": "^4.17.21"

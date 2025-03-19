@@ -6,7 +6,7 @@ import { createHoverForDiagnostic } from 'src/hover/hover';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
-import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
+import { DecorationRangeBehavior, DiagnosticSeverity, Range, ThemeColor, languages, window, workspace, type DecorationInstanceRenderOptions, type DecorationOptions, type DecorationRenderOptions, type ExtensionContext, type TextEditor, type TextEditorDecorationType, type ThemableDecorationAttachmentRenderOptions, type Uri } from 'vscode';
 
 type DecorationKeys =
 	'error' |
@@ -155,10 +155,16 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	}
 
 	const fontFamily = $config.fontFamily ? `font-family: ${$config.fontFamily}` : '';
-	const fontSize = $config.fontSize ? `font-size: ${extUtils.addPxUnitsIfNeeded($config.fontSize)}` : '';
 	const padding = $config.padding ? `padding: ${extUtils.addPxUnitsIfNeeded($config.padding)}` : '';
 	const borderRadius = `border-radius: ${$config.borderRadius || '0'}`;
 	const scrollbarHack = $config.scrollbarHackEnabled ? 'position:absolute;pointer-events:none;top:50%;transform:translateY(-50%);' : '';
+	let fontSize = $config.fontSize ? `font-size: ${extUtils.addPxUnitsIfNeeded($config.fontSize)}` : '';
+
+	const isRelativeFontSize = $config.fontSize.startsWith('-');
+	if (isRelativeFontSize) {
+		const editorFontSize = workspace.getConfiguration('editor').get<number>('fontSize')! || 14;
+		fontSize = `font-size: ${editorFontSize + (parseFloat($config.fontSize) || 0)}px`;
+	}
 
 	textDecorationStyleString = `none;${fontFamily};${fontSize};${borderRadius}`;
 

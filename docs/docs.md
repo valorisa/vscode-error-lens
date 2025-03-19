@@ -247,7 +247,7 @@ Whether to use italic font style or not for messages.
 
 ### `errorLens.fontSize`
 
-Change font size of inline message. Not supported natively by VSCode. Mostly useful to make message smaller, not bigger. May break [errorLens.alignMessage](#errorlensalignmessage).
+Change font size of inline message. Not supported natively by VSCode. Mostly useful to make message smaller, not bigger. Use negative value to have it relative to the editor's fontSize (e.g. `-3px`). May break [errorLens.alignMessage](#errorlensalignmessage).
 
 <table>
 <tbody>

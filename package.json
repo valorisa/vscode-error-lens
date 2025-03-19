@@ -205,7 +205,7 @@
 				"errorLens.fontSize": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Font size of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length)). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontsize). May break `#errorLens.alignMessage#`"
+					"markdownDescription": "Font size of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length)). Use negative value to have it relative to the editor's fontSize (e.g. `-3px`). May break `#errorLens.alignMessage#`. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontsize)."
 				},
 				"errorLens.margin": {
 					"type": "string",

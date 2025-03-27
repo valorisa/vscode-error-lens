@@ -694,10 +694,10 @@
 					"default": false
 				},
 				"errorLens.onSaveTimeout": {
-					"type": "number",
+					"type": "integer",
 					"markdownDescription": "Time period (ms) that used for showing decorations after the document save (manual, not auto save).",
-					"default": 1000,
-					"minimum": 500
+					"default": 250,
+					"minimum": 50
 				},
 				"errorLens.onSaveUpdateOnActiveEditorChange": {
 					"type": "boolean",

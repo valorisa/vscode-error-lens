@@ -80,8 +80,8 @@ export class StatusBarIcons {
 		});
 
 		for (const diagnosticWithUri of allDiagnostics) {
-			const uri = diagnosticWithUri[0];
-			const diagnostics = diagnosticWithUri[1];
+			const uri = diagnosticWithUri.uri;
+			const diagnostics = diagnosticWithUri.diagnostics;
 			const errors = [];
 			const warnings = [];
 			for (const diag of diagnostics) {

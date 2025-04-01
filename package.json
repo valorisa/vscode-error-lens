@@ -421,8 +421,8 @@
 					],
 					"enumDescriptions": [
 						"Should be the same as native status bar icons - counts all known problems from all files.",
-						"Count only problems from the active text editor.",
-						"Count only problems from the visible text editors."
+						"Count only problems from the Active Text Editor.",
+						"Count only problems from the Visible Text Editors."
 					],
 					"default": "all",
 					"markdownDescription": "Which problems to use for counting problems at icons status bar."
@@ -696,7 +696,7 @@
 				"errorLens.onSaveTimeout": {
 					"type": "integer",
 					"markdownDescription": "Time period (ms) that used for showing decorations after the document save (manual, not auto save).",
-					"default": 250,
+					"default": 500,
 					"minimum": 50
 				},
 				"errorLens.onSaveUpdateOnActiveEditorChange": {

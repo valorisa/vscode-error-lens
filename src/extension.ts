@@ -123,7 +123,8 @@ export function activate(context: ExtensionContext): void {
 		if (
 			!e.affectsConfiguration(Constants.SettingsPrefix) &&
 			!e.affectsConfiguration('problems.visibility') &&
-			!e.affectsConfiguration('files.autoSave')
+			!e.affectsConfiguration('files.autoSave') &&
+			!e.affectsConfiguration('editor.fontSize')
 		) {
 			return;
 		}

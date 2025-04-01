@@ -28,30 +28,39 @@ export const extUtils = {
 		return utils.truncateString(removeLinebreaks ? utils.replaceLinebreaks(templated, replaceLinebreaksSymbol) : templated, $config.messageMaxChars);
 	},
 	/**
+	 * Convert VSCode returned [Uri, Diagnostic[]][] into more readable object { uri: Uri; diagnostics: Diagnostic[] }[]
+	 * to not use it in code like diagnostic[0] diagnostic[1] everywhere...
+	 */
+	_VscodeDiagnosticsArrayToObject(vscodeDiagnostics: [Uri, Diagnostic[]][]): { uri: Uri; diagnostics: Diagnostic[] }[] {
+		return vscodeDiagnostics.map(uriDiagnostics => ({
+			uri: uriDiagnostics[0],
+			diagnostics: uriDiagnostics[1],
+		}));
+	},
+	/**
 	 * Get all diagnostics from (all/visibleEditors/activeEditor).
 	 */
-	getDiagnostics(arg?: { target: DiagnosticTarget }): [Uri, Diagnostic[]][] {
+	getDiagnostics(arg?: { target: DiagnosticTarget }): { uri: Uri; diagnostics: Diagnostic[] }[] {
 		const allDiagnostics = languages.getDiagnostics();
+		let targetDiagnostics: { uri: Uri; diagnostics: Diagnostic[] }[] = [];
 
 		if (arg === undefined || arg.target === 'all') {
-			return allDiagnostics;
-		}
-
-		if (arg.target === 'activeEditor') {
-			return allDiagnostics.filter(diag => diag[0].toString(true) === window.activeTextEditor?.document.uri.toString(true));
+			targetDiagnostics = this._VscodeDiagnosticsArrayToObject(allDiagnostics);
+		} else if (arg.target === 'activeEditor') {
+			targetDiagnostics = this._VscodeDiagnosticsArrayToObject(allDiagnostics).filter(diag => diag.uri.toString(true) === window.activeTextEditor?.document.uri.toString(true));
 		} else if (arg.target === 'visibleEditors') {
 			const visibleUriWithDiagnostics = [];
-			for (const diag of allDiagnostics) {
+			for (const diag of this._VscodeDiagnosticsArrayToObject(allDiagnostics)) {
 				for (const visibleEditor of window.visibleTextEditors) {
-					if (visibleEditor.document.uri.toString(true) === diag[0].toString(true)) {
+					if (visibleEditor.document.uri.toString(true) === diag.uri.toString(true)) {
 						visibleUriWithDiagnostics.push(diag);
 					}
 				}
 			}
-			return visibleUriWithDiagnostics;
+			targetDiagnostics = visibleUriWithDiagnostics;
 		}
 
-		return [];
+		return targetDiagnostics;
 	},
 	/**
 	 * Usually documentation website Uri.

@@ -1,3 +1,11 @@
+## 3.25.0 `01 Apr 2025`
+
+- ✨ Configure inline message border `"errorLens.border"` [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensborder)
+- ✨ Allow relative fontSize (negative/smaller) to `"editor.fontSize"` e.g.: `"errorLens.fontSize": "-4",`
+- ✨ Apply gutter colors to text specified in `"errorLens.gutterEmoji"` (symbols like ⏻/⛆/▣/◈/⟁/... or any letter/text)
+- 🐛 Fix possible NPE when problems were removed
+- 🔨 Remove duplicate onSave timeout. Change default timeout from 1000 to 500 `"errorLens.onSaveTimeout": 500,`
+
 ## 3.24.0 `06 Mar 2025`
 
 - ✨ Add hint gutter icons
